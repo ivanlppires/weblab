@@ -1,0 +1,233 @@
+                                  UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                       TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                 Desenvolvimento Web
+                                               FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                                    Aula 6 — Acessibilidade e ARIA
+                         Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 1: Web Estática (encerramento)
+
+
+
+
+1. Objetivos da aula
+
+   Entender o que é acessibilidade web, quem se beneficia e o que a lei brasileira exige;
+   Conhecer as diretrizes WCAG e os quatro princípios (perceptível, operável, compreensível, robusto);
+   Aplicar as práticas fundamentais: semântica, textos alternativos, contraste, foco e navegação por teclado;
+   Usar ARIA corretamente — e saber quando não usar;
+   Auditar o projeto com ferramentas automáticas e testes manuais — último critério da Avaliação 1.
+
+  ENCERRAMENTO DA UNIDADE 1
+  Esta é a última camada da Web Estática. Após esta aula, seu projeto deve atender aos cinco critérios da Avaliação 1 (entrega até
+  29/09, 23h59, no SIGAA): HTML semântico, layout responsivo, framework CSS, animação/SVG e acessibilidade.
+
+
+
+2. O que é acessibilidade e por que ela importa
+
+Acessibilidade web (a11y) é a prática de construir sites que qualquer pessoa consegue usar — incluindo pessoas com deficiência
+visual, auditiva, motora ou cognitiva, que navegam com leitores de tela, apenas teclado, comandos de voz ou outras tecnologias
+assistivas.
+
+2.1 Quem se beneficia
+   Pessoas com deficiência permanente: cegueira e baixa visão, surdez, limitações motoras, dislexia;
+   Limitações temporárias e situacionais: braço engessado, tela sob sol forte, ambiente barulhento, internet lenta;
+   Todos os usuários: sites acessíveis são mais rápidos, mais claros e melhor ranqueados (a semântica que ajuda o leitor de tela é a
+   mesma que ajuda o Google);
+   Você, desenvolvedor: acessibilidade é requisito legal em projetos públicos e diferencial profissional crescente no mercado.
+
+2.2 A exigência legal no Brasil
+A Lei Brasileira de Inclusão (Lei nº 13.146/2015), art. 63, determina que é obrigatória a acessibilidade em sites mantidos por
+empresas com sede ou representação comercial no país e por órgãos de governo, conforme as melhores práticas e diretrizes
+internacionais. Ou seja: para quem vai desenvolver sistemas profissionalmente — o caso de vocês — acessibilidade não é opcional.
+
+2.3 WCAG: as diretrizes internacionais
+As WCAG (Web Content Accessibility Guidelines, do W3C) são o padrão de referência mundial, organizadas em 4 princípios — o acrônimo
+POUR:
+
+ Princípio                            Pergunta-chave                                Exemplos práticos
+
+ Perceptível                          O usuário consegue perceber o conteúdo?       alt em imagens, contraste suficiente, legendas em vídeo
+
+ Operável                             Consegue operar a interface?                  Tudo funciona por teclado, foco visível, tempo suficiente
+
+ Compreensível (Understandable)       Consegue entender?                            Idioma declarado, rótulos claros, erros explicados
+
+ Robusto                              Funciona com tecnologias assistivas?          HTML válido e semântico, ARIA correto
+
+Níveis de conformidade: A (mínimo), AA (padrão exigido na maioria das leis e contratos — nossa meta) e AAA (máximo).
+
+
+3. Fundamentos práticos (que você já vem aplicando)
+
+Boa notícia: quem seguiu as aulas anteriores já construiu a base. Agora nomeamos e completamos:
+
+ Prática                                              Aula em que surgiu          O que verificar agora
+
+ Semântica ( header , nav , main , footer )           Aula 3                      Um único <main> ; hierarquia h1→h2→h3 sem saltos
+
+ alt em todas as imagens                              Aula 3                      Descritivo no conteúdo; alt="" no decorativo
+
+ <label> em todos os campos                           Aula 3                       for apontando para o id correto
+ lang="pt-BR" no <html>                               Aula 2                       Presente em todas as páginas
+
+ Texto de link significativo                          Aula 3                       Nada de "clique aqui"
+
+ prefers-reduced-motion                               Aula 5                       Bloco presente no CSS
+
+
+3.1 Contraste de cores
+A WCAG AA exige razão de contraste mínima de 4,5:1 para texto normal e 3:1 para texto grande (≥ 24px ou ≥ 18,5px em negrito). Cinza-
+claro sobre branco — tão comum em sites "modernos" — costuma reprovar. Verifique no DevTools (inspecionar a cor do texto mostra a
+razão de contraste) ou no WebAIM Contrast Checker (webaim.org/resources/contrastchecker).
+
+3.2 Navegação por teclado e foco visível
+Teste fundamental: largue o mouse. Navegue pelo seu site só com Tab (avançar), Shift+Tab (voltar) e Enter (ativar). Três perguntas:
+1. Consigo alcançar todos os links, botões e campos?
+2. Vejo onde o foco está a cada momento?
+3. A ordem do foco segue a ordem visual da página?
+
+  /* Nunca remova o outline sem substituir por algo visível: */
+  :focus-visible {
+    outline: 3px solid #ffb703;
+    outline-offset: 2px;
+  }
+
+
+  CRIME COMUM
+   *:focus { outline: none; } sem substituto torna o site inutilizável por teclado. Se encontrar isso em um template ou tutorial,
+  corrija.
+
+
+3.3 Skip link: pulando direto ao conteúdo
+Quem navega por teclado precisaria passar por todo o menu em cada página. O skip link resolve — é o primeiro elemento do <body> ,
+invisível até receber foco:
+
+  <body>
+    <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+    <header>...</header>
+    <main id="conteudo">...</main>
+
+  /* CSS */
+  .skip-link {
+    position: absolute;
+    top: -50px;              /* escondido acima da tela */
+    transition: top 0.2s;
+  }
+  .skip-link:focus { top: 0; } /* aparece ao receber foco via Tab */
+
+
+
+
+4. ARIA: quando o HTML não basta
+
+ARIA (Accessible Rich Internet Applications) é um conjunto de atributos que enriquece o que as tecnologias assistivas "enxergam": papéis
+( role ), nomes ( aria-label ) e estados ( aria-expanded ).
+
+  A PRIMEIRA REGRA DO ARIA
+  Não use ARIA se um elemento HTML nativo resolve. <button> já é focável, ativável por teclado e anunciado como botão; <div
+  role="button"> exige recriar tudo isso na mão — e quase sempre sai errado. ARIA ruim é pior que ARIA nenhum: ele mente para o
+  leitor de tela.
+
+
+4.1 Os atributos que você realmente vai usar
+
+ Atributo                         Função                                                  Exemplo
+
+ aria-label                       Nome acessível para elemento sem texto visível           <button aria-label="Fechar menu">✕</button>
+
+ aria-labelledby                  Nomeia usando o texto de outro elemento                  <section aria-labelledby="titulo-servicos">
+
+ aria-hidden="true"               Esconde do leitor de tela (decorativos)                  <svg aria-hidden="true">...</svg>
+
+ aria-expanded                    Estado aberto/fechado de menus e acordeões               <button aria-expanded="false">Menu</button>
+
+ aria-current="page"              Indica o item de navegação da página atual               <a href="index.html" aria-current="page">
+
+ role="img" + aria-label          SVG informativo (Aula 5)                                 <svg role="img" aria-label="Logo">
+
+
+4.2 Exemplo integrado: navegação acessível
+  <nav aria-label="Navegação principal">
+    <button class="menu-toggle" aria-expanded="false" aria-controls="menu">
+      <svg aria-hidden="true">...</svg>   <!-- ícone hambúrguer: decorativo -->
+      Menu                                 <!-- o texto dá o nome acessível -->
+    </button>
+    <ul id="menu">
+      <li><a href="index.html" aria-current="page">Início</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+    </ul>
+  </nav>
+
+
+Observação: alternar aria-expanded entre true / false no clique exige JavaScript — na Unidade 2 fecharemos esse ciclo. Os frameworks
+da Aula 4 (Bootstrap/Materialize) já fazem isso em seus componentes — inspecione a navbar no DevTools e observe os atributos mudando.
+
+
+5. Auditando o projeto: ferramentas e testes
+
+ Ferramenta/teste               Como usar                                                       O que pega
+
+ Lighthouse (no                 F12 → aba Lighthouse → categoria Accessibility →                Contraste, alt, labels, ARIA inválido — com nota 0-100
+ DevTools)                      Analyze
+
+ WAVE (wave.webaim.org)         Colar a URL do seu GitHub Pages                                 Erros e alertas sobrepostos visualmente na página
+
+ axe DevTools (extensão)        Instalar no Chrome/Firefox → aba axe no DevTools                Auditoria detalhada com instruções de correção
+
+ Teste de teclado               Manual: Tab / Shift+Tab / Enter                                 Foco invisível, elementos inalcançáveis, ordem
+                                                                                                quebrada
+
+ Leitor de tela                 NVDA (gratuito, Windows) ou o TalkBack do seu Android           A experiência real: navegue seu site de olhos fechados
+
+
+  VERDADE IMPORTANTE
+  Ferramentas automáticas detectam só 30-40% dos problemas de acessibilidade. Nota 100 no Lighthouse não significa site acessível
+  — significa que os erros detectáveis por máquina foram resolvidos. O teste de teclado e o leitor de tela são insubstituíveis.
+
+
+
+6. Checklist final da Avaliação 1 (entrega até 29/09, 23h59)
+
+1. HTML semântico: landmarks corretos, hierarquia de títulos, um <main> por página;
+2. Layout responsivo: usável no celular (DevTools modo dispositivo) sem rolagem horizontal;
+3. Framework CSS: aplicado de forma consistente, escolha justificada no README;
+4. Animação/SVG: microinterações, ao menos um @keyframes , SVGs inline com hover e prefers-reduced-motion ;
+5. Acessibilidade: Lighthouse ≥ 90, teste de teclado aprovado, contraste AA, alt /labels completos, skip link e ARIA onde couber.
+Entrega no SIGAA: link do repositório + link do site publicado no GitHub Pages.
+
+
+7. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Rodar o Lighthouse e o WAVE no seu site; registrar a nota inicial;
+2. Corrigir todos os erros apontados + executar o teste de teclado completo;
+3. Adicionar: skip link, aria-label na navegação, aria-current="page" , aria-hidden nos SVGs decorativos;
+4. Registrar no README.md : nota Lighthouse antes/depois e as 3 principais correções feitas;
+5. Finalizar e entregar a Avaliação 1 no SIGAA até 29/09, 23h59 (checklist da seção 6);
+6. Leitura dirigida (Biblioteca Virtual da UNEMAT): revisão de JavaScript em Queirós e Portela (camada de comportamento) —
+   preparação para a Unidade 2, que começa na próxima aula.
+
+  PRÓXIMA AULA (22/09) — INÍCIO DA UNIDADE 2
+  Revisão de JavaScript: objetos, funções, eventos e manipulação do HTML. O site estático que você acabou de entregar começa a
+  ganhar comportamento.
+
+
+
+8. Referências
+
+BRASIL. Lei nº 13.146, de 6 de julho de 2015 (Lei Brasileira de Inclusão da Pessoa com Deficiência), art. 63. Disponível em: planalto.gov.br. Acesso em: set.
+2026.
+
+W3C. Web Content Accessibility Guidelines (WCAG) 2.2. Disponível em: w3.org/TR/WCAG22. Acesso em: set. 2026.
+
+W3C. WAI-ARIA Authoring Practices Guide (APG). Disponível em: w3.org/WAI/ARIA/apg. Acesso em: set. 2026.
+MDN Web Docs. Acessibilidade; ARIA. Disponível em: developer.mozilla.org. Acesso em: set. 2026.
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web. Lisboa: FCA, 2018.
+WEBAIM. Contrast Checker; WAVE. Disponível em: webaim.org. Acesso em: set. 2026.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 6 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

@@ -1,0 +1,203 @@
+                                UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                     TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                Desenvolvimento Web
+                                             FACET-SNP-307 • 60h • Turma 01 • 2026/2
+           Aula 1 — Apresentação da Disciplina, Arquitetura Web, Ambiente de Desenvolvimento e Git
+                              Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 1: Web Estática
+
+
+
+
+1. Como esta disciplina funciona
+
+Esta disciplina adota aprendizagem baseada em projeto: você vai construir, de forma incremental, uma única aplicação web
+completa ao longo do semestre — da interface estática até o full-stack com autenticação. Cada unidade adiciona uma camada ao mesmo
+projeto:
+
+                                                                                                                                 Avaliação
+ Unidade                   Camada             Conteúdo
+                                                                                                                                 (SIGAA)
+
+ 1 — Web Estática          Interface           Arquitetura web, HTML semântico, CSS e frameworks, animação e SVG,                até 29/09,
+                                               acessibilidade e ARIA                                                             23h59
+
+ 2 — Web Dinâmica          Comportamento       JavaScript, DOM, callbacks, Promises e Async/Await, AJAX, JSON e SPA              até 27/10,
+ Client-Side                                                                                                                     23h59
+
+ 3 — Web Dinâmica          Servidor            Node.js e Express, rotas e controladores, autenticação Google (OAuth 2.0), CRUD   até 24/11,
+ Server-Side                                   com front-end assíncrono                                                          23h59
+
+Avaliação: três avaliações práticas e individuais (10,0 pontos cada), entregues como tarefa no SIGAA ao término de cada unidade,
+sempre sobre o mesmo projeto. Média final MF = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0;
+reprovação direta se MF < 4,0 ou frequência abaixo do mínimo.
+
+  ATENDIMENTO
+  Segundas-feiras, das 18h às 19h, com agendamento via e-mail: ivanpires@unemat.br
+
+
+  COMECE A PENSAR JÁ
+  Escolha o tema do seu projeto ainda esta semana: um site de portfólio, um catálogo de produtos, um sistema de eventos, uma página
+  para um negócio local... O tema é livre, mas será o mesmo até o fim do semestre. Traga a ideia na próxima aula.
+
+
+
+2. Arquitetura de uma aplicação Web
+
+2.1 O modelo cliente-servidor
+Toda a Web funciona sobre um modelo simples: um cliente (normalmente o navegador) faz requisições e um servidor devolve
+respostas. Quando você digita um endereço no navegador, acontece aproximadamente isto:
+1. O navegador resolve o nome do domínio para um endereço IP via DNS;
+2. Abre uma conexão com o servidor (TCP, geralmente com criptografia TLS/HTTPS);
+3. Envia uma requisição HTTP (ex.: GET /index.html );
+4. O servidor processa e devolve uma resposta HTTP: um código de status + cabeçalhos + o conteúdo (HTML, JSON, imagem...);
+5. O navegador interpreta e renderiza o HTML, baixando em seguida CSS, JavaScript, imagens e fontes referenciados na página.
+
+2.2 O protocolo HTTP
+HTTP (HyperText Transfer Protocol) é o idioma comum entre cliente e servidor. Os elementos que mais usaremos:
+
+ Método                Uso típico
+
+ GET                    Buscar um recurso (página, imagem, dados). Não altera nada no servidor.
+
+ POST                   Enviar dados para criar algo (formulário de cadastro, novo registro).
+
+ PUT / PATCH            Atualizar um recurso existente.
+
+ DELETE                 Remover um recurso.
+
+
+ Status                                                                                Significado
+
+ 200 OK                                                                                Deu certo.
+
+ 301/302                                                                               Redirecionamento.
+ 404 Not Found                                                                     Recurso não existe.
+
+ 500 Internal Server Error                                                         Erro no servidor.
+
+Anatomia de uma URL:         https://www.unemat.br/cursos/tads?campus=sinop#contato    → esquema (https), domínio (www.unemat.br),
+caminho (/cursos/tads), query string (?campus=sinop) e fragmento (#contato).
+
+2.3 Front-end, back-end e banco de dados
+Uma aplicação web moderna se organiza em três camadas — exatamente as três unidades da disciplina:
+   Front-end (executa no navegador): HTML define a estrutura, CSS a apresentação e JavaScript o comportamento;
+   Back-end (executa no servidor): recebe requisições, aplica regras de negócio, autentica usuários e monta respostas. Usaremos
+   Node.js + Express;
+   Banco de dados: persiste as informações. O back-end é o único que conversa com ele — o navegador nunca acessa o banco
+   diretamente.
+
+  SITE ESTÁTICO × APLICAÇÃO DINÂMICA
+  Um site estático devolve sempre os mesmos arquivos prontos (Unidade 1). Uma aplicação dinâmica monta a resposta sob
+  demanda, consultando dados e reagindo ao usuário (Unidades 2 e 3). Nosso projeto começa estático e ganha dinamismo camada por
+  camada.
+
+
+
+3. Ambiente de desenvolvimento
+
+Nesta semana, deixe sua máquina (do laboratório e, se possível, a pessoal) com o seguinte ambiente instalado:
+
+ Ferramenta               Para quê                                                                                     Onde obter
+
+ Visual Studio Code       Editor de código                                                                             code.visualstudio.com
+
+ Google Chrome ou         Navegador com DevTools                                                                       —
+ Firefox
+
+ Node.js (versão LTS)     Executar JavaScript fora do navegador (usaremos desde já para ferramentas e, na Unidade 3,   nodejs.org
+                          para o servidor)
+
+ Git                      Controle de versão do projeto                                                                git-scm.com
+
+Extensões recomendadas no VS Code: Live Server (servidor local com recarga automática), Prettier (formatação automática) e
+Portuguese (Brazil) Language Pack (opcional).
+
+3.1 DevTools: o raio-X do navegador
+Pressione F12 (ou clique com o botão direito → Inspecionar). As abas que mais usaremos:
+   Elements: inspecionar e editar HTML/CSS ao vivo;
+   Console: executar JavaScript e ver erros;
+   Network: ver cada requisição HTTP que a página faz — abra qualquer site e observe os métodos e códigos de status que estudamos
+   na seção 2.
+
+
+4. Git: controle de versão desde o dia 1
+
+O projeto da disciplina será versionado com Git desde a primeira linha de código. Git registra "fotografias" (commits) do seu projeto ao
+longo do tempo, permitindo voltar atrás, comparar versões e trabalhar com segurança.
+
+4.1 Configuração inicial (uma única vez)
+
+ git config --global user.name "Seu Nome"
+ git config --global user.email "seu@email.com"
+
+
+
+4.2 O ciclo básico
+
+ # 1. Criar o repositório na pasta do projeto
+ git init
+
+ # 2. Ver o que mudou
+ git status
+
+ # 3. Preparar arquivos para o commit (staging)
+ git add index.html        # um arquivo específico
+ git add .                 # tudo que mudou
+
+ # 4. Registrar a fotografia com uma mensagem descritiva
+ git commit -m "Cria estrutura inicial do site"
+  # 5. Ver o histórico
+  git log --oneline
+
+
+Os arquivos passam por três estados: modificado (working directory) → preparado (staging area, após git add ) → versionado
+(repositório, após git commit ).
+
+4.3 Publicando no GitHub
+
+  # Conectar o repositório local a um repositório remoto criado no GitHub
+  git remote add origin https://github.com/usuario/meu-projeto.git
+  git branch -M main
+  git push -u origin main
+
+  # Nos próximos envios, basta:
+  git push
+
+
+   BOAS PRÁTICAS DE COMMIT
+   Faça commits pequenos e frequentes, com mensagens no imperativo que expliquem o que a mudança faz: "Adiciona formulário de
+   contato", "Corrige menu no celular". Evite mensagens vazias como "alterações" ou "aula".
+
+
+
+5. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Preparar o ambiente: instalar VS Code, Node.js LTS e Git na sua máquina pessoal (ou validar no laboratório);
+2. Criar conta no GitHub (github.com) com e-mail que você acessa;
+3. Primeiro repositório: criar a pasta do projeto da disciplina, executar git init , criar um arquivo README.md com seu nome e o tema
+   pretendido do projeto, fazer o primeiro commit e publicar no GitHub;
+4. Entregar no SIGAA: o link do repositório;
+5. Leitura dirigida: capítulos introdutórios sobre arquitetura web na bibliografia básica (disponível na Biblioteca Virtual da UNEMAT) —
+   ver referências abaixo.
+
+
+6. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Capítulo introdutório: evolução e arquitetura da Web.
+
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Conceitos de cliente-servidor e planejamento de projetos web.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Capítulo 1: o fluxo de trabalho do desenvolvedor (editor,
+terminal e Git).
+MDN Web Docs. Visão geral do HTTP. Disponível em: developer.mozilla.org. Acesso em: ago. 2026.
+
+CHACON, Scott; STRAUB, Ben. Pro Git. 2. ed. Disponível gratuitamente em: git-scm.com/book/pt-br. Acesso em: ago. 2026.
+
+
+
+                             FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 1 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

@@ -1,0 +1,187 @@
+                                UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                     TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                               Desenvolvimento Web
+                                            FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                               Aula 9 — Promises e Async/Await: Programação Assíncrona
+                        Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 2: Web Dinâmica Client-Side
+
+
+
+
+1. Objetivos da aula
+
+   Entender por que o JavaScript é assíncrono e o que é o event loop (visão prática);
+   Criar e consumir Promises com .then() , .catch() e .finally() ;
+   Reescrever código assíncrono com async/await — a sintaxe que usaremos no restante do curso;
+   Tratar erros corretamente com try/catch ;
+   Executar operações em paralelo com Promise.all .
+
+  CONEXÃO COM A AULA ANTERIOR
+  Na Aula 8, o setTimeout mostrou que o JS "agenda e segue em frente". Hoje entendemos por que isso é necessário e conhecemos a
+  evolução do callback: a Promise. Na próxima aula, tudo isso se materializa no fetch — buscando dados de servidores reais.
+
+
+
+2. Por que o JavaScript não pode esperar
+
+O JavaScript do navegador roda em uma única thread — a mesma que desenha a tela e responde aos cliques. Se uma operação
+demorada (buscar dados na rede: 200ms a vários segundos) bloqueasse essa thread, a página inteira congelaria: sem rolagem, sem
+cliques, sem animação.
+A solução da plataforma: operações lentas são delegadas ao navegador, e o seu código registra o que fazer quando o resultado chegar.
+Esse é o modelo assíncrono:
+
+ console.log("1 — início");
+
+ setTimeout(() => console.log("3 — callback (depois)"), 0);      // mesmo com 0ms!
+
+ console.log("2 — fim do script");
+ // Saída: 1, 2, 3 — o callback SEMPRE espera o código síncrono terminar.
+
+
+O mecanismo que coordena isso é o event loop: uma fila de tarefas que o navegador processa quando a thread está livre. Não
+precisamos dominar seus detalhes internos — precisamos internalizar a consequência: código assíncrono não retorna o valor "na
+hora"; ele promete o valor para depois.
+
+
+3. Promises: o contrato de um valor futuro
+
+Uma Promise é um objeto que representa um valor que ainda não existe, mas existirá (ou falhará). Ela está sempre em um de três
+estados:
+
+ Estado                       Significado
+
+ pending                      Aguardando — a operação está em andamento.
+
+ fulfilled                    Resolvida — o valor chegou (dispara o .then ).
+
+ rejected                     Rejeitada — algo falhou (dispara o .catch ).
+
+
+3.1 Criando uma Promise (para entender o mecanismo)
+No dia a dia, quase sempre consumimos Promises criadas pelas APIs ( fetch , bancos de dados). Mas criar uma vez desmistifica:
+
+ function buscarProduto(id) {
+   return new Promise((resolve, reject) => {
+     setTimeout(() => {                       // simula a demora da rede
+       if (id === 1) {
+         resolve({ id: 1, nome: "Camiseta", preco: 49.9 });
+       } else {
+         reject(new Error(`Produto ${id} não encontrado`));
+       }
+     }, 1500);
+   });
+ }
+3.2 Consumindo com .then / .catch / .finally
+
+ buscarProduto(1)
+   .then(produto => {
+     console.log("Chegou:", produto.nome);
+     return buscarProduto(2);              // retornar outra Promise encadeia
+   })
+   .then(outro => console.log(outro.nome)) // só roda quando a anterior resolver
+   .catch(erro => console.error("Falhou:", erro.message)) // pega QUALQUER erro da cadeia
+   .finally(() => console.log("Fim — sucesso ou falha")); // sempre roda (ex.: esconder "carregando")
+
+
+Compare com o "callback hell" da aula passada: a cadeia de .then é plana, e um único .catch cobre todos os passos. Já é um avanço
+enorme — mas dá para ficar ainda mais legível.
+
+
+4. Async/Await: assíncrono com cara de síncrono
+
+async/await é açúcar sintático sobre Promises — mesmo mecanismo, sintaxe linear:
+
+     async antes de uma função faz com que ela sempre retorne uma Promise;
+     await (só dentro de funções async) pausa a função — não a página! — até a Promise resolver, e entrega o valor.
+
+
+ async function exibirProduto(id) {
+   try {
+     const produto = await buscarProduto(id);       // "espera" o valor
+     console.log("Chegou:", produto.nome);
+
+       const outro = await buscarProduto(2);        // sequência natural, sem aninhamento
+       console.log(outro.nome);
+     } catch (erro) {
+       console.error("Falhou:", erro.message);      // erros caem aqui, como código síncrono
+     } finally {
+       console.log("Fim — sucesso ou falha");
+     }
+ }
+
+ exibirProduto(1);
+
+
+  OS DOIS ERROS MAIS COMUNS DA TURMA
+  1) Esquecer o await: const p = buscarProduto(1); guarda a Promise, não o produto — e p.nome é undefined . 2) await fora de
+  função async: gera erro de sintaxe. Sempre que ver Promise { <pending> } no console, faltou um await .
+
+
+4.1 Padrão de interface: estados de carregamento
+Toda operação assíncrona na interface tem três momentos — carregando, sucesso, erro. Esse padrão será cobrado na SPA da Avaliação 2:
+
+ async function carregarCards() {
+   const status = document.querySelector("#status");
+   status.textContent = "Carregando...";           // 1. feedback imediato
+   try {
+     const dados = await buscarProdutos();
+     render(dados);                                 // 2. sucesso: render da Aula 8
+     status.textContent = "";
+   } catch (erro) {
+     status.textContent = "Erro ao carregar. Tente novamente."; // 3. falha
+   }
+ }
+
+
+
+
+5. Promise.all: esperando várias de uma vez
+
+await em sequência soma os tempos. Quando as operações são independentes, dispare todas e espere juntas:
+
+
+ // SEQUENCIAL: ~3s (1,5s + 1,5s)
+ const a = await buscarProduto(1);
+ const b = await buscarProduto(1);
+
+ // PARALELO: ~1,5s — as duas correm ao mesmo tempo
+ const [c, d] = await Promise.all([buscarProduto(1), buscarProduto(1)]);
+
+
+Promise.all rejeita se qualquer uma falhar; a variante Promise.allSettled espera todas e informa o resultado de cada uma — útil
+quando falhas parciais são aceitáveis.
+6. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Criar no projeto uma função buscarProdutos() que retorna uma Promise resolvendo seu array de itens (Aula 8) após um atraso
+   simulado de 1-2s com setTimeout ;
+2. Refatorar a inicialização dos cards para uma função async com o padrão completo da seção 4.1: mensagem "Carregando...",
+    try/catch e mensagem de erro amigável;
+3. Simular uma falha (rejeitar a Promise aleatoriamente em ~30% das vezes com Math.random() ) e verificar que a interface reage bem
+   nos dois cenários;
+4. Criar uma segunda função assíncrona (ex.: buscarCategorias() ) e carregar as duas em paralelo com Promise.all ;
+5. Commit + push e entregar o link no SIGAA;
+6. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, JavaScript assíncrono; MDN, "Using Promises" e "Fetch API" — o
+   fetch é o protagonista da próxima aula.
+
+  PRÓXIMA AULA (13/10)
+  AJAX, JSON e Single Page Application: o await que você dominou hoje vai buscar dados de APIs reais na internet — e os cards do
+  projeto passarão a nascer de um servidor.
+
+
+
+7. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— JavaScript assíncrono.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Fluxos assíncronos em aplicações de grande porte.
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014.
+
+MDN Web Docs. Asynchronous JavaScript; Using Promises; async function. Disponível em: developer.mozilla.org. Acesso em: out. 2026.
+ECMA INTERNATIONAL. ECMAScript Language Specification — Promise Objects. Disponível em: tc39.es/ecma262. Acesso em: out. 2026.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 9 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

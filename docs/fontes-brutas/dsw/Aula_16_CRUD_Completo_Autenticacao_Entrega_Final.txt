@@ -1,0 +1,184 @@
+                                 UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                      TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                Desenvolvimento Web
+                                              FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                  Aula 16 — CRUD Completo com Autenticação Google: Integração Final e Entrega
+           Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side (encerramento da disciplina)
+
+
+
+
+1. Objetivos da aula
+
+   Integrar as peças finais: CRUD completo + autenticação Google funcionando juntos de ponta a ponta;
+   Adicionar o refinamento profissional: cada registro tem dono, e só o dono edita ou exclui (autorização);
+   Executar o roteiro de auto-teste completo antes da entrega;
+   Revisar o checklist da Avaliação 3, critério por critério;
+   Enxergar os próximos passos da carreira full-stack a partir daqui.
+
+  PRAZO HOJE — ÚLTIMA ENTREGA DO SEMESTRE
+  A Avaliação 3 encerra hoje, 24/11, às 23h59, no SIGAA. Esta aula é dedicada à integração final e ao tira-dúvidas do projeto.
+  Critérios: rotas e controladores; autenticação Google; CRUD com persistência; integração com front-end assíncrono.
+
+
+
+2. A amarração final: autenticação + CRUD juntos
+
+Nas Aulas 14 e 15 construímos as duas metades: rotas protegidas por token e o CRUD com persistência. Hoje as unimos com o toque que
+falta em quase todo projeto de aula — e que diferencia os melhores: saber de quem é cada registro.
+
+2.1 Todo registro tem dono
+O middleware exigirLogin (Aula 14) já coloca os dados verificados do usuário em req.usuario . Basta usá-los ao criar:
+
+ // controllers/produtosController.js
+ exports.criar = async (req, res) => {
+   const { nome, preco, categoria } = req.body;
+   if (!nome || typeof preco !== "number") {
+     return res.status(400).json({ erro: "nome e preco são obrigatórios" });
+   }
+
+   const produtos = await repo.lerTodos();
+   const novo = {
+     id: produtos.length ? Math.max(...produtos.map(p => p.id)) + 1 : 1,
+     nome, preco, categoria: categoria ?? "geral",
+     dono: req.usuario.email,                 // vem do TOKEN verificado — não do body!
+     criadoEm: new Date().toISOString()
+   };
+   produtos.push(novo);
+   await repo.salvarTodos(produtos);
+   res.status(201).json(novo);
+ };
+
+
+  DETALHE DE SEGURANÇA QUE VALE NOTA
+  O dono vem de req.usuario.email (extraído do token verificado pelo servidor), nunca de req.body.dono . Se viesse do body, qualquer
+  cliente poderia se passar por outra pessoa — a mesma lição de sempre: nada que o cliente envia é confiável sem verificação.
+
+
+2.2 Autorização: só o dono altera (401 × 403)
+Autenticação responde "quem é você"; autorização responde "você pode fazer isso?". A diferença aparece nos status: 401 = não logado;
+403 = logado, mas sem permissão:
+
+ exports.atualizar = async (req, res) => {
+   const produtos = await repo.lerTodos();
+   const produto = produtos.find(p => p.id === Number(req.params.id));
+   if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
+
+   if (produto.dono !== req.usuario.email) {          // checagem de autorização
+     return res.status(403).json({ erro: "Você não é o dono deste registro" });
+   }
+
+   const { nome, preco, categoria } = req.body;
+   if (nome !== undefined) produto.nome = nome;
+   if (preco !== undefined) produto.preco = preco;
+    if (categoria !== undefined) produto.categoria = categoria;
+
+    await repo.salvarTodos(produtos);
+    res.json(produto);
+  };
+  // exports.remover: mesma checagem antes do splice
+
+
+2.3 A interface reage ao dono
+
+  // public/js/app.js — dentro do render():
+  const souDono = usuarioLogado && p.dono === usuarioLogado.email;
+
+  if (souDono) {                       // botões só para o dono (conforto, não segurança)
+    card.append(btnEditar, btnExcluir);
+  }
+
+  const autor = document.createElement("small");
+  autor.textContent = `por ${p.dono}`;
+  card.appendChild(autor);
+
+
+Com isso, o ciclo de confiança fecha: a interface orienta (mostra só o possível), e o servidor garante (403 para quem tentar burlar). Teste
+os dois caminhos no testes.http .
+
+
+3. Roteiro de auto-teste (execute antes de entregar)
+
+Simule a correção. Com o servidor rodando e o navegador em aba anônima:
+ 1. Visitante: abre o site → lista carrega (GET público) → botões de escrita ocultos → tenta POST direto via testes.http sem token → 401;
+ 2. Login: clica no botão do Google → nome e foto aparecem → formulário de criação visível;
+ 3. Create: cria um item → feedback de sucesso → item aparece na lista com seu e-mail como dono → status 201 no Network (F12);
+ 4. Read: busca e filtros (query string) funcionando; item inexistente → 404;
+ 5. Update: edita o item criado → mudança refletida sem recarregar a página;
+ 6. Delete: exclui com confirmação → some da lista → repetir o DELETE via testes.http → 404;
+ 7. Autorização: com um segundo Gmail (ou token de colega), tentar editar item alheio → 403;
+ 8. Persistência: derruba o servidor (Ctrl+C), sobe de novo → dados continuam lá;
+ 9. Validações: POST com corpo inválido → 400 com mensagem clara;
+10. Higiene do repositório: node_modules/ e .env fora do Git; npm install && npm run dev funciona numa pasta limpa.
+
+
+4. Checklist da Avaliação 3 (entrega até hoje, 23h59)
+
+                                                                                                                                     Construído
+  Critério do plano         O que será verificado
+                                                                                                                                     em
+
+  Rotas e controladores     Estrutura routes/ + controllers/ ; rotas REST enxutas apontando para controladores; middlewares          Aulas 12-13
+                            de 404 e erro
+
+  Autenticação Google       Botão funcional; verificação do token no servidor; rotas de escrita protegidas (401); segredos no .env   Aula 14
+
+  CRUD com persistência     Create/Read/Update/Delete completos; dados sobrevivem ao reinício; validação no servidor com             Aulas 13, 15
+                            status corretos (200/201/204/400/403/404)                                                                e hoje
+
+  Integração front-end      SPA consumindo a API com fetch + async/await; estados carregando/sucesso/erro; operações sem             Aulas 9-10,
+  assíncrono                recarregar a página                                                                                      15
+
+
+4.1 O que entregar no SIGAA
+ 1. Link do repositório da Unidade 3 (com o front em public/ );
+ 2. README.md profissional contendo: descrição do projeto e tema; instruções de execução ( npm install , configuração do .env com o
+    Client ID, npm run dev ); lista dos endpoints da API; e as decisões técnicas (framework CSS escolhido, estrutura de pastas);
+ 3. O arquivo testes.http versionado, cobrindo os cenários da seção 3.
+
+   SOBRE A MÉDIA E O EXAME
+   MF = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0 (prova teórica, individual, presencial e dissertativa
+   sobre todo o conteúdo — aprovação com nota ≥ 5,0); reprovação direta se MF < 4,0 ou frequência insuficiente. Data do exame
+   conforme calendário acadêmico — acompanhe o SIGAA.
+
+
+
+5. O que você construiu — e para onde ir agora
+
+Em 16 encontros, o mesmo projeto atravessou toda a pilha de uma aplicação web profissional: HTTP e Git (Aula 1) → HTML semântico e
+acessível (U1) → JavaScript, assincronia e SPA (U2) → API REST autenticada com persistência (U3). Esse é, literalmente, o esqueleto de
+qualquer sistema web do mercado.
+Caminhos naturais de evolução — bons projetos de férias e de portfólio:
+   Deploy real: publicar o servidor em plataformas com camada gratuita (Render, Railway, Fly.io) e apontar um domínio — seu projeto
+   sai do localhost;
+   Banco de dados de verdade: trocar o repositorio.js por PostgreSQL ou MongoDB — a arquitetura em camadas que adotamos
+   torna essa troca localizada;
+   Frameworks de front-end: React ou Vue automatizam o padrão estado → render que você implementou à mão — a melhor ordem:
+   entender o mecanismo (feito!) e só então adotar a ferramenta;
+   TypeScript: tipos sobre o JavaScript que você já domina, padrão crescente no mercado;
+   Portfólio: o repositório desta disciplina, com README caprichado e deploy no ar, já é peça de portfólio para estágios — trate-o como
+   cartão de visita.
+
+  ENCERRAMENTO
+  Obrigado pelo semestre! Dúvidas sobre a entrega de hoje: atendimento das 18h às 19h ou ivanpires@unemat.br . Bom exame a quem
+  precisar — e bons deploys a todos.
+
+
+
+6. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Visão global — releitura recomendada ao fim do curso.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Evoluindo a aplicação: código que cresce e prospera.
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014.
+GOOGLE. Google Identity Services. Disponível em: developers.google.com/identity. Acesso em: nov. 2026.
+MDN Web Docs. HTTP response status codes — 401, 403. Disponível em: developer.mozilla.org. Acesso em: nov. 2026.
+
+
+
+                            FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 16 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

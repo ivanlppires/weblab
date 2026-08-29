@@ -1,0 +1,284 @@
+                                UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                     TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                               Desenvolvimento Web
+                                             FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                         Aula 7 — Revisão de JavaScript: Objetos, Funções, Eventos e o DOM
+                         Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 2: Web Dinâmica Client-Side
+
+
+
+
+1. Objetivos da aula
+
+   Revisar a base do JavaScript moderno: variáveis, tipos, funções e objetos;
+   Entender como o JS entra na página e como depurá-lo no Console;
+   Manipular o DOM: selecionar, alterar e criar elementos;
+   Reagir a eventos do usuário com addEventListener ;
+   Implementar as primeiras interações reais no projeto — incluindo o menu hambúrguer acessível prometido na Aula 6.
+
+  INÍCIO DA UNIDADE 2 — WEB DINÂMICA CLIENT-SIDE
+  Seu site estático está pronto (Avaliação 1: entrega até 29/09, 23h59). A partir de hoje ele ganha comportamento: nas próximas aulas
+  veremos funções avançadas e callbacks, programação assíncrona e SPA — tudo desembocando na Avaliação 2 (até 27/10).
+
+
+
+2. JavaScript na página
+
+Vimos na Aula 2 que o JS mora em arquivo próprio ( js/app.js ), vinculado ao HTML. A forma moderna usa defer no <head> : o navegador
+baixa o script em paralelo e o executa somente após montar o DOM — assim seus seletores nunca encontram uma página pela
+metade:
+
+ <head>
+   ...
+   <script src="js/app.js" defer></script>
+ </head>
+
+
+Seu melhor amigo na Unidade 2 é o Console ( F12 → Console): erros aparecem ali (com arquivo e linha), e console.log(valor) permite
+inspecionar qualquer coisa durante a execução. Programe com o Console sempre aberto.
+
+
+3. Fundamentos essenciais (revisão relâmpago)
+
+3.1 Variáveis e tipos
+
+ const curso = "Desenvolvimento Web"; // não será reatribuída → const (padrão)
+ let nota = 8.5;                        // será reatribuída → let
+ // var: forma antiga, não usaremos (escopo problemático)
+
+ // Tipos primitivos principais:
+ typeof "texto"     // "string"
+ typeof 10.5        // "number" (inteiros e decimais são o mesmo tipo)
+ typeof true        // "boolean"
+ typeof undefined   // "undefined" (declarado sem valor)
+ let vazio = null; // null: ausência intencional de valor
+
+
+3.2 Strings modernas: template literals
+
+ const nome = "Maria";
+ const msg = `Olá, ${nome}! Sua nota é ${nota >= 6 ? "aprovado" : "exame"}.`;
+ // crase (`) permite interpolar ${expressões} e quebrar linha no texto
+
+
+3.3 Comparação: sempre com ===
+
+ 5 == "5"    // true → compara convertendo tipos (armadilha!)
+ 5 === "5"   // false → compara valor E tipo. Use sempre === e !==
+
+
+
+
+4. Funções: blocos de comportamento
+  // Declaração clássica
+  function calcularMedia(a1, a2, a3) {
+    return (a1 + a2 + a3) / 3;
+  }
+
+  // Função com parâmetro padrão
+  function saudar(nome = "visitante") {
+    return `Bem-vindo(a), ${nome}!`;
+  }
+
+  calcularMedia(8, 7, 9);    // 8
+  saudar();                  // "Bem-vindo(a), visitante!"
+
+
+Em JavaScript, funções são valores: podem ser guardadas em variáveis e passadas como argumento para outras funções. Essa ideia —
+que parece um detalhe — é a chave de tudo na próxima aula (callbacks e arrow functions) e de toda a programação assíncrona da
+Unidade 2. Você já vai usá-la hoje, no addEventListener .
+
+
+5. Objetos e arrays: organizando dados
+
+5.1 Objetos: pares chave-valor
+
+  const produto = {
+    nome: "Camiseta",
+    preco: 49.9,
+    emEstoque: true,
+    exibir() {                              // método: função dentro do objeto
+      return `${this.nome} — R$ ${this.preco.toFixed(2)}`;
+    }
+  };
+
+  produto.nome;              // "Camiseta" (notação de ponto)
+  produto["preco"];          // 49.9 (notação de colchetes)
+  produto.preco = 39.9;      // alterar
+  produto.categoria = "Vestuário"; // adicionar nova propriedade
+  produto.exibir();          // "Camiseta — R$ 39.90"
+
+
+  POR QUE OBJETOS IMPORTAM TANTO
+  Objetos são o formato universal de dados na Web: o DOM é um objeto, o evento que chega no clique é um objeto, e o JSON que
+  trafega entre navegador e servidor (aulas de AJAX e Express) é literalmente a notação de objetos do JavaScript. Dominar objetos
+  agora é investir nas duas próximas unidades.
+
+
+5.2 Arrays: listas ordenadas
+
+  const notas = [8, 7.5, 9, 6];
+  notas.length;        // 4
+  notas[0];            // 8 (índice começa em 0)
+  notas.push(10);      // adiciona ao final
+
+  // Percorrendo — forma moderna:
+  for (const n of notas) {
+    console.log(n);
+  }
+
+  // Array de objetos: o formato mais comum em aplicações reais
+  const carrinho = [
+    { nome: "Camiseta", preco: 49.9 },
+    { nome: "Boné", preco: 29.9 }
+  ];
+
+
+As operações poderosas de vetores ( map , filter , forEach ) são o tema central da próxima aula.
+
+
+6. DOM: o JavaScript encontra o HTML
+
+Na Aula 2 vimos que o navegador transforma o HTML no DOM — a página viva na memória. O JS enxerga esse DOM pelo objeto global
+document :
+
+
+6.1 Selecionando elementos
+
+  const titulo = document.querySelector("h1");          // primeiro que casa
+  const btn = document.querySelector("#btn-enviar");     // por id
+  const cards = document.querySelectorAll(".card");      // TODOS (NodeList)
+  // querySelector aceita qualquer seletor CSS — o conhecimento da Unidade 1 vale aqui
+6.2 Alterando conteúdo, atributos e estilo
+
+ titulo.textContent = "Novo título";            // texto puro (seguro)
+ titulo.innerHTML = "Novo <em>título</em>";     // interpreta HTML (cuidado!)
+
+ btn.setAttribute("aria-expanded", "true");     // atributos
+ btn.disabled = true;                           // propriedades diretas
+
+ // Estilo: prefira alternar CLASSES a estilos inline —
+ // o visual continua no CSS, o JS só liga/desliga estados:
+ card.classList.add("destaque");
+ card.classList.remove("oculto");
+ card.classList.toggle("aberto");     // adiciona se não tem, remove se tem
+
+
+  TEXTCONTENT × INNERHTML
+  Nunca use innerHTML com texto vindo do usuário (campo de formulário, URL): um valor como <script>...</script> seria interpretado
+  — a porta do ataque XSS. Para texto, textContent sempre. Voltaremos à segurança na Unidade 3.
+
+
+6.3 Criando elementos
+
+ const li = document.createElement("li");
+ li.textContent = "Novo item";
+ document.querySelector("#lista").appendChild(li);
+
+
+
+
+7. Eventos: reagindo ao usuário
+
+Evento é qualquer acontecimento na página: clique, tecla, envio de formulário, rolagem. O padrão profissional é addEventListener(tipo,
+função) — repare: passamos uma função como argumento (a ideia da seção 4 em ação):
+
+
+ const botao = document.querySelector("#btn-tema");
+
+ botao.addEventListener("click", function (evento) {
+   console.log(evento.target);        // o elemento clicado
+   document.body.classList.toggle("tema-escuro");
+ });
+
+
+ Evento                               Dispara quando...
+
+ click                                Clique/toque em um elemento.
+
+ submit                               Formulário é enviado (no <form> , não no botão).
+
+ input / change                       Valor de um campo muda (a cada tecla / ao concluir).
+
+ keydown                              Tecla pressionada (ex.: fechar menu com Esc).
+
+ DOMContentLoaded                     DOM terminou de montar (dispensável se usar defer ).
+
+
+7.1 Fechando o ciclo da Aula 6: menu hambúrguer acessível
+Na aula passada deixamos o aria-expanded estático. Agora completamos o componente:
+
+ // js/app.js
+ const toggle = document.querySelector(".menu-toggle");
+ const menu = document.querySelector("#menu");
+
+ toggle.addEventListener("click", function () {
+   const aberto = menu.classList.toggle("aberto");
+   toggle.setAttribute("aria-expanded", aberto);   // true/false sincronizado
+ });
+
+ document.addEventListener("keydown", function (e) {
+   if (e.key === "Escape" && menu.classList.contains("aberto")) {
+     menu.classList.remove("aberto");
+     toggle.setAttribute("aria-expanded", "false");
+     toggle.focus();                               // devolve o foco ao botão
+   }
+ });
+
+
+7.2 Interceptando o envio de formulário
+Prévia do que aprofundaremos na avaliação (critério "validação de formulários"):
+
+ const form = document.querySelector("#form-contato");
+
+ form.addEventListener("submit", function (e) {
+    e.preventDefault();                // impede o envio padrão (recarregar a página)
+    const nome = form.nome.value.trim();
+    if (nome === "") {
+      document.querySelector("#erro-nome").textContent = "Informe seu nome.";
+      form.nome.focus();
+      return;
+    }
+    console.log("Formulário válido — enviaremos via AJAX na aula de 13/10!");
+  });
+
+
+
+
+8. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Antes de tudo: entregar a Avaliação 1 no SIGAA até 29/09, 23h59 (checklist na apostila da Aula 6);
+2. Vincular o js/app.js com defer em todas as páginas do projeto;
+3. Implementar o menu hambúrguer funcional (seção 7.1) com aria-expanded sincronizado e fechamento por Esc — se seu framework
+   já traz o menu pronto, implemente no lugar um modo claro/escuro com classList.toggle ;
+4. Criar um array de objetos com os itens do seu projeto (produtos, serviços, posts...) e gerar os cards da página inicial via JavaScript
+   (createElement + appendChild), substituindo o HTML fixo;
+5. Adicionar ao formulário a validação de um campo com mensagem de erro via textContent (seção 7.2);
+6. Commit + push e entregar o link no SIGAA;
+7. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, camada de comportamento (JavaScript); MDN, "Building blocks:
+   Events".
+
+  PRÓXIMA AULA (29/09)
+  Funções em profundidade: arrow functions, callbacks e as operações de vetores ( map , filter , forEach ) — e o prazo final da
+  Avaliação 1 encerra às 23h59 desse dia.
+
+
+
+9. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Camada de comportamento: JavaScript.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — JavaScript e interatividade.
+
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Organização de código JavaScript.
+MDN Web Docs. JavaScript — primeiros passos; Introdução ao DOM; Introduction to events. Disponível em: developer.mozilla.org. Acesso em: set. 2026.
+
+ECMA INTERNATIONAL. ECMAScript Language Specification. Disponível em: tc39.es/ecma262. Acesso em: set. 2026.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 7 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

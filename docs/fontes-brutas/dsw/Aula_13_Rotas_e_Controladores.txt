@@ -1,0 +1,210 @@
+                                  UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                       TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                 Desenvolvimento Web
+                                              FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                    Aula 13 — Rotas e Controladores: API REST Completa
+                          Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side
+
+
+
+
+1. Objetivos da aula
+
+   Separar rota (endereço) de controlador (lógica) — o coração do padrão MVC no back-end;
+   Completar o CRUD da API: POST , PUT e DELETE juntam-se aos GET ;
+   Aplicar as convenções REST de nomenclatura de recursos;
+   Usar query strings para filtro e busca no servidor;
+   Deixar a API completa e organizada — critério "rotas e controladores" da Avaliação 3.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Na Aula 12 as rotas ganharam arquivo próprio, mas a lógica ainda mora dentro delas. Hoje damos o último passo da arquitetura: a
+  rota apenas aponta; quem faz é o controlador. A Avaliação 3 (até 24/11, 23h59) cobra exatamente essa organização.
+
+
+
+2. O padrão rotas + controladores (MVC no servidor)
+
+No padrão MVC (Model-View-Controller), cada camada tem um papel: o Model cuida dos dados, o Controller da lógica de cada operação,
+e a View da apresentação — que, na nossa arquitetura, é o front-end SPA da public/ consumindo JSON. A tradução para o nosso projeto:
+
+ Camada              Arquivo                                        Responsabilidade
+
+ Rota                 routes/produtos.js                            Mapear método + caminho → função do controlador. Nada mais.
+
+ Controlador          controllers/produtosController.js             Validar entrada, executar a operação, escolher status e resposta.
+
+ Dados (model)        data/produtos.js                              Acesso ao "banco" (em memória hoje; persistência na Aula 15).
+
+
+ api-projeto/
+ ├── public/
+ ├── routes/
+ │   └── produtos.js
+ ├── controllers/
+ │   └── produtosController.js
+ ├── data/
+ │   └── produtos.js
+ ├── server.js
+ └── package.json
+
+
+2.1 O controlador
+
+ // controllers/produtosController.js
+ const produtos = require("../data/produtos");
+ let proximoId = produtos.length + 1;
+
+ exports.listar = (req, res) => {
+   let resultado = produtos;
+
+   // Filtros via query string: /api/produtos?categoria=casa&busca=cane
+   const { categoria, busca } = req.query;
+   if (categoria) resultado = resultado.filter(p => p.categoria === categoria);
+   if (busca) resultado = resultado.filter(p =>
+     p.nome.toLowerCase().includes(busca.toLowerCase()));
+
+   res.json(resultado);
+ };
+
+ exports.obter = (req, res) => {
+   const produto = produtos.find(p => p.id === Number(req.params.id));
+   if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
+   res.json(produto);
+ };
+
+ exports.criar = (req, res) => {
+   const { nome, preco, categoria } = req.body;
+   if (!nome || typeof preco !== "number") {
+     return res.status(400).json({ erro: "nome e preco são obrigatórios" });
+   }
+   const novo = { id: proximoId++, nome, preco, categoria: categoria ?? "geral" };
+   produtos.push(novo);
+   res.status(201).json(novo);
+ };
+
+ exports.atualizar = (req, res) => {
+   const produto = produtos.find(p => p.id === Number(req.params.id));
+   if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
+
+    const { nome, preco, categoria } = req.body;
+    if (nome !== undefined) produto.nome = nome;
+    if (preco !== undefined) produto.preco = preco;
+    if (categoria !== undefined) produto.categoria = categoria;
+
+   res.json(produto);
+ };
+
+ exports.remover = (req, res) => {
+   const indice = produtos.findIndex(p => p.id === Number(req.params.id));
+   if (indice === -1) return res.status(404).json({ erro: "Produto não encontrado" });
+
+   produtos.splice(indice, 1);
+   res.status(204).end();                    // sucesso, sem corpo
+ };
+
+
+2.2 A rota — agora só um índice
+
+ // routes/produtos.js
+ const express = require("express");
+ const router = express.Router();
+ const ctrl = require("../controllers/produtosController");
+
+ router.get("/", ctrl.listar);
+ router.get("/:id", ctrl.obter);
+ router.post("/", ctrl.criar);
+ router.put("/:id", ctrl.atualizar);
+ router.delete("/:id", ctrl.remover);
+
+ module.exports = router;
+
+
+Leia o arquivo de rotas: ele virou a documentação da API — cinco linhas dizem tudo o que o recurso oferece. Esse é o ganho do padrão:
+navegabilidade, testabilidade e divisão de trabalho em equipe.
+
+
+3. REST: as convenções de nomes
+
+REST é o estilo arquitetural que padroniza como URLs e métodos HTTP expressam operações. As regras práticas:
+
+ Operação (CRUD)                         Método + URL                                        Sucesso
+
+ Listar (Read)                           GET /api/produtos                                   200 + array
+
+ Detalhar (Read)                         GET /api/produtos/7                                 200 + objeto
+
+ Criar (Create)                          POST /api/produtos                                  201 + objeto criado
+
+ Atualizar (Update)                      PUT /api/produtos/7                                 200 + objeto atualizado
+
+ Excluir (Delete)                        DELETE /api/produtos/7                              204 sem corpo
+
+   Recursos no plural e como substantivos: /produtos , /usuarios — nunca verbos ( /criarProduto é anti-padrão: o verbo já está no
+   método HTTP);
+   Parâmetro de rota ( /:id ) identifica qual recurso; query string ( ?categoria=casa ) refina como listar;
+   Aninhamento expressa relação: GET /api/usuarios/3/pedidos — pedidos do usuário 3.
+
+  DECISÃO DE PROJETO: FILTRO NO CLIENTE OU NO SERVIDOR?
+  Na Aula 8 filtramos com filter no navegador; hoje, com req.query , no servidor. Com poucos dados, tanto faz; com milhares de
+  registros, filtrar no servidor evita trafegar tudo. Nosso projeto manterá o filtro no servidor a partir de agora — o front só pede:
+   fetch(`/api/produtos?busca=${termo}`) .
+
+
+
+
+4. Testando o CRUD completo
+
+ ### testes.http
+  GET http://localhost:3000/api/produtos?categoria=casa
+
+  ### Atualizar
+  PUT http://localhost:3000/api/produtos/2
+  Content-Type: application/json
+
+  { "preco": 27.9 }
+
+  ### Excluir (deve devolver 204; repetir deve devolver 404)
+  DELETE http://localhost:3000/api/produtos/2
+
+
+Roteiro de teste que a banca da vida real faz: criar → listar (confere que apareceu) → atualizar → detalhar (confere a mudança) → excluir →
+detalhar de novo (confere o 404).
+
+
+5. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Refatorar o projeto para controllers/ + routes/ conforme a seção 2;
+2. Completar o CRUD do seu recurso principal: PUT e DELETE com os status corretos (200, 204, 400, 404);
+3. Implementar filtro e busca via query string no listar e apontar a busca do front-end (Aula 8) para o servidor;
+4. Criar um segundo recurso completo relacionado ao seu tema (ex.: categorias, clientes, eventos) com rota + controlador próprios;
+5. Atualizar o testes.http com o roteiro completo da seção 4 para os dois recursos;
+6. Commit + push e entregar o link no SIGAA;
+7. Leitura dirigida: expressjs.com — "Routing" (rotas com parâmetros); MDN, "Express Tutorial: Routes and controllers".
+
+  PRÓXIMA AULA (10/11)
+  Autenticação com Google (OAuth 2.0): sua aplicação ganha login de verdade — quem é o usuário, o que ele pode fazer, e como
+  proteger rotas da API. Crie antecipadamente uma conta no Google Cloud Console (console.cloud.google.com) com seu Gmail para
+  agilizar a prática.
+
+
+
+6. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— APIs REST.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Camadas e organização de lógica de negócio.
+
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Modelagem de operações de sistemas.
+EXPRESSJS. Routing. Disponível em: expressjs.com. Acesso em: nov. 2026.
+
+MDN Web Docs. Express Tutorial Part 4: Routes and controllers. Disponível em: developer.mozilla.org. Acesso em: nov. 2026.
+
+FIELDING, Roy T. Architectural Styles and the Design of Network-based Software Architectures (cap. 5 — REST). Tese (Doutorado) — University of
+California, Irvine, 2000.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 13 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

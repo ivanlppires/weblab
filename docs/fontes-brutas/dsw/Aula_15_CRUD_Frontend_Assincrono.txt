@@ -1,0 +1,255 @@
+                                UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                     TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                               Desenvolvimento Web
+                                            FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                        Aula 15 — CRUD com Front-end Assíncrono (AJAX SPA) e Persistência
+                        Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side
+
+
+
+
+1. Objetivos da aula
+
+   Integrar o CRUD completo na SPA: criar, editar e excluir itens pela interface, sem recarregar;
+   Adicionar persistência em arquivo JSON no servidor — os dados sobrevivem ao reinício;
+   Reutilizar um formulário para criar e editar (o padrão do "modo edição");
+   Implementar confirmação de exclusão, feedback de sucesso/erro e atualização da lista;
+   Deixar a aplicação a um passo da Avaliação 3 (falta só amarrar tudo com a autenticação, próxima aula).
+
+  CONEXÃO COM A AULA ANTERIOR
+  API com CRUD ✔ (Aula 13). Login Google e rotas protegidas ✔ (Aula 14). Hoje o usuário final ganha acesso a tudo isso pela interface:
+  a SPA da Unidade 2 encontra a API da Unidade 3 — o full-stack completo prometido na Aula 1.
+
+
+
+2. Persistência: os dados precisam sobreviver
+
+Até agora, reiniciar o servidor apaga tudo — o array vive na memória. A solução definitiva é um banco de dados (PostgreSQL, MySQL,
+MongoDB — disciplinas de BD); para o nosso projeto, um arquivo JSON demonstra o conceito de persistência com o que já sabemos:
+
+ // data/repositorio.js — camada de persistência (o "M" do MVC)
+ const fs = require("fs/promises");           // versão com Promises → async/await
+ const ARQUIVO = "./data/produtos.json";
+
+ async function lerTodos() {
+   try {
+     const texto = await fs.readFile(ARQUIVO, "utf-8");
+     return JSON.parse(texto);
+   } catch (e) {
+     if (e.code === "ENOENT") return [];       // arquivo ainda não existe
+     throw e;
+   }
+ }
+
+ async function salvarTodos(lista) {
+   await fs.writeFile(ARQUIVO, JSON.stringify(lista, null, 2));
+ }
+
+ module.exports = { lerTodos, salvarTodos };
+
+
+Os controladores (Aula 13) passam a ser async e a usar o repositório:
+
+ // controllers/produtosController.js (trechos)
+ const repo = require("../data/repositorio");
+
+ exports.listar = async (req, res) => {
+   const produtos = await repo.lerTodos();
+   // ...filtros de query string como antes...
+   res.json(produtos);
+ };
+
+ exports.criar = async (req, res) => {
+   const { nome, preco, categoria } = req.body;
+   if (!nome || typeof preco !== "number") {
+     return res.status(400).json({ erro: "nome e preco são obrigatórios" });
+   }
+   const produtos = await repo.lerTodos();
+   const novo = {
+     id: produtos.length ? Math.max(...produtos.map(p => p.id)) + 1 : 1,
+     nome, preco, categoria: categoria ?? "geral"
+   };
+   produtos.push(novo);
+   await repo.salvarTodos(produtos);
+   res.status(201).json(novo);
+ };
+Repare na elegância da arquitetura em camadas: rotas e front-end não mudam nada — trocamos só o miolo. Migrar depois para um
+banco real será trocar o repositorio.js .
+
+
+3. O front-end do CRUD
+
+3.1 Uma camada de API no cliente
+Centralize as chamadas num módulo — inclusive o token da Aula 14 — em vez de espalhar fetch pelo código:
+
+  // public/js/api.js
+  async function requisitar(url, opcoes = {}) {
+    const cabecalhos = { "Content-Type": "application/json" };
+    if (tokenGoogle) cabecalhos["Authorization"] = `Bearer ${tokenGoogle}`;
+
+      const resp = await fetch(url, { ...opcoes, headers: cabecalhos });
+      if (resp.status === 401) throw new Error("Faça login para continuar");
+      if (!resp.ok) {
+        const corpo = await resp.json().catch(() => ({}));
+        throw new Error(corpo.erro || `Erro HTTP ${resp.status}`);
+      }
+      return resp.status === 204 ? null : resp.json();
+  }
+
+  const api = {
+    listar:    (filtros = "") => requisitar(`/api/produtos${filtros}`),
+    criar:     (dados) => requisitar("/api/produtos", { method: "POST", body: JSON.stringify(dados) }),
+    atualizar: (id, dados) => requisitar(`/api/produtos/${id}`, { method: "PUT", body: JSON.stringify(dados) }),
+    remover:   (id) => requisitar(`/api/produtos/${id}`, { method: "DELETE" })
+  };
+
+
+
+3.2 Formulário único para criar E editar
+O padrão profissional: um único formulário com um campo oculto de id . Vazio = criando; preenchido = editando.
+
+  <form id="form-produto">
+    <input type="hidden" name="id">
+    <label for="nome">Nome</label>
+    <input id="nome" name="nome" required>
+    <label for="preco">Preço</label>
+    <input id="preco" name="preco" type="number" step="0.01" min="0" required>
+    <button type="submit" id="btn-salvar">Adicionar</button>
+    <button type="button" id="btn-cancelar" hidden>Cancelar</button>
+  </form>
+  <p id="feedback" role="status" aria-live="polite"></p>
+
+
+
+  // public/js/app.js
+  const form = document.querySelector("#form-produto");
+  const feedback = document.querySelector("#feedback");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = form.id.value;
+    const dados = { nome: form.nome.value.trim(), preco: Number(form.preco.value) };
+
+    try {
+      if (id) {
+        await api.atualizar(id, dados);
+        feedback.textContent = "Produto atualizado!";
+      } else {
+        await api.criar(dados);
+        feedback.textContent = "Produto criado!";
+      }
+      sairDoModoEdicao();
+      await recarregarLista();                // re-busca e re-renderiza
+    } catch (erro) {
+      feedback.textContent = erro.message;    // inclui o "Faça login" do 401
+    }
+  });
+
+  function entrarEmModoEdicao(produto) {
+    form.id.value = produto.id;
+    form.nome.value = produto.nome;
+    form.preco.value = produto.preco;
+    document.querySelector("#btn-salvar").textContent = "Salvar alterações";
+    document.querySelector("#btn-cancelar").hidden = false;
+    form.nome.focus();
+  }
+
+  function sairDoModoEdicao() {
+     form.reset();
+     document.querySelector("#btn-salvar").textContent = "Adicionar";
+     document.querySelector("#btn-cancelar").hidden = true;
+ }
+
+
+
+3.3 Botões de editar e excluir em cada card
+
+ function render(lista) {
+   container.innerHTML = "";
+   lista.forEach(p => {
+     const card = document.createElement("article");
+     card.className = "card";
+
+       const h3 = document.createElement("h3");
+       h3.textContent = p.nome;
+       const preco = document.createElement("p");
+       preco.textContent = `R$ ${p.preco.toFixed(2)}`;
+
+       const btnEditar = document.createElement("button");
+       btnEditar.textContent = "Editar";
+       btnEditar.addEventListener("click", () => entrarEmModoEdicao(p));
+
+       const btnExcluir = document.createElement("button");
+       btnExcluir.textContent = "Excluir";
+       btnExcluir.addEventListener("click", async () => {
+         if (!confirm(`Excluir "${p.nome}"?`)) return;   // confirmação simples
+         try {
+           await api.remover(p.id);
+           feedback.textContent = "Produto excluído.";
+           await recarregarLista();
+         } catch (erro) {
+           feedback.textContent = erro.message;
+         }
+       });
+
+       card.append(h3, preco, btnEditar, btnExcluir);
+       container.appendChild(card);
+     });
+ }
+
+
+  DETALHES QUE SEPARAM TRABALHO BOM DE EXCELENTE
+  1) O <p role="status" aria-live="polite"> faz o leitor de tela anunciar o feedback — acessibilidade (Aula 6) valendo no full-stack. 2)
+  Exibir os botões Editar/Excluir somente com usuário logado melhora a experiência — mas lembre: quem protege é o middleware
+  do servidor (Aula 14); a interface só evita frustração. 3) Após excluir, se a lista ficar vazia, mostre o estado vazio da Aula 8.
+
+
+
+4. O fluxo completo, de ponta a ponta
+
+Vale contemplar o que a turma construiu — cada requisição de "Salvar" percorre:
+1. HTML/CSS (U1): formulário semântico, acessível e estilizado;
+2. JS Client-side (U2): validação, preventDefault , fetch com async/await e token no cabeçalho;
+3. HTTP (Aula 1): POST /api/produtos com corpo JSON;
+4. Express (U3): middlewares (json → log → exigirLogin) → rota → controlador;
+5. Verificação Google (Aula 14): assinatura do token conferida;
+6. Persistência (hoje): validação no servidor, gravação no JSON, resposta 201;
+7. De volta ao front: feedback anunciado, lista re-renderizada.
+
+
+5. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Migrar a API para a persistência em arquivo (seção 2) — controladores async com o repositório;
+2. Implementar na SPA o CRUD completo: formulário criar/editar (modo edição), exclusão com confirmação, feedback com aria-live e
+     recarga da lista após cada operação;
+3. Ocultar os controles de escrita para visitantes não logados (mantendo a proteção real no servidor);
+4. Testar o ciclo completo: login → criar → editar → excluir → reiniciar o servidor → conferir que os dados persistiram;
+5. Commit + push e entregar o link no SIGAA;
+6. Preparar a Avaliação 3 (entrega até 24/11, 23h59) — critérios: rotas e controladores; autenticação Google; CRUD com persistência;
+   integração com front-end assíncrono. Traga dúvidas para a próxima aula: ela é dedicada ao fechamento;
+7. Leitura dirigida: MDN, "Express Tutorial: Using a Database" (visão do próximo passo além do JSON); revisão geral da bibliografia para
+     o conteúdo do exame final, se necessário.
+
+  PRÓXIMA AULA (24/11) — ÚLTIMA DO SEMESTRE
+  CRUD completo com autenticação via Google: aula de integração final, ajustes e tira-dúvidas do projeto. Às 23h59 encerra a
+  Avaliação 3 — e, com ela, o projeto que você construiu camada por camada desde 11 de agosto.
+
+
+
+6. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Integração front-end e back-end.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Camada de dados e aplicações completas.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Aplicação completa com Node.js.
+
+OPENJS FOUNDATION. Node.js — File system (fs/promises). Disponível em: nodejs.org/docs. Acesso em: nov. 2026.
+MDN Web Docs. Express Tutorial; ARIA live regions. Disponível em: developer.mozilla.org. Acesso em: nov. 2026.
+
+
+
+                            FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 15 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

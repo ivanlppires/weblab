@@ -1,0 +1,245 @@
+      10 projetos para                                                Um roteiro
+                                                                      progressivo de
+      aprender                                                        projetos,
+                                                                      competências e
+      HTML, CSS e                                                     fontes de estudo
+                                                                      para transformar
+      JavaScript                                                      fundamentos em
+      na prática                                                      aplicações reais.
+
+
+
+
+Do primeiro layout responsivo à integração com APIs
+Material de apoio para aulas, estudos orientados e definição de trabalhos práticos.
+ Como utilizar este roteiro
+ Os projetos estão organizados em uma sequência de complexidade crescente. Cada proposta pode ser
+ desenvolvida inicialmente com três arquivos - index.html, style.css e script.js - sem frameworks e sem
+ backend.
+
+ O objetivo não é apenas reproduzir uma interface. Em cada projeto, os estudantes devem
+ compreender o problema, modelar os dados, implementar as regras e explicar suas decisões.
+
+
+      ETAPA                 PROJETOS   FOCO PRINCIPAL
+
+
+      Fundamentos           1e2        HTML semântico, CSS, layouts e responsividade
+
+
+      Interatividade        3a5        DOM, eventos, funções, condições, arrays e objetos
+
+
+      Aplicações            6a9        Formulários, CRUD, regras de negócio e localStorage
+
+
+      Integração            10         JSON, fetch, async/await e tratamento de erros
+
+
+
+ Sugestão de entrega
+ Solicite uma versão mínima funcional e uma evolução escolhida pelo estudante. A entrega pode incluir
+ o código-fonte, uma demonstração de três minutos e um texto curto explicando estrutura HTML,
+ estratégia de CSS e lógica JavaScript.
+
+
+
+
+HTML + CSS + JavaScript na prática                                                               Página 2
+ 1. Página de perfil profissional
+ Nível: Iniciante
+
+ Caso: Apresentação, formação, habilidades, projetos e contatos.
+
+ Práticas: HTML semântico; imagens e links; tipografia; cores; Flexbox; responsividade.
+
+ Evolução: Adicionar alternância entre tema claro e escuro e salvar a preferência.
+
+
+ 2. Cardápio digital de restaurante
+ Nível: Iniciante
+
+ Caso: Produtos organizados por categorias, com descrição, imagem e preço.
+
+ Práticas: Seções; cards; CSS Grid; design responsivo; eventos de clique; filtros.
+
+ Evolução: Criar busca por nome, filtro por categoria e marcação de favoritos.
+
+
+ 3. Lista de tarefas
+ Nível: Iniciante/intermediário
+
+ Caso: Cadastro e acompanhamento de tarefas pessoais ou acadêmicas.
+
+ Práticas: Formulários; DOM; eventos; arrays; classes CSS; validação.
+
+ Evolução: Permitir concluir, editar e excluir tarefas e persistir tudo em localStorage.
+
+
+ 4. Calculadora de notas acadêmicas
+ Nível: Iniciante/intermediário
+
+ Caso: Cálculo de médias simples ou ponderadas e situação do estudante.
+
+ Práticas: Inputs numéricos; funções; operadores; condicionais; validação; feedback visual.
+
+ Evolução: Trabalhar com várias disciplinas e gerar um resumo do desempenho.
+
+
+
+
+HTML + CSS + JavaScript na prática                                                            Página 3
+ 5. Quiz de conhecimentos
+ Nível: Intermediário
+
+ Caso: Perguntas de múltipla escolha com correção e resultado final.
+
+ Práticas: Objetos e arrays; DOM; eventos; estado da aplicação; funções.
+
+ Evolução: Adicionar cronômetro, ordem aleatória, revisão das respostas e ranking local.
+
+
+ 6. Sistema de cadastro de eventos
+ Nível: Intermediário
+
+ Caso: Agenda com título, data, horário, local e descrição.
+
+ Práticas: Formulários; datas; objetos; renderização dinâmica; filtros; CRUD no navegador.
+
+ Evolução: Editar e excluir eventos, destacar os próximos e persistir em localStorage.
+
+
+ 7. Catálogo de produtos com carrinho
+ Nível: Intermediário
+
+ Caso: Vitrine de produtos e simulação do processo de compra.
+
+ Práticas: Grid responsivo; arrays; objetos; eventos; cálculos; atualização do DOM.
+
+ Evolução: Alterar quantidades, remover itens, calcular total e aplicar cupom.
+
+
+ 8. Controle de despesas pessoais
+ Nível: Intermediário/avançado
+
+ Caso: Registro de receitas, despesas, categorias e saldo.
+
+ Práticas: Formulários; datas; filtros; reduce; formatação monetária; armazenamento local.
+
+ Evolução: Exibir resumo mensal, limites por categoria e gráfico de distribuição.
+
+
+
+
+HTML + CSS + JavaScript na prática                                                           Página 4
+ 9. Sistema de reservas de equipamentos
+ Nível: Avançado
+
+ Caso: Reserva, retirada e devolução de equipamentos compartilhados.
+
+ Práticas: Regras de negócio; validação de datas; estados; objetos; filtros; persistência.
+
+ Evolução: Impedir conflitos de horário e registrar histórico de movimentações.
+
+
+ 10. Painel com dados de uma API pública
+ Nível: Avançado
+
+ Caso: Consulta e apresentação de dados de CEP, países, clima ou Pokémon.
+
+ Práticas: fetch; async/await; JSON; loading; tratamento de erros; componentes visuais.
+
+ Evolução: Criar favoritos, cache local, paginação e comparação entre resultados.
+
+
+
+
+HTML + CSS + JavaScript na prática                                                           Página 5
+ Onde aprender
+ Os links abaixo foram selecionados por reunirem documentação confiável, exemplos executáveis e
+ percursos adequados para iniciantes. Clique no endereço no leitor de PDF.
+
+
+ MDN - Aprendendo desenvolvimento web
+ Curso estruturado em português, do primeiro site até HTML, CSS e JavaScript.
+   https://developer.mozilla.org/pt-BR/docs/Learn_web_development
+
+
+ MDN - Introdução à Web
+ Percurso curto para preparar o ambiente e construir o primeiro site.
+   https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Getting_started/Your_first_website
+
+
+ MDN - Primeiros passos com JavaScript
+ Fundamentos da linguagem, com guias e avaliações.
+   https://developer.mozilla.org/pt-BR/docs/Learn_web_development/Core/Scripting
+
+
+ freeCodeCamp em português
+ Exercícios progressivos de JavaScript, variáveis, arrays, objetos, laços e funções.
+   https://www.freecodecamp.org/portuguese/learn/javascript-algorithms-and-data-structures
+
+
+ JavaScript.info
+ Tutorial detalhado sobre JavaScript, DOM, eventos, formulários e programação assíncrona.
+   https://javascript.info/
+
+
+ W3Schools - HTML e CSS
+ Exemplos curtos e editor online para testar cada conceito.
+   https://www.w3schools.com/htmlcss/
+
+
+ W3Schools - JavaScript
+ Referência introdutória com exemplos executáveis e exercícios.
+   https://www.w3schools.com/js/
+
+
+ W3Schools - How To
+ Receitas práticas de componentes como cards, formulários, filtros e listas.
+   https://www.w3schools.com/howto/
+
+
+
+
+HTML + CSS + JavaScript na prática                                                                     Página 6
+ Critérios sugeridos de avaliação
+      CRITÉRIO                       PESO   O QUE OBSERVAR
+
+
+      Estrutura HTML                 20%    Semântica, organização, formulários e acessibilidade básica
+
+
+      CSS e responsividade           20%    Legibilidade, consistência visual, layout e adaptação a telas
+
+
+      JavaScript                     30%    Corretude, funções, eventos, manipulação do DOM e clareza
+
+
+      Regras e validações            15%    Tratamento de entradas, estados e situações inválidas
+
+
+      Usabilidade                    10%    Fluxo compreensível, feedback e prevenção de erros
+
+
+      Apresentação                   5%     Demonstração, explicação das decisões e organização do código
+
+
+
+
+ Projeto integrador recomendado
+ O sistema de reservas de equipamentos é uma excelente proposta final. Ele combina um problema
+ real, interface responsiva, formulários, regras de negócio, manipulação do DOM e persistência.
+ Também abre caminho para uma evolução futura com autenticação, API e banco de dados.
+
+
+ Desafio final
+ O estudante deve escolher um contexto real - laboratório, biblioteca, escola ou empresa - entrevistar
+ ao menos um usuário potencial e adaptar o sistema às regras encontradas. Assim, o exercício deixa de
+ ser apenas técnico e passa a desenvolver análise de problemas e construção de soluções.
+
+
+
+
+HTML + CSS + JavaScript na prática                                                                          Página 7
+

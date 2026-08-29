@@ -1,0 +1,220 @@
+                                 UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                      TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                Desenvolvimento Web
+                                             FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                           Aula 14 — Autenticação com Google (OAuth 2.0): Front e Back-end
+                         Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side
+
+
+
+
+1. Objetivos da aula
+
+   Diferenciar autenticação (quem é você) de autorização (o que você pode fazer);
+   Entender por que delegar o login ao Google (OAuth 2.0 / OpenID Connect) em vez de guardar senhas;
+   Configurar o projeto no Google Cloud Console e obter o Client ID;
+   Implementar o fluxo completo: botão do Google no front + verificação do token no back;
+   Proteger rotas da API com middleware de autenticação — critério "autenticação Google" da Avaliação 3.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Sua API faz CRUD completo — mas qualquer pessoa pode criar e excluir produtos. Hoje resolvemos a pergunta que toda aplicação
+  real enfrenta: quem está fazendo esta requisição?
+
+
+
+2. Autenticação sem senha própria: por quê?
+
+Guardar senhas dos usuários é uma responsabilidade enorme: hash com algoritmos corretos, proteção contra vazamentos, fluxo de
+"esqueci a senha", detecção de invasão... Errar qualquer etapa expõe os usuários — que reutilizam senhas em todo lugar.
+A alternativa adotada pela indústria: delegar a autenticação a um provedor de identidade que já resolve isso em escala — Google,
+Microsoft, Apple, GitHub. É o "Entrar com Google" que você usa todo dia. Os protocolos por trás:
+   OAuth 2.0: protocolo de autorização delegada — um app acessa recursos em nome do usuário sem conhecer sua senha;
+   OpenID Connect (OIDC): camada de identidade sobre o OAuth 2.0 — devolve um ID Token assinado com os dados do usuário
+   (nome, e-mail, foto). É o que usaremos.
+
+2.1 O fluxo que vamos implementar (Google Identity Services)
+1. O front exibe o botão do Google; o usuário clica e faz login no Google (nunca no nosso site);
+2. O Google devolve ao nosso front um ID Token — um JWT (JSON Web Token): três blocos codificados (cabeçalho.dados.assinatura) que
+   o Google assina digitalmente;
+3. O front envia esse token ao nosso back-end;
+4. O back verifica a assinatura com a biblioteca oficial do Google. Assinatura válida = o Google garante: "este usuário é quem diz ser";
+5. O back cria a sessão do usuário e passa a exigir o token nas rotas protegidas.
+
+  O PRINCÍPIO INEGOCIÁVEL
+  O front-end nunca é confiável (a mesma lição da validação, Aula 12). Esconder um botão no HTML não protege nada: a proteção
+  real é o servidor verificar o token em toda requisição sensível. Verificação de assinatura acontece no back — sempre.
+
+
+
+3. Configurando o Google Cloud Console
+
+1. Acesse console.cloud.google.com com seu Gmail e crie um projeto (ex.: "projeto-web-unemat");
+2. Em APIs e serviços → Tela de permissão OAuth: tipo Externo, preencha nome do app e e-mail;
+3. Em Credenciais → Criar credenciais → ID do cliente OAuth: tipo Aplicativo da Web;
+4. Em Origens JavaScript autorizadas, adicione http://localhost:3000 ;
+5. Copie o Client ID (formato 1234...apps.googleusercontent.com ).
+Instale a biblioteca de verificação e organize os segredos:
+
+  npm install google-auth-library
+
+  # .env (SEGREDOS — adicione .env ao .gitignore JÁ!)
+  GOOGLE_CLIENT_ID=1234...apps.googleusercontent.com
+
+
+  SEGREDOS NUNCA VÃO PARA O GIT
+  Client IDs, chaves de API e senhas de banco vivem em variáveis de ambiente (arquivo .env , lido com process.env — no Node 22,
+  rode com node --env-file=.env server.js ). Um segredo commitado no GitHub é considerado vazado para sempre, mesmo que você
+  apague depois: o histórico do Git preserva tudo.
+
+
+
+4. Front-end: o botão do Google
+
+ <!-- public/index.html -->
+ <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+ <div id="g_id_onload"
+      data-client_id="SEU_CLIENT_ID_AQUI"
+      data-callback="aoLogar"></div>
+ <div class="g_id_signin" data-type="standard" data-locale="pt-BR"></div>
+
+ <div id="area-usuario" hidden>
+   <img id="foto-usuario" alt="Foto do usuário">
+   <span id="nome-usuario"></span>
+   <button id="sair">Sair</button>
+ </div>
+
+
+
+ // public/js/auth.js
+ let tokenGoogle = null;                // guardado em memória durante a sessão
+
+ // chamado pelo Google após o login (o nome casa com data-callback)
+ async function aoLogar(resposta) {
+   tokenGoogle = resposta.credential; // o ID Token (JWT)
+
+   const r = await fetch("/api/auth/google", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ token: tokenGoogle })
+   });
+   if (!r.ok) { alert("Falha no login"); return; }
+
+   const usuario = await r.json();     // dados verificados PELO SERVIDOR
+   document.querySelector("#nome-usuario").textContent = usuario.nome;
+   document.querySelector("#foto-usuario").src = usuario.foto;
+   document.querySelector("#area-usuario").hidden = false;
+ }
+ window.aoLogar = aoLogar;              // expõe o callback globalmente
+
+
+
+
+5. Back-end: verificando o token
+
+ // controllers/authController.js
+ const { OAuth2Client } = require("google-auth-library");
+ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+ exports.loginGoogle = async (req, res) => {
+   try {
+     const { token } = req.body;
+
+     const ticket = await client.verifyIdToken({     // verifica a ASSINATURA
+       idToken: token,
+       audience: process.env.GOOGLE_CLIENT_ID        // token emitido para o NOSSO app?
+     });
+
+     const dados = ticket.getPayload();              // dados confiáveis do usuário
+     res.json({ nome: dados.name, email: dados.email, foto: dados.picture });
+   } catch (e) {
+     res.status(401).json({ erro: "Token inválido" });
+   }
+ };
+
+
+
+5.1 Middleware de proteção: exigindo login nas rotas
+A peça que junta tudo — um middleware (Aula 12) que barra requisições sem token válido:
+
+ // middlewares/exigirLogin.js
+ const { OAuth2Client } = require("google-auth-library");
+ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+ module.exports = async function exigirLogin(req, res, next) {
+   const cabecalho = req.headers.authorization;          // "Bearer eyJhbG..."
+   if (!cabecalho?.startsWith("Bearer ")) {
+     return res.status(401).json({ erro: "Login necessário" });
+   }
+
+   try {
+      const ticket = await client.verifyIdToken({
+        idToken: cabecalho.slice(7),
+        audience: process.env.GOOGLE_CLIENT_ID
+      });
+      req.usuario = ticket.getPayload();                  // controladores acessam req.usuario
+      next();
+    } catch {
+      res.status(401).json({ erro: "Token inválido ou expirado" });
+    }
+  };
+
+  // routes/produtos.js — leitura pública, escrita protegida:
+  const exigirLogin = require("../middlewares/exigirLogin");
+
+  router.get("/", ctrl.listar);                    // aberta
+  router.post("/", exigirLogin, ctrl.criar);       // exige login
+  router.put("/:id", exigirLogin, ctrl.atualizar);
+  router.delete("/:id", exigirLogin, ctrl.remover);
+
+
+E no front, toda escrita passa a enviar o token no cabeçalho:
+
+  await fetch("/api/produtos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${tokenGoogle}`
+    },
+    body: JSON.stringify(novoProduto)
+  });
+
+
+
+
+6. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Criar o projeto no Google Cloud Console e obter o Client ID (seção 3), com .env no .gitignore ;
+2. Implementar o botão de login no front e o endpoint POST /api/auth/google no back (seções 4 e 5);
+3. Exibir nome e foto do usuário logado na interface (e ocultar o botão de login);
+4. Proteger as rotas de escrita ( POST/PUT/DELETE ) com o middleware exigirLogin , mantendo os GET públicos;
+5. Testar os dois cenários no testes.http : escrita sem token (deve dar 401) e leitura sem token (deve funcionar);
+6. Commit + push (confirme que o .env NÃO subiu) e entregar o link no SIGAA;
+7. Leitura dirigida: Google Identity — "Verify the Google ID token on your server side"; Queirós e Portela, segurança em aplicações web.
+
+  PRÓXIMA AULA (17/11)
+  CRUD com front-end assíncrono: a SPA ganha as telas de criar, editar e excluir consumindo a API protegida — a penúltima peça da
+  Avaliação 3 (entrega até 24/11, 23h59).
+
+
+
+7. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Segurança e autenticação.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Segurança em aplicações de grande porte.
+
+GOOGLE. Google Identity Services — Sign In With Google; Verify the Google ID token. Disponível em: developers.google.com/identity. Acesso em: nov.
+2026.
+
+IETF. RFC 6749 — The OAuth 2.0 Authorization Framework; RFC 7519 — JSON Web Token (JWT). Disponível em: datatracker.ietf.org. Acesso em: nov.
+2026.
+
+OPENID FOUNDATION. OpenID Connect Core 1.0. Disponível em: openid.net/specs. Acesso em: nov. 2026.
+
+
+
+                              FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 14 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

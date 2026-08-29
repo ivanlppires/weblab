@@ -1,0 +1,235 @@
+                                  UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                       TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                  Desenvolvimento Web
+                                                FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                            Aula 5 — Trabalhando com Animação e SVG
+                              Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 1: Web Estática
+
+
+
+
+1. Objetivos da aula
+
+   Criar transições suaves em estados de interação (hover, focus);
+   Aplicar transformações (mover, escalar, girar) sem quebrar o layout;
+   Construir animações completas com @keyframes ;
+   Entender o que é SVG, quando usá-lo no lugar de PNG/JPG e como estilizá-lo e animá-lo com CSS;
+   Adicionar microinterações ao projeto — critério "animação/SVG" da Avaliação 1.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Seu projeto já tem estrutura semântica e visual profissional com framework CSS. Hoje ele ganha vida: botões que respondem ao
+  toque, cards que se elevam, ícones vetoriais nítidos em qualquer tela.
+
+
+
+2. Transições CSS: suavizando mudanças de estado
+
+Sem transição, uma mudança de estilo acontece instantaneamente — o botão "pisca" de uma cor para outra. A propriedade transition
+interpola a mudança ao longo do tempo:
+
+ .btn-projeto {
+   background: #0f4c81;
+   transform: translateY(0);
+   transition: background 0.3s ease, transform 0.2s ease;
+ }
+
+ .btn-projeto:hover {
+   background: #16324f;
+   transform: translateY(-3px);     /* botão "sobe" 3px ao passar o mouse */
+ }
+
+ .btn-projeto:focus-visible {           /* também anime o foco por teclado! */
+   outline: 3px solid #ffb703;
+ }
+
+
+A sintaxe completa: transition: propriedade duração função-de-tempo atraso;
+
+ Função de tempo                  Comportamento
+
+ ease (padrão)                    Começa rápido, termina devagar — natural para a maioria dos casos.
+
+ linear                           Velocidade constante — bom para rotações contínuas (spinners).
+
+ ease-in / ease-out               Acelera no início / desacelera no fim.
+
+ cubic-bezier(...)                Curva customizada — experimente no DevTools (clique no ícone da curva).
+
+
+
+3. Transformações: mover, escalar e girar
+
+transform altera a renderização do elemento sem afetar o layout dos vizinhos — por isso é a forma mais performática de animar
+posição e tamanho:
+
+ Função                          Efeito                                Exemplo
+
+ translate(x, y)                 Desloca                                   transform: translateY(-5px);
+
+ scale(n)                        Amplia/reduz                              transform: scale(1.05);
+
+ rotate(ângulo)                  Gira                                      transform: rotate(45deg);
+
+ Combinadas                      Aplicadas em ordem                        transform: translateY(-4px) scale(1.02);
+
+
+3.1 Padrão clássico: card que se eleva
+ .card {
+   transition: transform 0.25s ease, box-shadow 0.25s ease;
+ }
+ .card:hover {
+   transform: translateY(-6px);
+   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+ }
+
+
+  PERFORMANCE
+  Anime preferencialmente transform e opacity : o navegador as processa na GPU, sem recalcular layout. Animar width , height ,
+   margin ou top/left força reflow a cada quadro e trava a página em máquinas modestas.
+
+
+
+
+4. Animações com @keyframes
+
+Transição precisa de um gatilho (hover, focus). Para animar sem gatilho — ou com múltiplas etapas — usamos @keyframes + animation :
+
+ /* 1. Definir os quadros-chave */
+ @keyframes aparecer {
+   from { opacity: 0; transform: translateY(20px); }
+   to   { opacity: 1; transform: translateY(0); }
+ }
+
+ @keyframes pulsar {
+   0%   { transform: scale(1); }
+   50% { transform: scale(1.08); }
+   100% { transform: scale(1); }
+ }
+
+ /* 2. Aplicar aos elementos */
+ .hero h1 {
+   animation: aparecer 0.8s ease-out;
+ }
+ .btn-destaque {
+   animation: pulsar 2s ease-in-out infinite;    /* repete para sempre */
+ }
+
+
+Sintaxe: animation: nome duração função-tempo atraso repetições direção; . Valores úteis: infinite (repetições), alternate (vai e volta),
+animation-delay para escalonar elementos em sequência.
+
+
+4.1 Movimento responsável: prefers-reduced-motion
+Algumas pessoas têm desconforto ou tontura com movimento na tela e ativam "reduzir movimento" no sistema operacional. Respeite essa
+preferência — é nossa primeira ponte com a aula de acessibilidade:
+
+ @media (prefers-reduced-motion: reduce) {
+   * {
+     animation-duration: 0.01ms !important;
+     transition-duration: 0.01ms !important;
+   }
+ }
+
+
+
+
+5. SVG: gráficos vetoriais na Web
+
+SVG (Scalable Vector Graphics) é um formato de imagem descrito em XML — ou seja, é código, como o HTML. Em vez de guardar pixels
+(como PNG/JPG), guarda instruções de desenho: "um círculo de raio 40 na posição tal".
+
+                                        PNG/JPG (bitmap)                         SVG (vetorial)
+
+ Escala                                 Serrilha ao ampliar                      Nítido em qualquer tamanho/tela
+
+ Tamanho de arquivo                     Cresce com a resolução                   Minúsculo para ícones e logos
+
+ Estilizável com CSS                    Não                                      Sim (cores, hover, animação)
+
+ Ideal para                             Fotos                                    Ícones, logos, ilustrações, gráficos
+
+
+5.1 Formas básicas e o viewBox
+
+ <svg viewBox="0 0 200 100" width="200" role="img"
+      aria-label="Logotipo do projeto">
+   <rect x="10" y="10" width="80" height="80" rx="12" fill="#0f4c81"/>
+   <circle cx="150" cy="50" r="40" fill="#ffb703"/>
+   <line x1="90" y1="50" x2="110" y2="50" stroke="#333" stroke-width="4"/>
+   <text x="100" y="95" font-size="12" text-anchor="middle">Meu Projeto</text>
+ </svg>
+O viewBox="0 0 200 100" define o sistema de coordenadas interno (largura 200 × altura 100). O SVG então escala para qualquer
+tamanho externo mantendo as proporções — é o segredo da nitidez infinita.
+
+5.2 Duas formas de usar SVG
+   Como arquivo de imagem: <img src="img/logo.svg" alt="Logo"> — simples, mas o CSS da página não alcança o interior do desenho;
+   Inline (colado no HTML): o código <svg> direto na página — cada forma vira um elemento do DOM, estilizável e animável com CSS.
+
+5.3 Estilizando e animando SVG inline
+
+  <!-- HTML -->
+  <svg viewBox="0 0 100 100" class="icone-engrenagem" role="img"
+       aria-label="Configurações">
+    <path d="..." class="dente"/>
+  </svg>
+
+  /* CSS */
+  .icone-engrenagem { width: 48px; }
+  .icone-engrenagem .dente { fill: #0f4c81; transition: fill 0.3s; }
+  .icone-engrenagem:hover .dente { fill: #ffb703; }
+  .icone-engrenagem:hover { animation: girar 2s linear infinite; }
+
+  @keyframes girar {
+    to { transform: rotate(360deg); }
+  }
+
+
+Propriedades específicas de SVG no CSS: fill (preenchimento), stroke (contorno), stroke-width . Um efeito clássico de "desenhar o
+traço" usa stroke-dasharray + stroke-dashoffset animados — demonstração em sala.
+
+5.4 De onde tirar ícones SVG prontos
+   Bootstrap Icons (icons.getbootstrap.com) — combina com quem escolheu Bootstrap;
+   Material Symbols (fonts.google.com/icons) — para quem escolheu Materialize/Material Design;
+   Heroicons (heroicons.com) — estética que casa bem com Tailwind;
+   Todos permitem copiar o código SVG e colar inline no HTML. Verifique a licença ao usar ícones de outras fontes.
+
+  ACESSIBILIDADE DO SVG (ANTECIPANDO A PRÓXIMA AULA)
+  SVG informativo recebe role="img" e aria-label="descrição" . SVG puramente decorativo recebe aria-hidden="true" para que
+  leitores de tela o ignorem.
+
+
+
+6. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Adicionar ao projeto 3 microinterações com transição: links da navbar, botões e efeito de elevação nos cards;
+2. Criar 1 animação com @keyframes (ex.: entrada suave do título principal ou botão pulsante de chamada para ação);
+3. Incluir SVG inline em pelo menos dois pontos: ícones no menu ou nos cards, e um logo/ilustração simples desenhado por você com
+   formas básicas ( rect , circle , path );
+4. Fazer ao menos um SVG reagir ao hover (mudança de fill ou rotação);
+5. Adicionar o bloco prefers-reduced-motion ao seu CSS;
+6. Commit + push e entregar o link no SIGAA;
+7. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, seções sobre apresentação avançada; MDN, guias "Usando
+   animações CSS" e "SVG: Scalable Vector Graphics".
+
+  PRÓXIMA AULA (15/09)
+  Acessibilidade e ARIA — a última camada da Unidade 1 e o último critério da Avaliação 1 (entrega até 29/09, 23h59). Traga o projeto
+  atualizado: faremos uma auditoria de acessibilidade ao vivo nos sites da turma.
+
+
+
+7. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Camada de apresentação avançada.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014.
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Elementos gráficos em interfaces.
+
+MDN Web Docs. Usando transições CSS; Usando animações CSS; SVG: Scalable Vector Graphics. Disponível em: developer.mozilla.org. Acesso em: set.
+2026.
+
+W3C. Scalable Vector Graphics (SVG) 2. Disponível em: w3.org/TR/SVG2. Acesso em: set. 2026.
+FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 5 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

@@ -1,0 +1,222 @@
+                                UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                     TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                               Desenvolvimento Web
+                                             FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                             Aula 12 — Express JS: Abordagem Estruturada e Middlewares
+                        Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side
+
+
+
+
+1. Objetivos da aula
+
+   Entender o conceito de middleware — a espinha dorsal do Express;
+   Receber dados de POST com express.json() ;
+   Organizar o servidor em módulos: rotas separadas com express.Router ;
+   Centralizar o tratamento de erros e o 404;
+   Estruturar o projeto no padrão que evoluirá para rotas + controladores (próxima aula).
+
+  PRAZO HOJE
+  A Avaliação 2 encerra hoje, 27/10, às 23h59, no SIGAA. Critérios: validação de formulários, DOM e eventos, programação
+  assíncrona e SPA com AJAX/JSON.
+
+
+  CONEXÃO COM A AULA ANTERIOR
+  O server.js da Aula 11 funciona, mas tudo num arquivo só não escala: imagine 40 rotas, validações e regras de negócio misturadas.
+  Hoje aplicamos ao servidor o mesmo princípio da Unidade 1 — separação de responsabilidades — só que entre arquivos.
+
+
+
+2. Middleware: a linha de montagem do Express
+
+No Express, tudo é middleware: funções que recebem (req, res, next) e formam uma corrente. Cada requisição atravessa a corrente
+na ordem em que os middlewares foram registrados; cada elo pode examinar/modificar a requisição e decidir: responder (encerra) ou
+passar adiante com next() .
+
+ // Middleware de log: roda para TODA requisição
+ app.use((req, res, next) => {
+   console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+   next();                              // sem next(), a requisição "trava" aqui
+ });
+
+ // Middleware restrito a um prefixo
+ app.use("/api", (req, res, next) => {
+   res.setHeader("X-API-Versao", "1.0");
+   next();
+ });
+
+
+Você já usou dois sem saber: express.static("public") (tenta achar um arquivo; se não acha, chama next() ) e as próprias rotas
+(middlewares que só rodam se método + caminho casarem).
+
+2.1 O middleware indispensável: express.json()
+Na Aula 10, o front enviou JSON.stringify(dados) no corpo do POST. Para o Express entender esse corpo, é preciso o parser:
+
+ app.use(express.json());     // SEM isso, req.body é undefined — erro clássico nº 1
+
+ app.post("/api/produtos", (req, res) => {
+   const { nome, preco } = req.body;                // o objeto enviado pelo fetch
+
+   if (!nome || typeof preco !== "number") {      // validação NO SERVIDOR
+     return res.status(400).json({ erro: "nome e preco são obrigatórios" });
+   }
+
+   const novo = { id: proximoId++, nome, preco };
+   produtos.push(novo);
+   res.status(201).json(novo);                    // 201 Created + o recurso criado
+ });
+
+
+  A REGRA DE OURO DA VALIDAÇÃO
+  Lembra das camadas (Aula 3)? HTML valida, JS valida — e mesmo assim o servidor valida de novo. Qualquer pessoa pode mandar um
+  POST direto para sua API (via curl, Postman ou script), pulando seu front-end inteiro. A única validação confiável é a do servidor.
+2.2 Status HTTP que sua API vai usar
+
+ Código                                      Quando devolver
+
+ 200 OK                                      Sucesso em consulta/alteração.
+
+ 201 Created                                 Recurso criado com sucesso (POST).
+
+ 204 No Content                              Sucesso sem corpo (ex.: DELETE).
+
+ 400 Bad Request                             Dados inválidos enviados pelo cliente.
+
+ 401 / 403                                   Não autenticado / autenticado mas sem permissão (Aula 14).
+
+ 404 Not Found                               Recurso ou rota inexistente.
+
+ 500 Internal Server Error                   Erro inesperado no servidor.
+
+
+
+3. Estruturando o projeto: express.Router
+
+O Router é um "mini-app" que agrupa rotas de um mesmo recurso em arquivo próprio:
+
+ api-projeto/
+ ├── public/                  # front-end (Unidades 1-2)
+ ├── routes/
+ │   └── produtos.js          # todas as rotas de /api/produtos
+ ├── data/
+ │   └── produtos.js          # os dados (na Aula 15, persistência real)
+ ├── server.js                # só configuração e montagem
+ └── package.json
+
+
+
+ // routes/produtos.js
+ const express = require("express");
+ const router = express.Router();
+ const produtos = require("../data/produtos");
+
+ router.get("/", (req, res) => {          // caminho RELATIVO ao prefixo
+   res.json(produtos);
+ });
+
+ router.get("/:id", (req, res) => {
+   const produto = produtos.find(p => p.id === Number(req.params.id));
+   if (!produto) return res.status(404).json({ erro: "Não encontrado" });
+   res.json(produto);
+ });
+
+ module.exports = router;
+
+ // server.js — enxuto: só monta as peças
+ const express = require("express");
+ const produtosRouter = require("./routes/produtos");
+
+ const app = express();
+ app.use(express.json());
+ app.use(express.static("public"));
+ app.use("/api/produtos", produtosRouter);   // prefixo + router
+
+ app.listen(3000, () => console.log("http://localhost:3000"));
+
+
+Novo recurso (ex.: categorias)? Novo arquivo routes/categorias.js + uma linha no server.js . O projeto cresce sem virar espaguete.
+
+
+4. Tratando o que dá errado
+
+4.1 Rota não encontrada (404 de API)
+
+ // DEPOIS de todas as rotas — só chega aqui quem não casou com nenhuma:
+ app.use((req, res) => {
+   res.status(404).json({ erro: `Rota ${req.method} ${req.url} não existe` });
+ });
+
+
+
+4.2 Middleware de erro (4 parâmetros)
+
+ // Assinatura com QUATRO parâmetros = middleware de erro. Vai por último.
+ app.use((err, req, res, next) => {
+   console.error(err);                          // log completo para o desenvolvedor
+   res.status(500).json({ erro: "Erro interno do servidor" }); // resposta genérica p/ o cliente
+  });
+
+
+Qualquer throw em rota síncrona (e, no Express 5, também em rotas async ) cai aqui. Princípio importante: log detalhado no servidor,
+mensagem genérica ao cliente — detalhes internos de erro vazados são presente para invasores.
+
+
+5. Testando a API sem o front-end
+
+Para testar POST/PUT/DELETE sem depender de formulário, use um cliente HTTP:
+   REST Client (extensão do VS Code): crie um arquivo testes.http e clique em "Send Request" — fica versionado com o projeto
+   (recomendado);
+   Postman/Insomnia: interfaces gráficas dedicadas;
+   curl no terminal.
+
+  ### testes.http (REST Client)
+  GET http://localhost:3000/api/produtos
+
+  ### Criar produto
+  POST http://localhost:3000/api/produtos
+  Content-Type: application/json
+
+  { "nome": "Adesivo", "preco": 9.9 }
+
+  ### Deve devolver 400
+  POST http://localhost:3000/api/produtos
+  Content-Type: application/json
+
+  { "nome": "" }
+
+
+
+
+6. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Refatorar o servidor da Aula 11 para a estrutura da seção 3: routes/ , data/ e server.js enxuto;
+2. Adicionar express.json() e implementar o POST /api/produtos com validação e status 201/400;
+3. Adicionar o middleware de log, o 404 de API e o middleware de erro;
+4. Criar o arquivo testes.http cobrindo: listagem, item existente, item inexistente (404), POST válido (201) e POST inválido (400);
+5. Commit + push e entregar o link no SIGAA;
+6. Leitura dirigida: expressjs.com — "Using middleware" e "Routing"; Queirós e Portela, organização do back-end.
+
+  PRÓXIMA AULA (03/11)
+  Rotas e Controladores: separamos o "endereço" (rota) da "lógica" (controlador) — o padrão MVC que completa a arquitetura
+  profissional e prepara o CRUD com persistência.
+
+
+
+7. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Estruturação do back-end.
+
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Modularidade e código que cresce.
+
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Arquitetura de sistemas web.
+EXPRESSJS. Using middleware; Routing; Error handling. Disponível em: expressjs.com. Acesso em: out. 2026.
+
+MDN Web Docs. Express/Node introduction. Disponível em: developer.mozilla.org. Acesso em: out. 2026.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 12 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

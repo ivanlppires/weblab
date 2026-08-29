@@ -1,0 +1,161 @@
+Introdução ao
+Desenvolvimento Web
+Aula 2 — Unidade 1: Web Estática • FACET-SNP-307 • 60h • 2026/2
+
+Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br
+Objetivos da Aula
+01                                                             02
+
+Evolução da Web                                                Renderização
+Compreender a história da Web e o papel dos padrões abertos    Entender o que o navegador faz com o código: do HTML à página
+(W3C, WHATWG).                                                 renderizada.
+
+
+03                                                             04
+
+O Trio Fundamental                                             HTML5 + Publicação
+Conhecer o papel de HTML, CSS e JavaScript.                    Escrever a anatomia de um documento HTML5 válido e publicar
+                                                               com GitHub Pages.
+
+
+
+      Conexão com a Aula 1: Vimos como cliente e servidor conversam (HTTP). Hoje entramos no lado do cliente — o que
+      acontece depois que a resposta chega ao navegador.
+Breve História da Web
+A Web nasceu em 1989–1991 no CERN, com Tim Berners-Lee, combinando
+três invenções: HTML (documentos), HTTP (transporte) e URL
+(endereçoamento).
+
+
+            Web 1.0 — Anos 90
+    1       Páginas estáticas, somente leitura. Ex: sites institucionais,
+            portais.
+
+
+            Web 2.0 — Anos 2000
+    2       Conteúdo gerado pelo usuário, interatividade, AJAX. Ex: redes
+            sociais, wikis.
+
+
+            Web Moderna
+    3       SPAs, APIs, mobile, tempo real. Ex: Gmail, WhatsApp Web,
+            bancos.
+Padrões Abertos: Quem Define as Regras
+
+                                                                                             www.rfc-editor.org
+                              W3C
+                                                                                          RFC 9110: HTTP Semantics | RFC…
+                          W3C standards and drafts
+                                                                                          The Hypertext Transfer Protocol
+                          The World Wide Web Consortium                                   (HTTP) is a stateless application-leve…
+                          (W3C) is an international community…
+
+
+
+
+                                                                       whatwg.org
+     Ecma International
+                                                                    Web Hypertext Application Technology Working Grou…
+  Home - Ecma International
+  Celebrating 65 Years of Ecma International – Advancing global
+  standards through collaboration, innovation, and the…
+                                                                           Referência nossa: MDN Web Docs
+
+
+
+
+A Web funciona em qualquer navegador e dispositivo porque é construída sobre padrões abertos. Escrever código conforme o
+padrão — e não "para o navegador X" — garante compatibilidade universal.
+O Que o Navegador Faz com o Código
+Quando a resposta HTTP chega, o navegador executa o
+processo de renderização em etapas sequenciais.                    Parse HTML
+
+
+O JavaScript pode modificar o DOM a qualquer momento               Parse CSS
+— é isso que torna a página dinâmica. Lembre-se: o DOM
+é a página viva na memória; o HTML é apenas o texto                Árvore de Render
+que a origina.
+                                                                   Layout
+
+
+
+
+       Experimente agora: Abra qualquer site, pressione F12   → aba Elements. Edite um texto ao vivo e veja a página mudar sem
+       alterar o arquivo original.
+O Trio Fundamental
+
+
+  HTML                                        CSS                                          JavaScript
+  Estrutura e significado do conteúdo:        Apresentação: cores, fontes,                 Comportamento: reagir a cliques,
+  títulos, parágrafos, links, imagens,        espaçamento, posicionamento,                 validar formulários, buscar dados,
+  formulários.                                responsividade.                              atualizar a página.
+
+  → Esqueleto                                 → Aparência                                  → Músculos e reflexos
+Princípio adotado: separação de responsabilidades — estrutura no .html, estilo no .css, comportamento no .js.
+Anatomia de um Documento HTML5
+                                                                      <!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="pt-BR">                                      Declara HTML5 (modo padrão de renderização).
+ <head>
+  <meta charset="UTF-8">                                           <html lang="pt-BR">
+  <meta name="viewport" content="width=device-width,
+initial-scale=1">                                      Elemento raiz; lang informa idioma a leitores de tela e
+  <title>Meu projeto</title>                                                buscadores.
+  <link rel="stylesheet" href="css/estilo.css">
+ </head>                                                              <meta viewport>
+ <body>
+                                                           Torna a página adaptável a telas de celular —
+  <h1>Bem-vindo!</h1>
+  <script src="js/app.js">                                       essencial para layout responsivo.
+
+  </script>
+ </body>                                                             <head> vs <body>
+</html>
+                                                         Metadados (invisíveis) vs. todo o conteúdo visível.
+Estrutura do Projeto
+                       Boas Práticas
+meu-projeto/
+├── index.html           Nomes de arquivos/pastas sem espaços, sem acentos, em
+├── css/                 minúsculas (sobre-nos.html)
+│ └── estilo.css         Caminhos relativos entre arquivos (css/estilo.css), nunca
+├── js/                  absolutos
+│ └── app.js             Use a extensão Live Server no VS Code (botão "Go Live")
+├── img/                 para servidor local com recarregamento automático
+│ └── logo.png
+└── README.md
+Publicando com GitHub
+Pages
+Todo repositório público do GitHub pode virar um site estático publicado
+gratuitamente.
+
+
+ 1     Settings → Pages
+       No repositório, acesse Settings   → Pages.
+
+ 2     Escolha a Branch
+       Em Source, selecione a branch main e a pasta raiz (/).
+
+
+
+ 3     Deploy Automático
+       Seu site estará em https://usuario.github.io/meu-projeto/. A cada git
+       push, o site é atualizado automaticamente — seu primeiro fluxo de
+       deploy.
+Atividade Extraclasse & Próximos Passos
+Tarefa Assíncrona — SIGAA                                       Próxima Aula — 25/08
+1. Criar a estrutura de pastas no repositório                   Revisão de HTML em profundidade: layout do documento, links
+
+2. Escrever index.html com anatomia completa: título,           e formulários — base para os frameworks CSS (01/09).
+
+   parágrafo do tema e link para sobre.html
+3. Ativar GitHub Pages e verificar o site publicado
+                                                                Referências
+4. Entregar no SIGAA: link do repositório + link do site
+                                                                   Queirós & Portela — Introdução ao Desenvolvimento
+5. Leitura dirigida: Queirós & Portela (HTML); Purewal (fluxo
+                                                                   Moderno para a Web
+   de trabalho)
+                                                                   Purewal — Aprendendo a Desenvolver Aplicações Web
+                                                                   MDN Web Docs — developer.mozilla.org
+                                                                   WHATWG — html.spec.whatwg.org
+

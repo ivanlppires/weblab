@@ -1,0 +1,264 @@
+                               UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                    TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                              Desenvolvimento Web
+                                            FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                       Aula 8 — Funções, Arrow Functions, Callbacks e Operações em Vetores
+                        Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 2: Web Dinâmica Client-Side
+
+
+
+
+1. Objetivos da aula
+
+   Dominar as três formas de escrever funções — e quando usar cada uma;
+   Escrever arrow functions com fluência (a sintaxe dominante no JS moderno);
+   Entender callbacks: funções passadas para outras funções — a fundação da programação assíncrona;
+   Processar dados com as operações de vetores: forEach , map , filter , find e reduce ;
+   Implementar busca e filtro de cards no projeto, combinando tudo.
+
+  PRAZO HOJE
+  A Avaliação 1 encerra hoje, 29/09, às 23h59, no SIGAA. Confira o checklist da apostila da Aula 6 antes de enviar.
+
+
+  CONEXÃO COM A AULA ANTERIOR
+  Na Aula 7 plantamos a ideia de que funções são valores e a usamos no addEventListener . Hoje essa ideia vira ferramenta principal:
+  callbacks e os métodos de array que os recebem. É o vocabulário de que Promises e Async/Await (próxima aula) dependem.
+
+
+
+2. As três formas de escrever funções
+
+ // 1. Declaração (function declaration)
+ function dobrar(n) {
+   return n * 2;
+ }
+
+ // 2. Expressão de função (guardada numa variável; pode ser anônima)
+ const triplicar = function (n) {
+   return n * 3;
+ };
+
+ // 3. Arrow function (ES6 — a forma que dominará seu código daqui em diante)
+ const quadruplicar = (n) => {
+   return n * 4;
+ };
+
+
+As três são chamadas do mesmo jeito: dobrar(5) , triplicar(5) , quadruplicar(5) . A diferença prática imediata: declarações sofrem
+hoisting (podem ser chamadas antes da linha em que aparecem); expressões e arrows, não. Há também a função vazia — corpo sem
+instruções — útil como valor padrão de um callback opcional: const aoConcluir = () => {};
+
+
+3. Arrow functions em detalhe
+
+A arrow function tem "níveis de encolhimento" — todos significando a mesma coisa:
+
+ const dobrar = (n) => { return n * 2; };   // forma completa
+ const dobrar = (n) => n * 2;               // sem chaves: retorno IMPLÍCITO
+ const dobrar = n => n * 2;                 // 1 parâmetro: parênteses opcionais
+
+ const somar = (a, b) => a + b;             // 2+ parâmetros: parênteses obrigatórios
+ const agora = () => new Date();            // sem parâmetros: () obrigatório
+
+ // Retornar um OBJETO exige parênteses em volta das chaves:
+ const criarProduto = (nome, preco) => ({ nome, preco });
+
+
+  ARMADILHA CLÁSSICA
+  Com chaves, não há retorno implícito: const dobrar = n => { n * 2 }; retorna undefined — as chaves abrem um corpo comum,
+  que exige return . Ou tudo numa expressão sem chaves, ou chaves com return .
+
+
+3.1 Uma diferença que importa: o this
+Arrow functions não têm this próprio — herdam o do contexto onde foram escritas. Consequência prática para nós: em métodos de
+objeto que usam this (como o produto.exibir() da Aula 7), use a sintaxe de método ou function ; em todo o resto — callbacks,
+eventos, operações de array — a arrow é a escolha natural e mais segura.
+
+
+4. Callbacks: funções que viajam
+
+Callback é uma função passada como argumento para outra, que decide quando (e quantas vezes) chamá-la. Você já usa desde a Aula 7,
+sem o nome:
+
+ // O callback é chamado PELO navegador quando o clique acontecer:
+ botao.addEventListener("click", () => {
+   console.log("clicou!");
+ });
+
+ // setTimeout: chamado UMA vez, após o tempo dado (em ms):
+ setTimeout(() => console.log("2 segundos depois"), 2000);
+
+ // Nosso próprio código também pode receber callbacks:
+ function processarPedido(pedido, aoConcluir) {
+   console.log(`Processando ${pedido}...`);
+   aoConcluir(pedido);                 // devolve o controle a quem chamou
+ }
+
+ processarPedido("Pedido #42", (p) => console.log(`${p} concluído!`));
+
+
+Repare no setTimeout : o programa não para para esperar os 2 segundos — segue executando, e o callback dispara depois. Essa é sua
+primeira visão da execução assíncrona, tema central da próxima aula. Callbacks encadeados demais geram o famoso "callback hell" —
+exatamente o problema que as Promises vieram resolver.
+
+
+5. Operações em vetores: processando dados sem for
+
+Os métodos de array recebem um callback e o aplicam a cada elemento. Eles substituem a maioria dos laços for por código mais curto e
+declarativo — e são onipresentes em qualquer código JS profissional. Nossa base de exemplos:
+
+ const produtos = [
+   { nome: "Camiseta", preco: 49.9, categoria: "vestuario", estoque: 12 },
+   { nome: "Boné",     preco: 29.9, categoria: "vestuario", estoque: 0 },
+   { nome: "Caneca",   preco: 24.9, categoria: "casa",      estoque: 35 },
+   { nome: "Poster",   preco: 19.9, categoria: "casa",      estoque: 8 }
+ ];
+
+
+
+5.1 forEach — fazer algo com cada item (não retorna nada)
+
+ produtos.forEach(p => console.log(`${p.nome}: R$ ${p.preco}`));
+
+
+
+5.2 map — transformar cada item (retorna novo array, mesmo tamanho)
+
+ const nomes = produtos.map(p => p.nome);
+ // ["Camiseta", "Boné", "Caneca", "Poster"]
+
+ const comDesconto = produtos.map(p => ({ ...p, preco: p.preco * 0.9 }));
+ // novo array com preços 10% menores — o original permanece intacto
+
+
+
+5.3 filter — selecionar itens (retorna novo array, possivelmente menor)
+
+ const disponiveis = produtos.filter(p => p.estoque > 0);      // 3 itens
+ const casa = produtos.filter(p => p.categoria === "casa");    // 2 itens
+
+
+
+5.4 find, some e every — buscas e testes
+
+ produtos.find(p => p.preco < 25);          // PRIMEIRO que casa: Caneca (objeto)
+ produtos.some(p => p.estoque === 0);       // true — ALGUM esgotado?
+ produtos.every(p => p.preco < 100);        // true — TODOS abaixo de 100?
+
+
+
+5.5 reduce — resumir o array em um único valor
+
+ const total = produtos.reduce((acum, p) => acum + p.preco, 0);
+ // 124.6 → acum começa em 0 e acumula o preço de cada item
+
+
+5.6 sort — ordenando (com cuidado)
+ // sort MODIFICA o array original; copie antes com [...array]
+ const porPreco = [...produtos].sort((a, b) => a.preco - b.preco);
+ // negativo: a antes de b; positivo: b antes de a
+
+
+5.7 Encadeamento: o poder real
+Como map e filter retornam arrays, as operações se encadeiam como uma linha de produção:
+
+ // "Nomes dos produtos de casa, disponíveis, do mais barato ao mais caro"
+ const resultado = produtos
+   .filter(p => p.categoria === "casa")
+   .filter(p => p.estoque > 0)
+   .sort((a, b) => a.preco - b.preco)
+   .map(p => p.nome);
+ // ["Poster", "Caneca"]
+
+
+ Método                       Pergunta que responde                               Retorna
+
+ forEach                      "Faça isso com cada um"                             nada ( undefined )
+
+ map                          "Transforme cada um em..."                          novo array (mesmo tamanho)
+
+ filter                       "Quais passam no teste?"                            novo array (0 a N itens)
+
+ find                         "Qual é o primeiro que...?"                         1 item ou undefined
+
+ some / every                 "Algum/todos passam?"                               booleano
+
+ reduce                       "Resuma tudo em um valor"                           qualquer coisa
+
+
+
+6. Exemplo integrado: busca e filtro de cards no projeto
+
+Juntando a geração de cards da Aula 7 com os métodos de hoje — o padrão estado → render que reaparecerá na SPA (aula de 13/10):
+
+ const busca = document.querySelector("#busca");
+ const selectCategoria = document.querySelector("#categoria");
+ const container = document.querySelector("#cards");
+
+ function render(lista) {
+   container.innerHTML = "";                    // limpa o container
+   lista.forEach(p => {
+     const card = document.createElement("article");
+     card.className = "card";
+     const h3 = document.createElement("h3");
+     h3.textContent = p.nome;                   // dado dinâmico → textContent
+     const preco = document.createElement("p");
+     preco.textContent = `R$ ${p.preco.toFixed(2)}`;
+     card.append(h3, preco);
+     container.appendChild(card);
+   });
+ }
+
+ function aplicarFiltros() {
+   const termo = busca.value.trim().toLowerCase();
+   const cat = selectCategoria.value;           // "" = todas
+
+     const filtrados = produtos
+       .filter(p => p.nome.toLowerCase().includes(termo))
+       .filter(p => cat === "" || p.categoria === cat);
+
+     render(filtrados);
+ }
+
+ busca.addEventListener("input", aplicarFiltros);      // filtra a cada tecla
+ selectCategoria.addEventListener("change", aplicarFiltros);
+ render(produtos);                                     // estado inicial
+
+
+
+
+7. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Refatorar o js/app.js do projeto: converter os callbacks de eventos para arrow functions;
+2. Implementar a busca por texto nos cards (seção 6) usando filter + evento input ;
+3. Adicionar um segundo filtro (categoria via select , ou ordenação por preço com sort ) encadeado ao primeiro;
+4. Exibir um resumo calculado com reduce ou length (ex.: "8 itens encontrados — total R$ 320,00") atualizado a cada filtragem;
+5. Tratar a lista vazia: se nenhum item passar nos filtros, mostrar "Nenhum resultado encontrado";
+6. Commit + push e entregar o link no SIGAA;
+7. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, seções de JavaScript avançado; MDN, "Array" (métodos) e
+   "Introducing asynchronous JavaScript" — preparação direta para a próxima aula.
+
+  PRÓXIMA AULA (06/10)
+  Async, Await e Promises: por que o JavaScript não pode "parar e esperar", o que acontece quando os dados demoram a chegar — e
+  como o callback do setTimeout de hoje evolui para a ferramenta que buscará dados de servidores reais.
+
+
+
+8. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— JavaScript: funções e coleções.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Funções e manipulação de dados.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Padrões de código JavaScript escalável.
+
+MDN Web Docs. Arrow function expressions; Array — métodos; Callback function. Disponível em: developer.mozilla.org. Acesso em: out. 2026.
+
+ECMA INTERNATIONAL. ECMAScript Language Specification. Disponível em: tc39.es/ecma262. Acesso em: out. 2026.
+
+
+
+                             FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 8 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

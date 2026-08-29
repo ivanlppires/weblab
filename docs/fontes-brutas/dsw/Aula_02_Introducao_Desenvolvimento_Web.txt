@@ -1,0 +1,196 @@
+                               UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                    TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                              Desenvolvimento Web
+                                            FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                        Aula 2 — Introdução ao Desenvolvimento Web
+                              Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 1: Web Estática
+
+
+
+
+1. Objetivos da aula
+
+   Compreender a evolução da Web e o papel dos padrões abertos (W3C e WHATWG);
+   Entender o que o navegador faz com o código: do HTML à página renderizada;
+   Conhecer o papel de cada tecnologia do trio HTML + CSS + JavaScript;
+   Escrever a anatomia completa de um documento HTML5 válido;
+   Organizar a estrutura de pastas do projeto e publicá-lo com GitHub Pages.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Na Aula 1 vimos como cliente e servidor conversam (HTTP) e preparamos o ambiente com Git e GitHub. Hoje entramos no lado do
+  cliente: o que acontece depois que a resposta HTTP chega ao navegador — e escrevemos as primeiras páginas do projeto.
+
+
+
+2. Breve história e evolução da Web
+
+A Web nasceu em 1989-1991, no CERN, com Tim Berners-Lee, combinando três invenções que usamos até hoje: o HTML (linguagem dos
+documentos), o HTTP (protocolo de transporte) e a URL (endereçamento). Desde então, ela passou por fases distintas:
+
+ Fase                 Característica                                                                 Exemplo típico
+
+ Web 1.0 (anos 90)    Páginas estáticas, somente leitura; o usuário consome conteúdo                 Sites institucionais, portais de notícias
+
+ Web 2.0 (anos        Conteúdo gerado pelo usuário, interatividade, AJAX                             Redes sociais, wikis, blogs
+ 2000)
+
+ Web moderna          Aplicações completas no navegador (SPA), APIs, dispositivos móveis, tempo      Gmail, WhatsApp Web, sistemas
+                      real                                                                           bancários
+
+
+2.1 Quem define as regras: padrões abertos
+A Web só funciona em qualquer navegador e em qualquer dispositivo porque é construída sobre padrões abertos:
+   W3C (World Wide Web Consortium): padroniza CSS, acessibilidade (WCAG/ARIA) e diversas APIs;
+   WHATWG: mantém o HTML Living Standard — o HTML deixou de ter "versões" fechadas e evolui continuamente;
+   ECMA International: padroniza o JavaScript (especificação ECMAScript, com edições anuais);
+   IETF: padroniza os protocolos, como o HTTP.
+
+  CONSEQUÊNCIA PRÁTICA
+  Escrever código conforme o padrão — e não "para o navegador X" — é o que garante que seu site funcione no Chrome, no Firefox, no
+  celular e no leitor de tela. Consulte sempre a documentação oficial: MDN Web Docs (developer.mozilla.org) será nossa referência
+  permanente.
+
+
+
+3. O que o navegador faz com o código
+
+Quando a resposta HTTP chega, o navegador executa um processo chamado renderização, em etapas:
+1. Parsing do HTML → constrói o DOM (Document Object Model), uma árvore de elementos na memória;
+2. Parsing do CSS → constrói o CSSOM, a árvore de estilos;
+3. Render tree → combina DOM + CSSOM para decidir o que é visível e com qual estilo;
+4. Layout → calcula posição e tamanho de cada elemento;
+5. Paint → desenha os pixels na tela.
+O JavaScript pode modificar o DOM a qualquer momento — e é isso que torna a página dinâmica (assunto central da Unidade 2). Por
+enquanto, guarde a ideia: o DOM é a página viva na memória; o HTML é apenas o texto que a origina.
+
+  EXPERIMENTE AGORA (DEVTOOLS)
+  Abra qualquer site, pressione F12 → aba Elements. O que você vê ali não é o arquivo HTML: é o DOM atual. Edite um texto ao vivo
+  e veja a página mudar — sem alterar o arquivo original no servidor.
+4. O trio fundamental: HTML, CSS e JavaScript
+
+ Tecnologia    Responsabilidade                                                                                   Analogia (corpo humano)
+
+ HTML          Estrutura e significado do conteúdo: títulos, parágrafos, links, imagens, formulários              Esqueleto
+
+ CSS           Apresentação: cores, fontes, espaçamento, posicionamento, responsividade                           Aparência
+
+ JavaScript    Comportamento: reagir a cliques, validar formulários, buscar dados, atualizar a página             Músculos e reflexos
+
+O princípio de projeto que adotaremos é a separação de responsabilidades: estrutura no .html , estilo no .css , comportamento no
+.js — três arquivos, três papéis. Um exemplo mínimo com os três integrados:
+
+
+ <!-- index.html -->
+ <!DOCTYPE html>
+ <html lang="pt-BR">
+ <head>
+   <meta charset="UTF-8">
+   <title>Meu projeto</title>
+   <link rel="stylesheet" href="css/estilo.css">
+ </head>
+ <body>
+   <h1>Bem-vindo!</h1>
+   <button id="btn">Clique aqui</button>
+   <script src="js/app.js"></script>
+ </body>
+ </html>
+
+
+
+ /* css/estilo.css */
+ h1 { color: #0f4c81; font-family: sans-serif; }
+
+
+
+ // js/app.js
+ document.getElementById("btn").addEventListener("click", function () {
+   alert("Olá, Desenvolvimento Web!");
+ });
+
+
+
+
+5. Anatomia de um documento HTML5
+
+Todo documento da disciplina deve conter, no mínimo:
+
+ Elemento                                                       Função
+
+ <!DOCTYPE html>                                                 Declara o documento como HTML5 (modo padrão de renderização).
+
+ <html lang="pt-BR">                                             Elemento raiz; o atributo lang informa o idioma a leitores de tela e buscadores.
+
+ <head>                                                          Metadados: nada aqui aparece na página.
+
+ <meta charset="UTF-8">                                          Codificação de caracteres — garante acentuação correta.
+
+ <meta name="viewport" content="width=device-width,              Torna a página adaptável a telas de celular (essencial para o layout responsivo
+ initial-scale=1">                                               da Avaliação 1).
+
+ <title>                                                         Título na aba do navegador e nos resultados de busca.
+
+ <body>                                                          Todo o conteúdo visível.
+
+
+
+6. Estrutura do projeto e servidor local
+
+A partir de hoje, o repositório criado na Aula 1 ganha uma organização padrão:
+
+ meu-projeto/
+ ├── index.html           # página inicial (o nome index é convenção do servidor)
+ ├── css/
+ │   └── estilo.css
+ ├── js/
+ │   └── app.js
+ ├── img/
+ │   └── logo.png
+ └── README.md
+
+
+   Nomes de arquivos e pastas sem espaços, sem acentos e em minúsculas ( sobre-nos.html , não Sobre Nós.html );
+   Caminhos relativos entre os arquivos ( css/estilo.css ), nunca caminhos absolutos da sua máquina ( C:\Users\... );
+   Para visualizar, use a extensão Live Server no VS Code (botão "Go Live"): ela sobe um servidor local em http://127.0.0.1:5500 e
+   recarrega a página a cada salvamento.
+
+6.1 Publicando de graça: GitHub Pages
+Todo repositório público do GitHub pode virar um site estático publicado:
+1. No repositório, acesse Settings → Pages;
+2. Em Source, escolha a branch main e a pasta raiz ( / );
+3. Salve. Em poucos minutos seu site estará em https://usuario.github.io/meu-projeto/ .
+A cada git push , o site publicado é atualizado automaticamente — seu primeiro fluxo de deploy.
+
+
+7. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Criar no repositório do projeto a estrutura de pastas da seção 6;
+2. Escrever o index.html com a anatomia completa da seção 5, contendo: título do projeto, um parágrafo descrevendo o tema escolhido
+   e um link para uma segunda página ( sobre.html ) com sua apresentação pessoal;
+3. Ativar o GitHub Pages e verificar o site publicado;
+4. Entregar no SIGAA: o link do repositório e o link do site publicado;
+5. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, capítulos sobre a camada de estrutura (HTML); Purewal, capítulo
+   sobre o fluxo de trabalho do desenvolvedor — preparação para a revisão de HTML da próxima aula.
+
+  PRÓXIMA AULA (25/08)
+  Revisão de HTML em profundidade: layout do documento, links e formulários — a base sobre a qual os frameworks CSS (aula de
+  01/09) serão aplicados.
+
+
+
+8. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Evolução da Web e camada de estrutura.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Cap. 1-2: fluxo de trabalho e primeiras páginas.
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Organização de projetos e estrutura de sites.
+
+MDN Web Docs. Introdução ao HTML; Como a Web funciona. Disponível em: developer.mozilla.org. Acesso em: ago. 2026.
+WHATWG. HTML Living Standard. Disponível em: html.spec.whatwg.org. Acesso em: ago. 2026.
+
+
+
+                             FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 2 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

@@ -1,0 +1,270 @@
+                                  UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                       TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                  Desenvolvimento Web
+                                               FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                        Aula 3 — Revisão de HTML: Layout do Documento, Links e Formulários
+                                Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 1: Web Estática
+
+
+
+
+1. Objetivos da aula
+
+   Estruturar páginas com HTML semântico — critério explícito da Avaliação 1;
+   Dominar a hierarquia de títulos, listas, imagens e tabelas;
+   Usar links em todas as suas formas: navegação entre páginas, âncoras internas, e-mail e telefone;
+   Construir formulários completos com os tipos de campo do HTML5 e validação nativa;
+   Aplicar tudo isso no projeto incremental da disciplina.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Na Aula 2 escrevemos a anatomia mínima do documento e publicamos o projeto no GitHub Pages. Hoje o index.html deixa de ser um
+  esqueleto e ganha estrutura semântica real: cabeçalho, navegação, seções de conteúdo e um formulário de contato.
+
+
+
+2. HTML semântico: por que a tag certa importa
+
+Semântica é significado. Uma <div> não diz nada sobre seu conteúdo; um <nav> declara: "isto é a navegação do site". Usar a tag certa
+traz três benefícios diretos:
+1. Acessibilidade: leitores de tela permitem pular direto para a navegação ou o conteúdo principal (tema da aula de 15/09);
+2. SEO: buscadores entendem melhor a estrutura e a relevância do conteúdo;
+3. Manutenção: o código se autodocumenta — qualquer colega entende a estrutura sem ler o CSS.
+
+2.1 As tags estruturais do HTML5
+
+ Tag                   Papel na página
+
+ <header>               Cabeçalho da página ou de uma seção: logo, título, navegação principal.
+
+ <nav>                  Bloco de links de navegação (menu principal, breadcrumbs).
+
+ <main>                 Conteúdo principal — único por página.
+
+ <section>              Seção temática do conteúdo, geralmente com um título próprio.
+
+ <article>              Conteúdo independente e autocontido (post, notícia, card de produto).
+
+ <aside>                Conteúdo complementar (barra lateral, links relacionados).
+
+ <footer>               Rodapé: créditos, contato, links institucionais.
+
+ <div> / <span>         Contêineres genéricos, sem significado — use apenas quando nenhuma tag semântica couber.
+
+
+2.2 Layout típico de uma página
+
+ <body>
+   <header>
+     <h1>Nome do Projeto</h1>
+     <nav>
+       <ul>
+         <li><a href="index.html">Início</a></li>
+         <li><a href="sobre.html">Sobre</a></li>
+         <li><a href="#contato">Contato</a></li>
+       </ul>
+     </nav>
+   </header>
+
+   <main>
+     <section id="destaques">
+       <h2>Destaques</h2>
+       <article>
+         <h3>Primeiro item</h3>
+         <p>Descrição...</p>
+       </article>
+     </section>
+     <section id="contato">
+       <h2>Contato</h2>
+       <!-- formulário: seção 5 desta apostila -->
+     </section>
+   </main>
+
+   <footer>
+     <p>&copy; 2026 — Desenvolvido por Fulano</p>
+   </footer>
+ </body>
+
+
+  HIERARQUIA DE TÍTULOS
+  Use <h1> a <h6> como estrutura de tópicos, não como tamanhos de fonte: um único <h1> por página, <h2> para seções, <h3>
+  para subseções — sem pular níveis. Tamanho é papel do CSS.
+
+
+
+3. Conteúdo: listas, imagens e tabelas
+
+3.1 Listas
+
+ <ul>                             <!-- não ordenada (marcadores) -->
+   <li>HTML</li>
+   <li>CSS</li>
+ </ul>
+
+ <ol>                          <!-- ordenada (numerada) -->
+   <li>Clonar o repositório</li>
+   <li>Abrir no VS Code</li>
+ </ol>
+
+
+
+3.2 Imagens
+
+ <img src="img/fachada.jpg" alt="Fachada da loja com letreiro azul">
+
+ <figure>
+   <img src="img/grafico.png" alt="Gráfico de vendas de 2026 em crescimento">
+   <figcaption>Figura 1 — Evolução das vendas.</figcaption>
+ </figure>
+
+
+O atributo alt é obrigatório: descreve a imagem para quem não a vê (leitores de tela) e aparece quando o arquivo falha. Imagem
+puramente decorativa recebe alt="" (vazio, mas presente).
+
+3.3 Tabelas — para dados tabulares, nunca para layout
+
+ <table>
+   <caption>Horário de atendimento</caption>
+   <thead>
+     <tr><th>Dia</th><th>Horário</th></tr>
+   </thead>
+   <tbody>
+     <tr><td>Segunda</td><td>18h–19h</td></tr>
+   </tbody>
+ </table>
+
+
+
+
+4. Links: a essência do hipertexto
+
+ Forma                                                         Código
+
+ Outra página do site (caminho relativo)                       <a href="sobre.html">Sobre</a>
+
+ Site externo (URL absoluta)                                   <a href="https://unemat.br">UNEMAT</a>
+
+ Abrir em nova aba                                             <a href="..." target="_blank" rel="noopener">...</a>
+
+ Âncora interna (rola até o elemento com o id)                 <a href="#contato">Contato</a>
+
+ E-mail                                                        <a href="mailto:ivanpires@unemat.br">E-mail</a>
+
+ Telefone/WhatsApp (útil no celular)                           <a href="tel:+5566999990000">Ligar</a>
+
+ Download de arquivo                                           <a href="docs/edital.pdf" download>Baixar edital</a>
+
+
+  TEXTO DO LINK
+  O texto deve fazer sentido fora do contexto: prefira "Baixar o edital do processo seletivo" a "clique aqui". Leitores de tela costumam
+  listar os links da página isoladamente — "clique aqui" repetido dez vezes não diz nada.
+
+
+
+5. Formulários: a porta de entrada de dados
+
+Formulários coletam dados do usuário e os enviam ao servidor. Na Unidade 2 nós os validaremos com JavaScript e, na Unidade 3, os
+receberemos no Express — por isso a estrutura correta agora é investimento direto nas três avaliações.
+
+5.1 A estrutura do <form>
+
+ <form action="/contato" method="post">
+   <fieldset>
+     <legend>Fale conosco</legend>
+
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required
+               placeholder="voce@exemplo.com">
+
+        <label for="assunto">Assunto</label>
+        <select id="assunto" name="assunto">
+          <option value="duvida">Dúvida</option>
+          <option value="orcamento">Orçamento</option>
+        </select>
+
+        <label for="msg">Mensagem</label>
+        <textarea id="msg" name="msg" rows="5" maxlength="500"></textarea>
+
+     <button type="submit">Enviar</button>
+   </fieldset>
+ </form>
+
+
+   action : para onde os dados vão (URL no servidor); method : get (dados na URL — buscas) ou post (dados no corpo — cadastros);
+   name : o nome do dado enviado ao servidor — sem ele, o campo não é enviado;
+
+   <label for="id"> : vincula o rótulo ao campo — clicar no rótulo foca o campo, e o leitor de tela anuncia o par corretamente. Todo
+   campo tem label.
+
+5.2 Tipos de campo do HTML5
+
+ Tipo                            Comportamento
+
+ text , password                 Texto livre; senha oculta os caracteres.
+
+ email , url , tel               Validação de formato automática + teclado adequado no celular.
+
+ number , range                  Numérico com min , max e step .
+
+ date , time                     Seletores nativos de data e hora.
+
+ checkbox , radio                Múltipla escolha / escolha única (radios agrupados pelo mesmo name ).
+
+ file                            Envio de arquivo.
+
+ hidden                          Valor enviado sem aparecer na tela.
+
+
+5.3 Validação nativa (sem JavaScript)
+Atributos que o navegador valida sozinho antes de enviar: required , minlength / maxlength , min / max , pattern (expressão regular).
+Exemplo:
+
+ <input type="text" id="cep" name="cep" required
+        pattern="[0-9]{5}-?[0-9]{3}" placeholder="78550-000"
+        title="Digite um CEP no formato 78550-000">
+
+
+  CAMADAS DE VALIDAÇÃO
+  A validação nativa é a primeira camada. Na Unidade 2 adicionaremos a validação com JavaScript (mensagens customizadas, regras
+  de negócio) e, na Unidade 3, a validação no servidor — a única em que se pode confiar de verdade, pois o cliente pode ser burlado.
+
+
+
+6. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Reestruturar o index.html do projeto com as tags semânticas da seção 2: header com nav , main com pelo menos duas section , e
+   footer ;
+2. Incluir: uma lista, uma imagem com alt descritivo e ao menos três formas diferentes de link (página interna, âncora, externo ou
+   mailto);
+3. Criar a página contato.html (ou seção #contato ) com um formulário completo: no mínimo 5 campos de tipos diferentes, todos com
+    label , e validação nativa ( required + um pattern );
+
+4. Commit + push (o GitHub Pages atualiza sozinho) e entregar o link no SIGAA;
+5. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, seções sobre a camada de apresentação (CSS) — preparação para
+   a aula de frameworks CSS.
+
+  PRÓXIMA AULA (01/09)
+  Frameworks CSS: por que existem, como escolher e como aplicar um framework (ex.: Bootstrap/Tailwind) ao layout semântico que
+  você construiu hoje.
+
+
+
+7. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Camada de estrutura: HTML.
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Estruturação de páginas e formulários.
+
+ALVES, William P. Projetos de Sistemas Web. São Paulo: Érica, 2015. — Elementos de interface e formulários.
+
+MDN Web Docs. Estrutura do documento e do site; Seu primeiro formulário HTML. Disponível em: developer.mozilla.org. Acesso em: ago. 2026.
+WHATWG. HTML Living Standard — Forms. Disponível em: html.spec.whatwg.org. Acesso em: ago. 2026.
+
+
+
+                            FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 3 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

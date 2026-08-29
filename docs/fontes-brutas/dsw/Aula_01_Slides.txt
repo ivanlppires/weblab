@@ -1,0 +1,470 @@
+            UNEMAT · Campus Sinop — Tecnologia em Análise e Desenvolvimento de Sistemas
+
+
+
+
+Desenvolvimento Web
+Aula 1 — Apresentação da disciplina, arquitetura web,
+ambiente de desenvolvimento e Git
+
+
+
+  Prof. Dr. Ivan Luiz Pedroso Pires                                                       Unidade 1 — Web Estática
+  ivanpires@unemat.br · FACET-SNP-307 · 60h · Turma 01 · 2026/2
+Roteiro de hoje
+
+                        Como a disciplina funciona
+                        Projeto único e incremental, três unidades, avaliação no SIGAA
+
+
+
+
+                        Arquitetura de uma aplicação web
+                        Cliente-servidor, HTTP, front-end, back-end e banco de dados
+
+
+
+
+                        Ambiente de desenvolvimento
+                        VS Code, Node.js, navegador com DevTools
+
+
+
+
+                        Git desde o dia 1
+                        Ciclo básico de versionamento e publicação no GitHub
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                    2
+Um único projeto, três camadas
+Aprendizagem baseada em projeto: você constrói uma única aplicação web completa ao longo do semestre — da interface estática ao
+full-stack com autenticação.
+
+
+
+         1        Web Estática                            2     Web Dinâmica Client-Side           3     Web Dinâmica Server-Side
+                  Camada: Interface                             Camada: Comportamento                    Camada: Servidor
+
+
+
+
+      Arquitetura web, HTML semântico, CSS                                                       Node.js e Express, rotas e
+                                                        JavaScript, DOM, callbacks, Promises e
+      e frameworks, animação e SVG,                                                              controladores, OAuth 2.0 (Google),
+                                                        Async/Await, AJAX, JSON e SPA
+      acessibilidade e ARIA                                                                      CRUD com front-end assíncrono
+
+
+
+
+        Avaliação no SIGAA até 29/09, 23h59              Avaliação no SIGAA até 27/10, 23h59       Avaliação no SIGAA até 24/11, 23h59
+
+
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                    3
+Como cada aula funciona
+Aulas teórico-práticas em laboratório, toda segunda-feira à noite (2N234). Traga o notebook se tiver — mas o laboratório dá conta.
+
+
+
+                      Live coding                                                            Desafios em sala
+
+                      O professor codifica ao vivo e você codifica junto —                   Dinâmicas individuais, em duplas ou pequenos
+                      nada de slides parados por muito tempo.                                grupos, com socialização das soluções no fim.
+
+
+
+
+                      Documentação oficial                                                   Extraclasse no SIGAA
+                                                                                             A carga não presencial é integralizada por
+                      MDN, Node.js e Express como fontes primárias —                         atividades assíncronas: exercícios, estudos dirigidos
+                      aprender a ler documentação é parte da disciplina.                     e evolução do projeto entre os encontros, com
+                                                                                             prazos e feedback no SIGAA.
+
+
+      Entre uma aula e outra o projeto anda: cada encontro assume que a atividade extraclasse anterior foi feita.
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                                4
+Cronograma: 16 segundas-feiras
+            Unidade 1 — Web Estática                            Unidade 2 — Client-Side               Unidade 3 — Server-Side
+
+                Apresentação, arquitetura web,                   Revisão JavaScript: objetos,
+   10/08                                                21/09                                   19/10 Introdução ao Express JS
+                ambiente e Git                                   eventos, DOM
+
+                Introdução ao desenvolvimento                    Arrow functions, callbacks,            Express estruturado e
+   17/08                                                28/09                                   26/10
+                web                                              vetores                                middlewares
+
+                Revisão HTML: layout, links e
+   24/08                                                05/10 Promises, Async e Await           02/11 Rotas e controladores
+                formulários
+
+   31/08 Frameworks CSS                                 12/10 AJAX, JSON e SPA                  09/11 Autenticação Google (OAuth 2.0)
+
+
+   07/09 Animação e SVG                                                                         16/11 CRUD com front-end assíncrono
+
+                                                                                                        CRUD completo com
+   14/09 Acessibilidade e ARIA                                                                  24/11
+                                                                                                        autenticação
+
+
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                   5
+Avaliação e aprovação
+
+                                                                                           MF ≥ 6,0          Aprovado
+               MF = (A1 + A2 + A3) ÷ 3
+                                                                                        4,0 ≤ MF < 6,0       Exame final
+          Três avaliações práticas e individuais (10,0 pontos cada),
+         entregues como tarefa no SIGAA ao fim de cada unidade —
+                      sempre sobre o mesmo projeto.                                   MF < 4,0 ou faltas     Reprovação direta
+
+
+
+
+                       Atendimento: segundas-feiras, das 18h às 19h, com agendamento via e-mail — ivanpires@unemat.br
+
+
+
+
+                       Comece a pensar já: escolha o tema do seu projeto ainda esta semana — portfólio, catálogo de produtos, sistema de
+                       eventos, página para um negócio local. O tema é livre, mas será o mesmo até o fim do semestre. Traga a ideia na próxima
+                       aula.
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                            6
+PARTE 2
+
+
+
+Arquitetura de uma aplicação web
+O modelo cliente-servidor
+
+                                                                   requisição HTTP
+                          Cliente                                                    Servidor
+                          navegador                                                  responde requisições
+                                                                   resposta HTTP
+
+
+
+    O que acontece quando você digita um endereço:
+
+         1        DNS resolve o domínio para um endereço IP
+
+         2        Abre conexão TCP com o servidor (criptografia TLS/HTTPS)
+
+         3        Envia a requisição HTTP — ex.: GET /index.html
+
+         4        Servidor devolve: código de status + cabeçalhos + conteúdo
+
+         5        Navegador renderiza o HTML e baixa CSS, JS, imagens e fontes
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                       8
+HTTP: o idioma da web
+Métodos                                                                           Códigos de status
+
+                                      Buscar um recurso. Não altera nada no
+                GET                                                                          200 OK            Deu certo.
+                                      servidor.
+
+
+                                      Enviar dados para criar algo (formulário,
+               POST                                                                         301 / 302          Redirecionamento.
+                                      novo registro).
+
+
+
+       PUT / PATCH                    Atualizar um recurso existente.                     404 Not Found        Recurso não existe.
+
+
+
+                                                                                     500 Internal Server
+            DELETE                    Remover um recurso.                                   Error
+                                                                                                               Erro no servidor.
+
+
+
+
+     https://www.unemat.br/cursos/tads?campus=sinop#contato                           →    esquema · domínio · caminho · query · fragmento
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                        9
+Front-end, back-end e banco de dados
+
+                         Front-end                                  Back-end                            Banco de dados
+                         Executa no navegador                       Executa no servidor                 Persiste as informações
+
+
+
+                                                        Recebe requisições, aplica regras
+      HTML define a estrutura, CSS a                                                        Só o back-end conversa com ele
+                                                        de negócio, autentica usuários e
+      apresentação e JavaScript o                                                           — o navegador nunca acessa o
+                                                        monta respostas. Usaremos
+      comportamento.                                                                        banco diretamente.
+                                                        Node.js + Express.
+
+
+      Unidades 1 e 2                                    Unidade 3                           Unidade 3
+
+
+
+      Site estático × aplicação dinâmica — um site estático devolve sempre os mesmos arquivos prontos (Unidade 1); uma
+      aplicação dinâmica monta a resposta sob demanda, consultando dados e reagindo ao usuário (Unidades 2 e 3). Nosso projeto
+      começa estático e ganha dinamismo camada por camada.
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                             10
+Uma conversa antes de seguir…
+
+
+Quem está acessando a web hoje?
+
+                                                        de todo o tráfego web em 2024 já foi gerado por bots — a primeira vez em uma
+                        51%                             década que as máquinas ultrapassaram os humanos. Em 2025: ~53%.
+
+
+
+
+                                                        foi o crescimento do tráfego de bots de IA ao longo de 2025. O tráfego humano
+                        +187%                           cresceu apenas 3,1% no mesmo período.
+
+
+
+
+                                                        o volume de crawling para treinar modelos de IA chegou a 8 vezes o volume de
+                        Até 8×                          crawling de busca tradicional em 2025.
+
+
+Fontes: Imperva/Thales Bad Bot Report 2025 · Cloudflare Radar 2025-2026
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                   11
+As máquinas viraram clientes — e pagam
+Já existe infraestrutura comercial para vender serviços a agentes de IA, sem nenhum humano na tela:
+
+                        x402 (Coinbase, 2025)
+                        Ressuscitou o status HTTP 402 “Payment Required” — reservado desde os anos 90 e nunca usado. O agente recebe
+                        402 com o preço, paga e refaz a requisição. Sem checkout, sem cadastro. 100 milhões de pagamentos nos primeiros
+                        6 meses; CoinMarketCap cobra US$ 0,01 por chamada de API.
+
+
+                        Redes de pagamento p/ agentes
+                        Mastercard Agent Pay, Visa Trusted Agent Protocol e o AP2 do Google (60+ parceiros: PayPal, Amex, Adobe…) dão
+                        identidade e cartão às máquinas. Em 2026, Santander e Mastercard executaram o 1º pagamento europeu ponta a ponta
+                        feito por um agente de IA.
+
+
+                        MCP (2024→Linux Foundation)
+
+                        Padrão aberto que conecta assistentes de IA a dados e ferramentas de forma padronizada — milhares de serviços já
+                        expõem “portas para agentes” em vez de telas para humanos.
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                      12
+    Estamos construindo para o consumidor certo?
+     O agente não quer o botão azul. Ele quer o dado, o serviço, a resposta — em JSON, via API, de forma padronizada e
+     confiável.
+
+     A informação vira o produto. APIs bem projetadas, dados estruturados e documentação clara passam a ser a
+     “fachada” principal do sistema.
+
+     A interface vira sob demanda. O humano continua importando — mas a tela pode ser montada na hora, quando e
+     como ele precisar.
+
+
+     Tudo que vamos aprender aqui — HTML semântico, HTTP, APIs REST, JSON, Express — serve aos dois públicos.
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                    13
+PARTE 3
+
+
+
+Ambiente de desenvolvimento
+Instale nesta semana
+
+                        Visual Studio Code                                                                     code.visualstudio.c
+                        Editor de código                                                                                        om
+
+
+
+                        Chrome ou Firefox                                                                                             —
+                        Navegador com DevTools
+
+
+
+                        Node.js (versão LTS)                                                                               nodejs.org
+                        Executar JavaScript fora do navegador — ferramentas já, servidor na Unidade 3
+
+
+
+                        Git                                                                                               git-scm.com
+                        Controle de versão do projeto
+
+
+
+      Extensões do VS Code: Live Server (recarga automática) · Prettier (formatação) · Portuguese (Brazil) Language Pack (opcional)
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                     15
+DevTools: o raio-X do navegador
+
+      Pressione F12 (ou botão direito → Inspecionar)
+
+
+
+
+                         Elements                                   Console                                    Network
+                                                                                                     Ver cada requisição HTTP que a
+        Inspecionar e editar HTML e CSS                  Executar JavaScript e ver erros da
+                                                                                                     página faz — métodos e códigos
+            ao vivo, direto na página.                                página.
+                                                                                                           de status na prática.
+
+
+
+                      Experimente agora: abra qualquer site, vá na aba Network e observe os métodos e códigos de status que acabamos de
+                      estudar.
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                     16
+PARTE 4
+
+
+
+Git: controle de versão desde o dia 1
+Git registra "fotografias" (commits) do projeto ao longo do tempo — voltar atrás, comparar versões e
+trabalhar com segurança.
+O ciclo básico do Git
+Configuração inicial (uma única vez):                               Os três estados de um arquivo:
+
+
+     git config --global user.name "Seu Nome"
+     git config --global user.email "seu@email.com"                        Modificado
+                                                                           working directory
+
+
+
+O ciclo em cinco comandos:
+
+
+                                                                           Preparado
+                                                                           staging area — após git add
+
+      git init
+         cria o repositório na pasta do projeto
+      git status
+         mostra o que mudou
+      git add index.html                     |          git add .
+         prepara arquivos para o commit (staging)                          Versionado
+      git commit -m "Cria estrutura inicial"                               repositório — após git commit
+         registra a fotografia com mensagem descritiva
+      git log --oneline
+         mostra o histórico
+
+
+                                                                       Commits pequenos e frequentes, mensagem no imperativo: "Adiciona formulário
+                                                                       de contato". Nada de "alterações" ou "aula".
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                                18
+Publicando no GitHub
+Conectar o repositório local a um repositório remoto criado no GitHub:
+
+
+       git remote add origin https://github.com/usuario/meu-projeto.git
+       git branch -M main
+       git push -u origin main
+
+       # nos próximos envios, basta:
+       git push
+
+
+
+
+                                Repositório local               git push   GitHub (remoto)
+                                sua máquina — commits                      backup, portfólio e entrega
+
+
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                    19
+Atividade extraclasse (SIGAA)
+
+          1           Preparar o ambiente — Instalar VS Code, Node.js LTS e Git na máquina pessoal (ou validar no laboratório).
+
+
+
+          2           Criar conta no GitHub — github.com, com um e-mail que você realmente acessa.
+
+
+
+                      Primeiro repositório — Criar a pasta do projeto, git init, README.md com seu nome e o tema pretendido, primeiro commit e
+          3           publicação no GitHub.
+
+
+
+          4           Entregar no SIGAA — O link do repositório.
+
+
+
+          5           Leitura dirigida — Capítulos introdutórios sobre arquitetura web na bibliografia básica — Biblioteca Virtual da UNEMAT.
+
+
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                            20
+IA no desenvolvimento: ferramenta, não atalho
+A pergunta não é “pode usar?” — é “como usar bem?”. Usar Claude Code, Copilot e afins não é trapaça: é usar as ferramentas que existem.
+
+
+
+                       Potencializa, não substitui                                   Time-to-market decide
+
+                       O que levaria um mês pode sair em uma semana:                 Em startup, o que vale não é só tempo de código: é a
+                       boilerplate, testes, refatoração, documentação. Você          hora de entrar no mercado. O 1º a chegar pode
+                       foca no que importa — arquitetura e decisões.                 capturar até 70% do mercado; retardatários, ~20%.
+
+
+
+
+                       Seu concorrente já usa                                        Mas juízo importa
+
+                       ~92% dos devs usam assistente de IA ao menos uma              Estudo controlado (METR, 2025) achou devs
+                       vez por mês; usuários diários entregam ~60% mais PRs.         experientes 19% MAIS lentos quando usaram IA sem
+                       Ficar de fora não é pureza — é desvantagem.                   domínio da base. Ferramenta sem critério atrapalha.
+
+
+
+
+Fontes: METR 2025 (RCT) · DX/Faros 2025 · Axify/first-mover
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                                       21
+    Então por que ainda estudar a fundo?
+
+     Você usa Assembly hoje? Quase nunca — mas em Arquitetura você estuda, pra entender o que o sistema operacional e
+     o hardware fazem por baixo.
+
+     Você fala HTTP na mão? Não — mas como profissional de sistemas você precisa saber o que são portas, sockets e
+     requisições para depurar quando quebra.
+
+     Com IA, a mesma regra vale. Ela escreve o código, mas quem julga se está certo, seguro e bem arquitetado é você. Só
+     revisa bem quem entende a base.
+
+
+     Estamos em transição. Quem domina a fundo E usa as ferramentas sai na frente — esse é o objetivo desta disciplina.
+FACET-SNP-307 · Desenvolvimento Web · 2026/2 — Aula 1                                                                      22
+Próxima aula: Introdução ao
+Desenvolvimento Web
+Traga o tema do seu projeto — e o ambiente instalado.
+
+Referências
+
+
+QUEIRÓS; PORTELA. Introdução ao Desenvolvimento Moderno para a Web. FCA, 2018.
+ALVES, W. P. Projetos de Sistemas Web. Érica, 2015.
+LOUDON, K. Desenvolvimento de Grandes Aplicações Web. Novatec, 2019.
+PUREWAL, S. Aprendendo a Desenvolver Aplicações Web. Novatec, 2014. (cap. 1)
+MDN Web Docs — Visão geral do HTTP · developer.mozilla.org
+CHACON; STRAUB. Pro Git. 2. ed. — gratuito em git-scm.com/book/pt-br
+
+
+
+Prof. Dr. Ivan Luiz Pedroso Pires · ivanpires@unemat.br
+

@@ -1,0 +1,192 @@
+                                 UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                      TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                Desenvolvimento Web
+                                             FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                         Aula 11 — Introdução ao Node.js e Express JS
+                         Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 3: Web Dinâmica Server-Side
+
+
+
+
+1. Objetivos da aula
+
+   Entender o que é o Node.js e por que o JavaScript conquistou o servidor;
+   Iniciar um projeto Node com npm: package.json , dependências e scripts;
+   Criar o primeiro servidor com Express, respondendo a rotas GET ;
+   Servir os arquivos estáticos do seu projeto (Unidades 1 e 2) pelo próprio Express;
+   Construir os primeiros endpoints de API JSON — o outro lado do fetch.
+
+  INÍCIO DA UNIDADE 3 — WEB DINÂMICA SERVER-SIDE
+  Até aqui, todo o seu código rodou no navegador do usuário. A partir de hoje, você escreve o lado que recebe as requisições: o
+  servidor. Lembrete: a Avaliação 2 vence em 27/10, 23h59.
+
+
+
+2. Node.js: JavaScript fora do navegador
+
+O Node.js (2009) pegou o V8 — o motor JavaScript do Chrome — e o levou para fora do navegador. Com ele, JS passou a acessar o que o
+navegador proíbe: arquivos do disco, rede em baixo nível, portas, bancos de dados. Nasceu aí o full-stack JavaScript: uma língua
+só, do front ao back — e é exatamente por isso que a transição de vocês será suave: const , arrow functions, async/await , objetos e
+arrays funcionam identicamente.
+Verifique a instalação (feita lá na Aula 1) e experimente o Node como executor de scripts:
+
+ node --version         # v22.x (LTS)
+ npm --version
+
+ # olamundo.js
+ console.log("JavaScript rodando no terminal, sem navegador!");
+
+ node olamundo.js
+
+
+Diferenças de ambiente que importam: no Node não existem document , window nem DOM — não há página. Em compensação existem
+módulos como fs (arquivos) e http (rede), além do ecossistema npm.
+
+2.1 npm: o gerenciador de pacotes
+O npm instala bibliotecas do maior repositório de código do mundo e registra tudo no package.json — a certidão do projeto:
+
+ mkdir api-projeto && cd api-projeto
+ npm init -y                       # cria o package.json
+ npm install express               # baixa o Express para node_modules/
+
+
+  GIT + NODE: REGRA IMEDIATA
+  A pasta node_modules/ pode ter dezenas de milhares de arquivos e nunca vai para o repositório. Crie um arquivo .gitignore com
+  a linha node_modules/ antes do primeiro commit. Quem clonar o projeto roda npm install e o npm reconstrói tudo a partir do
+  package.json .
+
+
+
+
+3. Express: o framework do servidor
+
+Dá para criar um servidor só com o módulo http do Node — mas é verboso. O Express é o framework minimalista que se tornou padrão
+do ecossistema: rotas, tratamento de requisição/resposta e middlewares em poucas linhas.
+
+3.1 O primeiro servidor
+
+ // server.js
+ const express = require("express");
+ const app = express();
+ const PORTA = 3000;
+ app.get("/", (req, res) => {
+   res.send("<h1>Meu primeiro servidor Express!</h1>");
+ });
+
+ app.listen(PORTA, () => {
+   console.log(`Servidor rodando em http://localhost:${PORTA}`);
+ });
+
+
+
+ node server.js
+ # abra http://localhost:3000 no navegador — você acabou de atender
+ # uma requisição HTTP igual às que estudamos na Aula 1
+
+
+Anatomia da rota: app.get(caminho, callback) — o método HTTP ( get / post / put / delete ) vira o nome da função, e o callback recebe req
+(a requisição: o que o cliente mandou) e res (a resposta: o que devolveremos). Reconheça o padrão: é o mesmo modelo de callbacks dos
+eventos — só que o "evento" agora é uma requisição chegou.
+
+3.2 Reinício automático durante o desenvolvimento
+Alterou o código? O servidor precisa reiniciar. Automatize com o modo watch e um script npm:
+
+ // package.json
+ "scripts": {
+   "dev": "node --watch server.js"
+ }
+
+ npm run dev      # reinicia sozinho a cada arquivo salvo
+
+
+
+
+4. Servindo o site + criando a API
+
+4.1 Arquivos estáticos: seu projeto sai do Live Server
+Coloque o site das Unidades 1-2 numa pasta public/ e o Express o entrega inteiro com uma linha:
+
+ api-projeto/
+ ├── public/                 # seu site: index.html, css/, js/, img/
+ ├── server.js
+ ├── package.json
+ └── .gitignore
+
+ // server.js
+ app.use(express.static("public"));
+ // http://localhost:3000 agora serve o index.html e todos os assets
+
+
+4.2 Endpoints JSON: o outro lado do fetch
+Na Aula 10 vocês consumiram a JSONPlaceholder. Agora vocês são a JSONPlaceholder:
+
+ const produtos = [
+   { id: 1, nome: "Camiseta", preco: 49.9, categoria: "vestuario" },
+   { id: 2, nome: "Caneca",   preco: 24.9, categoria: "casa" }
+ ];
+
+ // GET /api/produtos → a lista completa
+ app.get("/api/produtos", (req, res) => {
+   res.json(produtos);                         // serializa e define Content-Type
+ });
+
+ // GET /api/produtos/2 → um item (parâmetro de rota)
+ app.get("/api/produtos/:id", (req, res) => {
+   const id = Number(req.params.id);        // params chegam como string!
+   const produto = produtos.find(p => p.id === id);   // find da Aula 8
+
+   if (!produto) {
+     return res.status(404).json({ erro: "Produto não encontrado" });
+   }
+   res.json(produto);
+ });
+
+
+E no front-end, dentro de public/js/app.js , o fetch da Aula 10 muda apenas o endereço:
+
+ const resposta = await fetch("/api/produtos");       // mesma origem: caminho relativo
+ const dados = await resposta.json();
+ render(dados);
+
+
+  O CICLO SE FECHOU
+  Aula 1: teoria do cliente-servidor. Aulas 2-6: o cliente (interface). Aulas 7-10: o cliente inteligente (fetch). Hoje: o servidor. Você
+  agora enxerga a requisição HTTP dos dois lados — e como front e back servidos da mesma origem dispensam se preocupar com CORS
+  por enquanto.
+
+
+
+5. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Prioridade: finalizar e entregar a Avaliação 2 no SIGAA até 27/10, 23h59;
+2. Criar o projeto Node ( npm init -y , npm install express , .gitignore com node_modules/ ) em um novo repositório — ele será o
+   projeto da Unidade 3;
+3. Mover seu site para public/ e servi-lo com express.static ;
+4. Criar os endpoints GET /api/produtos (com seus dados reais) e GET /api/produtos/:id com 404 correto;
+5. Apontar o fetch do front para /api/produtos e confirmar os cards renderizando a partir do seu servidor;
+6. Commit + push e entregar o link no SIGAA;
+7. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, camada de back-end (Node/Express); documentação oficial
+   expressjs.com — "Basic routing" e "Serving static files".
+
+  PRÓXIMA AULA (27/10)
+  Express com abordagem estruturada: o servidor de arquivo único vira um projeto organizado (rotas separadas, middlewares,
+  tratamento de erros) — a base profissional para os controladores da aula seguinte. E às 23h59 encerra a Avaliação 2.
+
+
+
+6. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— Back-end com Node.js.
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Servidores e arquitetura de aplicações.
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — Introdução ao Node.js.
+
+OPENJS FOUNDATION. Node.js Documentation. Disponível em: nodejs.org/docs. Acesso em: out. 2026.
+EXPRESSJS. Express — Fast, unopinionated, minimalist web framework for Node.js. Disponível em: expressjs.com. Acesso em: out. 2026.
+
+
+
+                          FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 11 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+

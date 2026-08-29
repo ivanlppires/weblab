@@ -1,0 +1,233 @@
+                                 UNIVERSIDADE DO ESTADO DE MATO GROSSO — UNEMAT • CAMPUS SINOP
+                                      TECNOLOGIA EM ANÁLISE E DESENVOLVIMENTO DE SISTEMAS
+
+
+                                                Desenvolvimento Web
+                                              FACET-SNP-307 • 60h • Turma 01 • 2026/2
+                                        Aula 10 — AJAX, JSON e Single Page Application
+                  Prof. Dr. Ivan Luiz Pedroso Pires • ivanpires@unemat.br • Unidade 2: Web Dinâmica Client-Side (encerramento)
+
+
+
+
+1. Objetivos da aula
+
+     Entender o que é AJAX e como ele mudou a Web;
+     Dominar o formato JSON: sintaxe, parse e stringify ;
+     Buscar dados de APIs reais com fetch + async/await, tratando status HTTP e erros;
+     Enviar dados com POST — o formulário da Aula 3 finalmente ganha destino;
+     Compreender o padrão SPA (Single Page Application) e implementar uma navegação por seções sem recarregar a página.
+
+  CONEXÃO COM A AULA ANTERIOR
+  Você já domina async/await com Promises simuladas. Hoje trocamos a simulação por rede de verdade: o fetch retorna Promises, e
+  tudo que você aprendeu se aplica sem mudar uma linha de raciocínio. Esta aula fecha o conteúdo novo da Unidade 2 — a Avaliação
+  2 vence em 27/10, 23h59.
+
+
+
+2. AJAX: a Web sem recarregar
+
+Até o início dos anos 2000, toda interação significava recarregar a página inteira: clicar em "próxima página" de e-mails baixava todo o
+HTML de novo. AJAX (Asynchronous JavaScript And XML) mudou isso: o JavaScript passou a fazer requisições HTTP por conta própria, em
+segundo plano, e atualizar só o pedaço necessário do DOM.
+É o que o Gmail faz ao chegar um e-mail novo, o que uma rede social faz no rolar infinito, o que qualquer busca com sugestões faz a cada
+tecla. Ironia histórica: o "X" era de XML, mas o formato que venceu foi o JSON — o nome AJAX ficou. A ferramenta original era o
+ XMLHttpRequest ; hoje o padrão é a Fetch API, que usaremos.
+
+
+
+3. JSON: o idioma dos dados na Web
+
+JSON (JavaScript Object Notation) é texto com a sintaxe de objetos JS — legível por humanos e por qualquer linguagem (Python, Java,
+PHP... todas falam JSON). É o formato do tráfego navegador ↔ servidor:
+
+ {
+     "nome": "Camiseta",
+     "preco": 49.9,
+     "disponivel": true,
+     "tamanhos": ["P", "M", "G"],
+     "fornecedor": { "cidade": "Sinop", "uf": "MT" }
+ }
+
+
+Diferenças em relação ao objeto JS: chaves sempre entre aspas duplas, sem funções, sem comentários, sem vírgula sobrando no final.
+Conversões:
+
+ const texto = JSON.stringify(produto);      // objeto → texto JSON (para ENVIAR)
+ const obj = JSON.parse(texto);              // texto JSON → objeto (ao RECEBER)
+
+
+
+
+4. Fetch: requisições HTTP com JavaScript
+
+4.1 GET: buscando dados
+Usaremos APIs públicas de teste — a JSONPlaceholder (jsonplaceholder.typicode.com) simula posts e usuários, e o ViaCEP
+(viacep.com.br) consulta CEPs brasileiros de verdade:
+
+ async function buscarPosts() {
+   const resposta = await fetch("https://jsonplaceholder.typicode.com/posts");
+
+     if (!resposta.ok) {                          // status fora de 200-299
+       throw new Error(`Erro HTTP ${resposta.status}`);
+     }
+
+     const posts = await resposta.json();          // parse do corpo (também é assíncrono!)
+     return posts;                                        // array de objetos, pronto para map/filter
+ }
+
+
+  PEGADINHA ESSENCIAL DO FETCH
+  O fetch só rejeita a Promise em falha de rede (sem internet, DNS). Um 404 ou 500 resolve normalmente — por isso o teste if
+  (!resposta.ok) é obrigatório. Sem ele, seu código tentará processar uma página de erro como se fossem dados. E note os dois
+  awaits: um para os cabeçalhos chegarem, outro para o corpo ( .json() ).
+
+
+4.2 Exemplo real: preenchendo endereço pelo CEP
+
+ const campoCep = document.querySelector("#cep");
+
+ campoCep.addEventListener("change", async () => {
+   const cep = campoCep.value.replace(/\D/g, "");              // só dígitos
+   if (cep.length !== 8) return;
+
+     try {
+       const resp = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+       if (!resp.ok) throw new Error("Falha na consulta");
+       const dados = await resp.json();
+       if (dados.erro) throw new Error("CEP não encontrado");
+
+     document.querySelector("#rua").value = dados.logradouro;
+     document.querySelector("#cidade").value = `${dados.localidade}/${dados.uf}`;
+   } catch (e) {
+     document.querySelector("#erro-cep").textContent = e.message;
+   }
+ });
+
+
+4.3 POST: enviando dados
+O formulário com preventDefault (Aula 7) agora envia de verdade — sem recarregar a página:
+
+ form.addEventListener("submit", async (e) => {
+   e.preventDefault();
+
+     const novoPost = {
+       title: form.titulo.value,
+       body: form.mensagem.value,
+       userId: 1
+     };
+
+     try {
+       const resp = await fetch("https://jsonplaceholder.typicode.com/posts", {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },   // "estou enviando JSON"
+         body: JSON.stringify(novoPost)                     // objeto → texto
+       });
+       if (!resp.ok) throw new Error(`Erro HTTP ${resp.status}`);
+
+     const criado = await resp.json();                    // o servidor devolve o recurso com id
+     exibirMensagem(`Enviado com sucesso! ID: ${criado.id}`);
+     form.reset();
+   } catch (erro) {
+     exibirMensagem("Não foi possível enviar. Tente novamente.");
+   }
+ });
+
+
+Na Unidade 3, o endereço jsonplaceholder... será substituído pela sua própria API Express — o código do front-end permanecerá
+praticamente idêntico.
+
+
+5. SPA: Single Page Application
+
+Juntando as peças, chegamos ao padrão que define as aplicações modernas: a SPA carrega um único HTML; a partir daí, o JavaScript
+intercepta a navegação, busca dados via AJAX e troca o conteúdo do DOM — a página nunca recarrega.
+
+                         Site multipágina (MPA)                                             SPA
+
+ Navegação               Cada clique = novo HTML do servidor                                JS troca o conteúdo; sem recarga
+
+ Dados                   Embutidos no HTML                                                  Buscados via AJAX (JSON)
+
+ Sensação                "Site"                                                             "Aplicativo"
+
+ Exemplos                Blogs, portais, institucionais                                     Gmail, WhatsApp Web, painéis
+
+
+5.1 Mini-roteador: navegação por seções
+Frameworks como React e Vue automatizam SPAs; o mecanismo essencial, porém, cabe em poucas linhas — e é o que a Avaliação 2
+espera:
+
+  <!-- HTML: seções-"tela", só uma visível por vez -->
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <main>
+    <section id="inicio" class="tela">...</section>
+    <section id="catalogo" class="tela oculta">...</section>
+    <section id="contato" class="tela oculta">...</section>
+  </main>
+
+  // JS: o "roteador" — reage à mudança do hash (#) na URL
+  function navegar() {
+    const rota = location.hash || "#inicio";
+
+      document.querySelectorAll(".tela").forEach(t => t.classList.add("oculta"));
+      document.querySelector(rota)?.classList.remove("oculta");
+
+      if (rota === "#catalogo") carregarCards();         // busca dados ao entrar na tela
+  }
+
+  window.addEventListener("hashchange", navegar);         // usuário navegou
+  navegar();                                              // primeira carga (respeita a URL atual)
+
+
+Usar o hash mantém o histórico do navegador funcionando: voltar/avançar e favoritar continuam operando — cuidado clássico de SPAs
+bem feitas.
+
+
+6. Rumo à Avaliação 2 (até 27/10, 23h59)
+
+Critérios do plano de curso e onde cada um foi construído:
+1. Validação de formulários — Aulas 3 (nativa) e 7 (JS com mensagens); aperfeiçoe as mensagens por campo;
+2. DOM e eventos — Aulas 7 e 8 (render de cards, filtros, menu acessível);
+3. Programação assíncrona — Aula 9 (async/await, estados de carregamento) + fetch de hoje;
+4. SPA com AJAX/JSON — a navegação por hash da seção 5 com os cards alimentados por fetch .
+
+
+7. Atividade extraclasse (assíncrona — SIGAA)
+
+1. Substituir a Promise simulada da Aula 9 por um fetch real: consumir a JSONPlaceholder (ou outra API pública de sua escolha) e
+      renderizar os dados nos cards com o padrão carregando/sucesso/erro;
+2. Implementar a navegação SPA por hash (seção 5.1) com pelo menos 3 telas;
+3. Fazer o formulário enviar via POST com feedback de sucesso/erro sem recarregar;
+4. Bônus: adicionar a consulta de CEP do ViaCEP ao formulário;
+5. Commit + push e entregar o link no SIGAA;
+6. Finalizar a Avaliação 2 até 27/10, 23h59 (critérios na seção 6);
+7. Leitura dirigida (Biblioteca Virtual da UNEMAT): Queirós e Portela, introdução ao back-end e Node.js — a Unidade 3 começa na
+      próxima aula.
+
+  PRÓXIMA AULA (20/10) — INÍCIO DA UNIDADE 3
+  Node.js e Express: o JavaScript atravessa a rede e passa a rodar no servidor. Você deixará de consumir APIs dos outros para
+  construir a sua.
+
+
+
+8. Referências
+
+QUEIRÓS, Ricardo; PORTELA, Filipe. Introdução ao Desenvolvimento Moderno para a Web: do front-end ao back-end, uma visão global. Lisboa: FCA, 2018.
+— AJAX, JSON e comunicação com o servidor.
+
+LOUDON, Kyle. Desenvolvimento de Grandes Aplicações Web. São Paulo: Novatec, 2019. — Arquitetura de aplicações ricas no cliente.
+
+PUREWAL, Semmy. Aprendendo a Desenvolver Aplicações Web. São Paulo: Novatec, 2014. — AJAX e integração com APIs.
+MDN Web Docs. Fetch API; Working with JSON. Disponível em: developer.mozilla.org. Acesso em: out. 2026.
+
+ECMA INTERNATIONAL. ECMA-404 — The JSON Data Interchange Syntax. Disponível em: ecma-international.org. Acesso em: out. 2026.
+
+
+
+                           FACET-SNP-307 — Desenvolvimento Web • 2026/2 • Aula 10 • Prof. Dr. Ivan Luiz Pedroso Pires — UNEMAT Sinop
+
