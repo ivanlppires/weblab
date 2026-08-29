@@ -93,10 +93,40 @@ def _separar_callouts(md_texto: str) -> str:
     return "\n".join(out)
 
 
+def _linguagens_dos_fences(md_texto: str):
+    """Linguagens dos fences de abertura, em ordem de documento."""
+    langs = []
+    aberto = None
+    for linha in md_texto.splitlines():
+        m = _RE_FENCE.match(linha)
+        if not m:
+            continue
+        marcador, lang, resto = m.group(1), m.group(2), m.group(3)
+        if aberto is None:
+            aberto = (marcador[0], len(marcador))
+            langs.append(lang.lower())
+        elif marcador[0] == aberto[0] and len(marcador) >= aberto[1] and not lang and not resto.strip():
+            aberto = None
+    return langs
+
+
+_RE_DIV_CODE = re.compile(r'<div class="codehilite">')
+
+
 def converter(md_texto: str) -> str:
-    """Markdown → HTML bruto (com ids nos títulos e código destacado)."""
+    """Markdown → HTML bruto (com ids nos títulos e código destacado).
+
+    O codehilite não registra a linguagem no HTML; casamos os fences do Markdown
+    com os blocos gerados (mesma ordem) e gravamos data-lang em cada <div>.
+    """
     _MD.reset()
-    return _MD.convert(_separar_callouts(md_texto))
+    texto = _separar_callouts(md_texto)
+    html = _MD.convert(texto)
+    langs = _linguagens_dos_fences(texto)
+    if len(langs) == len(_RE_DIV_CODE.findall(html)):
+        it = iter(langs)
+        html = _RE_DIV_CODE.sub(lambda m: f'<div class="codehilite" data-lang="{next(it)}">', html)
+    return html
 
 
 # --------------------------------------------------------------------------
@@ -149,15 +179,13 @@ CALLOUTS = [
 ]
 
 _RE_BLOCO = re.compile(
-    r'<div class="codehilite(?: [^"]*)?"(?: [^>]*)?>\s*(<pre[\s\S]*?</pre>)\s*</div>'
+    r'<div class="codehilite"(?: data-lang="([^"]*)")?>\s*(<pre[\s\S]*?</pre>)\s*</div>'
 )
-_RE_LANG = re.compile(r'<code class="language-([\w+.-]+)"')
 
 
 def _bloco(m):
-    pre = m.group(1)
-    ml = _RE_LANG.search(pre)
-    lang = ml.group(1).lower() if ml else ""
+    lang = (m.group(1) or "").lower()
+    pre = m.group(2)
     rotulo = ROTULOS.get(lang, lang.upper() if lang else "Código")
     return (
         '<div class="bloco"><div class="bloco-topo"><span class="lang">' + html_mod.escape(rotulo) + "</span>"
@@ -180,12 +208,10 @@ _TAGS_CRUAS = ("template", "script", "style", "iframe", "textarea", "object", "e
 
 
 def enfeitar(corpo: str) -> str:
-    """Callouts por emoji, blocos de código com cabeçalho, tabelas roláveis, escape de tags cruas."""
-    corpo = _RE_BLOCO.sub(_bloco, corpo)
-    corpo = re.sub(r"<blockquote>([\s\S]*?)</blockquote>", _callout, corpo)
-    corpo = corpo.replace("<table>", '<div class="tabela-wrap"><table>').replace("</table>", "</table></div>")
+    """Escape de tags cruas, callouts por emoji, blocos de código com cabeçalho, tabelas roláveis."""
     # rede de segurança: tags cruas escritas fora de blocos de código quebram a página.
     # O código real já vem escapado pelo Pygments; qualquer ocorrência aqui é acidental.
+    # Roda ANTES de gerar a nossa própria marcação (botão Copiar etc.).
     for tag in _TAGS_CRUAS:
         corpo = re.sub(
             r"<(/?)" + tag + r"(\s[^>]*)?>",
@@ -193,6 +219,9 @@ def enfeitar(corpo: str) -> str:
             corpo,
             flags=re.I,
         )
+    corpo = _RE_BLOCO.sub(_bloco, corpo)
+    corpo = re.sub(r"<blockquote>([\s\S]*?)</blockquote>", _callout, corpo)
+    corpo = corpo.replace("<table>", '<div class="tabela-wrap"><table>').replace("</table>", "</table></div>")
     return corpo
 
 
