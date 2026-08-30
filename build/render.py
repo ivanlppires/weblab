@@ -112,6 +112,66 @@ def _linguagens_dos_fences(md_texto: str):
 
 _RE_DIV_CODE = re.compile(r'<div class="codehilite">')
 
+_RE_DETAILS_ABERTURA = re.compile(r'^<details>(?:<summary>(.*?)</summary>)?\s*$')
+_RE_SUMMARY_SOZINHO = re.compile(r'^<summary>(.*?)</summary>\s*$')
+
+
+def _indices_fora_de_codigo(linhas):
+    """Índices (0-based) das linhas que não estão dentro de blocos de código (fences)."""
+    aberto = None
+    fora = set()
+    for i, linha in enumerate(linhas):
+        m = _RE_FENCE.match(linha)
+        if m:
+            marcador, lang, resto = m.group(1), m.group(2), m.group(3)
+            if aberto is None:
+                aberto = (marcador[0], len(marcador))
+                continue
+            if marcador[0] == aberto[0] and len(marcador) >= aberto[1] and not lang and not resto.strip():
+                aberto = None
+                continue
+        if aberto is None:
+            fora.add(i)
+    return fora
+
+
+def normalizar_details(md_texto: str) -> str:
+    """Normaliza '<details><summary>…</summary>' (sem markdown="1") para o formato que o
+    md_in_html do python-markdown processa corretamente: '<details markdown="1">' numa
+    linha, '<summary>…</summary>' na linha seguinte e uma linha em branco depois.
+
+    Sem isso o python-markdown trata o bloco como HTML cru: o conteúdo (crases, listas,
+    fences) sai literal, e se o texto interno mencionar "<details...>" o parser de HTML
+    cru entende uma tag aninhada e engole o restante do arquivo procurando o fechamento
+    correspondente. Blocos que já têm markdown="1" ficam como estão. Não mexe em linhas
+    dentro de fences de código.
+    """
+    linhas = md_texto.splitlines()
+    fora = _indices_fora_de_codigo(linhas)
+    out = []
+    i = 0
+    n = len(linhas)
+    while i < n:
+        linha = linhas[i]
+        if i in fora:
+            m = _RE_DETAILS_ABERTURA.match(linha)
+            if m:
+                resumo = m.group(1)
+                if resumo is None and i + 1 < n and (i + 1) in fora:
+                    m2 = _RE_SUMMARY_SOZINHO.match(linhas[i + 1])
+                    if m2:
+                        resumo = m2.group(1)
+                        i += 1  # consome a linha do <summary>
+                out.append('<details markdown="1">')
+                if resumo is not None:
+                    out.append(f"<summary>{resumo}</summary>")
+                    out.append("")
+                i += 1
+                continue
+        out.append(linha)
+        i += 1
+    return "\n".join(out)
+
 
 def converter(md_texto: str) -> str:
     """Markdown → HTML bruto (com ids nos títulos e código destacado).
@@ -120,7 +180,8 @@ def converter(md_texto: str) -> str:
     com os blocos gerados (mesma ordem) e gravamos data-lang em cada <div>.
     """
     _MD.reset()
-    texto = _separar_callouts(md_texto)
+    texto = normalizar_details(md_texto)
+    texto = _separar_callouts(texto)
     html = _MD.convert(texto)
     langs = _linguagens_dos_fences(texto)
     if len(langs) == len(_RE_DIV_CODE.findall(html)):

@@ -126,3 +126,66 @@ def test_enfeitar_desafios_envolve_em_article():
     assert 'class="estrelas"' in out
     # o conteúdo posterior (Erros comuns) não é engolido pelo último article
     assert out.index("</article>", out.rindex('<article class="desafio"')) < out.index("Erros comuns")
+
+
+# --------------------------------------------------------------------------
+# <details><summary>…</summary> sem markdown="1" (formato do Nível 1/2/deploy)
+# --------------------------------------------------------------------------
+DETALHES_SIMPLES = """<details><summary>Dica</summary>
+
+Use `min-height: 100vh` e uma lista:
+
+- item um
+- item dois
+
+```js
+const x = 1;
+```
+</details>
+"""
+
+
+def test_details_summary_mesma_linha_processa_markdown_interno():
+    html = render.converter(DETALHES_SIMPLES)
+    assert "<details" in html
+    assert "<summary>Dica</summary>" in html
+    assert "<code>" in html  # crases viraram <code>
+    assert "<ul>" in html and "<li>" in html  # lista viraram <ul>/<li>
+    assert "<pre" in html and "codehilite" in html  # fence virou bloco destacado
+    assert "`" not in html  # nenhuma crase literal sobrou
+    assert "- item" not in html  # nenhum "- item" literal (lista crua) sobrou
+
+
+def test_details_summary_seguido_de_titulo_no_gera_h3():
+    md = DETALHES_SIMPLES + "\n### Título seguinte\ntexto\n"
+    html = render.converter(md)
+    assert '<h3 id="titulo-seguinte">' in html
+
+
+def test_details_summary_mencionando_a_propria_tag_nao_engole_o_resto():
+    md = (
+        '<details><summary>Dica</summary>\n\n'
+        'Para fechar os outros, use `<details name="acordeao">` com o mesmo `name`, '
+        'ou dentro de `<details>` simples.\n'
+        '</details>\n\n'
+        '### Título depois\n'
+        'texto do resto do arquivo\n'
+    )
+    html = render.converter(md)
+    assert '<h3 id="titulo-depois">' in html
+    assert "&lt;details" in html  # a menção à tag aparece escapada, não crua
+
+
+def test_details_markdown_1_com_summary_na_linha_seguinte_continua_funcionando():
+    md = (
+        '<details markdown="1">\n'
+        '<summary>Dica</summary>\n\n'
+        'Cinco linhas — uma por endpoint.\n'
+        '</details>\n\n'
+        '### Título depois\n'
+        'texto\n'
+    )
+    html = render.converter(md)
+    assert "<summary>Dica</summary>" in html
+    assert "<p>Cinco linhas" in html
+    assert '<h3 id="titulo-depois">' in html

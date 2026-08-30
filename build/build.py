@@ -33,16 +33,19 @@ def _renderizar_aula(t, a, texto):
     return html, itens, desafios
 
 
-def gerar(parcial: bool = False):
+def gerar(parcial: bool = False, forcar: bool = False):
+    """forcar=True ignora erros de lint (só para pré-visualizar durante a escrita)."""
     site = config.SITE
     fontes = config.FONTES
 
     erros = lint.lint_tudo(parcial=parcial)
-    if erros:
+    if erros and not forcar:
         for er in erros:
             print("✗", er)
-        print(f"{len(erros)} erro(s) de lint — corrija antes de gerar.")
+        print(f"{len(erros)} erro(s) de lint — corrija antes de gerar (ou use --forcar para pré-visualizar).")
         sys.exit(1)
+    elif erros:
+        print(f"⚠ {len(erros)} erro(s) de lint ignorados (--forcar)")
 
     if site.exists():
         shutil.rmtree(site)
@@ -159,8 +162,8 @@ def checar_links(site: Path):
     for arq in site.rglob("*.html"):
         texto = _ler(arq)
         proprios = set(_RE_ID.findall(texto))
-        # ignora o JS/CSS inline (contém strings com href=)
-        texto = re.sub(r"<script>[\s\S]*?</script>|<style>[\s\S]*?</style>", "", texto)
+        # ignora o JS/CSS inline e trechos de código (contêm strings com href=/src=)
+        texto = re.sub(r"<script>[\s\S]*?</script>|<style>[\s\S]*?</style>|<pre[\s\S]*?</pre>|<code[^>]*>[\s\S]*?</code>", "", texto)
         for alvo in set(_RE_HREF.findall(texto)):
             if alvo.startswith(("http://", "https://", "mailto:", "data:", "javascript:", "tel:")):
                 continue
@@ -185,4 +188,4 @@ def checar_links(site: Path):
 
 
 if __name__ == "__main__":
-    gerar(parcial="--parcial" in sys.argv)
+    gerar(parcial="--parcial" in sys.argv, forcar="--forcar" in sys.argv)
