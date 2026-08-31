@@ -18,6 +18,24 @@ RESUMO = (
     "com 57 aulas, banco de desafios e um gerador de site estático em Python. O material é "
     "atemporal: não traz datas, notas nem prazos, e cada unidade fecha com um marco de projeto."
 )
+DESCRICAO_HTML = (
+    "<p><strong>WebLab</strong> é um curso online aberto de desenvolvimento web em português do Brasil, "
+    "publicado em <a href=\"https://weblab.aprendabit.com\">weblab.aprendabit.com</a>. "
+    "Reúne <strong>57 aulas</strong> em quatro trilhas — introdução (HTML, CSS e JavaScript), desenvolvimento web "
+    "(frameworks CSS, SVG, acessibilidade, SPA e back-end com Node.js/Express), frameworks modernos "
+    "(Vue 3, Vuetify, Pinia, MySQL, Supabase, Firebase e Swagger) e uma trilha transversal de deploy e ferramentas "
+    "(Git, publicação, DNS e HTTPS, VPS com nginx, Docker, CI/CD, observabilidade e uso de IA).</p>"
+    "<p>Cada aula traz objetivos, teoria com código completo, um passo a passo guiado em um projeto contínuo, "
+    "laboratório em três níveis de dificuldade, desafios com estrelas, tabela de erros comuns e checkpoint. "
+    "Os <strong>221 desafios</strong> são reunidos em um banco filtrável por trilha, tema e dificuldade.</p>"
+    "<p>O material é <strong>atemporal e aberto</strong>: não traz datas, notas, prazos nem entrega institucional, "
+    "e cada unidade fecha com um <em>marco do projeto</em> — o estado que o projeto do estudante precisa alcançar. "
+    "Serve tanto a quem cursa uma disciplina quanto a quem estuda por conta própria.</p>"
+    "<p>O depósito inclui o <strong>gerador do site</strong>: um sistema em Python que valida as fontes em Markdown "
+    "contra uma especificação editorial, converte o material e publica um sítio estático autocontido, com busca, "
+    "progresso local e verificação de enlaces.</p>"
+)
+
 PALAVRAS = ["desenvolvimento web", "recurso educacional aberto", "ensino de programação",
             "HTML", "CSS", "JavaScript", "Node.js", "Vue.js", "material didático"]
 
@@ -86,13 +104,19 @@ def zenodo():
         criadores.append(item)
     return json.dumps({
         "title": f"{config.NOME_SITE} — {config.SUBTITULO}",
-        "description": RESUMO,
+        "description": DESCRICAO_HTML,
         "creators": criadores,
         "upload_type": "software",
         "license": "cc-by-4.0",
         "keywords": PALAVRAS,
         "language": "por",
         "access_right": "open",
+        "related_identifiers": [
+            {"identifier": config.URL_BASE, "relation": "isIdenticalTo",
+             "resource_type": "other", "scheme": "url"},
+        ],
+        "notes": ("Recurso educacional aberto. O conteúdo didático está sob CC BY 4.0 e o "
+                  "gerador do site sob licença MIT; ver LICENSE no repositório."),
     }, ensure_ascii=False, indent=2) + "\n"
 
 
