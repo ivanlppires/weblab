@@ -1,7 +1,7 @@
 # Aula 15 — CRUD com front-end assíncrono
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Sua API já faz CRUD completo e já sabe quem está batendo na porta. Só que, até agora, quem usou esses recursos foi você — pelo `testes.http`, com a extensão REST Client. Nenhuma outra pessoa consegue cadastrar um café no Café Cerrado sem escrever uma requisição HTTP na mão. Hoje isso muda: a interface que você construiu na Unidade 2 passa a criar, editar e excluir produtos consumindo a sua própria API, sem recarregar a página uma única vez.

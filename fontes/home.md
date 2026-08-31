@@ -28,10 +28,10 @@ O WebLab funciona dos dois jeitos. Cada unidade fecha com um **marco do projeto*
 - [Nível 2 — Desenvolvimento Web](nivel-2/#marcos)
 - [Nível 3 — Frameworks Modernos](nivel-3/#marcos)
 
-Não há prova, nota nem prazo aqui: o material é o mesmo em qualquer época e para qualquer pessoa. Quem cursa a disciplina na UNEMAT recebe do professor as regras de entrega e as datas da turma; quem estuda sozinho usa os marcos como metas e o projeto autoral como portfólio.
+Não há prova, nota nem prazo aqui: o material é o mesmo em qualquer época e para qualquer pessoa. Quem cursa uma disciplina que use este material recebe do professor as regras de entrega e o calendário da turma; quem estuda por conta própria usa os marcos como metas e o projeto autoral como portfólio.
 
 ## Sobre este material
 
-O WebLab é escrito e revisado por professores da **UNEMAT — Campus Sinop (FACET)** e nasceu das disciplinas de desenvolvimento web dos cursos de Tecnologia em Análise e Desenvolvimento de Sistemas e Sistemas de Informação. É publicado aberto: qualquer pessoa pode estudar por ele, em qualquer lugar, no seu ritmo. Quem escreveu e revisou cada parte está em [Autoria e créditos](autores/). As fontes em Markdown e o gerador do site estão no [GitHub](https://github.com/ivanlppires/weblab) — correções e sugestões são bem-vindas por *issue* ou *pull request*.
+O WebLab é escrito e revisado por um grupo de professores universitários de computação. Nasceu de disciplinas de graduação em desenvolvimento web e é publicado aberto: qualquer pessoa pode estudar por ele, em qualquer lugar, no seu ritmo — sem matrícula, sem prazo e sem custo. Quem escreveu e revisou cada parte, e onde cada um leciona, está em [Autoria e créditos](autores/). As fontes em Markdown e o gerador do site estão no [GitHub](https://github.com/ivanlppires/weblab) — correções e sugestões são bem-vindas por *issue* ou *pull request*.
 
 Material didático de uso educacional: livre para consulta, estudo e reuso com atribuição. Nomes de produtos e marcas citados pertencem aos seus donos.

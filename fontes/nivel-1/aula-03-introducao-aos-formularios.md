@@ -1,7 +1,7 @@
 # Aula 03 — Introdução aos formulários
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -388,9 +388,9 @@ Nas caixas de seleção, o `name` repetido tem outro efeito: o servidor recebe *
 <input type="text" id="instituicao" name="instituicao" list="instituicoes"
        autocomplete="organization">
 <datalist id="instituicoes">
-  <option value="UNEMAT — Campus Sinop"></option>
+  <option value="Universidade Estadual — Campus Sinop"></option>
   <option value="UFMT — Campus Sinop"></option>
-  <option value="IFMT — Campus Sorriso"></option>
+  <option value="Instituto Federal — Campus Sorriso"></option>
   <option value="UNIC"></option>
   <option value="Outra instituição"></option>
 </datalist>
@@ -568,14 +568,14 @@ Abra `inscricao.html` e substitua o conteúdo inteiro por este esqueleto. O `<he
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Formulário de inscrição na Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: dados pessoais, acadêmicos e escolha de oficinas.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Formulário de inscrição na Semana Acadêmica de Sistemas de Informação: dados pessoais, acadêmicos e escolha de oficinas.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Inscrição — Semana Acadêmica de Sistemas de Informação</title>
 </head>
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -598,12 +598,12 @@ Abra `inscricao.html` e substitua o conteúdo inteiro por este esqueleto. O `<he
   </main>
 
   <footer>
-    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
     <p>
-      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
       <a href="tel:+556635111000">(66) 3511-1000</a>
     </p>
-    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+    <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
   </footer>
 </body>
 </html>
@@ -693,9 +693,9 @@ Repare no `type="date"` com `min="1930-01-01"`: o formato do atributo é sempre 
                  placeholder="Comece a digitar para ver sugestões"
                  autocomplete="organization">
           <datalist id="instituicoes">
-            <option value="UNEMAT — Campus Sinop"></option>
+            <option value="Universidade Estadual — Campus Sinop"></option>
             <option value="UFMT — Campus Sinop"></option>
-            <option value="IFMT — Campus Sorriso"></option>
+            <option value="Instituto Federal — Campus Sorriso"></option>
             <option value="UNIC — Sinop"></option>
             <option value="Escola de ensino médio"></option>
           </datalist>

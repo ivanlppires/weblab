@@ -1,7 +1,7 @@
 # Aula 01 — Apresentação da trilha e revisão de JavaScript
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -23,7 +23,7 @@ Esta é a primeira aula — não há pré-requisito de conteúdo desta trilha. V
 
 - Um notebook capaz de rodar Node.js 22 e o VS Code (Windows, Linux ou macOS).
 - Conta no [GitHub](https://github.com) criada antes da aula.
-- Conhecimento prévio de lógica de programação e alguma exposição a HTML/CSS/JS (pré-requisito formal: FACET-SNP-307).
+- Conhecimento prévio de lógica de programação e alguma exposição a HTML/CSS/JS (pré-requisito formal: a disciplina de Nível 2 desta sequência, ou conhecimento equivalente).
 
 > **⚠️ Atenção**
 > Se você nunca escreveu uma linha de JavaScript, não entre em pânico — a Seção 3 desta aula é uma revisão completa. Mas reserve um tempo extra para os laboratórios em casa.
@@ -40,7 +40,7 @@ Esta é a primeira aula — não há pré-requisito de conteúdo desta trilha. V
 
 ### 1.1 O que é esta trilha
 
-Esta trilha nasceu da disciplina **FACET-SNP-310 — Frameworks Modernos para Desenvolvimento de Sistemas** (FACET/UNEMAT — Campus Sinop) e é publicada aberta: são 15 aulas de cerca de 150 minutos cada, mais uma hora de prática por aula. Quem cursa a disciplina acompanha o calendário da turma; quem estuda por conta própria avança no ritmo que conseguir sustentar — a ordem das aulas é a mesma nos dois casos, porque cada uma depende da anterior. Quem escreveu e revisou cada parte está na página [Autoria e créditos](../autores/).
+Esta trilha nasceu de uma disciplina de graduação em frameworks modernos e integração de sistemas e é publicada aberta: são 15 aulas de cerca de 150 minutos cada, mais uma hora de prática por aula. Quem cursa a disciplina acompanha o calendário da turma; quem estuda por conta própria avança no ritmo que conseguir sustentar — a ordem das aulas é a mesma nos dois casos, porque cada uma depende da anterior. Quem escreveu e revisou cada parte está na página [Autoria e créditos](../autores/).
 
 O que esta trilha cobre:
 
@@ -112,7 +112,7 @@ Exemplos de temas válidos:
 
 - Catálogo de plantas do Pantanal, com filtro por bioma e época de floração.
 - Agenda de quadras esportivas do bairro, com reserva de horário.
-- Mural de estágios e vagas para estudantes da FACET.
+- Mural de estágios e vagas para estudantes.
 - Brechó colaborativo, com peças, categorias e reserva.
 - Controle de pescarias, com espécies, rio e datas.
 - Cardápio digital de um restaurante, com categorias de prato e pedidos.
@@ -218,7 +218,7 @@ Imagine que você precisa mostrar uma lista de eventos acadêmicos na tela, com 
 const eventos = [
   { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', vagas: 40 },
   { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', vagas: 25 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', vagas: 60 },
+  { id: 3, titulo: 'Hackathon de Tecnologia', categoria: 'workshop', vagas: 60 },
   { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', vagas: 80 },
 ]
 
@@ -528,7 +528,7 @@ Vamos usar o mesmo array de eventos em todos os exemplos — é o dado que suste
 const eventos = [
   { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2030-09-10T19:00:00', vagas: 40, inscritos: 12 },
   { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2030-08-20T14:00:00', vagas: 25, inscritos: 25 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
+  { id: 3, titulo: 'Hackathon de Tecnologia', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
   { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2030-08-18T19:30:00', vagas: 80, inscritos: 55 },
 ]
 ```
@@ -538,7 +538,7 @@ const eventos = [
 ```js
 const titulos = eventos.map((evento) => evento.titulo)
 console.log(titulos)
-// ['Semana da Computação', 'Oficina de Vue.js', 'Hackathon FACET', 'Introdução a IA']
+// ['Semana da Computação', 'Oficina de Vue.js', 'Hackathon de Tecnologia', 'Introdução a IA']
 
 // map devolvendo objetos NOVOS (sem mutar os originais) — padrão que
 // vamos repetir sempre que precisarmos "decorar" dados para a tela
@@ -581,7 +581,7 @@ console.log(Object.keys(porCategoria)) // ['palestra', 'minicurso', 'workshop']
 
 ```js
 const eventoBuscado = eventos.find((evento) => evento.id === 3)
-console.log(eventoBuscado.titulo) // Hackathon FACET
+console.log(eventoBuscado.titulo) // Hackathon de Tecnologia
 
 const inexistente = eventos.find((evento) => evento.id === 999)
 console.log(inexistente) // undefined
@@ -605,7 +605,7 @@ const eventosPorData = [...eventos].sort(
   (a, b) => new Date(a.dataHora) - new Date(b.dataHora),
 )
 console.log(eventosPorData.map((e) => e.titulo))
-// ['Introdução a IA', 'Oficina de Vue.js', 'Semana da Computação', 'Hackathon FACET']
+// ['Introdução a IA', 'Oficina de Vue.js', 'Semana da Computação', 'Hackathon de Tecnologia']
 
 console.log(eventos.map((e) => e.titulo))
 // ainda na ordem original — porque ordenamos a CÓPIA, não `eventos`
@@ -954,7 +954,7 @@ touch index.html eventos.js main.js
 export const eventos = [
   { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2030-09-10T19:00:00', vagas: 40, inscritos: 12 },
   { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2030-08-20T14:00:00', vagas: 25, inscritos: 25 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
+  { id: 3, titulo: 'Hackathon de Tecnologia', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
   { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2030-08-18T19:30:00', vagas: 80, inscritos: 55 },
 ]
 
@@ -1092,7 +1092,7 @@ Resultado esperado: falta copiar o array antes de ordenar — `lista.sort(...)` 
 **A5.** Preveja a saída do trecho abaixo usando o que a Seção 3.7 explica sobre optional chaining e nullish coalescing:
 
 ```js
-const evento = { titulo: 'Hackathon FACET', local: { predio: 'Bloco B' } }
+const evento = { titulo: 'Hackathon de Tecnologia', local: { predio: 'Bloco B' } }
 console.log(evento.local?.sala ?? 'a definir')
 console.log(evento.organizador?.contato?.email ?? 'sem contato')
 ```
@@ -1103,7 +1103,7 @@ Resultado esperado: `a definir` (a propriedade `sala` não existe dentro de `loc
 
 **B1.** Filtrar por categoria. Escreva uma função `apenasWorkshops(lista)` que retorne só os eventos de categoria `'workshop'`, usando `filter`.
 
-Resultado esperado: array com 1 item (`Hackathon FACET`).
+Resultado esperado: array com 1 item (`Hackathon de Tecnologia`).
 
 <details markdown="1">
 <summary>Dica</summary>

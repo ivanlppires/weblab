@@ -1,7 +1,7 @@
 # Aula 08 — Arrow functions, callbacks e operações em vetores
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 07 você plantou uma ideia quase de passagem: em JavaScript, função é um valor. Ela apareceu no `addEventListener`, quando você entregou uma função ao navegador para que ele a chamasse depois. Hoje essa ideia deixa de ser detalhe e vira a ferramenta principal. Arrow functions, callbacks e os métodos de array que os recebem são o vocabulário com que se escreve JavaScript profissional — e são exatamente o que as Promises da próxima aula pressupõem que você já domina.
@@ -1111,7 +1111,7 @@ No repositório do **seu projeto autoral**:
 
 **Guarde no seu repositório:** commit + push.
 
-**Leitura dirigida (Biblioteca Virtual da UNEMAT):** Queirós e Portela, seções de JavaScript avançado; Loudon, padrões de código JavaScript escalável; MDN, "Array" (métodos) e "Introducing asynchronous JavaScript" — preparação direta para a próxima aula.
+**Leitura dirigida (se você tem acesso a uma biblioteca virtual pela sua instituição):** Queirós e Portela, seções de JavaScript avançado; Loudon, padrões de código JavaScript escalável; MDN, "Array" (métodos) e "Introducing asynchronous JavaScript" — preparação direta para a próxima aula.
 
 ## ✅ Checkpoint do projeto
 

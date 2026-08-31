@@ -1,7 +1,7 @@
 # Capítulo 08 — Bancos de dados na nuvem
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -496,7 +496,7 @@ const EVENTOS = [
   {
     titulo: 'Semana Acadêmica de Sistemas de Informação',
     categoria: 'palestra',
-    local: 'Auditório da FACET',
+    local: 'Auditório Central',
     vagas: 120,
     descricao: 'Abertura com egressos do curso contando o primeiro emprego.',
   },

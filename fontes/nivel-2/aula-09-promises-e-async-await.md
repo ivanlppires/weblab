@@ -1,7 +1,7 @@
 # Aula 09 — Promises e async/await
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Até agora todos os dados do Café Cerrado estavam prontos no momento em que a página abria: o array `produtos` já existia dentro do `js/app.js`, e renderizar os cards era uma questão de percorrer o que já estava na memória. No mundo real isso não acontece. Os dados moram em outro computador, do outro lado de uma rede que pode estar rápida, lenta ou fora do ar — e o navegador não pode parar tudo para esperar. Hoje você aprende o mecanismo que o JavaScript inventou para lidar com valores que ainda não chegaram: a **Promise**, e a sintaxe que a tornou confortável, o **async/await**.
@@ -1383,7 +1383,7 @@ No **seu projeto autoral** (não no Café Cerrado), aplique tudo o que fizemos h
 
 **Guarde no seu repositório:** commit + push.
 
-**Leitura dirigida (Biblioteca Virtual da UNEMAT):** QUEIRÓS & PORTELA, capítulo de JavaScript assíncrono; MDN, *Usando Promises* e a página da *Fetch API* — o `fetch` é o protagonista da próxima aula.
+**Leitura dirigida (se você tem acesso a uma biblioteca virtual pela sua instituição):** QUEIRÓS & PORTELA, capítulo de JavaScript assíncrono; MDN, *Usando Promises* e a página da *Fetch API* — o `fetch` é o protagonista da próxima aula.
 
 ## ✅ Checkpoint do projeto
 

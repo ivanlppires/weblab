@@ -1,7 +1,7 @@
 # Aula 14 — Documentação com Swagger
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -161,7 +161,7 @@ Vantagem: controle total do texto, sem depender de comentário no meio do códig
 ![Licença](https://img.shields.io/badge/licença-MIT-lightgrey)
 
 API REST da plataforma **UniEventos** — divulgação e inscrição em eventos acadêmicos.
-Projeto desenvolvido na disciplina FACET-SNP-310 (UNEMAT/Sinop).
+Projeto desenvolvido na disciplina em que esta trilha nasceu.
 
 ## Requisitos
 
@@ -354,10 +354,10 @@ const opcoes = {
       version: '1.0.0',
       description:
         'API REST da plataforma UniEventos — divulgação e inscrição em eventos acadêmicos. ' +
-        'Desenvolvida na disciplina FACET-SNP-310 (UNEMAT/Sinop).',
+        'Desenvolvida na disciplina em que esta trilha nasceu.',
       contact: {
         name: 'Equipe UniEventos',
-        email: 'ivanpires@unemat.br',
+        email: 'contato@unieventos.exemplo',
       },
       license: {
         name: 'MIT',
@@ -443,7 +443,7 @@ Antes de anotar cada rota, definimos os formatos de objeto que se repetem — as
  *           example: 3
  *         titulo:
  *           type: string
- *           example: Hackathon FACET
+ *           example: Hackathon de Tecnologia
  *         descricao:
  *           type: string
  *           example: Maratona de programação de 24 horas aberta a todos os cursos.
@@ -1148,6 +1148,6 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 - [Swagger.io — guia oficial de OpenAPI](https://swagger.io/docs/specification/about/)
 - [ADR GitHub organization — modelos de Architecture Decision Record](https://adr.github.io)
 - [Keep a README — checklist do que compõe um bom README](https://www.makeareadme.com/)
-- Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre documentação de APIs REST e contratos de serviço.
+- Bibliografia do plano da disciplina em que esta trilha nasceu — capítulos sobre documentação de APIs REST e contratos de serviço.
 
 **Na Aula 15** fechamos esta trilha com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, perguntas para testar seu domínio e os requisitos completos do Marco 3. Traga a API documentada e pronta para publicar.

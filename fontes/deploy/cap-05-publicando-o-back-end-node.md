@@ -1,7 +1,7 @@
 # Capítulo 05 — Publicando o back-end Node
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem

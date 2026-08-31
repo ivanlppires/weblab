@@ -1,7 +1,7 @@
 # Capítulo 06 — Servidor próprio (VPS) com nginx
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -22,7 +22,7 @@ Ao final deste capítulo você será capaz de:
 
 - [ ] Capítulos 02 e 04 concluídos: repositórios no GitHub e um domínio (ou subdomínio gratuito) sob seu controle, com acesso ao painel de DNS.
 - [ ] Terminal com `ssh`, `rsync` e `dig` (Windows: use o WSL — todos os comandos deste capítulo assumem um shell Linux/macOS).
-- [ ] Um VPS próprio — a §2 lista opções a partir de poucos reais por mês. Se você é aluno da turma de Deploy & Ferramentas na UNEMAT Sinop, vale também o acesso ao laboratório da disciplina (`gN@ivanpires.dev`) fornecido pelo professor, descrito na §11.
+- [ ] Um VPS próprio — a §2 lista opções a partir de poucos reais por mês. Se você cursa a disciplina em que este material nasceu, vale também o acesso ao laboratório (`gN@ivanpires.dev`) fornecido pelo professor, descrito na §11.
 - [ ] `unieventos-api` (Nível 3) e `unieventos-web` funcionando na sua máquina, com `npm run build` gerando `dist/`. Não está no Nível 3? Use a `cafe-cerrado-api` e o Café Cerrado estático — os passos são idênticos.
 - [ ] Paciência para errar: você **vai** se trancar fora do servidor pelo menos uma vez. A §4 mostra como não perder o acesso de vez.
 
@@ -687,9 +687,9 @@ Guarde a linha de publicação em um script do `package.json` para não errar a 
 }
 ```
 
-## 11. Estudo de caso: o laboratório da turma da UNEMAT em `ivanpires.dev/dsw/gN/`
+## 11. Estudo de caso: o laboratório da turma em `ivanpires.dev/dsw/gN/`
 
-Esta seção descreve o servidor real da turma de Deploy & Ferramentas na UNEMAT Sinop — é o mesmo VPS que hospeda este WebLab, com uma conta por grupo. Se você é aluno dessa turma, é o ambiente que você vai usar, e o acesso é fornecido pelo professor. Se está estudando por conta própria, leia esta seção como um **estudo de caso completo** de tudo o que as §§1–10 ensinaram, aplicado a um servidor de verdade — e repita o mesmo desenho no seu próprio VPS. Substitua `N` pelo número do seu grupo em tudo o que segue — os exemplos usam o grupo 3.
+Esta seção descreve o servidor real da turma da disciplina em que este material nasceu — é o mesmo VPS que hospeda este WebLab, com uma conta por grupo. Se você é aluno dessa turma, é o ambiente que você vai usar, e o acesso é fornecido pelo professor. Se está estudando por conta própria, leia esta seção como um **estudo de caso completo** de tudo o que as §§1–10 ensinaram, aplicado a um servidor de verdade — e repita o mesmo desenho no seu próprio VPS. Substitua `N` pelo número do seu grupo em tudo o que segue — os exemplos usam o grupo 3.
 
 ### 11.1 O que cada grupo recebe
 

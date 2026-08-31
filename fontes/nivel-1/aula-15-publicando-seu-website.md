@@ -1,7 +1,7 @@
 # Aula 15 — Publicando seu website na internet
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -60,7 +60,7 @@ O primeiro modelo é o desta aula, e o serviço que você vai usar — o GitHub 
 
 ### 1.2 Domínio: o nome que as pessoas digitam
 
-Servidores são encontrados por **endereço IP** (`185.199.108.153`, por exemplo). Ninguém decora isso. O **domínio** é um apelido legível — `unemat.br`, `github.io`, `weblab.aprendabit.com` — e o **DNS** é a agenda telefônica mundial que traduz o apelido no número.
+Servidores são encontrados por **endereço IP** (`185.199.108.153`, por exemplo). Ninguém decora isso. O **domínio** é um apelido legível — `wikipedia.org`, `github.io`, `weblab.aprendabit.com` — e o **DNS** é a agenda telefônica mundial que traduz o apelido no número.
 
 Quando alguém digita o endereço do seu site, acontece o seguinte, nesta ordem:
 
@@ -248,7 +248,7 @@ O `<head>` de cada página carrega informações que não aparecem na tela, mas 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop</title>
+  <title>Semana Acadêmica de Sistemas de Informação</title>
   <meta name="description" content="Três dias de palestras, minicursos e maratona de programação no campus de Sinop. Programação completa, inscrição gratuita e certificado.">
   <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <meta name="theme-color" content="#0b3d5c">
@@ -670,9 +670,8 @@ O `README.md` é a primeira coisa que o GitHub mostra ao abrir o repositório �
 ```markdown
 # Semana Acadêmica de Sistemas de Informação
 
-Site do evento acadêmico do curso de Sistemas de Informação da UNEMAT — Campus
-Sinop, desenvolvido com o [WebLab](https://weblab.aprendabit.com), trilha
-Introdução ao Desenvolvimento Web.
+Site do evento acadêmico do curso de Sistemas de Informação, desenvolvido com o
+[WebLab](https://weblab.aprendabit.com), trilha Introdução ao Desenvolvimento Web.
 
 **Site publicado:** https://usuario.github.io/site-evento/
 
@@ -733,8 +732,7 @@ HTML validado sem erros no validator.w3.org em todas as páginas.
 
 ## Autoria
 
-Desenvolvido por Nome Sobrenome, estudante de Sistemas de Informação da UNEMAT
-Sinop.
+Desenvolvido por Nome Sobrenome, estudante de Sistemas de Informação.
 ```
 
 Sete seções, nenhuma opcional na prática: o que é, onde está no ar, o que faz, com o que foi feito, como está organizado, como rodar e quem fez. Um README com o link do site no topo economiza o tempo de quem avalia — e isso conta.
@@ -829,7 +827,7 @@ As fotos dos palestrantes não estão mais no HTML desde a Aula 13 — quem as e
 
 ```js
 const palestrantes = [
-  { id: 1, nome: "Ana Lúcia Ferreira", instituicao: "UNEMAT — Sinop", area: "ia",
+  { id: 1, nome: "Ana Lúcia Ferreira", instituicao: "Universidade Estadual — Sinop", area: "ia",
     tema: "Redes neurais para prever a safra de soja",
     foto: "img/palestrante-01.webp" },
   { id: 2, nome: "Bruno Takahashi", instituicao: "Startup AgroData", area: "dados",
@@ -841,7 +839,7 @@ const palestrantes = [
   { id: 4, nome: "Diego Nascimento", instituicao: "Prefeitura de Sinop", area: "web",
     tema: "Acessibilidade em portais públicos: erros que vimos",
     foto: "img/palestrante-04.webp" },
-  { id: 5, nome: "Eduarda Ribeiro", instituicao: "UNEMAT — Sinop", area: "web",
+  { id: 5, nome: "Eduarda Ribeiro", instituicao: "Universidade Estadual — Sinop", area: "web",
     tema: "Do HTML ao deploy: o caminho do estudante",
     foto: "img/palestrante-05.webp" },
   { id: 6, nome: "Felipe Arruda", instituicao: "Cooperativa Coopercana", area: "ia",
@@ -1269,7 +1267,7 @@ Guarde o repositório. Ele já é peça de portfólio — o tipo de link que se 
 
 ### O Nível 2, a continuação direta
 
-O [Nível 2 — Desenvolvimento Web](../nivel-2/) (FACET-SNP-307) tem esta trilha como pré-requisito e continua exatamente de onde você parou. Lá, o CSS escrito à mão ganha a companhia de frameworks (Bootstrap e Tailwind) e de SVG; o `js/dados.js` com o array fixo vira um `fetch` que busca dados de uma API real, com `async/await`, estados de carregamento e tratamento de erro; as cinco páginas HTML viram uma **SPA**, uma aplicação de página única com navegação sem recarregamento. E, na terceira unidade, o JavaScript sai do navegador: com **Node.js e Express** você escreve o servidor que responde às requisições, adiciona login com conta Google e constrói um CRUD completo, com dados que sobrevivem ao fechar do navegador.
+O [Nível 2 — Desenvolvimento Web](../nivel-2/) tem esta trilha como pré-requisito e continua exatamente de onde você parou. Lá, o CSS escrito à mão ganha a companhia de frameworks (Bootstrap e Tailwind) e de SVG; o `js/dados.js` com o array fixo vira um `fetch` que busca dados de uma API real, com `async/await`, estados de carregamento e tratamento de erro; as cinco páginas HTML viram uma **SPA**, uma aplicação de página única com navegação sem recarregamento. E, na terceira unidade, o JavaScript sai do navegador: com **Node.js e Express** você escreve o servidor que responde às requisições, adiciona login com conta Google e constrói um CRUD completo, com dados que sobrevivem ao fechar do navegador.
 
 O projeto fio-condutor de lá é o **Café Cerrado**, uma cafeteria fictícia que percorre o mesmo caminho: site estático, depois dinâmico, depois full-stack.
 

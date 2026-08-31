@@ -1,7 +1,7 @@
 # Aula 03 — Revisão de HTML: layout, links e formulários
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -128,7 +128,7 @@ Quando a página tem **mais de uma** navegação, cada `<nav>` precisa de um ró
 O `aria-label` é um dos poucos atributos ARIA que você vai usar hoje. A aula de **Acessibilidade e ARIA** aprofunda o assunto; por enquanto, guarde a regra: **rotule toda navegação quando houver mais de uma**.
 
 > **🔬 Investigue**
-> Abra qualquer site grande (um portal de notícias, o site da UNEMAT) e pressione <kbd>F12</kbd>. No Chrome, vá em **Elements** e, no painel da direita, abra a aba **Accessibility**; no Firefox, use a aba **Acessibilidade** e ative "Mostrar tabulações". Procure a árvore de acessibilidade e conte quantos landmarks a página tem. Depois abra o seu `index.html` do Café Cerrado e faça a mesma contagem. Anote a diferença — no fim desta aula, refaça o teste na sua página e compare com o número de agora.
+> Abra qualquer site grande (um portal de notícias, o site da sua universidade ou escola) e pressione <kbd>F12</kbd>. No Chrome, vá em **Elements** e, no painel da direita, abra a aba **Accessibility**; no Firefox, use a aba **Acessibilidade** e ative "Mostrar tabulações". Procure a árvore de acessibilidade e conte quantos landmarks a página tem. Depois abra o seu `index.html` do Café Cerrado e faça a mesma contagem. Anote a diferença — no fim desta aula, refaça o teste na sua página e compare com o número de agora.
 
 ### 1.4 Hierarquia de títulos: estrutura, não tamanho
 
@@ -326,11 +326,11 @@ Outra armadilha: **Linux e macOS diferenciam maiúsculas de minúsculas; Windows
 <a href="cardapio.html#doces">Doces do dia</a>
 
 <!-- 4. Site externo (URL absoluta) -->
-<a href="https://www.unemat.br">UNEMAT</a>
+<a href="https://www.wikipedia.org">Wikipédia</a>
 
 <!-- 5. Abrir em nova aba -->
-<a href="https://www.unemat.br" target="_blank" rel="noopener">
-  UNEMAT (abre em nova aba)
+<a href="https://www.wikipedia.org" target="_blank" rel="noopener">
+  Wikipédia (abre em nova aba)
 </a>
 
 <!-- 6. E-mail e telefone -->
@@ -403,7 +403,7 @@ Leitores de tela oferecem "listar todos os links da página". Nessa lista, cada 
 |---|---|
 | `Para ver o cardápio, <a href="cardapio.html">clique aqui</a>.` | `Veja o <a href="cardapio.html">cardápio completo</a>.` |
 | `<a href="docs/menu.pdf">Leia mais</a>` | `<a href="docs/menu.pdf" download>Baixar o cardápio em PDF</a>` |
-| `<a href="https://unemat.br">https://unemat.br</a>` | `<a href="https://unemat.br">Portal da UNEMAT</a>` |
+| `<a href="https://wikipedia.org">https://wikipedia.org</a>` | `<a href="https://wikipedia.org">Wikipédia</a>` |
 
 E, no menu, marque a página atual **semanticamente**:
 
@@ -862,7 +862,7 @@ Escreva a página inicial inteira. O `<header>` e o `<footer>` deste arquivo sã
       </nav>
     </div>
 
-    <p class="rodape__creditos">Café Cerrado · UNEMAT Sinop · Projeto acadêmico</p>
+    <p class="rodape__creditos">Café Cerrado · Sinop/MT · Projeto acadêmico</p>
   </footer>
 </body>
 </html>
@@ -1498,7 +1498,7 @@ O GitHub Pages republica sozinho em cerca de um minuto. Abra o endereço públic
 
 **A6.** Escreva a marcação completa de uma tabela com o consumo semanal de três produtos, incluindo `caption`, `thead`, `tbody` e `th` com `scope` correto nas duas direções. Depois explique, em uma frase, o que muda para o leitor de tela por causa do `scope`.
 
-**A7.** Dê o código de cinco links diferentes a partir de `cardapio.html`: (a) para o `index.html`; (b) para a seção `#doces` da própria página; (c) para a seção `#horarios` da página inicial; (d) para o site da UNEMAT em nova aba, com segurança; (e) para o e-mail do café já com o assunto "Encomenda".
+**A7.** Dê o código de cinco links diferentes a partir de `cardapio.html`: (a) para o `index.html`; (b) para a seção `#doces` da própria página; (c) para a seção `#horarios` da página inicial; (d) para o site da sua universidade ou escola em nova aba, com segurança; (e) para o e-mail do café já com o assunto "Encomenda".
 
 **A8.** Qual a diferença entre `id` e `name` em um campo de formulário? O que acontece se faltar cada um deles?
 
@@ -1594,7 +1594,7 @@ Quantas regiões um leitor de tela consegue enxergar no seu site? E no site da s
 
 **Critérios de pronto**
 
-- Uma tabela em `docs/landmarks.md` comparando **três** sites (o seu projeto autoral, o portal da UNEMAT e um site de sua escolha) com as colunas: site, quantidade de landmarks, landmarks encontrados.
+- Uma tabela em `docs/landmarks.md` comparando **três** sites (o seu projeto autoral, o portal da sua universidade ou escola e um site de sua escolha) com as colunas: site, quantidade de landmarks, landmarks encontrados.
 - Para cada site, a captura de tela da árvore de acessibilidade do DevTools.
 - Um parágrafo apontando o site com melhor estrutura e explicando **por quê**, citando tags específicas.
 - No mínimo duas correções aplicadas ao seu próprio projeto a partir do que você observou, listadas no arquivo com o antes e o depois.

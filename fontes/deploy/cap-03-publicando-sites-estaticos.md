@@ -1,7 +1,7 @@
 # Capítulo 03 — Publicando sites estáticos
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -304,7 +304,7 @@ Três arquivos cobrem tudo o que importa hoje: um `.ico` de 32×32 para navegado
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop</title>
+  <title>Semana Acadêmica de Sistemas de Informação</title>
 
   <!-- Ícone clássico, para a aba e para navegadores antigos -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
@@ -326,7 +326,7 @@ Repare que **nenhum caminho começa com barra**. É a regra da §3 aplicada aos 
 
 ```json
 {
-  "name": "Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop",
+  "name": "Semana Acadêmica de Sistemas de Informação",
   "short_name": "Semana Acadêmica",
   "start_url": "./",
   "display": "standalone",

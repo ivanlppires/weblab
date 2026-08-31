@@ -5,14 +5,14 @@
 
 ## 1. O que é o WebLab
 
-**WebLab — Laboratório de Desenvolvimento Web** é a apostila online, pública e gratuita, das disciplinas de desenvolvimento web do curso de Tecnologia em Análise e Desenvolvimento de Sistemas / Sistemas de Informação da **UNEMAT — Campus Sinop (FACET)**, escritas e revisadas por professores da instituição (ver `fontes/autores.md`). Ela é organizada em quatro trilhas, abertas a qualquer pessoa que queira aprender:
+**WebLab — Laboratório de Desenvolvimento Web** é a apostila online, pública e gratuita de desenvolvimento web, escrita e revisada por um grupo de professores universitários (ver `fontes/autores.md`). Nasceu de disciplinas de graduação, mas **não é material institucional**: não cita a instituição no corpo das aulas, não pressupõe matrícula e serve a qualquer pessoa. Ela é organizada em quatro trilhas, abertas a qualquer pessoa que queira aprender:
 
-| Trilha | Disciplina de origem | Aulas | Projeto fio-condutor |
+| Trilha | Pré-requisito | Aulas | Projeto fio-condutor |
 |---|---|---|---|
-| **Nível 1 — Introdução ao Desenvolvimento Web** | FACET-SNP-319 (sem pré-requisito) | 15 | **Site do evento acadêmico** — 5 páginas (início, programação, inscrição, palestrantes, contato) |
-| **Nível 2 — Desenvolvimento Web** | FACET-SNP-307 (pré-req. Nível 1) | 16 | **Café Cerrado** — cafeteria fictícia: site estático → SPA → API Express + login Google + CRUD |
-| **Nível 3 — Frameworks Modernos** | FACET-SNP-310 (pré-req. Nível 2) | 15 | **UniEventos** — Vue 3 + Vuetify + Pinia + Express + MySQL/Supabase + Firebase Auth |
-| **Deploy & Ferramentas** | transversal | 11 capítulos | Publicar de verdade os três projetos acima |
+| **Nível 1 — Introdução ao Desenvolvimento Web** | Nenhum | 15 | **Site do evento acadêmico** — 5 páginas (início, programação, inscrição, palestrantes, contato) |
+| **Nível 2 — Desenvolvimento Web** | Nível 1 | 16 | **Café Cerrado** — cafeteria fictícia: site estático → SPA → API Express + login Google + CRUD |
+| **Nível 3 — Frameworks Modernos** | Nível 2 | 15 | **UniEventos** — Vue 3 + Vuetify + Pinia + Express + MySQL/Supabase + Firebase Auth |
+| **Deploy & Ferramentas** | trilha transversal | 11 capítulos | Publicar de verdade os três projetos acima |
 
 **Regra pedagógica central:** o professor constrói o projeto fio-condutor em sala; **cada estudante desenvolve um projeto autoral** com a mesma arquitetura e um domínio diferente (ex.: catálogo de plantas do Pantanal, agenda de quadras, mural de estágios, brechó, controle de pescarias, cardápio). As avaliações são sobre o projeto autoral.
 
@@ -74,7 +74,7 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
 # Aula NN — <Título exatamente como em config.py>
 
 > **Nível N — <nome da trilha>** · Unidade N: <nome da unidade>
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem

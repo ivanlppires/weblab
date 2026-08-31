@@ -1,7 +1,7 @@
 # Aula 07 — Revisão de JavaScript: objetos, funções, eventos e DOM
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 06 você fechou a Unidade 1: o Café Cerrado tem HTML semântico, layout responsivo com Bootstrap, animação, SVG e uma auditoria de acessibilidade aprovada. É um site bonito e **imóvel** — tudo o que ele mostra está escrito à mão no HTML. Hoje começa a Unidade 2: o site ganha um cérebro. Você cria `js/app.js`, transforma o cardápio em **dados** e passa a desenhar a tela a partir desses dados, com eventos reagindo ao que a pessoa faz.
@@ -1178,7 +1178,7 @@ Ainda não enviamos nada para lugar nenhum — a mensagem só é registrada na t
 4. Clique em um card e confira a linha impressa no Console, com nome e preço formatado em reais.
 5. Clique no botão de tema. A página inteira troca de cor; recarregue (<kbd>F5</kbd>) e a escolha permanece. No DevTools, Application → Local Storage, veja a chave `cafe-cerrado:tema`.
 6. Em `contato.html`, clique em "Enviar mensagem" com tudo vazio: três mensagens aparecem, o foco vai para o campo Nome e a região de status anuncia "Corrija 3 campo(s) antes de enviar".
-7. Digite `ana@` no e-mail e saia do campo: aparece a mensagem de formato. Complete para `ana@unemat.br` e a mensagem some sozinha.
+7. Digite `ana@` no e-mail e saia do campo: aparece a mensagem de formato. Complete para `ana@exemplo.br` e a mensagem some sozinha.
 8. Rode o Lighthouse de novo. A nota de acessibilidade não pode ter caído — se caiu, o culpado costuma ser uma imagem gerada sem `alt`.
 
 Commit com mensagem descritiva:
@@ -1433,7 +1433,7 @@ No repositório do **seu projeto autoral**:
 
 **Guarde no seu repositório:** commit + push.
 
-**Leitura dirigida (Biblioteca Virtual da UNEMAT):** Queirós e Portela, capítulo da camada de comportamento (JavaScript); Purewal, capítulo de JavaScript e interatividade.
+**Leitura dirigida (se você tem acesso a uma biblioteca virtual pela sua instituição):** Queirós e Portela, capítulo da camada de comportamento (JavaScript); Purewal, capítulo de JavaScript e interatividade.
 
 ## ✅ Checkpoint do projeto
 

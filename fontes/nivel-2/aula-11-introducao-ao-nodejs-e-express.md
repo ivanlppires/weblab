@@ -1,7 +1,7 @@
 # Aula 11 — Introdução ao Node.js e Express
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 10 o Café Cerrado virou uma SPA: um único `index.html`, navegação por hash, `fetch` buscando `data/produtos.json` e uma API pública para treinar `POST`. Todo esse código rodou dentro do navegador de quem visita o site. Hoje começa a **Unidade 3**, e você troca de lado: em vez de consumir a API dos outros, você escreve o programa que fica esperando requisições e devolvendo respostas. É o mesmo JavaScript — `const`, arrow functions, `async/await`, objetos e arrays funcionam igualzinho — em outro endereço.
@@ -662,7 +662,7 @@ Edite o `package.json` e deixe assim:
 {
   "name": "cafe-cerrado-api",
   "version": "1.0.0",
-  "description": "API e site do Café Cerrado — UNEMAT Sinop",
+  "description": "API e site do Café Cerrado — Sinop/MT",
   "main": "server.js",
   "scripts": {
     "dev": "node --watch server.js",

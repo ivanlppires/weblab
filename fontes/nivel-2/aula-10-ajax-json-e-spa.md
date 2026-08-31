@@ -1,7 +1,7 @@
 # Aula 10 — AJAX, JSON e Single Page Application
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na aula passada você aprendeu a esperar por um valor que ainda não chegou. Só que o valor não chegava de lugar nenhum: era o seu próprio `setTimeout` fingindo ser um servidor. Hoje a simulação acaba. O `fetch` entra em cena, os produtos do Café Cerrado passam a nascer de um arquivo JSON, o formulário de contato ganha destino de verdade e a navegação entre as páginas deixa de recarregar o navegador. No fim da aula você não terá mais um site: terá uma **aplicação**. E esta é a aula que fecha a Unidade 2.
@@ -295,7 +295,7 @@ A solução é servir o projeto por HTTP: **Live Server** no VS Code (`http://12
 Duas consequências que você vai encontrar hoje:
 
 - JSONPlaceholder e ViaCEP mandam esse cabeçalho de propósito, para permitir uso em qualquer página. Por isso funcionam.
-- Muitos sites **não** mandam. Tentar `fetch("https://www.unemat.br")` do seu projeto resulta em bloqueio — e não há nada que você possa fazer do lado do cliente. A solução, quando você tiver um servidor próprio, é pedir do back-end.
+- Muitos sites **não** mandam. Tentar `fetch("https://www.wikipedia.org")` do seu projeto resulta em bloqueio — e não há nada que você possa fazer do lado do cliente. A solução, quando você tiver um servidor próprio, é pedir do back-end.
 
 > **⚠️ Atenção**
 > Erro de CORS **não** é um `404` nem um erro do seu código: é o navegador recusando entregar a resposta ao JavaScript. Na aba Network a requisição costuma aparecer como enviada, e mesmo assim o `fetch` rejeita com `TypeError: Failed to fetch`. Sempre leia o console inteiro: a mensagem de CORS é longa e explica exatamente qual cabeçalho faltou.
@@ -1393,7 +1393,7 @@ No **seu projeto autoral**, feche a Unidade 2:
 
 **Guarde no seu repositório:** commit + push. Esta atividade é também a base do Marco 2 — veja as instruções abaixo.
 
-**Leitura dirigida (Biblioteca Virtual da UNEMAT):** QUEIRÓS & PORTELA, capítulos sobre AJAX, JSON e comunicação com o servidor, e a introdução ao back-end com Node.js — a Unidade 3 começa na próxima aula.
+**Leitura dirigida (se você tem acesso a uma biblioteca virtual pela sua instituição):** QUEIRÓS & PORTELA, capítulos sobre AJAX, JSON e comunicação com o servidor, e a introdução ao back-end com Node.js — a Unidade 3 começa na próxima aula.
 
 ## ✅ Checkpoint do projeto
 

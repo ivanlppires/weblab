@@ -1,7 +1,7 @@
 # Aula 02 — Introdução ao Vue: instância, ciclo de vida e diretivas
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -625,7 +625,7 @@ import { ref } from 'vue'
 const eventos = ref([
   { id: 1, titulo: 'Semana da Computação', categoria: 'palestra' },
   { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso' },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop' },
+  { id: 3, titulo: 'Hackathon de Tecnologia', categoria: 'workshop' },
 ])
 </script>
 
@@ -655,7 +655,7 @@ import { ref } from 'vue'
 const eventos = ref([
   { id: 1, titulo: 'Semana da Computação' },
   { id: 2, titulo: 'Oficina de Vue.js' },
-  { id: 3, titulo: 'Hackathon FACET' },
+  { id: 3, titulo: 'Hackathon de Tecnologia' },
 ])
 
 function removerPrimeiro() {
@@ -888,7 +888,7 @@ export const eventosIniciais = [
   },
   {
     id: 3,
-    titulo: 'Hackathon FACET',
+    titulo: 'Hackathon de Tecnologia',
     categoria: 'workshop',
     dataHora: '2030-10-05T08:00:00',
     local: 'Bloco B',

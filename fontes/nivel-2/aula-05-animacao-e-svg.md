@@ -1,7 +1,7 @@
 # Aula 05 — Animação e SVG
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -1424,7 +1424,7 @@ Ao fim desta aula o repositório do seu projeto autoral precisa ter:
 - W3C — WCAG 2.2, critérios 2.2.2 e 2.3.1: <https://www.w3.org/WAI/WCAG22/quickref/> — filtre pelos números para ler o texto normativo sobre movimento e flashes.
 - Bootstrap Icons: <https://icons.getbootstrap.com/> — biblioteca MIT que combina com o framework escolhido pelo Café Cerrado; copie o SVG e cole no seu sprite.
 - SVGOMG: <https://svgomg.net/> — otimizador de SVG no navegador; use antes de commitar qualquer ícone baixado.
-- QUEIRÓS, Ricardo; PORTELA, Filipe. *Introdução ao Desenvolvimento Moderno para a Web*. FCA, 2018 — camada de apresentação avançada (Biblioteca Virtual da UNEMAT).
+- QUEIRÓS, Ricardo; PORTELA, Filipe. *Introdução ao Desenvolvimento Moderno para a Web*. FCA, 2018 — camada de apresentação avançada (se você tem acesso a uma biblioteca virtual pela sua instituição).
 - ALVES, William P. *Projetos de Sistemas Web*. Érica, 2015 — capítulo sobre elementos gráficos em interfaces.
 - PUREWAL, Semmy. *Aprendendo a Desenvolver Aplicações Web*. Novatec, 2014 — front-end e organização de assets.
 

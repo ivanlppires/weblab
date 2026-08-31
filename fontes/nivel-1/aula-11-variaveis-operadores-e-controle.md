@@ -1,7 +1,7 @@
 # Aula 11 — Variáveis, operações aritméticas e estruturas de controle
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -882,12 +882,12 @@ const formatarReal = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
-// Estudantes da UNEMAT pagam metade; o aviso só aparece se houver desconto
+// Estudantes pagam metade; o aviso só aparece se houver desconto
 const temDesconto = DESCONTO_ESTUDANTE > 0;
 
 document.querySelector("#valor-taxa").textContent = formatarReal.format(TAXA_INSCRICAO);
 document.querySelector("#observacao-taxa").textContent = temDesconto
-  ? `(estudantes da UNEMAT: ${formatarReal.format(taxaComDesconto)})`
+  ? `(estudantes: ${formatarReal.format(taxaComDesconto)})`
   : "";
 
 console.log("Taxa cheia:", formatarReal.format(TAXA_INSCRICAO));

@@ -1,7 +1,7 @@
 # Aula 04 — Frameworks CSS: Bootstrap, Tailwind e Material
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -1253,7 +1253,7 @@ Os rádios ganharam `id` e `label for`. Na Aula 03 eles estavam envolvidos pelo 
       </nav>
     </div>
 
-    <p class="text-center small mt-4 mb-0">Café Cerrado · UNEMAT Sinop · Projeto acadêmico</p>
+    <p class="text-center small mt-4 mb-0">Café Cerrado · Sinop/MT · Projeto acadêmico</p>
   </div>
 </footer>
 ```
@@ -1646,7 +1646,7 @@ A melhor forma de entender um framework é escrever um. Não um clone do Bootstr
 
 ## 🏠 Para praticar depois da aula (1 h)
 
-**Parte 1 — Leitura (20 min).** QUEIRÓS e PORTELA, *Introdução ao Desenvolvimento Moderno para a Web*, seções sobre a camada de apresentação e frameworks de CSS (Biblioteca Virtual da UNEMAT). Em seguida, leia a página *Layout → Breakpoints* da documentação oficial do Bootstrap 5.3 e a página *Styling with utility classes* do Tailwind. Anote **duas** ideias que os dois textos defendem de formas opostas.
+**Parte 1 — Leitura (20 min).** QUEIRÓS e PORTELA, *Introdução ao Desenvolvimento Moderno para a Web*, seções sobre a camada de apresentação e frameworks de CSS (se você tem acesso a uma biblioteca virtual pela sua instituição). Em seguida, leia a página *Layout → Breakpoints* da documentação oficial do Bootstrap 5.3 e a página *Styling with utility classes* do Tailwind. Anote **duas** ideias que os dois textos defendem de formas opostas.
 
 **Parte 2 — Entrega (30 min).** No repositório do seu **projeto autoral**:
 

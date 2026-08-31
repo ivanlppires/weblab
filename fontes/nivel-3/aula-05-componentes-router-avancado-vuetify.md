@@ -1,7 +1,7 @@
 # Aula 05 — Componentes, Vue Router e Vuetify avançado
 
 > **Nível 3 — Frameworks Modernos** · Unidade 2: Vue.js avançado: Vuetify, Axios, Router e Pinia
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -864,7 +864,7 @@ function alternarTema() {
 
 <template>
   <v-footer color="primary" class="d-flex justify-center pa-4">
-    <span class="text-white">UNEMAT · FACET · FACET-SNP-310</span>
+    <span class="text-white">© UniEventos</span>
   </v-footer>
 </template>
 ```

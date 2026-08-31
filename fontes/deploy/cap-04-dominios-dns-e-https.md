@@ -1,7 +1,7 @@
 # Capítulo 04 — Domínios, DNS e HTTPS
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -575,7 +575,7 @@ A Cloudflare repassa o cabeçalho `Host` original para a origem; é por ele (e p
 ### ⭐ O caminho completo de um nome
 Tags: dns, terminal, investigacao
 
-Quantos servidores diferentes precisam ser consultados para que o seu navegador descubra o IP de `weblab.aprendabit.com`? E de `www.unemat.br`? A resposta muda de um nome para outro — e o `dig +trace` mostra cada parada, com o nome do servidor que respondeu. Descubra o caminho dos dois nomes e explique as diferenças.
+Quantos servidores diferentes precisam ser consultados para que o seu navegador descubra o IP de `weblab.aprendabit.com`? E de `www.uol.com.br`? A resposta muda de um nome para outro — e o `dig +trace` mostra cada parada, com o nome do servidor que respondeu. Descubra o caminho dos dois nomes e explique as diferenças.
 
 **Critérios de pronto**
 
@@ -588,7 +588,7 @@ Quantos servidores diferentes precisam ser consultados para que o seu navegador 
 
 1. Leia a seção *+trace* em `man dig`: ele ignora o resolvedor recursivo e faz as perguntas ele mesmo, começando pela raiz.
 2. Cada bloco da saída termina com `;; Received … from <IP>#53(<nome>)` — esse é o servidor que respondeu naquele nível.
-3. Compare o número de blocos: `unemat.br` passa pela raiz, pelo `.br` e pelo autoritativo da UNEMAT; veja se aparece um nível extra em algum dos casos.
+3. Compare o número de blocos: `uol.com.br` passa pela raiz, pelo `.br`, pelo `.com.br` e pelo autoritativo do domínio; veja se aparece um nível extra em algum dos casos.
 4. Sem cache, o TTL mostrado é sempre o valor original configurado na zona.
 </details>
 

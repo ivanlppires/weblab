@@ -1,7 +1,7 @@
 # Capítulo 02 — Git e GitHub do zero ao pull request
 
 > **Deploy & Ferramentas** · Unidade 1: Ferramentas e versionamento
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -100,7 +100,7 @@ Antes do primeiro commit, diga ao Git quem você é. Essa informação vai junto
 
 ```bash
 git config --global user.name "Ana Souza"
-git config --global user.email "ana.souza@unemat.br"
+git config --global user.email "ana.souza@gmail.com"
 ```
 
 Use o **mesmo e-mail** da sua conta do GitHub; é assim que o site liga os commits ao seu perfil e conta as contribuições.
@@ -279,7 +279,7 @@ O GitHub renderiza o `README.md` na página inicial do repositório. É a primei
 # Site do Evento — Semana Acadêmica de Sistemas de Informação
 
 Site institucional de cinco páginas para a Semana Acadêmica, construído na
-trilha Nível 1 do WebLab (UNEMAT Sinop). HTML5 semântico, CSS3 responsivo e
+trilha Nível 1 do WebLab. HTML5 semântico, CSS3 responsivo e
 JavaScript sem framework.
 
 Como rodar: clone, abra a pasta no VS Code e clique em **Go Live** (extensão
@@ -295,7 +295,7 @@ scripts em `js/script.js`, imagens em `img/`.
 Estado atual: as cinco páginas em HTML semântico e o menu de navegação estão
 prontos; faltam o layout responsivo e a validação do formulário de inscrição.
 
-Ana Souza — Introdução ao Desenvolvimento Web (FACET-SNP-319),
+Ana Souza — Introdução ao Desenvolvimento Web,
 seu nome. Código sob licença MIT.
 ```
 
@@ -453,7 +453,7 @@ Confira com `gh auth status`. Saída esperada: `✓ Logged in to github.com acco
 Com HTTPS + `gh`, o push já funciona sem senha. Se quiser chaves SSH (útil quando você também acessa um servidor, como no Capítulo 06), gere a chave aceitando o caminho padrão `~/.ssh/id_ed25519`, envie a pública e teste:
 
 ```bash
-ssh-keygen -t ed25519 -C "ana.souza@unemat.br"
+ssh-keygen -t ed25519 -C "ana.souza@gmail.com"
 gh ssh-key add ~/.ssh/id_ed25519.pub --title "Notebook da Ana"
 ssh -T git@github.com
 ```

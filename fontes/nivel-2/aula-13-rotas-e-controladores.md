@@ -1,7 +1,7 @@
 # Aula 13 — Rotas e controladores
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 12 as rotas do Café Cerrado saíram do `server.js` e ganharam arquivo próprio com `express.Router`. Mas a lógica continua morando dentro delas: a rota sabe o endereço **e** faz o serviço. Hoje damos o último passo da arquitetura do back-end — a rota vira um índice de duas palavras por linha, o controlador executa, e uma terceira camada guarda os dados em disco. No fim da aula a API do Café Cerrado tem CRUD completo, busca por query string, validação de verdade e produtos que sobrevivem ao reinício do servidor.

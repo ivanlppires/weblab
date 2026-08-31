@@ -1,7 +1,7 @@
 # Aula 14 — JavaScript para validação de formulários e consultas dinâmicas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -814,8 +814,8 @@ Primeiro o `<head>`, com os quatro scripts na ordem que importa — `defer` exec
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Inscrição gratuita na Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Inscrição gratuita na Semana Acadêmica de Sistemas de Informação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Inscrição — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="stylesheet" href="css/estilo.css">
   <script src="js/menu.js" defer></script>
@@ -905,7 +905,7 @@ Agora o `<main>`. A estrutura repete o mesmo bloco para cada campo: `<label>`, c
           <option value="si">Sistemas de Informação</option>
           <option value="ads">Análise e Desenvolvimento de Sistemas</option>
           <option value="eng">Engenharias</option>
-          <option value="outro">Outro curso da UNEMAT</option>
+          <option value="outro">Outro curso</option>
           <option value="externo">Comunidade externa</option>
         </select>
         <span class="erro" id="erro-curso" role="alert"></span>
@@ -1376,8 +1376,8 @@ Troque os cartões escritos à mão (Aula 07) por um contêiner vazio e os contr
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Programação — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="stylesheet" href="css/estilo.css">
   <script src="js/menu.js" defer></script>
@@ -1767,7 +1767,7 @@ Resultado esperado: um arquivo `js/contato.js` com validadores puros e reaprovei
 Comece copiando a estrutura de `js/inscricao.js` e apagando o que não se aplica. As funções `mostrarErro`, `validarEmail` e `validarNomeCompleto` saem de lá sem alteração — esse é o ponto de escrever validadores puros.
 </details>
 
-**B6.** Escreva e teste expressões regulares para validar: matrícula da UNEMAT (quatro dígitos de ano seguidos de cinco dígitos), placa Mercosul, código de rastreio dos Correios (duas letras, nove dígitos e `BR`), IPv4 e cartão com 16 dígitos com ou sem espaços e hífens.
+**B6.** Escreva e teste expressões regulares para validar: matrícula acadêmica (quatro dígitos de ano seguidos de cinco dígitos), placa Mercosul, código de rastreio dos Correios (duas letras, nove dígitos e `BR`), IPv4 e cartão com 16 dígitos com ou sem espaços e hífens.
 
 Resultado esperado: uma página `exercicios/aula14/regex.html` com um campo por padrão, validação em tempo real e, ao lado de cada campo, três exemplos válidos e três inválidos que você testou.
 

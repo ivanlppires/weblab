@@ -1,7 +1,7 @@
 # Aula 09 — Animações e efeitos em CSS
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -928,7 +928,7 @@ A página inicial ganha uma seção de destaque com a foto do auditório ao fund
   <div class="container hero__conteudo">
     <p class="hero__chamada">Semana Acadêmica de Sistemas de Informação</p>
     <h1 id="titulo-hero">Três dias de palestras, minicursos e maratona de programação</h1>
-    <p>Auditório da FACET · UNEMAT Sinop · vagas limitadas</p>
+    <p>Auditório Central · vagas limitadas</p>
     <a href="inscricao.html" class="botao">Garanta sua vaga</a>
   </div>
 </section>

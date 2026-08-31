@@ -1,7 +1,7 @@
 # Aula 10 — Introdução ao JavaScript
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -629,8 +629,8 @@ Inclua-o no `<head>` das **cinco** páginas, sempre com `defer`, logo após a fo
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona de programação.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação: palestras, minicursos e maratona de programação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -674,7 +674,7 @@ site-evento/
 // arrays e objetos, e no Nível 2 virão de uma API.
 const NOME_EVENTO = "Semana Acadêmica de Sistemas de Informação";
 const EDICAO = 12;
-const LOCAL_EVENTO = "UNEMAT — Campus Sinop";
+const LOCAL_EVENTO = "Auditório Central";
 const TRILHAS = "Desenvolvimento Web, Dados, Segurança";
 
 console.log(`Bem-vindo à ${EDICAO}ª ${NOME_EVENTO}!`);

@@ -1,7 +1,7 @@
 # Aula 13 — Desenvolvimento do back-end em camadas
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -657,10 +657,10 @@ describe('rotas de /api/eventos', () => {
     const app = montarAppDeTeste()
     const resposta = await request(app)
       .post('/api/eventos')
-      .send({ titulo: 'Hackathon FACET', categoria: 'workshop', vagas: 60 })
+      .send({ titulo: 'Hackathon de Tecnologia', categoria: 'workshop', vagas: 60 })
 
     expect(resposta.status).toBe(201)
-    expect(resposta.body.titulo).toBe('Hackathon FACET')
+    expect(resposta.body.titulo).toBe('Hackathon de Tecnologia')
     expect(resposta.body.id).toBeDefined()
   })
 })

@@ -143,7 +143,7 @@ Fim de semestre, três notas lançadas no SIGAA e a mesma pergunta em todo grupo
 - Várias disciplinas em uma tabela, com média por disciplina e resumo do semestre (quantas aprovadas, coeficiente médio).
 - Disciplinas salvas no `localStorage` e resumo exportado em CSV.
 - Gráfico de barras em CSS puro comparando as médias.
-- Regras de aprovação selecionáveis (UNEMAT e outra instituição), definidas em um objeto de configuração.
+- Regras de aprovação selecionáveis (média 6,0 com exame, média 7,0 sem exame, outra combinação), definidas em um objeto de configuração.
 
 <details><summary>Pistas</summary>
 
@@ -474,7 +474,7 @@ O painel do projeto de API pública chama a fonte direto do navegador; com duzen
 </details>
 
 > **💡 Dica**
-> Desafio final, válido para qualquer projeto desta página: escolha um contexto real — o laboratório da FACET, a biblioteca do campus, uma escola, o comércio da família — e entreviste ao menos uma pessoa que usaria o sistema. Pergunte o que ela faz hoje, onde dói, o que é proibido e o que acontece quando dá errado. Depois adapte as regras do projeto ao que ouviu: talvez a reserva precise de aprovação, talvez o cardápio mude por turno, talvez a nota mínima seja outra. Nesse momento você deixa de reproduzir uma interface e passa a resolver um problema, que é o que se paga a um desenvolvedor.
+> Desafio final, válido para qualquer projeto desta página: escolha um contexto real — o laboratório da sua faculdade, a biblioteca do bairro, uma escola, o comércio da família — e entreviste ao menos uma pessoa que usaria o sistema. Pergunte o que ela faz hoje, onde dói, o que é proibido e o que acontece quando dá errado. Depois adapte as regras do projeto ao que ouviu: talvez a reserva precise de aprovação, talvez o cardápio mude por turno, talvez a nota mínima seja outra. Nesse momento você deixa de reproduzir uma interface e passa a resolver um problema, que é o que se paga a um desenvolvedor.
 
 > **📌 Vale gravar**
 > Qualquer projeto desta página pode ser o **seu projeto autoral** — aquele que você constrói em paralelo às aulas e leva para o portfólio —, desde que siga a mesma arquitetura do projeto fio-condutor da trilha (Nível 1: site estático de várias páginas; Nível 2: SPA com API Express e login; Nível 3: Vue, Pinia, Express, banco e Firebase). Se você cursa a disciplina, combine a escolha com o professor antes de começar a unidade. Para saber se o projeto está no ponto, use o **marco da unidade**, na aula que a fecha: ele lista os requisitos e o checklist de qualidade.

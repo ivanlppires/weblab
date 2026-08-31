@@ -1,7 +1,7 @@
 # Aula 07 — Introdução ao Firebase, Node.js e Express
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -221,7 +221,7 @@ O `npm init -y` gera um `package.json` com valores padrão. Ajuste-o para o que 
 {
   "name": "unieventos-api",
   "version": "1.0.0",
-  "description": "API do projeto UniEventos — FACET-SNP-310",
+  "description": "API do projeto UniEventos",
   "type": "module",
   "main": "src/servidor.js",
   "scripts": {
@@ -620,7 +620,7 @@ Edite o `package.json` gerado:
 {
   "name": "unieventos-api",
   "version": "1.0.0",
-  "description": "API do projeto UniEventos — FACET-SNP-310",
+  "description": "API do projeto UniEventos",
   "type": "module",
   "main": "src/servidor.js",
   "scripts": {
@@ -1078,6 +1078,6 @@ No seu **projeto autoral**, replique o que foi feito hoje:
 - Documentação oficial do Express — [expressjs.com](https://expressjs.com/) e o guia de migração *Express 5 changes* — [expressjs.com/en/guide/migrating-5.html](https://expressjs.com/en/guide/migrating-5.html).
 - Documentação oficial do Firebase — [firebase.google.com/docs/web/setup](https://firebase.google.com/docs/web/setup) e [firebase.google.com/docs/firestore](https://firebase.google.com/docs/firestore) (API modular).
 - Referência de `path-to-regexp` v8, usado internamente pelo Express 5 para casar rotas — útil para entender a sintaxe de curingas e segmentos opcionais em profundidade.
-- Plano de curso FACET-SNP-310 — bibliografia básica, capítulos sobre arquitetura cliente-servidor e Node.js.
+- Plano da disciplina em que esta trilha nasceu — bibliografia básica, capítulos sobre arquitetura cliente-servidor e Node.js.
 
 Na Aula 08 você transforma o servidor de hoje num CRUD completo, modulariza rotas com `express.Router()`, escreve middlewares próprios e chega ao **Marco 2** do projeto. Deixe a `unieventos-api` rodando — ela cresce a partir daqui, aula após aula, até virar a API do seu projeto autoral final.

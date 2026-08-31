@@ -1,7 +1,7 @@
 # Aula 13 — Funções e eventos
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -312,7 +312,7 @@ titulo.innerHTML = "Novo <strong>título</strong>";
 const link = document.querySelector("a");
 
 link.getAttribute("href");
-link.setAttribute("href", "https://unemat.br");
+link.setAttribute("href", "https://www.wikipedia.org");
 link.setAttribute("target", "_blank");
 link.hasAttribute("download"); // true/false
 link.removeAttribute("target");
@@ -1141,7 +1141,7 @@ Comece pondo os comentários de seção sobre o que já existe, na ordem da seç
 // ===== ESTADO =====
 const NOME_EVENTO = "Semana Acadêmica de Sistemas de Informação";
 const EDICAO = 12;
-const LOCAL_EVENTO = "UNEMAT — Campus Sinop";
+const LOCAL_EVENTO = "Auditório Central";
 const TRILHAS = "Desenvolvimento Web, Dados, Segurança";
 ```
 
@@ -1191,8 +1191,8 @@ Substitua o `<main>` de `palestrantes.html` pelo contêiner vazio, os botões de
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conheça os palestrantes da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Conheça os palestrantes da Semana Acadêmica de Sistemas de Informação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Palestrantes — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="stylesheet" href="css/estilo.css">
   <script src="js/menu.js" defer></script>

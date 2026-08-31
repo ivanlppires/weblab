@@ -1,7 +1,7 @@
 # Aula 07 — Formatando o layout de um website e o menu
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -429,7 +429,7 @@ O menu é o componente que mais concentra erros de acessibilidade em projetos re
 ```
 
 > **⚠️ Atenção**
-> Este cabeçalho **substitui** o `<header id="topo">` das Aulas 02 a 06 (logo solto, `<h1>` do site, parágrafo de local e `<nav>` sem classe). Apague o bloco antigo inteiro nas cinco páginas e cole este no lugar. Junto com ele vão embora duas coisas: o parágrafo "UNEMAT Sinop · três noites de outubro · Auditório Central", que passa a viver no herói da página inicial e no rodapé, e o `<h1>` do cabeçalho — a partir de hoje o `<h1>` é o **título da página**, dentro do `<main>` (o que era `<h2>Programação</h2>` vira `<h1>Programação</h1>`, e assim por diante nas cinco páginas). O nome do evento continua acessível: ele está no `alt` do logo e no `<title>`.
+> Este cabeçalho **substitui** o `<header id="topo">` das Aulas 02 a 06 (logo solto, `<h1>` do site, parágrafo de local e `<nav>` sem classe). Apague o bloco antigo inteiro nas cinco páginas e cole este no lugar. Junto com ele vão embora duas coisas: o parágrafo "Três noites de outubro · Auditório Central", que passa a viver no herói da página inicial e no rodapé, e o `<h1>` do cabeçalho — a partir de hoje o `<h1>` é o **título da página**, dentro do `<main>` (o que era `<h2>Programação</h2>` vira `<h1>Programação</h1>`, e assim por diante nas cinco páginas). O nome do evento continua acessível: ele está no `alt` do logo e no `<title>`.
 
 Três pontos que valem nota:
 
@@ -967,7 +967,7 @@ A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação
     <li class="cartao cartao--palestrante">
       <img class="cartao__foto" src="img/palestrante-01.jpg" alt="Ana Lúcia Ferreira" width="400" height="400">
       <h2>Ana Lúcia Ferreira</h2>
-      <p class="cartao__meta">UNEMAT — Sinop · Inteligência Artificial</p>
+      <p class="cartao__meta">Professora e pesquisadora · Inteligência Artificial</p>
       <p>Pesquisa redes neurais para prever a safra de soja e ministra o minicurso de redes neurais.</p>
     </li>
     <li class="cartao cartao--palestrante">
@@ -1020,7 +1020,7 @@ A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação
   <div class="container rodape__grade">
     <section>
       <h2>Sobre o evento</h2>
-      <p>Organizado pelos cursos de computação da UNEMAT, campus Sinop, com apoio do centro acadêmico.</p>
+      <p>Organizado por professores e estudantes dos cursos de computação, com apoio do centro acadêmico.</p>
     </section>
     <section>
       <h2>Links</h2>
@@ -1038,7 +1038,7 @@ A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação
       </address>
     </section>
   </div>
-  <p class="rodape__creditos">Semana Acadêmica de Sistemas de Informação · UNEMAT Sinop</p>
+  <p class="rodape__creditos">Semana Acadêmica de Sistemas de Informação</p>
 </footer>
 ```
 
@@ -1306,7 +1306,7 @@ A página inicial do site do evento precisa de um bloco de destaques em formato 
 ### ⭐⭐⭐ Recriação de um layout real
 Tags: css, grid, flexbox, layout, responsivo
 
-Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha a home de um site conhecido (o portal da UNEMAT, um jornal, uma loja, a página inicial do GitHub) e reproduza seu **layout** — estrutura e disposição, com conteúdo próprio e sem copiar imagens — usando Grid para a página e Flexbox para os componentes, com responsividade em três larguras. Requisito inegociável: zero `float` e zero `position: absolute` para layout (o `absolute` só pode aparecer em selos e ícones). Ao terminar, você vai perceber quanto dos sites que admira é só Grid e Flexbox bem combinados. Isso entra bem no Marco 2 da unidade.
+Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha a home de um site conhecido (o portal da sua universidade ou escola, um jornal, uma loja, a página inicial do GitHub) e reproduza seu **layout** — estrutura e disposição, com conteúdo próprio e sem copiar imagens — usando Grid para a página e Flexbox para os componentes, com responsividade em três larguras. Requisito inegociável: zero `float` e zero `position: absolute` para layout (o `absolute` só pode aparecer em selos e ícones). Ao terminar, você vai perceber quanto dos sites que admira é só Grid e Flexbox bem combinados. Isso entra bem no Marco 2 da unidade.
 
 **Critérios de pronto**
 

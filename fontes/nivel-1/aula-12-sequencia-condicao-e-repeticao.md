@@ -1,7 +1,7 @@
 # Aula 12 — Estruturas sequenciais, condicionais e de repetição
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -200,13 +200,13 @@ for (const [indice, trilha] of trilhas.entries()) {
 O `for…in` percorre as **chaves** (nomes de propriedades) de um objeto:
 
 ```js
-const palestrante = { nome: "Ana Lúcia", instituicao: "UNEMAT", area: "ia" };
+const palestrante = { nome: "Ana Lúcia", instituicao: "Universidade Estadual", area: "ia" };
 
 for (const chave in palestrante) {
   console.log(`${chave}: ${palestrante[chave]}`);
 }
 // nome: Ana Lúcia
-// instituicao: UNEMAT
+// instituicao: Universidade Estadual
 // area: ia
 ```
 
@@ -563,7 +563,7 @@ Um array guarda uma lista de coisas parecidas. Um **objeto** guarda as **caracte
 ```js
 const palestrante = {
   nome: "Ana Lúcia Ferreira",
-  instituicao: "UNEMAT — Sinop",
+  instituicao: "Universidade Estadual — Sinop",
   area: "ia",
   confirmado: true,
   temas: ["redes neurais", "agricultura de precisão"],
@@ -606,7 +606,7 @@ Repare que tudo isso funciona mesmo com `palestrante` declarado como `const`: co
 ### 5.3 Percorrendo um objeto
 
 ```js
-const palestrante = { nome: "Ana Lúcia", instituicao: "UNEMAT", area: "ia" };
+const palestrante = { nome: "Ana Lúcia", instituicao: "Universidade Estadual", area: "ia" };
 
 // Com for...in
 for (const chave in palestrante) {
@@ -615,8 +615,8 @@ for (const chave in palestrante) {
 
 // Com os utilitários de Object
 console.log(Object.keys(palestrante));    // ["nome", "instituicao", "area"]
-console.log(Object.values(palestrante));  // ["Ana Lúcia", "UNEMAT", "ia"]
-console.log(Object.entries(palestrante)); // [["nome","Ana Lúcia"], ["instituicao","UNEMAT"], ["area","ia"]]
+console.log(Object.values(palestrante));  // ["Ana Lúcia", "Universidade Estadual", "ia"]
+console.log(Object.entries(palestrante)); // [["nome","Ana Lúcia"], ["instituicao","Universidade Estadual"], ["area","ia"]]
 
 // Object.entries + for...of + desestruturação: o padrão mais legível
 for (const [chave, valor] of Object.entries(palestrante)) {
@@ -650,7 +650,7 @@ Uma propriedade cujo valor é uma função chama-se **método**. Dentro dele, `t
 
 ```js
 const turma = {
-  nome: "FACET-SNP-319",
+  nome: "Turma A",
   notas: [8.5, 7.0, 9.0],
   calcularMedia() {
     return this.notas.reduce((soma, n) => soma + n, 0) / this.notas.length;
@@ -826,7 +826,7 @@ const palestrantes = [
   {
     id: 1,
     nome: "Ana Lúcia Ferreira",
-    instituicao: "UNEMAT — Sinop",
+    instituicao: "Universidade Estadual — Sinop",
     area: "ia",
     tema: "Redes neurais para prever a safra de soja",
     foto: "img/palestrante-01.jpg",
@@ -858,7 +858,7 @@ const palestrantes = [
   {
     id: 5,
     nome: "Eduarda Ribeiro",
-    instituicao: "UNEMAT — Sinop",
+    instituicao: "Universidade Estadual — Sinop",
     area: "web",
     tema: "Do HTML ao deploy: o caminho do estudante",
     foto: "img/palestrante-05.jpg",

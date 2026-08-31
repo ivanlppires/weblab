@@ -1,7 +1,7 @@
 # Aula 05 — Elementos HTML para layout e introdução ao CSS
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -45,7 +45,7 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
   <header id="topo">
     <img src="img/logo-sasi.svg" alt="" width="160" height="48">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav aria-label="Principal">
       <ul>
         <li><a href="index.html" aria-current="page">Início</a></li>
@@ -60,7 +60,7 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
   <main>
     <section class="hero">
       <h2>Três noites de palestras, minicursos e maratona de programação</h2>
-      <p>Participação gratuita, na UNEMAT Sinop, com certificado para quem comparecer.</p>
+      <p>Participação gratuita, com certificado para quem comparecer.</p>
     </section>
 
     <section class="destaques">
@@ -82,12 +82,12 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
   </aside>
 
   <footer>
-    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
     <p>
-      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
       <a href="tel:+556635111000">(66) 3511-1000</a>
     </p>
-    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+    <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
   </footer>
 </body>
 ```
@@ -723,8 +723,8 @@ A página inicial já tem conteúdo desde a Aula 02 (as seções "Sobre o evento
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: três dias de palestras, minicursos e oficinas para estudantes e profissionais de tecnologia.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação: três dias de palestras, minicursos e oficinas para estudantes e profissionais de tecnologia.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="stylesheet" href="css/estilo.css">
 </head>
@@ -733,7 +733,7 @@ A página inicial já tem conteúdo desde a Aula 02 (as seções "Sobre o evento
     <div class="container">
       <img src="img/logo-sasi.svg" alt="" width="160" height="48">
       <h1>Semana Acadêmica de Sistemas de Informação</h1>
-      <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+      <p>Três noites de outubro · Auditório Central</p>
       <nav aria-label="Principal">
         <ul>
           <li><a href="index.html" aria-current="page">Início</a></li>
@@ -818,16 +818,16 @@ A página inicial já tem conteúdo desde a Aula 02 (as seções "Sobre o evento
 
   <footer>
     <div class="container">
-      <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+      <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
       <p>
-        <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+        <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
         <a href="tel:+556635111000">(66) 3511-1000</a>
       </p>
-      <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+      <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
       <nav aria-label="Rodapé">
         <ul>
           <li><a href="contato.html">Contato</a></li>
-          <li><a href="https://unemat.br" target="_blank" rel="noopener noreferrer">UNEMAT</a></li>
+          <li><a href="https://www.w3.org/WAI/" target="_blank" rel="noopener noreferrer">Acessibilidade (W3C)</a></li>
         </ul>
       </nav>
     </div>
@@ -859,7 +859,7 @@ A quinta página existe desde a Aula 02 (esqueleto) e recebeu o formulário de m
     <div class="container">
       <img src="img/logo-sasi.svg" alt="" width="160" height="48">
       <h1>Semana Acadêmica de Sistemas de Informação</h1>
-      <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+      <p>Três noites de outubro · Auditório Central</p>
       <nav aria-label="Principal">
         <ul>
           <li><a href="index.html">Início</a></li>
@@ -880,8 +880,8 @@ A quinta página existe desde a Aula 02 (esqueleto) e recebeu o formulário de m
         <h3>Fale com a organização</h3>
         <address>
           <p>Telefone: <a href="tel:+5566999990000">(66) 99999-0000</a></p>
-          <p>E-mail: <a href="mailto:sasi@unemat.br?subject=Contato%20pelo%20site">sasi@unemat.br</a></p>
-          <p>Bloco da FACET, sala 12 — Campus da UNEMAT em Sinop</p>
+          <p>E-mail: <a href="mailto:sasi@semanasi.com.br?subject=Contato%20pelo%20site">sasi@semanasi.com.br</a></p>
+          <p>Sala 12 do Auditório Central, em Sinop</p>
         </address>
       </section>
 
@@ -962,7 +962,7 @@ A quinta página existe desde a Aula 02 (esqueleto) e recebeu o formulário de m
       <section>
         <h3>Como chegar</h3>
         <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
-                title="Mapa: campus da UNEMAT em Sinop"
+                title="Mapa: Auditório Central, em Sinop"
                 width="600" height="450"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
@@ -973,7 +973,7 @@ A quinta página existe desde a Aula 02 (esqueleto) e recebeu o formulário de m
 
   <footer>
     <div class="container">
-      <p>Semana Acadêmica de Sistemas de Informação · UNEMAT Sinop</p>
+      <p>Semana Acadêmica de Sistemas de Informação</p>
     </div>
   </footer>
 </body>
@@ -1098,7 +1098,7 @@ Comece pela página mais simples e copie o `<head>`, o `<header>` e o `<footer>`
 </div>
 <div id="lateral">
   <div class="titulo">Links úteis</div>
-  <a href="https://unemat.br">UNEMAT</a>
+  <a href="https://www.wikipedia.org">Wikipédia</a>
 </div>
 <div id="rodape">Todos os direitos reservados</div>
 ```
@@ -1112,7 +1112,7 @@ Faça a pergunta da seção 1.2 para cada `div`: "existe um elemento que descrev
 
 ### Nível C — Desafio
 
-**C1.** Engenharia reversa de um site real. Escolha a página inicial de um site institucional de verdade (o portal da UNEMAT, o site do IFMT, o gov.br). Com o DevTools, mapeie a estrutura de marcos dela: quantos `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` e `<footer>` existem, e quantas `<div>`. Depois reconstrua **o esqueleto** dessa página (sem copiar conteúdo — use textos próprios) em HTML semântico, com o contêiner centralizado, e escreva um parágrafo comparando: o site original usa os marcos corretamente? O que você faria diferente?
+**C1.** Engenharia reversa de um site real. Escolha a página inicial de um site institucional de verdade (o portal da sua universidade ou escola, o site de uma prefeitura, o gov.br). Com o DevTools, mapeie a estrutura de marcos dela: quantos `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` e `<footer>` existem, e quantas `<div>`. Depois reconstrua **o esqueleto** dessa página (sem copiar conteúdo — use textos próprios) em HTML semântico, com o contêiner centralizado, e escreva um parágrafo comparando: o site original usa os marcos corretamente? O que você faria diferente?
 
 <details><summary>Dica</summary>
 
@@ -1224,7 +1224,7 @@ Explicar o box model para outra pessoa é a melhor forma de descobrir se você e
 ### 🔥 Boss — Auditoria e reconstrução de um site real
 Tags: html, acessibilidade, projeto, investigacao
 
-Sites institucionais brasileiros — de prefeituras, secretarias, campi — costumam ter dezenas de `<div>`, imagens sem `alt`, formulários sem `<label>` e tabelas usadas para layout. Você agora sabe reconhecer tudo isso. Escolha um site institucional real (que não seja o da UNEMAT usado no C1), audite as suas quatro páginas principais com tudo o que a Unidade 1 ensinou e **reconstrua** essas páginas em HTML semântico, acessível e válido, com conteúdo próprio inspirado no original. É o mini-projeto que fecha a unidade: arquitetura da Web, estrutura de documento, textos, links, tabelas, formulários, mídias, listas e seccionamento — tudo junto.
+Sites institucionais brasileiros — de prefeituras, secretarias, campi — costumam ter dezenas de `<div>`, imagens sem `alt`, formulários sem `<label>` e tabelas usadas para layout. Você agora sabe reconhecer tudo isso. Escolha um site institucional real (que não seja o mesmo usado no C1), audite as suas quatro páginas principais com tudo o que a Unidade 1 ensinou e **reconstrua** essas páginas em HTML semântico, acessível e válido, com conteúdo próprio inspirado no original. É o mini-projeto que fecha a unidade: arquitetura da Web, estrutura de documento, textos, links, tabelas, formulários, mídias, listas e seccionamento — tudo junto.
 
 **Critérios de pronto**
 

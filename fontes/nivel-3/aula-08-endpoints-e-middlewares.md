@@ -1,7 +1,7 @@
 # Aula 08 — Definindo endpoints e middlewares
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -172,7 +172,7 @@ export const eventos = [
     descricao: 'Palestras e minicursos sobre o mercado de tecnologia.',
     categoria: 'palestra',
     dataHora: '2030-10-15T19:00:00',
-    local: 'Auditório FACET',
+    local: 'Auditório Central',
     vagas: 80,
     imagemUrl: 'https://picsum.photos/seed/semana-computacao/400/240',
   },
@@ -776,7 +776,7 @@ Content-Type: application/json
   "titulo": "Palestra de Segurança da Informação",
   "categoria": "palestra",
   "dataHora": "2030-11-05T19:00:00",
-  "local": "Auditório FACET",
+  "local": "Auditório Central",
   "vagas": 60
 }
 
@@ -797,7 +797,7 @@ Content-Type: application/json
   "titulo": "Semana Acadêmica de Computação — atualizada",
   "categoria": "palestra",
   "dataHora": "2030-10-16T19:00:00",
-  "local": "Auditório FACET",
+  "local": "Auditório Central",
   "vagas": 100
 }
 
@@ -1177,6 +1177,6 @@ O Marco 2 fecha com uma aplicação **Vue 3** completa, consumindo uma API (a su
 - Documentação do `helmet` — [helmetjs.github.io](https://helmetjs.github.io/) — o que cada cabeçalho de segurança faz.
 - Documentação do `express-rate-limit` — [express-rate-limit.mintlify.app](https://express-rate-limit.mintlify.app/) — estratégias de limitação além do padrão por IP.
 - RFC 9110 (semântica HTTP) — referência formal de métodos e status codes, para quem quiser a fonte primária.
-- Plano de curso FACET-SNP-310 — bibliografia básica, capítulos sobre APIs REST e middleware.
+- Plano da disciplina em que esta trilha nasceu — bibliografia básica, capítulos sobre APIs REST e middleware.
 
 Na Aula 09 os dados em memória desta API saem de cena: você migra tudo para **MySQL**, com pool de conexões, consultas parametrizadas e camada de repositório — mantendo os mesmos contratos de endpoint, para o front-end não perceber a diferença.

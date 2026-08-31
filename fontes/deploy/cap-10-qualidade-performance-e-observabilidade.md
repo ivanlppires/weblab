@@ -1,7 +1,7 @@
 # Capítulo 10 — Qualidade, performance e observabilidade
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -567,7 +567,7 @@ curl -sI -H 'Accept-Encoding: gzip, br' https://eventos.seudominio.dev/assets/in
 ```
 
 > **🔬 Investigue**
-> Rode o `curl` acima em três sites: o seu, o do WebLab e o portal da UNEMAT. Compare `content-encoding` e `cache-control`. Depois, no DevTools → Network, clique em um arquivo `.js` e compare **Size** (o que trafegou) com o tamanho descomprimido: a razão entre os dois é a taxa de compressão. Qual dos três comprime melhor?
+> Rode o `curl` acima em três sites: o seu, o do WebLab e o portal da sua universidade ou escola. Compare `content-encoding` e `cache-control`. Depois, no DevTools → Network, clique em um arquivo `.js` e compare **Size** (o que trafegou) com o tamanho descomprimido: a razão entre os dois é a taxa de compressão. Qual dos três comprime melhor?
 
 ## 7. Observabilidade: Sentry e pino
 

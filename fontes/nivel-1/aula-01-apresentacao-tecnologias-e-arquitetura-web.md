@@ -1,7 +1,7 @@
 # Aula 01 — Apresentação, tecnologias e arquitetura da Web
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -95,7 +95,7 @@ Esta trilha soma aproximadamente **60 h de estudo**: cerca de 45 h acompanhando 
 
 A regra pedagógica central do WebLab é simples:
 
-1. **O projeto fio-condutor** é construído ao longo da trilha — o **site de um evento acadêmico**, a "Semana Acadêmica de Sistemas de Informação" da UNEMAT Sinop. São cinco páginas: **início**, **programação**, **inscrição**, **palestrantes** e **contato**. Na Unidade 1 elas nascem em HTML puro; na Unidade 2 ganham CSS; na Unidade 3 ganham JavaScript. Se você está em aula com um professor, é o projeto que ele constrói com a turma, passo a passo, e todo mundo digita junto; se está estudando sozinho, é o que você constrói acompanhando cada Mão na massa.
+1. **O projeto fio-condutor** é construído ao longo da trilha — o **site de um evento acadêmico**, a "Semana Acadêmica de Sistemas de Informação". São cinco páginas: **início**, **programação**, **inscrição**, **palestrantes** e **contato**. Na Unidade 1 elas nascem em HTML puro; na Unidade 2 ganham CSS; na Unidade 3 ganham JavaScript. Se você está em aula com um professor, é o projeto que ele constrói com a turma, passo a passo, e todo mundo digita junto; se está estudando sozinho, é o que você constrói acompanhando cada Mão na massa.
 2. **Cada pessoa desenvolve também um projeto autoral** com a **mesma arquitetura** (cinco páginas, mesma sequência de tecnologias) e um **domínio diferente**. Os marcos do projeto acompanham o projeto autoral, não o site do evento.
 
 Exemplos de temas que funcionam bem: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios do curso, brechó de roupas, controle de pescarias no Teles Pires, cardápio de um restaurante, portfólio de um fotógrafo, site de uma ONG de proteção animal. O critério é: você consegue pensar em **cinco páginas com conteúdo real** para esse tema? Se sim, serve.
@@ -220,7 +220,7 @@ Este é um dos assuntos mais cobrados em entrevistas técnicas. Aprenda a sequê
 
 **Passo 1 — Análise da URL.** O navegador separa o endereço em partes (§5) e descobre qual protocolo usar e qual servidor contatar.
 
-**Passo 2 — Resolução DNS.** O nome `www.unemat.br` não serve para roteamento; a rede trabalha com endereços IP. O navegador consulta o **DNS** (Domain Name System), um serviço distribuído de diretórios, para traduzir o nome em um IP. Antes de sair para a rede, ele consulta caches, nesta ordem: cache do navegador → cache do sistema operacional → arquivo `hosts` → servidor DNS do provedor.
+**Passo 2 — Resolução DNS.** O nome `www.exemplo.com.br` não serve para roteamento; a rede trabalha com endereços IP. O navegador consulta o **DNS** (Domain Name System), um serviço distribuído de diretórios, para traduzir o nome em um IP. Antes de sair para a rede, ele consulta caches, nesta ordem: cache do navegador → cache do sistema operacional → arquivo `hosts` → servidor DNS do provedor.
 
 **Passo 3 — Conexão TCP.** Com o IP em mãos, o navegador abre uma conexão TCP com o servidor, normalmente na porta **80** (HTTP) ou **443** (HTTPS), usando o *three-way handshake* (SYN → SYN-ACK → ACK).
 
@@ -230,7 +230,7 @@ Este é um dos assuntos mais cobrados em entrevistas técnicas. Aprenda a sequê
 
 ```http
 GET /cursos/sistemas HTTP/1.1
-Host: www.unemat.br
+Host: www.exemplo.com.br
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/139.0
 Accept: text/html,application/xhtml+xml
 Accept-Language: pt-BR,pt;q=0.9
@@ -253,7 +253,7 @@ Cache-Control: max-age=3600
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <title>Sistemas de Informação — UNEMAT</title>
+  <title>Sistemas de Informação</title>
 </head>
 ```
 
@@ -268,7 +268,7 @@ Cache-Control: max-age=3600
 ## 5. Anatomia de uma URL
 
 ```text
-https://www.unemat.br:443/cursos/sistemas?campus=sinop&turno=noite#ementa
+https://www.exemplo.com.br:443/cursos/sistemas?campus=sinop&turno=noite#ementa
 └─┬─┘   └──────┬─────┘└┬┘└──────┬───────┘└────────┬─────────────┘└──┬──┘
   1            2       3        4                 5                 6
 ```
@@ -276,7 +276,7 @@ https://www.unemat.br:443/cursos/sistemas?campus=sinop&turno=noite#ementa
 | # | Elemento | Nome | Função |
 |---|---|---|---|
 | 1 | `https` | Esquema / protocolo | Como falar com o servidor |
-| 2 | `www.unemat.br` | Host / domínio | Com quem falar |
+| 2 | `www.exemplo.com.br` | Host / domínio | Com quem falar |
 | 3 | `443` | Porta | Qual serviço na máquina (80 = HTTP, 443 = HTTPS; omitida quando é a padrão) |
 | 4 | `/cursos/sistemas` | Caminho (*path*) | Qual recurso dentro do servidor |
 | 5 | `?campus=sinop&turno=noite` | Query string | Parâmetros no formato `chave=valor`, separados por `&` |
@@ -460,7 +460,7 @@ O formato de troca padrão é o **JSON** (JavaScript Object Notation) — texto,
 > Mnemônico: **4xx é culpa de quem pediu; 5xx é culpa de quem respondeu.** Um `404` diz "você pediu algo que não existe"; um `500` diz "eu quebrei ao tentar responder".
 
 > **🔬 Investigue**
-> Abra <https://www.unemat.br>, pressione <kbd>F12</kbd>, vá à aba **Network** e recarregue com <kbd>Ctrl</kbd>+<kbd>F5</kbd>. Observe: (1) quantas linhas apareceram — cada uma é uma requisição; (2) a coluna *Type*: `document`, `stylesheet`, `script`, `png`, `font`; (3) clique na primeira linha, abra *Headers* e procure `Content-Type` e `Server` na resposta; (4) na barra inferior, leia o total de requisições e o peso transferido. Você acabou de ver o "uma página são dezenas de arquivos" acontecendo — e o cabeçalho `Server` conta qual software respondeu.
+> Abra um site que você usa bastante (rede social, portal de notícias, e-commerce), pressione <kbd>F12</kbd>, vá à aba **Network** e recarregue com <kbd>Ctrl</kbd>+<kbd>F5</kbd>. Observe: (1) quantas linhas apareceram — cada uma é uma requisição; (2) a coluna *Type*: `document`, `stylesheet`, `script`, `png`, `font`; (3) clique na primeira linha, abra *Headers* e procure `Content-Type` e `Server` na resposta; (4) na barra inferior, leia o total de requisições e o peso transferido. Você acabou de ver o "uma página são dezenas de arquivos" acontecendo — e o cabeçalho `Server` conta qual software respondeu.
 
 ## 12. Infraestrutura de entrega
 
@@ -512,7 +512,7 @@ No painel esquerdo, clique com o botão direito em `site-evento` → *New File* 
 </head>
 <body>
   <h1>Semana Acadêmica de Sistemas de Informação</h1>
-  <p>Três dias de palestras, minicursos e oficinas na UNEMAT Sinop.</p>
+  <p>Três dias de palestras, minicursos e oficinas.</p>
   <p>Este site está sendo construído com o WebLab, na trilha <strong>Introdução ao Desenvolvimento Web</strong>.</p>
 </body>
 </html>
@@ -554,7 +554,7 @@ Roteiro de exploração — faça agora, na sua página:
 1. **Elements:** dê duplo clique no texto do `<h1>` e altere. Note que muda na tela mas **não no arquivo** — você está editando o DOM em memória, não o HTML. Recarregue e a alteração some.
 2. **Console:** digite `document.title` e pressione <kbd>Enter</kbd>. Aparece o texto do seu `<title>`. Digite `document.body.children.length` — quantos filhos diretos o `<body>` tem?
 3. **Network:** marque *Disable cache*, recarregue com <kbd>Ctrl</kbd>+<kbd>F5</kbd> e observe o status `200` ao lado de `index.html`. Agora renomeie o arquivo para `inicio.html` e recarregue: status `404`. Renomeie de volta.
-4. Abra <https://www.unemat.br> em outra aba e, na aba Network, conte quantas requisições a página faz e qual é o maior arquivo (clique no cabeçalho da coluna *Size* para ordenar).
+4. Abra em outra aba um site que você visita com frequência e, na aba Network, conte quantas requisições a página faz e qual é o maior arquivo (clique no cabeçalho da coluna *Size* para ordenar).
 
 ### Passo 6 — O projeto autoral começa hoje
 
@@ -604,7 +604,7 @@ https://loja.exemplo.com.br:8443/produtos/notebooks?marca=dell&ordem=preco#avali
 
 ### Nível B — Aplicação
 
-**B1.** Usando a aba Network do DevTools, acesse três sites diferentes (um portal de notícias, um e-commerce e o site da UNEMAT) e registre, para cada um: número de requisições, peso total transferido (KB ou MB), tempo de carregamento (*Load*, na barra inferior) e qual foi o maior recurso. Escreva um parágrafo comparando os resultados e levantando hipóteses sobre as diferenças.
+**B1.** Usando a aba Network do DevTools, acesse três sites diferentes (um portal de notícias, um e-commerce e o site da sua universidade ou escola) e registre, para cada um: número de requisições, peso total transferido (KB ou MB), tempo de carregamento (*Load*, na barra inferior) e qual foi o maior recurso. Escreva um parágrafo comparando os resultados e levantando hipóteses sobre as diferenças.
 
 **Resultado esperado:** uma tabela com três linhas e quatro medidas cada, mais um parágrafo de análise (por exemplo: "o portal de notícias fez 3× mais requisições por causa de anúncios e rastreadores").
 
@@ -613,13 +613,13 @@ https://loja.exemplo.com.br:8443/produtos/notebooks?marca=dell&ordem=preco#avali
 Marque *Disable cache* antes de medir, senão a segunda visita vem do cache e distorce a comparação. A barra de resumo na parte inferior da aba Network mostra "N requests | X MB transferred | Load: Y s".
 </details>
 
-**B2.** Crie `exercicios/aula01/sobre-mim.html` contendo: título da página no `<title>`, um `<h1>` com seu nome, um parágrafo de apresentação, um parágrafo com seus objetivos nesta trilha e um link para o site da UNEMAT que abra em nova aba (pesquise o atributo `target`).
+**B2.** Crie `exercicios/aula01/sobre-mim.html` contendo: título da página no `<title>`, um `<h1>` com seu nome, um parágrafo de apresentação, um parágrafo com seus objetivos nesta trilha e um link para o site de uma universidade ou escola (a sua, se estiver cursando alguma) que abra em nova aba (pesquise o atributo `target`).
 
-**Resultado esperado:** a página abre no Live Server com acentos corretos; o link abre `https://www.unemat.br` em outra aba.
+**Resultado esperado:** a página abre no Live Server com acentos corretos; o link abre o site escolhido em outra aba.
 
 <details><summary>Dica</summary>
 
-Parta do `index.html` que você criou no Mão na massa. O link é `<a href="https://www.unemat.br" target="_blank">UNEMAT</a>`. Na Aula 02 você vai descobrir por que esse link precisa de um atributo extra de segurança.
+Parta do `index.html` que você criou no Mão na massa. O link é algo como `<a href="https://www.wikipedia.org" target="_blank">Wikipédia</a>`, com o `href` trocado pelo site escolhido. Na Aula 02 você vai descobrir por que esse link precisa de um atributo extra de segurança.
 </details>
 
 **B3.** Desenhe (no papel, no Draw.io ou no Excalidraw) um diagrama do ciclo requisição-resposta incluindo: usuário, navegador, DNS, Internet, servidor web e banco de dados. Indique com setas numeradas a ordem dos eventos.
@@ -680,7 +680,7 @@ Na segunda visita, a coluna *Size* mostra "(disk cache)" em vez de um tamanho �
 ### ⭐ Quem entregou esta página?
 Tags: devtools, http, investigacao
 
-Toda resposta HTTP carrega cabeçalhos que contam quem a produziu — e muitos sites deixam pistas: qual servidor web, se passou por uma CDN, há quanto tempo o arquivo está em cache. Hoje você vira detetive: escolha três sites (o da UNEMAT, um jornal e um e-commerce) e descubra, só pelos cabeçalhos, como cada um é entregue.
+Toda resposta HTTP carrega cabeçalhos que contam quem a produziu — e muitos sites deixam pistas: qual servidor web, se passou por uma CDN, há quanto tempo o arquivo está em cache. Hoje você vira detetive: escolha três sites (o da sua universidade ou escola, um jornal e um e-commerce) e descubra, só pelos cabeçalhos, como cada um é entregue.
 
 **Critérios de pronto**
 
@@ -715,17 +715,17 @@ A tabela da §2 resume meio século em dez linhas. Ela merece mais: crie uma pá
 3. Pense na página como um documento que alguém vai ler de cima a baixo sem nenhum estilo: a ordem e a hierarquia dos títulos precisam contar a história sozinhas.
 </details>
 
-### ⭐⭐ A rota até a UNEMAT
+### ⭐⭐ A rota até o servidor
 Tags: terminal, dns, investigacao
 
-Quantos computadores um pacote atravessa entre a sua máquina e o servidor da UNEMAT? A resposta está em um comando que existe em todo sistema operacional. No terminal, execute `tracert www.unemat.br` (Windows) ou `traceroute www.unemat.br` (Linux/macOS). Registre a saída e responda: quantos saltos foram necessários? O que representa cada linha? Qual o tempo total? Relacione o resultado com o conceito de comutação de pacotes.
+Escolha um domínio real (o site de uma universidade, um jornal, uma loja). Quantos computadores um pacote atravessa entre a sua máquina e o servidor dele? A resposta está em um comando que existe em todo sistema operacional. No terminal, execute `tracert dominio-escolhido` (Windows) ou `traceroute dominio-escolhido` (Linux/macOS). Registre a saída e responda: quantos saltos foram necessários? O que representa cada linha? Qual o tempo total? Relacione o resultado com o conceito de comutação de pacotes.
 
 **Critérios de pronto**
 
 - A saída completa do comando, copiada em um bloco de texto.
 - O número de saltos e o tempo aproximado do último salto.
 - Uma explicação, por escrito, do que são as três medidas de tempo em cada linha e por que algumas linhas mostram `* * *`.
-- Uma comparação com `nslookup www.unemat.br` (ou `dig`): qual IP foi resolvido, e ele bate com o destino do traceroute?
+- Uma comparação com `nslookup dominio-escolhido` (ou `dig`): qual IP foi resolvido, e ele bate com o destino do traceroute?
 - Um parágrafo relacionando o resultado com "a Internet é uma rede de comutação de pacotes".
 
 <details><summary>Pistas</summary>
@@ -739,13 +739,13 @@ Quantos computadores um pacote atravessa entre a sua máquina e o servidor da UN
 ### ⭐⭐⭐ HTTP à mão
 Tags: http, https, terminal, investigacao
 
-O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele manualmente: dispara uma requisição HTTP sem navegador, lê a resposta crua e compara protocolos. A ferramenta é o `curl`, que já vem instalado no Windows 10+, no macOS e na maioria das distribuições Linux. Ao final, você vai conseguir explicar para outra pessoa, com evidências, cada etapa do "o que acontece quando digito uma URL".
+O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele manualmente: dispara uma requisição HTTP sem navegador, lê a resposta crua e compara protocolos. A ferramenta é o `curl`, que já vem instalado no Windows 10+, no macOS e na maioria das distribuições Linux. Escolha um site HTTPS (pode ser o mesmo domínio do desafio anterior). Ao final, você vai conseguir explicar para outra pessoa, com evidências, cada etapa do "o que acontece quando digito uma URL".
 
 **Critérios de pronto**
 
-- A saída de `curl -v https://www.unemat.br` salva em um arquivo, com anotações marcando: a resolução DNS, a conexão TCP, o handshake TLS (algoritmo negociado e emissor do certificado), a requisição enviada (linhas com `>`) e a resposta recebida (linhas com `<`).
-- A saída de `curl -I https://www.unemat.br` (só cabeçalhos) com uma explicação, em uma linha cada, de pelo menos 5 cabeçalhos de resposta.
-- Uma requisição a um caminho inexistente (`curl -I https://www.unemat.br/nao-existe`) e a interpretação do status recebido.
+- A saída de `curl -v https://dominio-escolhido` salva em um arquivo, com anotações marcando: a resolução DNS, a conexão TCP, o handshake TLS (algoritmo negociado e emissor do certificado), a requisição enviada (linhas com `>`) e a resposta recebida (linhas com `<`).
+- A saída de `curl -I https://dominio-escolhido` (só cabeçalhos) com uma explicação, em uma linha cada, de pelo menos 5 cabeçalhos de resposta.
+- Uma requisição a um caminho inexistente (`curl -I https://dominio-escolhido/nao-existe`) e a interpretação do status recebido.
 - Uma comparação entre `curl --http1.1 -I` e `curl --http2 -I` no mesmo site: qual versão o servidor aceitou, e como você sabe?
 - Um texto de 10 linhas, escrito como se fosse explicar a outra pessoa, ligando cada evidência ao passo correspondente da §4.
 

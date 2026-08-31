@@ -1,7 +1,7 @@
 # Aula 14 — Autenticação com Google (OAuth 2.0)
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Sua API está completa e tem um problema grave: qualquer pessoa com um terminal pode apagar o cardápio inteiro do Café Cerrado. `curl -X DELETE http://localhost:3000/api/produtos/1` e pronto. Hoje a aplicação aprende a responder a pergunta que separa um exercício de um sistema de verdade — **quem está fazendo esta requisição?** — sem que você precise guardar a senha de ninguém.
@@ -123,7 +123,7 @@ As claims que interessam em um ID token do Google:
 
 Esta é a ideia mais importante da aula inteira.
 
-**Decodificar** é desfazer o base64url e ler o JSON. Faz-se no navegador, em uma linha, e não prova absolutamente nada — eu posso escrever um JSON dizendo que sou `reitoria@unemat.br`, codificar em base64url e mandar para a sua API.
+**Decodificar** é desfazer o base64url e ler o JSON. Faz-se no navegador, em uma linha, e não prova absolutamente nada — eu posso escrever um JSON dizendo que sou `diretoria@exemplo.br`, codificar em base64url e mandar para a sua API.
 
 **Verificar** é conferir a assinatura com a **chave pública** do Google e checar três coisas: que `iss` é o Google, que `exp` ainda não passou e que `aud` é exatamente o **seu** Client ID. Só a chave privada do Google produz uma assinatura que bate com a chave pública dele — e essa chave privada nunca sai dos servidores do Google.
 
@@ -767,7 +767,7 @@ Suba o servidor com `npm run dev` e siga o roteiro:
 - (c) Usuário logado tentando excluir um produto cadastrado por outra pessoa.
 - (d) Token com a assinatura adulterada.
 
-**A2.** Um colega diz: "decodifiquei o JWT com `atob` e vi que o e-mail é `professor@unemat.br`, então o usuário é o professor". Explique em três linhas por que a conclusão está errada e o que faltou fazer.
+**A2.** Um colega diz: "decodifiquei o JWT com `atob` e vi que o e-mail é `professor@exemplo.br`, então o usuário é o professor". Explique em três linhas por que a conclusão está errada e o que faltou fazer.
 
 **A3.** Preveja a resposta de cada requisição **sem rodar**, e depois confira:
 

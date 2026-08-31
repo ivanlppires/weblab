@@ -1,7 +1,7 @@
 # Aula 02 — Introdução ao HTML: estrutura, textos, links e tabelas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -42,7 +42,7 @@ Essa é a diferença entre HTML e um editor de texto: no Word você formata a ap
 ### Anatomia de um elemento
 
 ```text
-<a href="https://unemat.br" title="Site oficial">UNEMAT</a>
+<a href="https://github.io" title="Site oficial">GitHub</a>
 └┬┘└──────────┬───────────┘ └───────┬───────┘└──┬──┘└─┬─┘
  │            │                     │           │     │
 nome      atributo 1            atributo 2   conteúdo tag
@@ -235,13 +235,13 @@ Um `<ul>` ou `<ol>` só pode ter `<li>` como filhos diretos. Qualquer outra cois
 O link é a invenção que dá o "hipertexto" ao HTML. Todos os tipos usam o mesmo elemento, `<a>`, e mudam só o `href`:
 
 ```html
-<a href="https://www.unemat.br">Link externo</a>
+<a href="https://www.wikipedia.org">Link externo</a>
 <a href="contato.html">Link interno relativo</a>
 <a href="/sobre.html">Link a partir da raiz</a>
 <a href="#secao3">Âncora interna da própria página</a>
 <a href="programacao.html#dia-2">Âncora em outra página</a>
 <a href="documentos/edital.pdf" download>Baixar edital</a>
-<a href="mailto:contato@unemat.br">Enviar e-mail</a>
+<a href="mailto:contato@exemplo.com.br">Enviar e-mail</a>
 <a href="tel:+556635111000">Ligar</a>
 <a href="https://exemplo.com" target="_blank" rel="noopener noreferrer">
   Abrir em nova aba
@@ -362,7 +362,7 @@ Antes do HTML5, tudo era `<div>`. O resultado era a chamada *div soup*: código 
   </main>
 
   <footer>
-    <p>&copy; UNEMAT — Todos os direitos reservados</p>
+    <p>&copy; Nome do site — Todos os direitos reservados</p>
   </footer>
 </body>
 ```
@@ -446,8 +446,8 @@ Abra `site-evento/index.html` e substitua o `<head>`:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: três dias de palestras, minicursos e oficinas para estudantes e profissionais de tecnologia.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação: três dias de palestras, minicursos e oficinas para estudantes e profissionais de tecnologia.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
 </head>
 ```
@@ -464,7 +464,7 @@ O cabeçalho é **idêntico nas cinco páginas** — é o que faz o site parecer
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -553,12 +553,12 @@ Cada `<section>` tem um `<h2>` — regra de ouro: seção sem título provavelme
 
 ```html
   <footer>
-    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
     <p>
-      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
       <a href="tel:+556635111000">(66) 3511-1000</a>
     </p>
-    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+    <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
   </footer>
 </body>
 </html>
@@ -578,14 +578,14 @@ Crie `site-evento/programacao.html`. Copie o `<head>` (trocando o `<title>` e a 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: horários, atividades e locais dos três dias.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação: horários, atividades e locais dos três dias.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Programação — Semana Acadêmica de Sistemas de Informação</title>
 </head>
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -701,12 +701,12 @@ Crie `site-evento/programacao.html`. Copie o `<head>` (trocando o `<title>` e a 
   </main>
 
   <footer>
-    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
     <p>
-      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
       <a href="tel:+556635111000">(66) 3511-1000</a>
     </p>
-    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+    <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
   </footer>
 </body>
 </html>
@@ -728,14 +728,14 @@ Três detalhes importantes nessa tabela:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conheça os palestrantes e ministrantes da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Conheça os palestrantes e ministrantes da Semana Acadêmica de Sistemas de Informação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Palestrantes — Semana Acadêmica de Sistemas de Informação</title>
 </head>
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -753,7 +753,7 @@ Três detalhes importantes nessa tabela:
 
     <article id="ana-lucia-ferreira">
       <h3>Ana Lúcia Ferreira</h3>
-      <p><strong>Professora e pesquisadora</strong> da UNEMAT — Sinop, na área de inteligência artificial.</p>
+      <p><strong>Professora e pesquisadora</strong> na área de inteligência artificial.</p>
       <p>Pesquisa redes neurais aplicadas à previsão de safra de soja e coordena um grupo de estudos em aprendizado de máquina.</p>
       <dl>
         <dt>Atividades</dt>
@@ -793,12 +793,12 @@ Três detalhes importantes nessa tabela:
   </main>
 
   <footer>
-    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>Realização: Comissão Organizadora da Semana Acadêmica de Sistemas de Informação.</p>
     <p>
-      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="mailto:contato@semanasi.com.br">contato@semanasi.com.br</a> ·
       <a href="tel:+556635111000">(66) 3511-1000</a>
     </p>
-    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
+    <p>&copy; Semana Acadêmica de Sistemas de Informação. Todos os direitos reservados.</p>
   </footer>
 </body>
 </html>
@@ -868,7 +868,7 @@ Os itens A1 a A6 revisam a arquitetura da Aula 01; os demais são sobre o HTML d
 
 **A9.** Escreva o HTML de uma lista não ordenada com 3 itens, sendo que o segundo contém uma sublista ordenada com 2 itens.
 
-**A10.** Escreva um link que abra `https://sigaa.unemat.br` em nova aba, com os atributos de segurança corretos.
+**A10.** Escreva um link que abra `https://www.wikipedia.org` em nova aba, com os atributos de segurança corretos.
 
 **A11.** O que faz o atributo `scope` em um `<th>`?
 
@@ -962,7 +962,7 @@ Na aba Network, filtre por *Doc*: uma MPA carrega um novo documento HTML a cada 
 Use *Validate by URI*. Sites grandes costumam ter dezenas de erros — isso não os impede de funcionar (lembre-se do "Você sabia?" da §1), mas mostra por que o validador é um padrão de qualidade e não uma obrigação técnica.
 </details>
 
-**B8.** Página institucional de um curso. Construa `exercicios/aula02/curso.html`, uma página sobre um curso técnico ou de graduação — o seu, se você estiver cursando um, ou o Sistemas de Informação da UNEMAT, como no exemplo a seguir —, contendo obrigatoriamente: estrutura completa do documento com todas as `<meta>` vistas; `<header>` com `<h1>` e `<nav>` com 4 links de âncora interna; `<main>` com três `<section>`, cada uma com `<h2>` e conteúdo; uma lista ordenada com as etapas do ciclo requisição-resposta (Aula 01); uma lista de definições com 5 termos técnicos da Aula 01; uma tabela com a grade de uma fase do curso (disciplina, carga horária, professor); um `<blockquote>` com citação e `<cite>`; `<footer>` com direitos autorais usando `&copy;`.
+**B8.** Página institucional de um curso. Construa `exercicios/aula02/curso.html`, uma página sobre um curso técnico ou de graduação — o seu, se você estiver cursando um, ou o curso de Sistemas de Informação de uma universidade à sua escolha, como no exemplo a seguir —, contendo obrigatoriamente: estrutura completa do documento com todas as `<meta>` vistas; `<header>` com `<h1>` e `<nav>` com 4 links de âncora interna; `<main>` com três `<section>`, cada uma com `<h2>` e conteúdo; uma lista ordenada com as etapas do ciclo requisição-resposta (Aula 01); uma lista de definições com 5 termos técnicos da Aula 01; uma tabela com a grade de uma fase do curso (disciplina, carga horária, professor); um `<blockquote>` com citação e `<cite>`; `<footer>` com direitos autorais usando `&copy;`.
 
 **Resultado esperado:** zero erros no validador; os 4 links de âncora funcionando; a tabela com `<caption>`, `<thead>` e `<th scope>`.
 
@@ -973,7 +973,7 @@ Use *Validate by URI*. Sites grandes costumam ter dezenas de erros — isso não
 
 ### Nível C — Desafio
 
-**C1.** Site institucional de 4 páginas. Construa, em `exercicios/aula02/curso/`, um site sobre um curso técnico ou de graduação — o seu, ou o Sistemas de Informação da UNEMAT, cuja grade é pública — com quatro páginas interligadas: `index.html` (apresentação), `grade.html` (tabela com a grade curricular completa), `corpo-docente.html` (lista de professores com formação) e `contato.html` (endereço, telefone, e-mail e mapa em link). Requisitos: navegação idêntica em todas as páginas; caminhos relativos corretos; HTML5 semântico; zero erros no validador; nomes de arquivos em minúsculas sem acentos. Sem CSS ainda — este site será estilizado nas Aulas 05 e 06.
+**C1.** Site institucional de 4 páginas. Construa, em `exercicios/aula02/curso/`, um site sobre um curso técnico ou de graduação — o seu, ou o curso de Sistemas de Informação de uma universidade pública à sua escolha (a grade curricular costuma estar disponível no site da instituição) — com quatro páginas interligadas: `index.html` (apresentação), `grade.html` (tabela com a grade curricular completa), `corpo-docente.html` (lista de professores com formação) e `contato.html` (endereço, telefone, e-mail e mapa em link). Requisitos: navegação idêntica em todas as páginas; caminhos relativos corretos; HTML5 semântico; zero erros no validador; nomes de arquivos em minúsculas sem acentos. Sem CSS ainda — este site será estilizado nas Aulas 05 e 06.
 
 <details><summary>Dica</summary>
 
@@ -1038,7 +1038,7 @@ Boa parte das pessoas que usam a Web não usa mouse: quem navega por teclado, qu
 **Critérios de pronto**
 
 - No `index.html` do site do evento, navegue **só com o teclado** (<kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>): registre a ordem em que os links recebem foco e se algum ficou inalcançável.
-- No Firefox, abra um site real (o da UNEMAT ou um jornal), desligue os estilos (*Exibir → Estilo da página → Sem estilo*) e responda: a página ainda faz sentido lida de cima a baixo? Onde a ordem do conteúdo surpreendeu você?
+- No Firefox, abra um site real (o da sua universidade ou escola, ou um jornal), desligue os estilos (*Exibir → Estilo da página → Sem estilo*) e responda: a página ainda faz sentido lida de cima a baixo? Onde a ordem do conteúdo surpreendeu você?
 - Um parágrafo comparando as duas experiências e apontando **uma** melhoria concreta que você faria no site real, com o elemento HTML que usaria.
 - No site do evento, uma melhoria implementada a partir do que você observou. Sugestão: acrescente `id="conteudo"` ao `<main>` das cinco páginas (ele ainda não tem) e, como primeiro elemento do `<body>`, um link `<a href="#conteudo">Pular para o conteúdo</a>` — sem CSS ele fica visível o tempo todo, e está tudo bem: escondê-lo até receber foco é assunto da Aula 07.
 

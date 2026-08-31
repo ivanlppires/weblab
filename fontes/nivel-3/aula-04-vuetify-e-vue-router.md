@@ -1,7 +1,7 @@
 # Aula 04 — Introdução a Vuetify e Vue Router
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -169,7 +169,7 @@ Dentro de `v-app`, os blocos estruturais mais comuns são:
     </v-main>
 
     <v-footer app color="primary">
-      <span>UNEMAT · FACET · FACET-SNP-310</span>
+      <span>© UniEventos</span>
     </v-footer>
   </v-app>
 </template>
@@ -785,7 +785,7 @@ const linksMenu = [
     </v-main>
 
     <v-footer color="primary" class="d-flex justify-center pa-4">
-      <span class="text-white">UNEMAT · FACET · FACET-SNP-310</span>
+      <span class="text-white">© UniEventos</span>
     </v-footer>
   </v-app>
 </template>
@@ -989,8 +989,8 @@ Note o uso de `Number(rota.params.id)` — como discutido na §7, o parâmetro d
           acadêmicos — palestras, minicursos e workshops.
         </p>
         <p>
-          Projeto desenvolvido na disciplina FACET-SNP-310 — Frameworks Modernos
-          para Desenvolvimento de Sistemas, UNEMAT/Sinop.
+          Projeto acadêmico desenvolvido como estudo de caso na disciplina em
+          que esta trilha nasceu.
         </p>
       </v-card-text>
     </v-card>

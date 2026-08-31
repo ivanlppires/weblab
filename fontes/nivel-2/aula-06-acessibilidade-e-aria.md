@@ -1,7 +1,7 @@
 # Aula 06 — Acessibilidade e ARIA
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -977,7 +977,7 @@ No NVDA, <kbd>H</kbd> pula entre títulos, <kbd>D</kbd> entre landmarks, <kbd>K<
 
 Tags: acessibilidade, investigacao, devtools
 
-Desconecte o mouse. Fisicamente, do computador — ou desative o touchpad. Por vinte minutos você vai usar apenas o teclado: o seu site, o site da UNEMAT, o SIGAA e um site de comércio à sua escolha. A maioria das pessoas desiste nos primeiros três minutos. Não desista: o que incomoda você por vinte minutos é o dia inteiro de alguém.
+Desconecte o mouse. Fisicamente, do computador — ou desative o touchpad. Por vinte minutos você vai usar apenas o teclado: o seu site, o site da sua universidade ou escola, o SIGAA e um site de comércio à sua escolha. A maioria das pessoas desiste nos primeiros três minutos. Não desista: o que incomoda você por vinte minutos é o dia inteiro de alguém.
 
 **Critérios de pronto**
 
@@ -1220,7 +1220,7 @@ Um projeto "pela metade" costuma ter um desses itens presente em uma página e a
 - NVDA — leitor de tela gratuito para Windows: <https://www.nvaccess.org/download/> — instale e passe dez minutos com ele; é a aula que mais muda a cabeça de um desenvolvedor.
 - BRASIL — Lei nº 13.146/2015 (Lei Brasileira de Inclusão), art. 63: <https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm> — leia o artigo inteiro, são poucas linhas.
 - eMAG — Modelo de Acessibilidade em Governo Eletrônico: <https://emag.governoeletronico.gov.br/> — a referência usada em licitações públicas brasileiras.
-- QUEIRÓS, Ricardo; PORTELA, Filipe. *Introdução ao Desenvolvimento Moderno para a Web*. FCA, 2018 — camada de apresentação e boas práticas de interface (Biblioteca Virtual da UNEMAT).
+- QUEIRÓS, Ricardo; PORTELA, Filipe. *Introdução ao Desenvolvimento Moderno para a Web*. FCA, 2018 — camada de apresentação e boas práticas de interface (se você tem acesso a uma biblioteca virtual pela sua instituição).
 - ALVES, William P. *Projetos de Sistemas Web*. Érica, 2015 — usabilidade e padrões de interface.
 - LOUDON, Kyle. *Desenvolvimento de Grandes Aplicações Web*. Novatec, 2019 — qualidade de front-end em escala.
 

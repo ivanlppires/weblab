@@ -1,7 +1,7 @@
 # Aula 08 — Criando telas responsivas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -961,8 +961,8 @@ Substitua o `<nav>` das **cinco** páginas pela marcação da seção 5, mantend
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona de programação.">
-  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação: palestras, minicursos e maratona de programação.">
+  <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1021,7 +1021,7 @@ Na `index.html`, a seção de abertura ganha uma classe e uma altura que acompan
 <section class="hero">
   <div class="container">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>Três dias de palestras, minicursos e maratona de programação na UNEMAT Sinop.</p>
+    <p>Três dias de palestras, minicursos e maratona de programação.</p>
     <a href="inscricao.html" class="botao">Inscreva-se</a>
   </div>
 </section>

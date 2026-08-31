@@ -1,7 +1,7 @@
 # Aula 12 — Express estruturado e middlewares
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 O `server.js` da Aula 11 funciona: serve o site, devolve o cardápio em JSON e responde `404` para um id inexistente. Mas ele é um arquivo só, e um arquivo só não escala. Imagine quarenta rotas, validações, regras de negócio e log de acesso empilhados ali dentro. Hoje aplicamos ao servidor exatamente o princípio que você já usa no front desde a Unidade 1 — **separação de responsabilidades** —, só que entre arquivos. E, para isso, você precisa conhecer a peça que sustenta o Express inteiro: o **middleware**.

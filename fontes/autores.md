@@ -1,3 +1,9 @@
+## Quem escreve
+
+O WebLab é escrito e revisado por um grupo de professores universitários de computação de Sinop, Mato Grosso. Seis atuam na **UNEMAT — Universidade do Estado de Mato Grosso, Campus Sinop**, e uma no **IFMT — Instituto Federal de Mato Grosso, Campus Sinop**; todos são doutores, com exceção de um mestre. As afiliações estão listadas ao lado de cada nome, acima.
+
+O material, porém, **não é institucional**: não representa a posição das instituições onde os autores trabalham, não depende de matrícula e não pressupõe vínculo com nenhuma delas. Nasceu de disciplinas de graduação e foi reescrito para servir a qualquer pessoa que queira aprender desenvolvimento web — sozinha, em grupo de estudo ou em sala de aula de qualquer instituição.
+
 ## Como a autoria funciona aqui
 
 O WebLab é publicado aberto e continua sendo escrito. Para que o crédito seja justo e verificável, cada contribuição é registrada com **o que a pessoa fez** e **em que parte do material** — nos moldes da taxonomia [CRediT](https://credit.niso.org/), usada por periódicos científicos para separar quem concebeu, quem escreveu, quem revisou e quem programou.
@@ -33,7 +39,7 @@ O material inteiro vive em [github.com/ivanlppires/weblab](https://github.com/iv
 
 Ao usar o WebLab em aula, em um trabalho ou em outro material, cite a versão que você consultou. O arquivo `CITATION.cff` no repositório mantém os dados sempre atualizados, e o site tem endereço fixo:
 
-> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. UNEMAT — Campus Sinop, FACET. Disponível em: https://weblab.aprendabit.com.
+> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. Disponível em: https://weblab.aprendabit.com.
 
 ## Licença
 

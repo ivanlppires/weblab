@@ -1,7 +1,7 @@
 # Aula 04 — Formulários, mídias e listas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -269,7 +269,7 @@ Um menu de navegação é um conjunto de links relacionados. Marcá-lo como `<ul
 <header id="topo">
   <img src="img/logo-sasi.svg" alt="" width="160" height="48">
   <h1>Semana Acadêmica de Sistemas de Informação</h1>
-  <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+  <p>Três noites de outubro · Auditório Central</p>
   <nav aria-label="Principal">
     <ul>
       <li><a href="index.html">Início</a></li>
@@ -295,7 +295,7 @@ Imagem é, disparado, o maior peso da maioria dos sites — e também a maior fo
 
 ```html
 <img src="img/campus-sinop.jpg"
-     alt="Vista aérea do campus da UNEMAT em Sinop ao entardecer"
+     alt="Vista aérea do campus universitário em Sinop ao entardecer"
      width="800" height="600"
      loading="lazy">
 ```
@@ -318,8 +318,8 @@ O `alt` é o que uma pessoa cega ouve, o que aparece quando a imagem não carreg
 |---|---|---|
 | Imagem informativa | Descreva a informação, não a aparência | `alt="Gráfico de barras: inscrições subiram de 120 na primeira edição para 180 na terceira"` |
 | Imagem decorativa | `alt=""` (vazio, mas **presente**) — o leitor de tela pula | Linha divisória, textura de fundo |
-| Imagem dentro de link | Descreva o **destino**, não a imagem | `alt="Página inicial da UNEMAT"` |
-| Logotipo | O nome, sem a palavra "logo" | `alt="UNEMAT"` |
+| Imagem dentro de link | Descreva o **destino**, não a imagem | `alt="Página inicial da Wikipédia"` |
+| Logotipo | O nome, sem a palavra "logo" | `alt="Wikipédia"` |
 
 Nunca escreva `alt="imagem"`, `alt="foto.jpg"`, `alt="clique aqui"` ou omita o atributo. Sem `alt`, o leitor de tela lê o **nome do arquivo** — "DSC underline zero zero quatro dois ponto jpg".
 
@@ -522,7 +522,7 @@ Mapa incorporado do Google Maps (o serviço gera este código em "Compartilhar �
 
 ```html
 <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
-        title="Mapa: localização do campus da UNEMAT em Sinop"
+        title="Mapa: localização do Auditório Central, em Sinop"
         width="600" height="450"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
@@ -604,7 +604,7 @@ O `<head>` de cada página **não muda** hoje: `charset`, `viewport`, `descripti
   <header id="topo">
     <img src="img/logo-sasi.svg" alt="" width="160" height="48">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
+    <p>Três noites de outubro · Auditório Central</p>
     <nav aria-label="Principal">
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -779,9 +779,9 @@ Este é o caso clássico de `<figure>`: um conteúdo autocontido (o áudio) com 
 ```html
     <section id="onde">
       <h3>Onde acontece</h3>
-      <p>Auditório central do campus da UNEMAT em Sinop.</p>
+      <p>Auditório Central, em Sinop.</p>
       <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
-              title="Mapa: campus da UNEMAT em Sinop"
+              title="Mapa: Auditório Central, em Sinop"
               width="600" height="450"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade">
@@ -789,7 +789,7 @@ Este é o caso clássico de `<figure>`: um conteúdo autocontido (o áudio) com 
     </section>
 ```
 
-Para obter o código: abra o Google Maps, pesquise "UNEMAT Sinop", clique em **Compartilhar → Incorporar um mapa → Copiar HTML** e substitua o `src` acima pelo que veio no código copiado. Mantenha o `title` — o código do Maps não o inclui.
+Para obter o código: abra o Google Maps, pesquise o local que vai sediar o evento (por exemplo, o auditório da sua escola), clique em **Compartilhar → Incorporar um mapa → Copiar HTML** e substitua o `src` acima pelo que veio no código copiado. Mantenha o `title` — o código do Maps não o inclui.
 
 ### Passo 8 — Fotos e elenco completo em `palestrantes.html`
 
@@ -805,7 +805,7 @@ Em cada um dos três artigos que já existem, a `<img>` entra logo depois do `<h
       <img src="img/palestrante-01.jpg"
            alt="Ana Lúcia Ferreira em frente a um quadro com um diagrama de rede neural"
            width="400" height="400" decoding="async">
-      <p><strong>Professora e pesquisadora</strong> da UNEMAT — Sinop, na área de inteligência artificial.</p>
+      <p><strong>Professora e pesquisadora</strong> na área de inteligência artificial.</p>
 ```
 
 Faça o mesmo em Bruno Takahashi (`img/palestrante-02.jpg`) e Carla Mendes (`img/palestrante-03.jpg`), com `alt` que descreva **aquela** pessoa naquela foto. Esses três ficam visíveis sem rolar a página, então **não** levam `loading="lazy"`.
@@ -836,7 +836,7 @@ Depois do artigo de Carla Mendes, e antes do parágrafo "Voltar ao topo", acresc
       <img src="img/palestrante-05.jpg"
            alt="Eduarda Ribeiro apresentando slides em um auditório"
            width="400" height="400" loading="lazy" decoding="async">
-      <p><strong>Professora</strong> do curso de Sistemas de Informação da UNEMAT — Sinop.</p>
+      <p><strong>Professora</strong> do curso de Sistemas de Informação.</p>
       <p>Coordena a Semana Acadêmica e orienta projetos de extensão que levam estudantes do HTML ao deploy.</p>
       <dl>
         <dt>Atividades</dt>
@@ -971,7 +971,7 @@ O `<output>` fica parado em "R$ 30" por enquanto: sem JavaScript ele não calcul
 
 ### Nível A — Fixação
 
-**A1.** Escreva o `alt` adequado para: (a) o logotipo da UNEMAT; (b) uma linha decorativa entre duas seções; (c) um gráfico de pizza mostrando 60% de aprovados e 40% de reprovados; (d) uma foto do campus dentro de um link para a página de contato.
+**A1.** Escreva o `alt` adequado para: (a) o logotipo da sua universidade ou escola; (b) uma linha decorativa entre duas seções; (c) um gráfico de pizza mostrando 60% de aprovados e 40% de reprovados; (d) uma foto do campus dentro de um link para a página de contato.
 
 **A2.** Diferencie `alt` de `figcaption`: para quem cada um existe, e por que não devem ter o mesmo texto.
 

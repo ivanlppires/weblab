@@ -1,7 +1,7 @@
 # Aula 15 — Deploy, apresentação e finalização
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -729,7 +729,7 @@ O que foi construído nesta trilha é uma base real de desenvolvimento full stac
 
 ### 9.2 Convite para iniciação científica e extensão
 
-Muitos dos temas tocados de leve nesta trilha — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET, a instituição de origem deste material. Se você está cursando esta trilha por lá e algum tópico despertou curiosidade além do conteúdo de uma aula, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados. Se você chegou até aqui por conta própria, esses mesmos temas são bons pontos de partida para aprofundar — grupos de pesquisa, comunidades on-line e cursos avançados costumam orbitar exatamente esses assuntos.
+Muitos dos temas tocados de leve nesta trilha — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas em diversos grupos de pesquisa em Computação. Se você está cursando esta trilha em uma instituição de ensino e algum tópico despertou curiosidade além do conteúdo de uma aula, procure o professor da disciplina para conversar sobre projetos de iniciação científica ou extensão relacionados. Se você chegou até aqui por conta própria, esses mesmos temas são bons pontos de partida para aprofundar — grupos de pesquisa, comunidades on-line e cursos avançados costumam orbitar exatamente esses assuntos.
 
 ## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
 
@@ -1066,7 +1066,7 @@ O que separa um projeto pronto de um feito às pressas na véspera:
 - [Vue Router — histórico HTML5 e configuração de servidor](https://router.vuejs.org/guide/essentials/history-mode.html)
 - [Nuxt — site oficial](https://nuxt.com)
 - [NestJS — site oficial](https://nestjs.com)
-- Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre implantação, integração contínua e ciclo de vida de aplicações web.
+- Bibliografia do plano da disciplina em que esta trilha nasceu — capítulos sobre implantação, integração contínua e ciclo de vida de aplicações web.
 
 ---
 

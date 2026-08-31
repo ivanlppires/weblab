@@ -1,7 +1,7 @@
 # Aula 06 — CSS: sintaxe, seletores, classes, atributos e valores
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -116,7 +116,7 @@ a[target]              { }   /* tem o atributo, qualquer que seja o valor */
 a[target="_blank"]     { }   /* valor exato */
 a[href^="https"]       { }   /* COMEÇA com (^ = começo) */
 a[href$=".pdf"]        { }   /* TERMINA com ($ = fim) */
-a[href*="unemat"]      { }   /* CONTÉM em qualquer posição */
+a[href*="wikipedia"]   { }   /* CONTÉM em qualquer posição */
 input[type="checkbox"] { }   /* muito usado em formulários */
 ```
 

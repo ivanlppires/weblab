@@ -1,7 +1,7 @@
 # Aula 03 — Vue: listas, computed e ciclo de vida
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -310,7 +310,7 @@ import { ref, computed } from 'vue'
 const eventos = ref([
   { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', vagas: 40, inscritos: 40 },
   { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', vagas: 25, inscritos: 10 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', vagas: 60, inscritos: 18 },
+  { id: 3, titulo: 'Hackathon de Tecnologia', categoria: 'workshop', vagas: 60, inscritos: 18 },
 ])
 
 // primeira computed: filtra por vaga disponível
@@ -536,7 +536,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
   },
   {
     "id": 3,
-    "titulo": "Hackathon FACET",
+    "titulo": "Hackathon de Tecnologia",
     "categoria": "workshop",
     "dataHora": "2030-10-05T08:00:00",
     "local": "Bloco B",

@@ -1,7 +1,7 @@
 # Aula 02 — Introdução ao desenvolvimento web moderno
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 01 você acompanhou a requisição saindo do navegador e a resposta voltando do servidor. Hoje a câmera vira para o outro lado: o que acontece **depois** que a resposta chega — como o navegador transforma texto em pixels, quem decide as regras dessa transformação e como organizar um projeto para que ele funcione tanto na sua máquina quanto em um servidor real.
@@ -622,7 +622,7 @@ Substitua o conteúdo de `index.html` por este. Digite, não cole — e repare e
 
   <footer class="rodape">
     <p>Café Cerrado — Avenida dos Jacarandás, 1200, Sinop/MT</p>
-    <p>Projeto do Nível 2 do WebLab — Desenvolvimento Web, UNEMAT Campus Sinop.</p>
+    <p>Projeto do Nível 2 do WebLab — Desenvolvimento Web.</p>
   </footer>
 </body>
 </html>
@@ -913,7 +913,7 @@ O GitHub Pages e o Live Server fazem a mesma coisa que você vai programar na Un
 
 **Parte 2 — Publicação (15 min).** Commit com mensagem descritiva, push e verificação do site publicado. Abra o site publicado no celular e confira que não há rolagem horizontal.
 
-**Parte 3 — Leitura dirigida (10 min).** Na Biblioteca Virtual da UNEMAT: QUEIRÓS & PORTELA, capítulos sobre a evolução da Web e a camada de estrutura (HTML); PUREWAL, capítulos 1 e 2, sobre fluxo de trabalho e primeiras páginas. Anote duas diferenças entre o que os livros descrevem e o que você fez hoje.
+**Parte 3 — Leitura dirigida (10 min).** Se você tem acesso a uma biblioteca virtual pela sua instituição: QUEIRÓS & PORTELA, capítulos sobre a evolução da Web e a camada de estrutura (HTML); PUREWAL, capítulos 1 e 2, sobre fluxo de trabalho e primeiras páginas. Anote duas diferenças entre o que os livros descrevem e o que você fez hoje.
 
 **Critério de pronto:** as duas páginas do projeto autoral abrem no site publicado, navegam entre si, passam no validador sem erros e usam variáveis CSS para todas as cores.
 

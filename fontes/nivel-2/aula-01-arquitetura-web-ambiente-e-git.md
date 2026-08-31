@@ -1,7 +1,7 @@
 # Aula 01 — Apresentação, arquitetura web, ambiente de desenvolvimento e Git
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Esta é a primeira aula do Nível 2. Ao final dela você terá um repositório Git publicado na internet, o ambiente de trabalho do semestre inteiro montado e uma ideia clara de onde o Nível 2 vai chegar: uma aplicação full-stack com API própria, login do Google e CRUD persistido.
@@ -43,7 +43,7 @@ Você **não** precisa saber Git, terminal ou Node.js. Tudo isso começa do zero
 
 ### 1.1 O que esta trilha cobre
 
-**O que esta trilha cobre** (a mesma ementa da disciplina de origem, Desenvolvimento Web — FACET-SNP-307, UNEMAT Campus Sinop): arquitetura de uma aplicação web; tecnologias de back-end; tecnologias de front-end; bancos de dados para web.
+**O que esta trilha cobre** (a mesma ementa da disciplina em que esta trilha nasceu, Desenvolvimento Web): arquitetura de uma aplicação web; tecnologias de back-end; tecnologias de front-end; bancos de dados para web.
 
 **Objetivo geral:** ao concluir esta trilha você projeta, implementa e publica uma aplicação web completa — interface acessível e responsiva, comportamento dinâmico em JavaScript, API própria em Node.js/Express, autenticação com conta Google e operações de CRUD com persistência.
 
@@ -283,7 +283,7 @@ HTTP é ***stateless***: cada requisição é independente e o servidor, por si 
 Login, carrinho e sessão são construídos **por cima** disso: o cliente reenvia, a cada requisição, uma credencial (um cookie ou um token no cabeçalho `Authorization`). É exatamente o que você vai implementar na Aula 14, quando o Café Cerrado passar a exigir login do Google para escrever dados.
 
 > **🔬 Investigue**
-> Abra <https://www.unemat.br>, pressione <kbd>F12</kbd>, vá à aba **Network**, marque *Disable cache* e recarregue com <kbd>Ctrl</kbd>+<kbd>F5</kbd>. Observe quatro coisas: (1) quantas linhas apareceram — cada uma é uma requisição completa dos passos 5 a 7 da §2.2; (2) a coluna *Type* (`document`, `stylesheet`, `script`, `png`, `font`); (3) clique na primeira linha, abra *Headers* e localize `Content-Type`, `Server` e o status; (4) na barra inferior, leia o total de requisições e o peso transferido. Anote os números: você vai comparar com os do seu próprio site no fim da aula.
+> Abra o site da sua universidade ou escola (ou outro site grande de sua preferência), pressione <kbd>F12</kbd>, vá à aba **Network**, marque *Disable cache* e recarregue com <kbd>Ctrl</kbd>+<kbd>F5</kbd>. Observe quatro coisas: (1) quantas linhas apareceram — cada uma é uma requisição completa dos passos 5 a 7 da §2.2; (2) a coluna *Type* (`document`, `stylesheet`, `script`, `png`, `font`); (3) clique na primeira linha, abra *Headers* e localize `Content-Type`, `Server` e o status; (4) na barra inferior, leia o total de requisições e o peso transferido. Anote os números: você vai comparar com os do seu próprio site no fim da aula.
 
 ## 4. Front-end, back-end e banco de dados
 
@@ -617,7 +617,7 @@ Crie o arquivo `index.html` na raiz da pasta. Digite (não cole):
 <body>
   <h1>Café Cerrado</h1>
   <p>Cafeteria de grãos torrados do cerrado mato-grossense, em Sinop/MT.</p>
-  <p>Site em construção no Nível 2 do WebLab (Desenvolvimento Web — UNEMAT Campus Sinop).</p>
+  <p>Site em construção no Nível 2 do WebLab (Desenvolvimento Web).</p>
 </body>
 </html>
 ```
@@ -636,7 +636,7 @@ O `README.md` é a primeira coisa que o GitHub mostra a quem abre o repositório
 # Café Cerrado
 
 Site da cafeteria fictícia **Café Cerrado** (Sinop/MT), construído aula a aula
-no Nível 2 do WebLab (Desenvolvimento Web — FACET-SNP-307, UNEMAT Campus Sinop).
+no Nível 2 do WebLab (Desenvolvimento Web).
 
 ## O projeto
 
@@ -660,7 +660,7 @@ HTML5 e CSS3. JavaScript entra na Unidade 2; Node.js e Express, na Unidade 3.
 
 ## Autoria
 
-Seu Nome — Desenvolvimento Web, UNEMAT Sinop.
+Seu Nome — Desenvolvimento Web.
 ```
 
 Troque `SEU-USUARIO` e `Seu Nome` pelos seus. O `.md` é **Markdown**, a mesma linguagem em que estas aulas são escritas: `#` faz título, `**texto**` deixa em negrito, `-` faz lista.
@@ -832,7 +832,7 @@ Use `git add index.html` e `git commit` depois de **cada** alteração, não no 
 <details markdown="1">
 <summary>Dica</summary>
 
-No Chrome: cadeado → *A conexão é segura* → *O certificado é válido*. O emissor é a autoridade certificadora; é ela que garante ao navegador que o servidor é mesmo quem diz ser. Compare com o certificado de <https://www.unemat.br>.
+No Chrome: cadeado → *A conexão é segura* → *O certificado é válido*. O emissor é a autoridade certificadora; é ela que garante ao navegador que o servidor é mesmo quem diz ser. Compare com o certificado de outro site grande de sua escolha (um banco, uma universidade, um grande portal de notícias).
 </details>
 
 **B5.** Escreva um `README.md` decente para o seu **projeto autoral**, com: título, um parágrafo explicando o tema e o público, a lista de páginas previstas, as tecnologias, como executar localmente e o link do site publicado. Commit e push.
@@ -912,7 +912,7 @@ O navegador esconde tudo o que a §2.2 descreve. Hoje você faz o trabalho dele 
 ### ⭐⭐ Quem responde por este site?
 Tags: http, devtools, dns, investigacao
 
-Toda resposta HTTP carrega pistas sobre a infraestrutura que a produziu: qual software serviu, se passou por uma CDN, quanto tempo o arquivo pode ficar em cache. Vire detetive: escolha quatro sites (o da UNEMAT, um jornal, um e-commerce e o seu site publicado) e descubra, só pelos cabeçalhos e por consultas de DNS, como cada um é entregue.
+Toda resposta HTTP carrega pistas sobre a infraestrutura que a produziu: qual software serviu, se passou por uma CDN, quanto tempo o arquivo pode ficar em cache. Vire detetive: escolha quatro sites (o da sua universidade ou escola, um jornal, um e-commerce e o seu site publicado) e descubra, só pelos cabeçalhos e por consultas de DNS, como cada um é entregue.
 
 **Critérios de pronto**
 
@@ -981,7 +981,7 @@ O valor real do Git não aparece quando tudo dá certo — aparece às 23h30 do 
 4. Pelo menos dois commits com mensagens no imperativo.
 5. GitHub Pages ligado e o site abrindo.
 
-**Parte 3 — Leitura dirigida (10 min).** Na Biblioteca Virtual da UNEMAT: QUEIRÓS & PORTELA, capítulo introdutório sobre a evolução e a arquitetura da Web; PUREWAL, capítulo 1, sobre o fluxo de trabalho do desenvolvedor (editor, terminal e Git). Anote duas ideias de cada texto que não apareceram nesta aula — elas voltam na discussão da próxima.
+**Parte 3 — Leitura dirigida (10 min).** Se você tem acesso a uma biblioteca virtual pela sua instituição: QUEIRÓS & PORTELA, capítulo introdutório sobre a evolução e a arquitetura da Web; PUREWAL, capítulo 1, sobre o fluxo de trabalho do desenvolvedor (editor, terminal e Git). Anote duas ideias de cada texto que não apareceram nesta aula — elas voltam na discussão da próxima.
 
 **Critério de pronto:** os dois links abrem (repositório público e site no ar); o `git log` mostra pelo menos dois commits com mensagens descritivas; a captura de tela mostra Node, npm, Git e VS Code respondendo com suas versões.
 

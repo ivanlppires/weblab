@@ -1,7 +1,7 @@
 # Aula 09 — Integrando com SGBD MySQL
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
@@ -170,7 +170,7 @@ INSERT INTO usuarios (firebase_uid, nome, email) VALUES
   ('uid-exemplo-002', 'Bruno Lima', 'bruno.lima@exemplo.com');
 
 INSERT INTO eventos (titulo, descricao, categoria, data_hora, local, vagas, imagem_url) VALUES
-  ('Semana Acadêmica de Computação', 'Palestras e minicursos sobre o mercado de tecnologia.', 'palestra', '2030-10-15 19:00:00', 'Auditório FACET', 80, 'https://picsum.photos/seed/semana-computacao/400/240'),
+  ('Semana Acadêmica de Computação', 'Palestras e minicursos sobre o mercado de tecnologia.', 'palestra', '2030-10-15 19:00:00', 'Auditório Central', 80, 'https://picsum.photos/seed/semana-computacao/400/240'),
   ('Minicurso de Vue 3', 'Introdução prática ao framework Vue com Composition API.', 'minicurso', '2030-10-20 14:00:00', 'Laboratório 3', 30, 'https://picsum.photos/seed/minicurso-vue/400/240'),
   ('Workshop de Firebase e Express', 'Construindo uma API real do zero.', 'workshop', '2030-10-28 19:30:00', 'Laboratório 1', 25, 'https://picsum.photos/seed/workshop-firebase/400/240');
 
@@ -327,7 +327,7 @@ const evento = linhas[0] // undefined se não encontrou
 // INSERT: o resultado é um objeto com metadados da inserção
 const [resultado] = await pool.execute(
   'INSERT INTO eventos (titulo, categoria, data_hora, local, vagas) VALUES (?, ?, ?, ?, ?)',
-  ['Palestra de teste', 'palestra', '2030-11-05 19:00:00', 'Auditório FACET', 60],
+  ['Palestra de teste', 'palestra', '2030-11-05 19:00:00', 'Auditório Central', 60],
 )
 console.log(resultado.insertId)       // id gerado pelo AUTO_INCREMENT
 console.log(resultado.affectedRows)   // quantas linhas foram afetadas (1, aqui)
@@ -1061,6 +1061,6 @@ No seu **projeto autoral**:
 - Documentação do Docker Hub para a imagem oficial `mysql` — [hub.docker.com/_/mysql](https://hub.docker.com/_/mysql).
 - MySQL 8 Reference Manual — capítulo *The InnoDB Storage Engine* — para entender transações, `FOR UPDATE` e isolamento em profundidade.
 - Documentação do MySQL Workbench — [dev.mysql.com/doc/workbench/en](https://dev.mysql.com/doc/workbench/en/) — modelagem visual (ER Diagram) a partir de um schema existente.
-- Plano de curso FACET-SNP-310 — bibliografia básica, capítulos sobre bancos de dados relacionais e persistência.
+- Plano da disciplina em que esta trilha nasceu — bibliografia básica, capítulos sobre bancos de dados relacionais e persistência.
 
 Na Aula 10, a API que você acabou de migrar para MySQL ganha **autenticação de verdade**: o Firebase Authentication entra em cena para identificar quem faz cada requisição, e você vai proteger rotas — como criar, editar e remover eventos — para que só usuários autenticados (e autorizados) possam executá-las.

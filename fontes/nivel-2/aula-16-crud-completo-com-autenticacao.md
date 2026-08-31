@@ -1,7 +1,7 @@
 # Aula 16 — CRUD completo com autenticação e entrega final
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Última aula desta trilha. As duas metades do sistema já existem: o CRUD com persistência e o login do Google. Hoje elas se encontram no detalhe que separa um projeto de aula de um sistema de verdade — **saber de quem é cada registro**. Ao fim destes 150 minutos, a sua aplicação vai recusar com `401` quem não está logado, recusar com `403` quem está logado mas mexe no que não é seu, e rodar do zero numa pasta limpa com dois comandos. É também o dia do Marco 3, o fechamento do semestre e a hora de olhar para o que vem depois.
@@ -91,7 +91,7 @@ const novo = {
 ```
 
 > **⚠️ Atenção**
-> A linha `dono: req.usuario.email` é a linha mais importante desta aula. Se ela fosse `dono: req.body.dono`, qualquer pessoa poderia mandar `{ "dono": "professor@unemat.br" }` e criar registros em nome de outra — e depois nem editá-los conseguiria. Vale como princípio geral: **tudo que identifica o autor de uma ação vem do token verificado; tudo que o cliente manda no corpo é palpite até ser validado.**
+> A linha `dono: req.usuario.email` é a linha mais importante desta aula. Se ela fosse `dono: req.body.dono`, qualquer pessoa poderia mandar `{ "dono": "professor@exemplo.br" }` e criar registros em nome de outra — e depois nem editá-los conseguiria. Vale como princípio geral: **tudo que identifica o autor de uma ação vem do token verificado; tudo que o cliente manda no corpo é palpite até ser validado.**
 
 `criadoEm` guarda o instante em ISO 8601 (`"2030-03-14T18:32:05.123Z"`), o formato que `new Date()` entende de volta sem ambiguidade e que ordena corretamente como texto. Nunca grave data como `"14/03 às 18h32"`: formatar é trabalho da interface, com `Intl.DateTimeFormat`.
 
@@ -633,7 +633,7 @@ Um repositório sem README é um projeto que só funciona para quem o escreveu. 
 # Café Cerrado — API e site
 
 Aplicação full-stack da cafeteria fictícia Café Cerrado, desenvolvida na
-no Nível 2 do WebLab (Desenvolvimento Web — FACET-SNP-307, UNEMAT Sinop).
+no Nível 2 do WebLab (Desenvolvimento Web).
 Site estático servido pelo Express, API REST com CRUD de produtos,
 login com Google e persistência em arquivo JSON.
 
@@ -708,7 +708,7 @@ Status possíveis: 200, 201, 204, 400, 401, 403, 404 e 500.
 
 ## Autor
 
-Seu Nome — Nível 2 do WebLab, UNEMAT Sinop.
+Seu Nome — Nível 2 do WebLab.
 ```
 
 Os blocos de comando dentro do README acima estão recuados em oito espaços: dentro de um bloco de código Markdown, essa é a forma de mostrar código sem abrir outra cerca. No seu README de verdade, use cercas normais com três crases.
@@ -872,7 +872,7 @@ Dizer "minha API está protegida" é fácil; provar é outra coisa. Monte a evid
 <summary>Pistas</summary>
 
 1. A aba Network do DevTools tem "Copiar como cURL" no menu de contexto de cada requisição — é a forma mais rápida de registrar cabeçalhos reais.
-2. Para conseguir o segundo token sem uma segunda conta, use uma janela anônima e a conta institucional (`@unemat.br`), que é uma conta Google.
+2. Para conseguir o segundo token sem uma segunda conta, use uma janela anônima e uma conta institucional da sua universidade ou escola (se ela for uma conta Google) ou qualquer outra conta Google que você tenha.
 3. Os status ficam visíveis também no log de requisições que o seu middleware da Aula 12 imprime no terminal — vale colar esse trecho no relatório.
 4. Se algum caso não produzir o status esperado, você acabou de encontrar um bug antes do avaliador. Essa é a graça do desafio.
 </details>
@@ -1050,7 +1050,7 @@ Você entra nesta trilha sabendo HTML e CSS e sai com uma aplicação full-stack
 
 ### 8.1 Nível 3 — Frameworks Modernos
 
-O [Nível 3 — Frameworks Modernos](../nivel-3/) (FACET-SNP-310) é a continuação direta desta trilha. Lá, o ciclo estado → render que você implementou à mão na Aula 15 vira **reatividade automática** com o Vue 3; o `criarCard` com `document.createElement` vira um componente declarativo; a fachada `api.js` vira uma instância do Axios com interceptadores; o estado que você guardou em variáveis de módulo vira uma store do Pinia. No back, o Express que você já conhece ganha um banco de dados de verdade (MySQL e Supabase), autenticação com Firebase e documentação com Swagger.
+O [Nível 3 — Frameworks Modernos](../nivel-3/) é a continuação direta desta trilha. Lá, o ciclo estado → render que você implementou à mão na Aula 15 vira **reatividade automática** com o Vue 3; o `criarCard` com `document.createElement` vira um componente declarativo; a fachada `api.js` vira uma instância do Axios com interceptadores; o estado que você guardou em variáveis de módulo vira uma store do Pinia. No back, o Express que você já conhece ganha um banco de dados de verdade (MySQL e Supabase), autenticação com Firebase e documentação com Swagger.
 
 O mais importante: você vai reconhecer cada ferramenta como a automação de algo que **já entendeu**. Quem chega ao Vue sem ter escrito um render à mão aprende a sintaxe; quem chega depois desta trilha entende o mecanismo. É uma diferença que aparece na primeira vez que algo dá errado.
 

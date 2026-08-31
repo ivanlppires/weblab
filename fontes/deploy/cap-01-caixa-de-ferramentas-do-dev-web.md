@@ -1,7 +1,7 @@
 # Capítulo 01 — Caixa de ferramentas do dev web
 
 > **Deploy & Ferramentas** · Unidade 1: Ferramentas e versionamento
-> WebLab · UNEMAT — Campus Sinop
+> WebLab · curso aberto de desenvolvimento web
 > **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
@@ -754,7 +754,7 @@ Resultado esperado: ao salvar, o arquivo fica com dois espaços de indentação,
 Se nada acontecer ao salvar, abra a paleta de comandos e execute **Format Document With…** → **Prettier**; se o Prettier não aparecer na lista, a extensão não está instalada. Se aparecer mas o resultado tiver ponto e vírgula, o `.prettierrc` não está na raiz da pasta aberta no VS Code.
 </details>
 
-**B3.** Caçador de requisições. Com a aba Network aberta e **Disable cache** marcado, carregue a página inicial de três sites: <https://weblab.aprendabit.com>, o portal da UNEMAT e um site de notícias à sua escolha. Para cada um, registre: número de requisições, total transferido, maior arquivo (nome e tamanho) e tempo até `DOMContentLoaded`. Repita com **Slow 4G**.
+**B3.** Caçador de requisições. Com a aba Network aberta e **Disable cache** marcado, carregue a página inicial de três sites: <https://weblab.aprendabit.com>, o portal da sua universidade ou escola e um site de notícias à sua escolha. Para cada um, registre: número de requisições, total transferido, maior arquivo (nome e tamanho) e tempo até `DOMContentLoaded`. Repita com **Slow 4G**.
 
 Resultado esperado: uma tabela com três linhas e as medições nas duas velocidades, mais uma frase por site dizendo qual recurso mais atrasou o carregamento no 4G lento.
 
