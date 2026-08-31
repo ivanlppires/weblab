@@ -240,8 +240,8 @@ No front-end da Unidade 2 você usou módulos ES (`import` / `export` com `type=
 ```js
 // Um módulo CommonJS: um arquivo que exporta algo.
 const produtos = [
-  { id: 1, nome: "Café coado do cerrado", preco: 7.5 },
-  { id: 2, nome: "Pão de queijo", preco: 9.0 },
+  { id: 1, nome: "Espresso do Cerrado", preco: 6 },
+  { id: 2, nome: "Coado da Casa", preco: 8.5 },
 ];
 
 module.exports = produtos; // isto é o que quem der require() vai receber
@@ -283,8 +283,8 @@ Dá para escrever um servidor web usando só o que vem no Node, sem instalar nad
 const http = require("node:http");
 
 const produtos = [
-  { id: 1, nome: "Café coado do cerrado", preco: 7.5 },
-  { id: 2, nome: "Pão de queijo", preco: 9.0 },
+  { id: 1, nome: "Espresso do Cerrado", preco: 6 },
+  { id: 2, nome: "Coado da Casa", preco: 8.5 },
 ];
 
 const servidor = http.createServer((req, res) => {
@@ -474,8 +474,8 @@ Na Aula 10 você consumiu a JSONPlaceholder. Agora você **é** a JSONPlaceholde
 
 ```js
 const produtos = [
-  { id: 1, nome: "Café coado do cerrado", categoria: "cafes", preco: 7.5 },
-  { id: 2, nome: "Pão de queijo", categoria: "salgados", preco: 9.0 },
+  { id: 1, nome: "Espresso do Cerrado", categoria: "cafes", preco: 6 },
+  { id: 2, nome: "Pão de Queijo Mineiro", categoria: "salgados", preco: 7 },
 ];
 
 // GET /api/produtos → a lista completa
@@ -533,19 +533,19 @@ Manter a lista dentro do `server.js` funciona para dois produtos e trava na hora
 [
   {
     "id": 1,
-    "nome": "Café coado do cerrado",
+    "nome": "Espresso do Cerrado",
     "categoria": "cafes",
-    "preco": 7.5,
-    "descricao": "Grãos de Alta Floresta torrados na semana e coados no pano.",
-    "imagem": "img/cafe-coado.jpg"
+    "preco": 6,
+    "descricao": "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    "imagem": "img/espresso.jpg"
   },
   {
     "id": 2,
-    "nome": "Cappuccino cremoso",
+    "nome": "Coado da Casa",
     "categoria": "cafes",
-    "preco": 12,
-    "descricao": "Espresso duplo, leite vaporizado e canela do cerrado.",
-    "imagem": "img/cappuccino.jpg"
+    "preco": 8.5,
+    "descricao": "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    "imagem": "img/coado.jpg"
   }
 ]
 ```
@@ -690,6 +690,19 @@ cp ../cafe-cerrado/data/produtos.json data/
 
 No Windows, use o Explorador de Arquivos: copie `index.html`, `css/`, `js/` e `img/` para dentro de `public/`, e `data/produtos.json` para uma pasta `data/` na raiz do projeto (fora de `public/`).
 
+Vale saber o que veio em cada peça, porque nenhuma delas é descartável:
+
+| Arquivo copiado | O que é | O que acontece com ele hoje |
+|---|---|---|
+| `index.html` | A página única da SPA, com as três `<section data-rota>` | Continua igual; o Express passa a servi-lo em `/` |
+| `css/estilo.css` | Todo o CSS das Aulas 02 a 06 | Continua igual |
+| `js/api.js` | A camada de acesso a dados da Aula 10 | **Duas linhas mudam** no Passo 7: as URLs |
+| `js/roteador.js` | O roteador por hash da Aula 10 | Continua igual — é ele que mostra e esconde as telas |
+| `js/app.js` | A aplicação (filtros, cards, carrinho, contato) | Continua igual, sem uma vírgula de diferença |
+| `img/` | As fotos dos dez produtos | Continua igual |
+| `data/produtos.json` | O cardápio | Sai de `public/` e vai para a raiz: agora é dado do servidor |
+| `data/categorias.json` | A lista de categorias da Aula 10 | **Não é copiado**: a partir de hoje quem responde categorias é a API |
+
 A estrutura final:
 
 ```text
@@ -701,7 +714,9 @@ cafe-cerrado-api/
 │   │   └── estilo.css
 │   ├── img/
 │   ├── js/
-│   │   └── app.js
+│   │   ├── api.js
+│   │   ├── app.js
+│   │   └── roteador.js
 │   └── index.html
 ├── .gitignore
 ├── package.json
@@ -711,7 +726,7 @@ cafe-cerrado-api/
 
 ### Passo 5 — Os dados do Café Cerrado
 
-Deixe o `data/produtos.json` com o cardápio completo (se o seu tiver outros itens, mantenha os seus — só garanta os seis campos):
+O arquivo que você copiou no passo anterior já é o cardápio certo — são os **mesmos dez produtos** das Aulas 03 a 10, com os mesmos ids, preços e categorias. Não reescreva nada: o `data/produtos.json` do `cafe-cerrado-api` tem de ser byte por byte igual ao do `cafe-cerrado`. Confira abaixo se o seu bate.
 
 `data/produtos.json`
 
@@ -719,54 +734,89 @@ Deixe o `data/produtos.json` com o cardápio completo (se o seu tiver outros ite
 [
   {
     "id": 1,
-    "nome": "Café coado do cerrado",
+    "nome": "Espresso do Cerrado",
     "categoria": "cafes",
-    "preco": 7.5,
-    "descricao": "Grãos de Alta Floresta torrados na semana e coados no pano.",
-    "imagem": "img/cafe-coado.jpg"
+    "preco": 6,
+    "descricao": "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    "imagem": "img/espresso.jpg"
   },
   {
     "id": 2,
-    "nome": "Cappuccino cremoso",
+    "nome": "Coado da Casa",
     "categoria": "cafes",
-    "preco": 12,
-    "descricao": "Espresso duplo, leite vaporizado e canela do cerrado.",
-    "imagem": "img/cappuccino.jpg"
+    "preco": 8.5,
+    "descricao": "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    "imagem": "img/coado.jpg"
   },
   {
     "id": 3,
-    "nome": "Pão de queijo (3 unidades)",
-    "categoria": "salgados",
-    "preco": 9,
-    "descricao": "Queijo curado da região, assado de hora em hora.",
-    "imagem": "img/pao-de-queijo.jpg"
+    "nome": "Cappuccino Sinop",
+    "categoria": "cafes",
+    "preco": 12,
+    "descricao": "Espresso duplo, leite vaporizado e canela do Cerrado por cima.",
+    "imagem": "img/cappuccino.jpg"
   },
   {
     "id": 4,
-    "nome": "Bolo de castanha-do-brasil",
-    "categoria": "doces",
-    "preco": 11.5,
-    "descricao": "Fatia generosa, com castanhas compradas de cooperativa local.",
-    "imagem": "img/bolo-castanha.jpg"
+    "nome": "Latte de Baunilha",
+    "categoria": "cafes",
+    "preco": 14,
+    "descricao": "Espresso, leite vaporizado e calda de baunilha feita na casa.",
+    "imagem": "img/latte.jpg"
   },
   {
     "id": 5,
-    "nome": "Açaí na tigela",
+    "nome": "Cold Brew da Chapada",
     "categoria": "geladas",
-    "preco": 18,
-    "descricao": "Polpa batida na hora, granola e banana. Serve duas pessoas.",
-    "imagem": "img/acai.jpg"
+    "preco": 15,
+    "descricao": "Extração a frio por dezoito horas, servida com gelo e rodela de laranja.",
+    "imagem": "img/cold-brew.jpg"
   },
   {
     "id": 6,
-    "nome": "Chá gelado de hibisco",
+    "nome": "Frappê de Café",
     "categoria": "geladas",
-    "preco": 8,
-    "descricao": "Infusão gelada com limão-siciliano e hortelã da horta.",
-    "imagem": "img/cha-hibisco.jpg"
+    "preco": 16,
+    "descricao": "Espresso batido com gelo, leite e chantili. Também sai sem lactose.",
+    "imagem": "img/frappe.jpg"
+  },
+  {
+    "id": 7,
+    "nome": "Pão de Queijo Mineiro",
+    "categoria": "salgados",
+    "preco": 7,
+    "descricao": "Porção com quatro unidades de polvilho azedo com queijo canastra.",
+    "imagem": "img/pao-de-queijo.jpg"
+  },
+  {
+    "id": 8,
+    "nome": "Torta de Frango",
+    "categoria": "salgados",
+    "preco": 13,
+    "descricao": "Fatia generosa com massa amanteigada e recheio de frango desfiado.",
+    "imagem": "img/torta-de-frango.jpg"
+  },
+  {
+    "id": 9,
+    "nome": "Bolo de Milho Verde",
+    "categoria": "doces",
+    "preco": 9.5,
+    "descricao": "Fatia de bolo cremoso feito com milho da feira do produtor.",
+    "imagem": "img/bolo-de-milho.jpg"
+  },
+  {
+    "id": 10,
+    "nome": "Brownie de Castanha",
+    "categoria": "doces",
+    "preco": 11,
+    "descricao": "Chocolate meio amargo com castanha-do-pará. Sem glúten.",
+    "imagem": "img/brownie.jpg"
   }
 ]
 ```
+
+> **⚠️ Atenção**
+> Este arquivo é o **contrato** entre o seu back-end e o seu front-end. O `js/app.js` que veio da Aula 10 filtra por `produto.categoria === "geladas"`, mostra `produto.imagem` e formata `produto.preco` — se você renomear uma categoria ou apagar um campo aqui, a SPA quebra sem dar erro no servidor. Da Aula 12 até a 16 esses dez objetos continuam sendo a base; o que muda é quem os serve.
 
 ### Passo 6 — O `server.js` completo
 
@@ -780,6 +830,16 @@ const express = require("express");
 const app = express();
 const PORTA = process.env.PORT || 3000;
 const CAMINHO_DADOS = path.join(__dirname, "data", "produtos.json");
+
+// As quatro categorias do cardápio, na ordem em que aparecem no site.
+// Este array substitui o data/categorias.json da Aula 10: a partir de hoje,
+// quem publica a lista de categorias é a API, não um arquivo do front-end.
+const CATEGORIAS = [
+  { id: "cafes", nome: "Cafés" },
+  { id: "geladas", nome: "Bebidas geladas" },
+  { id: "salgados", nome: "Salgados" },
+  { id: "doces", nome: "Doces" },
+];
 
 // ---------------------------------------------------------------
 // Arquivos estáticos: o site das Unidades 1 e 2, servido por nós.
@@ -817,11 +877,13 @@ app.get("/api/produtos/:id", async (req, res) => {
   res.json(produto);
 });
 
-// GET /api/categorias → lista de categorias distintas, derivada dos produtos
+// GET /api/categorias → [{ id, nome }], só as categorias que têm produto hoje.
+// O formato é o MESMO do antigo data/categorias.json, porque o front-end da
+// Aula 10 monta o <select> lendo categoria.id e categoria.nome.
 app.get("/api/categorias", async (req, res) => {
   const produtos = await lerProdutos();
-  const categorias = [...new Set(produtos.map((p) => p.categoria))].sort();
-  res.json(categorias);
+  const usadas = new Set(produtos.map((p) => p.categoria));
+  res.json(CATEGORIAS.filter((categoria) => usadas.has(categoria.id)));
 });
 
 // ---------------------------------------------------------------
@@ -840,98 +902,45 @@ npm run dev
 Café Cerrado no ar em http://localhost:3000
 ```
 
+Repare na decisão do `/api/categorias`: ele **não** devolve `["cafes", "doces", "geladas", "salgados"]`. Devolveria, se fosse só um `[...new Set(…)]` — e o `<select>` do cardápio ficaria com quatro opções escritas `[object Object]` ou, pior, com os ids técnicos na cara do usuário. O front-end da Aula 10 espera objetos com `id` (o valor da `<option>`) e `nome` (o texto). Um endpoint só é "pronto" quando devolve o formato que o consumidor precisa; a API existe para servir o cliente, não o contrário.
+
 ### Passo 7 — O front-end passa a consumir a sua API
 
-Abra `public/js/app.js`. A função que busca os produtos é a mesma da Aula 10 — muda **só o endereço**:
+Aqui está a recompensa de ter concentrado todo o `fetch` em um arquivo só na Aula 10. O front-end inteiro — o roteador por hash, o `index.html` com as três `<section data-rota>`, os ids `#cards`, `#status-cardapio`, `#resumo`, `#filtro-categoria`, o formulário de contato — **fica exatamente como está**. Você vai editar **duas linhas**, as duas dentro de `public/js/api.js`:
 
-`public/js/app.js`
+`public/js/api.js` (trecho — o resto do arquivo não muda)
 
 ```js
-// Busca o cardápio na NOSSA API. Antes: "data/produtos.json".
-// Caminho relativo (começa com /) = mesma origem = sem CORS para configurar.
-async function buscarProdutos() {
-  const resposta = await fetch("/api/produtos");
-
-  if (!resposta.ok) {
-    throw new Error(`Erro HTTP ${resposta.status} ao buscar o cardápio`);
-  }
-
-  return resposta.json();
+export function buscarProdutos() {
+  return pegarJson("/api/produtos");        // antes: "data/produtos.json"
 }
 
-// Desenha os cards do cardápio dentro do container recebido.
-function renderizarCardapio(produtos, container) {
-  container.innerHTML = "";
-
-  for (const produto of produtos) {
-    const card = document.createElement("article");
-    card.className = "card-produto";
-
-    const imagem = document.createElement("img");
-    imagem.src = produto.imagem;
-    imagem.alt = produto.nome;
-    imagem.loading = "lazy";
-
-    const titulo = document.createElement("h3");
-    titulo.textContent = produto.nome;
-
-    const descricao = document.createElement("p");
-    descricao.textContent = produto.descricao;
-
-    const preco = document.createElement("p");
-    preco.className = "preco";
-    preco.textContent = produto.preco.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    card.append(imagem, titulo, descricao, preco);
-    container.append(card);
-  }
+export function buscarCategorias() {
+  return pegarJson("/api/categorias");      // antes: "data/categorias.json"
 }
-
-// Orquestra: carregando → sucesso ou erro (o padrão da Aula 09).
-async function carregarCardapio() {
-  const container = document.querySelector("#lista-produtos");
-  const aviso = document.querySelector("#aviso-cardapio");
-
-  aviso.textContent = "Carregando o cardápio…";
-
-  try {
-    const produtos = await buscarProdutos();
-    renderizarCardapio(produtos, container);
-    aviso.textContent = `${produtos.length} itens no cardápio de hoje.`;
-  } catch (erro) {
-    console.error(erro);
-    aviso.textContent = "Não foi possível carregar o cardápio. Tente novamente.";
-  }
-}
-
-document.addEventListener("DOMContentLoaded", carregarCardapio);
 ```
 
-O HTML precisa ter os dois pontos de ancoragem (se o seu já tem, não mexa):
+É isso. Salve, recarregue `http://localhost:3000` e o cardápio aparece — agora vindo do seu servidor.
 
-`public/index.html` (trecho da seção do cardápio)
+Três detalhes valem o comentário:
 
-```html
-<section id="cardapio" aria-labelledby="titulo-cardapio">
-  <h2 id="titulo-cardapio">Cardápio</h2>
-  <p id="aviso-cardapio" role="status" aria-live="polite">Carregando o cardápio…</p>
-  <div id="lista-produtos" class="grade-produtos"></div>
-</section>
-```
+- **A barra inicial importa.** `"/api/produtos"` é um caminho **absoluto na origem**: sempre resolve para `http://localhost:3000/api/produtos`, esteja você em `/`, em `/index.html#/cardapio` ou em qualquer rota futura. Sem a barra, o navegador resolveria em relação à página atual e um dia buscaria `/alguma/pasta/api/produtos`.
+- **Mesma origem, zero CORS.** O site e a API saem do mesmo `http://localhost:3000`, então nenhum cabeçalho de CORS precisa ser configurado. Aquele erro de `Access-Control-Allow-Origin` da Aula 10 simplesmente não existe aqui — e é por isso que servir o front pelo próprio Express é o caminho mais curto até uma aplicação que funciona.
+- **`data/categorias.json` foi aposentado.** Ele não existe mais no `cafe-cerrado-api` (o `cp` do Passo 4 copiou só o `produtos.json`), e a lista de categorias passa a nascer no `server.js`. Se você ainda tiver o arquivo no repositório antigo, deixe-o lá como histórico — mas nada mais o lê.
 
-O `aria-live="polite"` faz o leitor de tela anunciar a mudança de "Carregando" para "6 itens no cardápio de hoje" — o mesmo cuidado da Aula 06, agora aplicado a conteúdo que chega da rede.
+> **⚠️ Atenção**
+> Não apague o `js/roteador.js` nem troque o `<script type="module">` por um script clássico. A SPA da Aula 10 depende dos dois: sem o roteador, as `<section data-rota>` continuam com `hidden` e a tela do cardápio nunca aparece, mesmo com a API respondendo `200`. Se o cardápio "sumiu" depois desta aula, o primeiro lugar para olhar é o console — um erro de `import` derruba o módulo inteiro em silêncio visual.
 
 ### Como testar
 
-1. Com `npm run dev` rodando, abra `http://localhost:3000`. O site aparece **sem Live Server** e o cardápio carrega.
-2. Abra o DevTools na aba **Network**, recarregue e clique na requisição `produtos`. Confira: **Status** `200`, **Request URL** `http://localhost:3000/api/produtos`, aba **Response** com o array JSON.
-3. No terminal, `curl -i http://localhost:3000/api/produtos/3` deve devolver o pão de queijo com status `200`.
-4. `curl -i http://localhost:3000/api/produtos/999` deve devolver `404` e `{"erro":"Produto 999 não encontrado"}`.
-5. `curl http://localhost:3000/api/categorias` deve devolver `["cafes","doces","geladas","salgados"]`.
-6. Edite `data/produtos.json`, mude um preço, **salve** e recarregue a página do navegador. O preço novo aparece sem reiniciar nada: o arquivo é lido a cada requisição.
+1. Com `npm run dev` rodando, abra `http://localhost:3000`. O site aparece **sem Live Server**, e o link **Cardápio** do menu leva a `http://localhost:3000/#/cardapio` com os dez cards.
+2. Abra o DevTools na aba **Network**, recarregue e clique na requisição `produtos`. Confira: **Status** `200`, **Request URL** `http://localhost:3000/api/produtos`, aba **Response** com o array JSON de dez objetos.
+3. Confira o `<select>` de categoria: cinco opções ("Todas" mais as quatro), com os textos "Cafés", "Bebidas geladas", "Salgados" e "Doces" — não com os ids técnicos.
+4. No terminal, `curl -i http://localhost:3000/api/produtos/3` deve devolver o Cappuccino Sinop com status `200`.
+5. `curl -i http://localhost:3000/api/produtos/999` deve devolver `404` e `{"erro":"Produto 999 não encontrado"}`.
+6. `curl http://localhost:3000/api/categorias` deve devolver `[{"id":"cafes","nome":"Cafés"},{"id":"geladas","nome":"Bebidas geladas"},{"id":"salgados","nome":"Salgados"},{"id":"doces","nome":"Doces"}]`.
+7. Edite `data/produtos.json`, mude um preço, **salve** e recarregue a página do navegador. O preço novo aparece sem reiniciar nada: o arquivo é lido a cada requisição.
+8. Renomeie `data/produtos.json` para `data/produtos-x.json` e recarregue o cardápio. O front-end mostra a mensagem de erro e o botão "Tentar de novo" da Aula 09 — a camada de erro que você escreveu continua valendo com a API nova. Volte o nome depois.
 
 Commit:
 
@@ -991,7 +1000,7 @@ Registre esta rota **antes** de `/api/produtos/:id`, senão `busca` vira o valor
 
 **B2.** Estatísticas do cardápio. Crie `GET /api/estatisticas`, que devolve um objeto com `total` (quantidade de produtos), `precoMedio` (arredondado para duas casas) e `maisCaro` (o nome do produto de maior preço).
 
-Resultado esperado: um JSON como `{"total":6,"precoMedio":11,"maisCaro":"Açaí na tigela"}`.
+Resultado esperado: com o cardápio de hoje, `{"total":10,"precoMedio":11.2,"maisCaro":"Frappê de Café"}`.
 
 <details markdown="1">
 <summary>Dica</summary>

@@ -26,7 +26,7 @@ Na Aula 13 a API do Café Cerrado ganhou controladores, CRUD completo e persist�
 Checklist antes de começar:
 
 - [ ] `cafe-cerrado-api` com os cinco endpoints de `/api/produtos` respondendo (Aula 13).
-- [ ] O site do Café Cerrado sendo servido por `express.static('public')` em `http://localhost:3000`.
+- [ ] O site do Café Cerrado sendo servido por `express.static(path.join(__dirname, 'public'))` em `http://localhost:3000`.
 - [ ] `testes.http` funcionando com a extensão REST Client.
 - [ ] Uma conta Google (Gmail) para usar no Google Cloud Console — se possível, já com o console aberto.
 - [ ] Git configurado no repositório, com `node_modules/` já ignorado no `.gitignore`.
@@ -169,7 +169,7 @@ Mesmo assim, os dois vão para o mesmo lugar — um arquivo `.env` fora do Git �
 ```text
 GOOGLE_CLIENT_ID=000000000000-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com
 SESSAO_SEGREDO=troque-por-uma-frase-longa-gerada-aleatoriamente
-PORTA=3000
+PORT=3000
 ```
 
 > **⚠️ Atenção**
@@ -234,7 +234,7 @@ Ao fim desta prática, o site do Café Cerrado terá um botão de login do Googl
 8. Crie e copie o **Client ID**, no formato `000000000000-letras.apps.googleusercontent.com`.
 
 > **⚠️ Atenção**
-> "Origem" é o trio protocolo + host + porta. `http://localhost:3000` e `http://127.0.0.1:3000` são origens **diferentes** para o Google, e `http://localhost:5500` (a porta do Live Server) é outra ainda. Se você abrir o site pelo Live Server em vez de pelo seu servidor Express, o botão do Google não vai aparecer e o console vai dizer `The given origin is not allowed for the given client ID`. Nesta aula, o site é sempre servido pelo Express — é o `express.static('public')` da Aula 11 que faz isso.
+> "Origem" é o trio protocolo + host + porta. `http://localhost:3000` e `http://127.0.0.1:3000` são origens **diferentes** para o Google, e `http://localhost:5500` (a porta do Live Server) é outra ainda. Se você abrir o site pelo Live Server em vez de pelo seu servidor Express, o botão do Google não vai aparecer e o console vai dizer `The given origin is not allowed for the given client ID`. Nesta aula, o site é sempre servido pelo Express — é o `express.static` da Aula 11 que faz isso.
 
 ### Passo 2 — Instalar as dependências e guardar os segredos
 
@@ -256,7 +256,7 @@ Crie o `.env` na raiz do projeto com o Client ID do passo 1 e o segredo gerado:
 ```text
 GOOGLE_CLIENT_ID=000000000000-abcdefghijklmnopqrstuvwxyz012345.apps.googleusercontent.com
 SESSAO_SEGREDO=8f2b1c9d4e7a0b3f6c5d8e1a4b7c0d3e6f9a2b5c8d1e4f7a0b3c6d9e2f5a8b1c
-PORTA=3000
+PORT=3000
 ```
 
 Crie também o exemplo, que **vai** para o Git:
@@ -266,7 +266,7 @@ Crie também o exemplo, que **vai** para o Git:
 ```text
 GOOGLE_CLIENT_ID=cole-aqui-o-client-id-do-google-cloud-console
 SESSAO_SEGREDO=gere-com-node-e-crypto-randomBytes-32-hex
-PORTA=3000
+PORT=3000
 ```
 
 E ignore o `.env` **antes** de qualquer commit:
@@ -486,12 +486,17 @@ module.exports = router;
 // Precisa vir antes de qualquer require que leia process.env.
 require('dotenv').config();
 
+const path = require('node:path');
 const express = require('express');
+
 const produtosRouter = require('./routes/produtos');
+const categoriasRouter = require('./routes/categorias');
 const authRouter = require('./routes/auth');
+const registrarRequisicao = require('./middlewares/registro');
+const { naoEncontradoApi, tratadorDeErros } = require('./middlewares/erros');
 
 const app = express();
-const PORTA = Number(process.env.PORTA) || 3000;
+const PORTA = process.env.PORT || 3000;
 
 // Falha cedo e com mensagem clara se a configuração estiver incompleta.
 for (const chave of ['GOOGLE_CLIENT_ID', 'SESSAO_SEGREDO']) {
@@ -503,16 +508,9 @@ for (const chave of ['GOOGLE_CLIENT_ID', 'SESSAO_SEGREDO']) {
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  const inicio = Date.now();
-  res.on('finish', () => {
-    const duracao = Date.now() - inicio;
-    console.log(`${req.method} ${req.originalUrl} -> ${res.statusCode} (${duracao} ms)`);
-  });
-  next();
-});
+app.use(registrarRequisicao);
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuração pública que o front precisa conhecer.
 // O Client ID não é segredo; o segredo de sessão nunca sai daqui.
@@ -522,20 +520,22 @@ app.get('/api/config', (req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/produtos', produtosRouter);
+app.use('/api/categorias', categoriasRouter);
 
-app.all('/api/{*splat}', (req, res) => {
-  res.status(404).json({ erro: `Rota ${req.method} ${req.originalUrl} não existe.` });
+app.all('/api/{*splat}', naoEncontradoApi);
+
+app.get('/{*splat}', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.use((erro, req, res, next) => {
-  console.error(erro);
-  res.status(500).json({ erro: 'Erro interno do servidor.' });
-});
+app.use(tratadorDeErros);
 
 app.listen(PORTA, () => {
   console.log(`Café Cerrado API em http://localhost:${PORTA}`);
 });
 ```
+
+Fora as três linhas novas — o `/api/config`, o `authRouter` e o bloco que verifica a configuração —, este `server.js` é o mesmo da Aula 13: os middlewares continuam em `middlewares/`, o fallback `/{*splat}` continua entregando o `index.html` da SPA e a porta continua vindo de `process.env.PORT`. **Sempre `PORT`**, nunca `PORTA`: é o nome que os serviços de hospedagem definem, e é o que o Capítulo 05 da trilha Deploy espera encontrar.
 
 A ordem do `require('dotenv').config()` não é estética. O `authController.js` executa `new OAuth2Client(process.env.GOOGLE_CLIENT_ID)` no momento em que é importado — se o `.env` ainda não tiver sido carregado, o cliente nasce com `undefined` e toda verificação falha com uma mensagem confusa. Carregue a configuração antes de tudo.
 
@@ -611,7 +611,9 @@ function mostrarUsuario(usuario) {
 
 export function sair() {
   sessionStorage.removeItem(CHAVE_SESSAO);
-  google.accounts.id.disableAutoSelect();
+  // Guarda com ?.: o clique pode acontecer antes de a GSI terminar de carregar,
+  // e um ReferenceError aqui deixaria a pessoa presa na sessão.
+  window.google?.accounts?.id?.disableAutoSelect();
   areaUsuario.hidden = true;
   areaLogin.hidden = false;
   aviso.textContent = 'Você saiu da sua conta.';
@@ -708,8 +710,8 @@ POST {{base}}/produtos
 Content-Type: application/json
 
 {
-  "nome": "Café gelado da casa",
-  "categoria": "bebidas-geladas",
+  "nome": "Café Gelado da Casa",
+  "categoria": "geladas",
   "preco": 14.0
 }
 
@@ -726,13 +728,13 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "nome": "Café gelado da casa",
-  "categoria": "bebidas-geladas",
+  "nome": "Café Gelado da Casa",
+  "categoria": "geladas",
   "preco": 14.0
 }
 
-### 21. Excluir COM token (204)
-DELETE {{base}}/produtos/6
+### 21. Excluir COM token (204) — o produto criado no bloco 20
+DELETE {{base}}/produtos/11
 Authorization: Bearer {{token}}
 ```
 

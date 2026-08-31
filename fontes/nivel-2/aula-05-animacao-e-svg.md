@@ -329,7 +329,7 @@ Fazer seis cards aparecerem juntos é banal; fazê-los aparecer em cascata custa
 </div>
 <div class="col-12 col-md-6 col-lg-4">
   <article class="card card-produto" style="--i: 2">
-    <h3 class="h5">Cappuccino de baunilha</h3>
+    <h3 class="h5">Coado da Casa</h3>
   </article>
 </div>
 ```
@@ -402,7 +402,7 @@ Movimento na tela não é neutro. Pessoas com distúrbios vestibulares, enxaquec
 Três detalhes que caem em prova:
 
 1. **`0.01ms` e não `0`.** Uma animação com duração zero pode nunca disparar o evento `animationend`, que a Unidade 2 usa para remover elementos. Um valor mínimo mantém o evento e é imperceptível.
-2. **`!important`.** O bloco precisa vencer qualquer regra escrita depois, inclusive as do Bootstrap.
+2. **`!important`.** O bloco precisa vencer qualquer regra escrita depois, inclusive as do Bootstrap. É a **única** exceção à regra "zero `!important`" do checkpoint da Aula 04, e ela é deliberada: aqui o objetivo é justamente atropelar tudo o que tenha ligado movimento.
 3. **Reduzir não é remover.** Nada pode sumir nem parar de funcionar com o movimento desligado: o menu abre, o card muda de sombra, o formulário envia. Só o deslocamento desaparece.
 
 O que a WCAG 2.2 exige a respeito:
@@ -610,19 +610,13 @@ Ao fim destes onze passos o site terá logotipo vetorial, ícones vetoriais, mic
 
 ### Passo 1 — variáveis de movimento
 
-Abra o `css/estilo.css` e complete o `:root` que você criou na Aula 02. As cores já estavam lá; as durações e curvas são de hoje.
+Abra o `css/estilo.css` e **acrescente** ao `:root` que já existe (Aulas 02 e 04) o bloco de movimento. As cores não mudam: `--cor-marca`, `--cor-marca-escura`, `--cor-destaque`, `--cor-fundo`, `--cor-superficie`, `--cor-texto` e `--cor-texto-suave` continuam sendo as mesmas do primeiro dia. Não crie um segundo `:root` nem renomeie cor nenhuma — a Aula 06 vai **medir** essa paleta com o Lighthouse, e ela precisa ser a que está no seu arquivo.
 
 **`css/estilo.css`**
 
 ```css
 :root {
-  /* Cores — Aula 02 */
-  --cafe-escuro: #3e2723;
-  --cafe-medio: #6d4c41;
-  --creme: #f5efe6;
-  --verde-cerrado: #4e7c59;
-  --dourado: #d99e33;
-  --texto: #2b1e1c;
+  /* … as cores das Aulas 02 e 04 continuam aqui, intactas … */
 
   /* Movimento — Aula 05 */
   --duracao-rapida: 150ms;
@@ -630,11 +624,11 @@ Abra o `css/estilo.css` e complete o `:root` que você criou na Aula 02. As core
   --duracao-longa: 400ms;
   --curva-entrada: cubic-bezier(0.16, 1, 0.3, 1);
   --curva-saida: cubic-bezier(0.4, 0, 1, 1);
-  --elevacao: 0 0.75rem 1.5rem rgba(62, 39, 35, 0.18);
+  --elevacao: 0 0.75rem 1.5rem rgba(74, 51, 37, 0.18);   /* 74, 51, 37 = #4a3325 */
 }
 ```
 
-Se os nomes das suas cores forem outros, mantenha os seus e acrescente só o bloco de movimento. A partir daqui **nenhuma duração solta** aparece no arquivo: toda transição usa uma dessas variáveis. Quando o professor pedir "deixe tudo 30 % mais rápido", você muda três linhas.
+A partir daqui **nenhuma duração solta** aparece no arquivo: toda transição usa uma dessas variáveis. Quando o professor pedir "deixe tudo 30 % mais rápido", você muda três linhas. E, como na Aula 02, **nenhuma cor literal fora do `:root`**: todo o CSS de hoje usa `var(--cor-*)`.
 
 ### Passo 2 — microinterações nos elementos clicáveis
 
@@ -655,15 +649,10 @@ O Bootstrap já transiciona cor de fundo e borda nos botões; o que falta é o m
     box-shadow var(--duracao-media) var(--curva-entrada);
 }
 
-.btn-cafe {
-  background-color: var(--cafe-escuro);
-  border: 2px solid var(--cafe-escuro);
-  color: var(--creme);
-}
-
+/* As cores do .btn-cafe já estão definidas na Aula 04, pelas variáveis
+   --bs-btn-*. Aqui só acrescentamos movimento — nenhuma propriedade de cor,
+   nenhuma regra concorrente. */
 .btn-cafe:hover {
-  background-color: var(--cafe-medio);
-  border-color: var(--cafe-medio);
   transform: translateY(-2px);
   box-shadow: var(--elevacao);
 }
@@ -685,12 +674,14 @@ O Bootstrap já transiciona cor de fundo e borda nos botões; o que falta é o m
 .btn:focus-visible,
 .nav-link:focus-visible,
 .rodape a:focus-visible {
-  outline: 3px solid var(--dourado);
+  outline: 3px solid var(--cor-destaque);
   outline-offset: 3px;
 }
 ```
 
 Repare no `:disabled`: ele **desliga** o movimento. Um botão desabilitado que ainda sobe no hover mente ao usuário.
+
+Repare também no que **não** está aqui: nenhuma cor de fundo, de borda ou de texto do `.btn-cafe`. Elas moram nas variáveis `--bs-btn-*` que você definiu na Aula 04, e é lá que continuam. Se você redeclarasse `background-color` aqui, teria duas regras `.btn-cafe` no mesmo arquivo brigando pelo mesmo botão — exatamente o "brigar com o framework" que a Aula 04 ensinou a evitar. Movimento é responsabilidade desta aula; cor é responsabilidade da anterior.
 
 ### Passo 3 — sublinhado animado no menu
 
@@ -699,7 +690,6 @@ Repare no `:disabled`: ele **desliga** o movimento. Um botão desabilitado que a
 ```css
 .navbar .nav-link {
   position: relative;
-  color: var(--creme);
 }
 
 .navbar .nav-link::after {
@@ -709,7 +699,7 @@ Repare no `:disabled`: ele **desliga** o movimento. Um botão desabilitado que a
   right: 0.5rem;
   bottom: 0.15rem;
   height: 2px;
-  background-color: var(--dourado);
+  background-color: var(--cor-superficie);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform var(--duracao-media) var(--curva-saida);
@@ -737,7 +727,7 @@ Repare também que a `transition` aparece **duas vezes**, com curvas diferentes.
   border: 0;
   border-radius: 0.75rem;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--cor-superficie);
 }
 
 .card-produto:hover,
@@ -788,7 +778,7 @@ O SVG é `aria-hidden="true"` porque o `<span>` ao lado já dá o nome acessíve
 .logo {
   width: 2.25rem;
   height: 2.25rem;
-  color: var(--creme);
+  color: var(--cor-superficie);
   flex-shrink: 0;
 }
 
@@ -884,12 +874,12 @@ Agora use os ícones dentro de cada card:
   fill: currentColor;
   vertical-align: -0.15em;
   margin-right: 0.35rem;
-  color: var(--verde-cerrado);
+  color: var(--cor-destaque);
   transition: transform var(--duracao-rapida) ease, color var(--duracao-rapida) ease;
 }
 
 .card-produto:hover .icone {
-  color: var(--cafe-medio);
+  color: var(--cor-marca);
   transform: scale(1.15);
 }
 ```
@@ -923,13 +913,19 @@ Numere os cards no HTML com `style="--i: 1"`, `style="--i: 2"` e assim por diant
 
 ```html
 <section class="hero text-center py-5">
-  <h1 class="hero__titulo display-4">Café do Cerrado, torrado em Sinop</h1>
-  <p class="hero__texto lead">Grãos de produtores de Mato Grosso, torra artesanal e um lugar para ficar.</p>
-  <div class="hero__acoes">
-    <a class="btn btn-cafe btn-lg btn-destaque" href="cardapio.html">Ver o cardápio</a>
+  <div class="container">
+    <h1 class="hero__titulo display-4">Café do Cerrado, torrado em Sinop</h1>
+    <p class="hero__texto lead">
+      Grãos de produtores de Mato Grosso, torra artesanal e um lugar para ficar.
+    </p>
+    <div class="hero__acoes">
+      <a class="btn btn-cafe btn-lg btn-destaque" href="cardapio.html">Ver o cardápio</a>
+    </div>
   </div>
 </section>
 ```
+
+O `<div class="container">` é o mesmo da Aula 04 — ele fica: só a classe `btn-destaque` é novidade. Animar os filhos do container, e não o container, evita que a entrada disputa espaço com o alinhamento.
 
 **`css/estilo.css`**
 
@@ -984,7 +980,7 @@ Ainda não há JavaScript no projeto, mas o CSS do estado de envio pode ficar pr
   width: 1.25rem;
   height: 1.25rem;
   margin: -0.625rem 0 0 -0.625rem;
-  border: 2px solid var(--creme);
+  border: 2px solid var(--cor-superficie);
   border-top-color: transparent;
   border-radius: 50%;
   animation: girar 700ms linear infinite;
@@ -1021,7 +1017,7 @@ Os dois traços têm o mesmo comprimento, mas direções opostas: o da esquerda 
   width: min(15rem, 60%);
   height: auto;
   margin: 2.5rem auto;
-  color: var(--cafe-medio);
+  color: var(--cor-marca);
 }
 
 .divisor__linha {
@@ -1075,7 +1071,7 @@ Para testar sem mexer no sistema operacional: DevTools → <kbd>Ctrl</kbd>+<kbd>
 
 ### Como testar
 
-- **Botões:** passe o mouse e depois navegue só por <kbd>Tab</kbd>. Todo botão sobe no hover, afunda no clique e mostra o anel dourado no foco por teclado. Um botão `disabled` não reage.
+- **Botões:** passe o mouse e depois navegue só por <kbd>Tab</kbd>. Todo botão sobe no hover, afunda no clique e mostra o anel de foco na cor de destaque ao chegar por teclado. Um botão `disabled` não reage.
 - **Menu:** o sublinhado cresce da esquerda ao entrar e recolhe pela direita ao sair; o item da página atual fica sublinhado permanentemente, sem mouse nenhum.
 - **Cards:** recarregue `cardapio.html` — os cards entram em cascata, de 80 em 80 ms. No hover, o card sobe, a foto amplia sem vazar da borda e os ícones mudam de cor. Chegando por <kbd>Tab</kbd> ao link interno, o card reage igual.
 - **Logotipo:** passe o mouse na marca da navbar — os três fios de vapor sobem em sequência. O leitor de tela não anuncia "Café Cerrado" duas vezes (confira na aba Elements que o `<svg>` tem `aria-hidden="true"`).
@@ -1132,7 +1128,7 @@ Para testar sem mexer no sistema operacional: DevTools → <kbd>Ctrl</kbd>+<kbd>
 
 **B1.** Construa um botão com os cinco estados animados: normal, `:hover` (elevação), `:active` (pressionado), `:disabled` (opaco e sem movimento) e `:focus-visible` (anel de foco). Nenhum estado pode ser distinguível **apenas** pela cor.
 
-**Resultado esperado:** o botão sobe no hover, afunda no clique, mostra um anel dourado ao chegar por <kbd>Tab</kbd> e, desabilitado, fica opaco com cursor `not-allowed` — e os cinco estados continuam distinguíveis numa captura de tela em preto e branco.
+**Resultado esperado:** o botão sobe no hover, afunda no clique, mostra o anel de foco na cor de destaque ao chegar por <kbd>Tab</kbd> e, desabilitado, fica opaco com cursor `not-allowed` — e os cinco estados continuam distinguíveis numa captura de tela em preto e branco.
 
 <details><summary>Dica</summary>
 

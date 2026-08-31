@@ -214,13 +214,12 @@ Um exemplo mínimo, completo, com os três arquivos integrados:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Separação de responsabilidades</title>
   <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/app.js" defer></script>
 </head>
 <body>
   <h1>Bem-vindo ao Café Cerrado</h1>
   <button id="botao-saudacao" type="button">Diga olá</button>
   <p id="saida"></p>
-
-  <script src="js/app.js" defer></script>
 </body>
 </html>
 ```
@@ -254,7 +253,7 @@ botao.addEventListener("click", () => {
 });
 ```
 
-Três arquivos, três papéis, uma página. Repare no `defer` no `<script>`: sem ele, o script rodaria antes de o `<button>` existir no DOM e `document.getElementById` devolveria `null`. Você vai reencontrar exatamente esse bug na Aula 07 — e agora já sabe o nome dele.
+Três arquivos, três papéis, uma página. Repare que o `<script>` está no `<head>` **com `defer`**: o navegador começa a baixar o arquivo cedo, mas só o executa depois que o HTML inteiro virou DOM. Sem o `defer`, um script no `<head>` rodaria antes de o `<button>` existir e `document.getElementById` devolveria `null` — e `null.addEventListener` estoura `TypeError`. (A outra saída é pôr o `<script>` sem atributos logo antes de `</body>`, quando o botão já existe; `defer` no `<head>` é a forma preferida porque o download acontece em paralelo com a análise do HTML.) Você vai reencontrar exatamente esse bug na Aula 07 — e agora já sabe o nome dele.
 
 ## 6. Anatomia de um documento HTML5
 
@@ -425,6 +424,7 @@ Regras de nomenclatura, que valem para o semestre inteiro: minúsculas, sem espa
   --cor-superficie: #ffffff;
   --cor-texto: #2b2118;
   --cor-texto-suave: #5c4b3c;
+  --borda-suave: rgba(111, 78, 55, 0.15);
 
   --fonte-base: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
@@ -512,7 +512,7 @@ main {
   padding: var(--espaco-4) var(--espaco-3);
   border-radius: var(--raio);
   background-color: var(--cor-superficie);
-  border: 1px solid #e7ddd2;
+  border: 1px solid var(--borda-suave);
   text-align: center;
 }
 
@@ -614,14 +614,14 @@ Substitua o conteúdo de `index.html` por este. Digite, não cole — e repare e
         métodos filtrados e uma pequena confeitaria feita no dia.
       </p>
       <p>
-        Funcionamos de terça a sábado, das 8h às 19h, na Avenida das Itaúbas,
-        no centro de Sinop.
+        Funcionamos de terça a sábado, das 8h às 19h, na Avenida dos
+        Jacarandás, 1200, no Setor Comercial de Sinop.
       </p>
     </section>
   </main>
 
   <footer class="rodape">
-    <p>Café Cerrado — Avenida das Itaúbas, Sinop/MT</p>
+    <p>Café Cerrado — Avenida dos Jacarandás, 1200, Sinop/MT</p>
     <p>Projeto acadêmico da disciplina Desenvolvimento Web — UNEMAT Campus Sinop.</p>
   </footer>
 </body>

@@ -145,7 +145,7 @@ Um `<h1>` mal escolhido custa caro: leitores de tela oferecem "listar todos os t
 ```text
 h1  Cardápio
 ├── h2  Cafés
-│   ├── h3  Espresso Cerrado
+│   ├── h3  Espresso do Cerrado
 │   ├── h3  Coado da Casa
 │   └── h3  Cappuccino Sinop
 ├── h2  Bebidas geladas
@@ -199,7 +199,7 @@ Aqui `div.container` existe para o CSS limitar a largura e centralizar; `span.de
   <dt>Torra média</dt>
   <dd>Equilibra doçura, corpo e acidez. É a nossa torra padrão.</dd>
   <dt>Torra escura</dt>
-  <dd>Mais amarga e encorpada, com notas de chocolate amargo.</dad>
+  <dd>Mais amarga e encorpada, com notas de chocolate amargo.</dd>
 </dl>
 ```
 
@@ -672,7 +672,7 @@ Vale também rodar o **Lighthouse** (DevTools → aba Lighthouse → Accessibili
 
 ## 💻 Mão na massa — Três páginas do Café Cerrado
 
-O Café Cerrado é uma cafeteria fictícia em Sinop/MT que torra grãos do Cerrado mato-grossense. Hoje o repositório `cafe-cerrado` sai de uma página só para três páginas ligadas entre si, com estrutura semântica completa.
+O Café Cerrado — o projeto-fio apresentado na Aula 01 e iniciado na Aula 02 — sai hoje de uma página só para três páginas ligadas entre si, com estrutura semântica completa.
 
 Ao final você terá:
 
@@ -680,6 +680,11 @@ Ao final você terá:
 - `cardapio.html` — produtos em listas por categoria, tabela de torras e uma `figure`.
 - `contato.html` — formulário completo com validação nativa.
 - Um menu igual nas três páginas, com `aria-current="page"` no item certo.
+
+> **⚠️ Cuidado**
+> O `index.html` de hoje **substitui** o da Aula 02, com nomes de classe novos. Antes de colar o código do Passo 1, abra `css/estilo.css` e **apague as cinco regras da Aula 02 que ficaram sem dono**: `.cabecalho`, `.marca` (a versão antiga, de uma linha só), `.navegacao ul`, `.navegacao a` (e o `:hover`/`:focus` dela), `.destaque`, `.destaque h1`, `.destaque p`, `.sobre`, `.sobre h2`, `.botao` (todas as declarações antigas dela) e `.rodape`/`.rodape p`. Ficam de pé, sem alteração: o bloco `:root`, o reset da §7.2, `body`, `img`, `a` e a regra de `main`. As classes novas — `.topo`, `.topo__interno`, `.hero`, `.cartoes`, `.rodape__grade` — entram no Passo 4. Duas regras com o mesmo nome no mesmo arquivo não dão erro: a última vence em silêncio, e você passa a tarde caçando um estilo que "não aplica".
+>
+> Se você fez o laboratório B1 da Aula 02 e criou `sobre.html`, mantenha o item **Sobre** no menu das três páginas (um `<li>` a mais, sem `aria-current`) e repita nele o mesmo `<header>`/`<footer>`. O menu de três itens abaixo é o mínimo, não o teto.
 
 ### Passo 1 — `index.html` completo
 
@@ -898,7 +903,7 @@ Duplique `index.html` como `cardapio.html` e faça quatro trocas: o `<title>` vi
       <ul class="produtos">
         <li>
           <article class="produto">
-            <h3>Espresso Cerrado</h3>
+            <h3>Espresso do Cerrado</h3>
             <p class="produto__preco">R$ 6,00</p>
             <p>Cinquenta mililitros de grãos de altitude, torra média, extraídos em
                vinte e cinco segundos.</p>
@@ -1223,9 +1228,26 @@ Mesma receita: duplique `index.html` como `contato.html`, ajuste `<title>` e `<m
 
 O `action="contato.html"` é um placeholder honesto: o site ainda é estático, não há servidor para receber os dados. Ao enviar, o navegador recarrega a própria página — e é exatamente isso que você deve observar no teste. Na Aula 07, o JavaScript vai interceptar o envio; na Unidade 3, o `action` aponta para a sua API Express.
 
-### Passo 5 — Um mínimo de CSS para enxergar a estrutura
+### Passo 4 — Um mínimo de CSS para enxergar a estrutura
 
-Na próxima aula o Café Cerrado adota o Bootstrap, e boa parte deste CSS será substituída. Por enquanto, acrescente ao fim de `css/estilo.css` o suficiente para que a estrutura fique legível. Se você já criou variáveis na Aula 02, troque os valores literais pelas suas.
+Na próxima aula o Café Cerrado adota o Bootstrap, e boa parte deste CSS será substituída. Por enquanto, o suficiente para que a estrutura fique legível — escrito com as **variáveis da Aula 02**, porque o checkpoint daquela aula ("nenhuma cor literal fora do `:root`") continua valendo.
+
+Primeiro, acrescente três variáveis ao `:root` que já existe no alto do arquivo. Não crie um segundo `:root`: edite o que está lá.
+
+**`cafe-cerrado/css/estilo.css`** — dentro do `:root` da Aula 02
+
+```css
+:root {
+  /* … as variáveis da Aula 02 continuam aqui … */
+
+  /* Novas nesta aula */
+  --cor-borda-campo: #8a7a68;   /* 4,1:1 sobre o branco: a WCAG exige 3:1 na borda de um campo */
+  --cor-erro: #b42318;
+  --realce-invalido: rgba(180, 35, 24, 0.25);
+}
+```
+
+Agora acrescente as regras abaixo **ao final** do arquivo, depois de ter apagado as regras órfãs da Aula 02 (o aviso do início do Mão na massa).
 
 **`cafe-cerrado/css/estilo.css` — acrescente ao final**
 
@@ -1238,26 +1260,29 @@ html {
 
 .container {
   width: 100%;
-  max-width: 1100px;
+  max-width: var(--largura-maxima);
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: var(--espaco-2);
 }
 
 /* Cabeçalho e menu */
-.topo { background: #fffdf8; border-bottom: 1px solid #e2e0da; }
+.topo {
+  background: var(--cor-superficie);
+  border-bottom: 1px solid var(--borda-suave);
+}
 
 .topo__interno {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding-block: 1rem;
+  gap: var(--espaco-2);
+  padding-block: var(--espaco-2);
 }
 
-.marca { color: #4a2c17; text-decoration: none; }
+.marca { color: var(--cor-marca-escura); text-decoration: none; }
 .marca__nome { display: block; font-size: 1.4rem; font-weight: 700; }
-.marca__slogan { display: block; font-size: .8rem; color: #7a6a58; }
+.marca__slogan { display: block; font-size: .8rem; color: var(--cor-texto-suave); }
 
 .menu {
   display: flex;
@@ -1271,7 +1296,7 @@ html {
 .menu a {
   display: block;
   padding: .25rem 0;
-  color: #4a2c17;
+  color: var(--cor-marca-escura);
   font-weight: 500;
   text-decoration: none;
 }
@@ -1280,7 +1305,10 @@ html {
 .menu a:focus-visible { text-decoration: underline; }
 
 /* O destaque da página atual sai do atributo, sem classe extra */
-.menu a[aria-current="page"] { color: #8c4a1f; border-bottom: 2px solid #8c4a1f; }
+.menu a[aria-current="page"] {
+  color: var(--cor-destaque);
+  border-bottom: 2px solid var(--cor-destaque);
+}
 
 /* Listas de cartões e de produtos */
 .cartoes, .produtos, .atalhos { list-style: none; margin: 0; padding: 0; }
@@ -1288,54 +1316,71 @@ html {
 .cartoes, .produtos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-  margin-block: 1rem 2rem;
+  gap: var(--espaco-2);
+  margin-block: var(--espaco-2) var(--espaco-3);
 }
 
-.atalhos { display: flex; flex-wrap: wrap; gap: 1rem; margin-block: 1rem; }
+.atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+  margin-block: var(--espaco-2);
+}
 
 .cartao, .produto {
   height: 100%;
-  padding: 1rem;
-  background: #fffdf8;
-  border: 1px solid #e2e0da;
-  border-radius: 8px;
+  padding: var(--espaco-2);
+  background: var(--cor-superficie);
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio);
 }
 
-.cartao__preco, .produto__preco { font-weight: 700; color: #8c4a1f; }
+.cartao__preco, .produto__preco { font-weight: 700; color: var(--cor-destaque); }
 
 /* Tabelas: rolam sozinhas em vez de estourar a tela */
-.tabela-rolavel { overflow-x: auto; margin-block: 1rem; }
+.tabela-rolavel { overflow-x: auto; margin-block: var(--espaco-2); }
 
 table { border-collapse: collapse; width: 100%; min-width: 22rem; }
-caption { text-align: left; font-weight: 600; padding-bottom: .5rem; }
-th, td { border: 1px solid #e2e0da; padding: .5rem .75rem; text-align: left; }
-thead th { background: #f3efe6; }
+caption { text-align: left; font-weight: 600; padding-bottom: var(--espaco-1); }
+
+th, td {
+  border: 1px solid var(--borda-suave);
+  padding: .5rem .75rem;
+  text-align: left;
+}
+
+thead th { background: var(--cor-fundo); }
 
 /* Figuras */
 figure { margin: 1.5rem 0; }
-figure img { max-width: 100%; height: auto; border-radius: 8px; }
-figcaption { font-size: .9rem; color: #7a6a58; padding-top: .5rem; }
+figure img { max-width: 100%; height: auto; border-radius: var(--raio); }
+figcaption { font-size: .9rem; color: var(--cor-texto-suave); padding-top: var(--espaco-1); }
 
 /* Formulário */
 .formulario fieldset {
-  padding: 1rem;
+  padding: var(--espaco-2);
   margin-block: 1.5rem;
-  border: 1px solid #e2e0da;
-  border-radius: 8px;
+  border: 1px solid var(--borda-suave);
+  border-radius: var(--raio);
 }
 
-.formulario legend { font-weight: 600; padding-inline: .5rem; }
+.formulario legend { font-weight: 600; padding-inline: var(--espaco-1); }
 
-.campo { display: flex; flex-direction: column; gap: .35rem; margin-block: 1rem; }
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  margin-block: var(--espaco-2);
+}
+
 .campo--linha { flex-direction: row; flex-wrap: wrap; gap: 1.5rem; }
 .campo label { font-weight: 500; }
 
 .campo input, .campo select, .campo textarea {
   font: inherit;
   max-width: 32rem;
-  padding: .5rem;
-  border: 1px solid #b8b0a2;
+  padding: var(--espaco-1);
+  border: 1px solid var(--cor-borda-campo);
   border-radius: 6px;
 }
 
@@ -1343,17 +1388,17 @@ figcaption { font-size: .9rem; color: #7a6a58; padding-top: .5rem; }
 .campo input:user-invalid,
 .campo select:user-invalid,
 .campo textarea:user-invalid {
-  border-color: #b42318;
-  outline: 2px solid rgba(180, 35, 24, .25);
+  border-color: var(--cor-erro);
+  outline: 2px solid var(--realce-invalido);
 }
 
 /* Botões */
 .botao {
   display: inline-block;
   padding: .6rem 1.2rem;
-  background: #8c4a1f;
-  color: #fffdf8;
-  border: 2px solid #8c4a1f;
+  background: var(--cor-marca);
+  color: var(--cor-superficie);
+  border: 2px solid var(--cor-marca);
   border-radius: 999px;
   font: inherit;
   font-weight: 600;
@@ -1361,32 +1406,50 @@ figcaption { font-size: .9rem; color: #7a6a58; padding-top: .5rem; }
   cursor: pointer;
 }
 
-.botao--vazado { background: transparent; color: #8c4a1f; }
+.botao--vazado { background: transparent; color: var(--cor-marca); }
 
 .botao:hover,
-.botao:focus-visible { background: #6d3915; border-color: #6d3915; color: #fffdf8; }
+.botao:focus-visible {
+  background: var(--cor-marca-escura);
+  border-color: var(--cor-marca-escura);
+  color: var(--cor-superficie);
+}
 
 /* Rodapé */
-.rodape { margin-top: 3rem; padding-block: 2rem; background: #4a2c17; color: #fffdf8; }
+.rodape {
+  margin-top: var(--espaco-4);
+  padding-block: var(--espaco-3);
+  background: var(--cor-marca-escura);
+  color: var(--cor-superficie);
+}
 
 .rodape__grade {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
+  gap: var(--espaco-3);
 }
 
 .rodape h2 { font-size: 1rem; }
 .rodape ul { list-style: none; padding: 0; }
-.rodape a { color: #f3d9b8; }
+.rodape a { color: var(--cor-fundo); }
 .rodape address { font-style: normal; line-height: 1.7; }
-.rodape__creditos { text-align: center; font-size: .85rem; opacity: .8; padding-top: 1.5rem; }
+
+.rodape__creditos {
+  text-align: center;
+  font-size: .85rem;
+  opacity: .8;
+  padding-top: 1.5rem;
+}
 ```
 
-### Passo 6 — Validar no W3C
+> **🧠 Você sabia?**
+> As duas regras `.rodape` — a da Aula 02 e esta — não podem coexistir. Se você não apagou a antiga, o navegador aplica **as duas**, na ordem do arquivo, e o resultado é uma mistura: `text-align: center` da primeira sobrevive porque a segunda não o redefine. Esse é o tipo de bug que não aparece no validador, não aparece no console e só some quando alguém lê o CSS inteiro. Na Aula 04 o problema desaparece pela raiz: o `estilo.css` é reescrito do zero.
+
+### Passo 5 — Validar no W3C
 
 Abra <https://validator.w3.org/nu/>, escolha **Validate by direct input** e cole o conteúdo de cada uma das três páginas, uma por vez. Corrija tudo o que aparecer como `Error`. Os `Warning` merecem leitura, mas nem todos exigem ação — o aviso sobre `<section>` sem título, por exemplo, é legítimo e você deve resolver; o aviso sobre codificação de caracteres desaparece quando a página é servida por HTTP de verdade.
 
-### Passo 7 — Publicar
+### Passo 6 — Publicar
 
 **Terminal, na pasta do repositório**
 
@@ -1426,7 +1489,7 @@ O GitHub Pages republica sozinho em cerca de um minuto. Abra o endereço públic
 ```html
 <h1>Café Cerrado</h1>
 <h3>Cardápio</h3>
-<h2>Espresso Cerrado</h2>
+<h2>Espresso do Cerrado</h2>
 <h5>Ingredientes</h5>
 <h1>Contato</h1>
 ```
@@ -1715,5 +1778,3 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 - ALVES, William P. *Projetos de Sistemas Web*. Érica, 2015 — elementos de interface e formulários em sistemas.
 
 Na próxima aula o Café Cerrado ganha aparência profissional sem você escrever centenas de linhas de CSS: vamos comparar as duas filosofias dominantes dos frameworks CSS — componentes prontos e classes utilitárias —, experimentar Bootstrap, Tailwind e Material Web lado a lado, e adotar um deles no projeto, com a escolha justificada no `README.md`. A estrutura semântica que você escreveu hoje permanece exatamente como está: o framework entra nas classes, não no lugar das tags.
-</content>
-</invoke>

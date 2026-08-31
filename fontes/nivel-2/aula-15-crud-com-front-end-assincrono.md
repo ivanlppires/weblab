@@ -11,7 +11,7 @@ Sua API já faz CRUD completo e já sabe quem está batendo na porta. Só que, a
 Ao final desta aula você será capaz de:
 
 - Descrever o contrato completo de um recurso REST (método, caminho, corpo, resposta, status) e usá-lo como acordo entre front e back.
-- Isolar leitura e escrita em disco numa camada `data/repositorio.js`, deixando os controladores livres de detalhes de arquivo.
+- Ler o contrato de um recurso já implementado (o repositório e o controlador das Aulas 13 e 14) e construir um cliente que o respeite sem alterá-lo.
 - Explicar por que uma gravação em duas etapas (arquivo temporário + `rename`) protege os dados contra um servidor que morre no meio da escrita.
 - Construir uma camada de acesso à API no cliente (`public/js/api.js`) que centraliza cabeçalhos, token e tratamento de erros.
 - Implementar os quatro estados de uma tela que depende de rede — carregando, erro, vazio e conteúdo — e renderizá-los a partir de uma única fonte de verdade.
@@ -21,7 +21,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos
 
-- [ ] Repositório `cafe-cerrado-api` rodando com `npm run dev`, servindo o site em `http://localhost:3000` por `express.static('public')` (Aula 11).
+- [ ] Repositório `cafe-cerrado-api` rodando com `npm run dev`, servindo o site em `http://localhost:3000` por `express.static(path.join(__dirname, 'public'))` (Aula 11).
 - [ ] `routes/produtos.js`, `controllers/produtosController.js` e os middlewares de log, 404 e erro funcionando (Aulas 12 e 13).
 - [ ] CRUD da API respondendo pelo `testes.http`: `GET`, `POST`, `PUT` e `DELETE` em `/api/produtos` (Aula 13).
 - [ ] Login Google funcionando, `.env` com `GOOGLE_CLIENT_ID` fora do Git e o middleware `exigirLogin` protegendo as rotas de escrita (Aula 14).
@@ -33,7 +33,7 @@ Ao final desta aula você será capaz de:
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Contrato do recurso; camada de persistência (`data/repositorio.js`); controladores `async` com gravação atômica |
+| 1 | 50 min | Contrato do recurso; revisão do repositório e do controlador das Aulas 13 e 14; gravação atômica |
 | 2 | 50 min | Camada de API no cliente (`public/js/api.js`); estado e render; os quatro estados da tela |
 | 3 | 50 min | Formulário criar/editar, exclusão com confirmação, feedback acessível; Mão na massa e laboratório |
 
@@ -43,7 +43,7 @@ Ao final desta aula você será capaz de:
 
 Na Aula 10 o seu `fetch` foi buscar dados no JSONPlaceholder — um servidor de outra pessoa, em outro domínio. Aquilo é uma requisição **cross-origin**, e só funcionou porque o JSONPlaceholder responde com o cabeçalho `Access-Control-Allow-Origin: *`, autorizando qualquer site a lê-lo.
 
-Agora a situação é outra e muito mais simples. Desde a Aula 11 o Express serve o site estático (`express.static('public')`) **e** a API no mesmo processo, na mesma porta. Abrir `http://localhost:3000/index.html` e pedir `fetch("/api/produtos")` é uma requisição de mesma origem: mesmo protocolo (`http`), mesmo host (`localhost`), mesma porta (`3000`). Nada de CORS, nada de cabeçalhos especiais, nada de preflight.
+Agora a situação é outra e muito mais simples. Desde a Aula 11 o Express serve o site estático (`express.static`) **e** a API no mesmo processo, na mesma porta. Abrir `http://localhost:3000/index.html` e pedir `fetch("/api/produtos")` é uma requisição de mesma origem: mesmo protocolo (`http`), mesmo host (`localhost`), mesma porta (`3000`). Nada de CORS, nada de cabeçalhos especiais, nada de preflight.
 
 Isso tem uma consequência prática importante no código: **use sempre caminhos relativos**.
 
@@ -63,6 +63,8 @@ const resposta2 = await fetch("http://localhost:3000/api/produtos");
 
 Antes de escrever qualquer código de integração, front e back precisam concordar num **contrato**: para cada operação, qual método HTTP, qual caminho, o que vai no corpo, o que volta e qual status. O contrato é o que permite que você mexa num lado sem ler o código do outro — e é o que você vai consultar às duas da manhã, quando a tela mostrar "undefined".
 
+Ele não é novidade: é exatamente o que a sua API responde desde a Aula 13, com as escritas protegidas pelo `exigirLogin` da Aula 14. O que fazemos aqui é escrevê-lo por extenso, do ponto de vista de quem consome.
+
 | Método | Caminho | Autenticação |
 |---|---|---|
 | GET | `/api/produtos` | Pública |
@@ -73,42 +75,55 @@ Antes de escrever qualquer código de integração, front e back precisam concor
 
 Detalhando corpo e resposta de cada operação:
 
-**`GET /api/produtos`** — lista todos os produtos. Aceita a busca por query string `?q=termo` (Aula 13). Status `200`. Resposta:
+**`GET /api/produtos`** — lista o cardápio. Aceita três parâmetros de query string, todos criados na Aula 13 e todos usados pela tela de hoje: `?q=termo` (busca no nome e na descrição, ignorando acento e caixa), `?categoria=cafes` (filtra pela categoria exata) e `?ordenar=preco` (também `-preco` e `nome`). Status `200`. Resposta:
 
 ```json
 [
   {
     "id": 1,
-    "nome": "Café coado do cerrado",
-    "categoria": "bebidas",
-    "preco": 7.5,
-    "descricao": "Grãos torrados em Sinop, coado na hora",
-    "imagem": "img/cafe-coado.jpg"
+    "nome": "Espresso do Cerrado",
+    "categoria": "cafes",
+    "preco": 6,
+    "descricao": "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    "imagem": "img/espresso.jpg"
   }
 ]
 ```
 
-**`GET /api/produtos/:id`** — um produto. Status `200` ou `404` com `{ "erro": "Produto não encontrado" }`.
+**`GET /api/produtos/:id`** — um produto. Status `200`; `404` com `{ "erro": "Produto 99 não encontrado." }`; e `400` quando o id nem é um número inteiro positivo (`/api/produtos/abacaxi`).
 
-**`POST /api/produtos`** — corpo com os campos editáveis:
+**`POST /api/produtos`** — corpo com os campos editáveis. `categoria` só aceita um dos quatro ids do cardápio (`cafes`, `geladas`, `salgados`, `doces`) — é a lista branca do controlador:
 
 ```json
 {
-  "nome": "Bolo de castanha",
-  "categoria": "doces",
-  "preco": 9.9,
-  "descricao": "Fatia generosa, feita na cozinha da casa"
+  "nome": "Suco de Cupuaçu",
+  "categoria": "geladas",
+  "preco": 10.5,
+  "descricao": "Polpa batida com água gelada e um fio de mel.",
+  "imagem": "img/suco-cupuacu.jpg"
 }
 ```
 
-Resposta: o produto criado, já com `id`, status `201` e cabeçalho `Location: /api/produtos/7`. Corpo inválido: `400` com `{ "erro": "...", "detalhes": ["..."] }`. Sem token: `401`.
+Resposta: o produto criado, já com `id`, status `201` e cabeçalho `Location: /api/produtos/11`. Sem token: `401`. Corpo inválido: `400` com o formato de erro abaixo — guarde-o, porque o formulário da seção 5 depende dele para colorir o campo certo:
 
-**`PUT /api/produtos/:id`** — mesmo corpo do `POST`. Resposta: o produto atualizado, status `200`. Inexistente: `404`. Sem token: `401`.
+```json
+{
+  "erro": "Dados inválidos.",
+  "detalhes": [
+    { "campo": "nome", "mensagem": "O nome precisa ter ao menos 3 caracteres." },
+    { "campo": "preco", "mensagem": "O preço precisa ser um número maior que zero." }
+  ]
+}
+```
 
-**`DELETE /api/produtos/:id`** — sem corpo. Resposta: status `204 No Content`, **sem corpo nenhum**. Inexistente: `404`. Sem token: `401`.
+Cada item de `detalhes` traz **o campo** e **a mensagem**, e não só um texto solto. É essa dupla que permite ao front pendurar a mensagem embaixo do `<input>` correspondente em vez de despejar tudo num alerta genérico.
+
+**`PUT /api/produtos/:id`** — mesmo corpo do `POST`, com atualização parcial permitida (envie só o que mudou). Resposta: o produto atualizado, status `200`. Inexistente: `404`. Id malformado: `400`. Sem token: `401`.
+
+**`DELETE /api/produtos/:id`** — sem corpo. Resposta: status `204 No Content`, **sem corpo nenhum**. Inexistente: `404`. Id malformado: `400`. Sem token: `401`.
 
 > **💡 Dica**
-> Se na Aula 13 o seu `DELETE` devolveu `200` com o objeto excluído, você tem duas opções: mudar para `204` (é o mais comum em APIs REST, porque não há nada a devolver) ou manter `200`. A camada de API que escreveremos na seção 3 trata os dois casos. O que não pode é devolver `204` **com** corpo: `resposta.json()` explode com `Unexpected end of JSON input`.
+> `204` não pode ter corpo: `resposta.json()` sobre uma resposta `204` explode com `Unexpected end of JSON input`. A camada de API que escreveremos na seção 3 trata isso em uma linha — e é o tipo de detalhe que consome uma tarde de quem não sabe que existe.
 
 > **📌 Na prova**
 > Decore a semântica dos status que este contrato usa: `200 OK` (deu certo e há corpo), `201 Created` (criou um recurso novo), `204 No Content` (deu certo e não há corpo), `400 Bad Request` (o cliente mandou algo inválido), `401 Unauthorized` (não sei quem você é), `404 Not Found` (o recurso não existe). O `403` entra na próxima aula.
@@ -125,164 +140,30 @@ Concretamente: quando você exclui um produto, o código **não** procura o `<ar
 
 Guarde esse ciclo. É exatamente o que Vue e React automatizam, e você vai reencontrá-lo no Nível 3 sob outro nome ("reatividade"). Aqui você o implementa à mão, que é a melhor forma de entender o que a ferramenta faz por você depois.
 
-## 2. Persistência: os dados precisam sobreviver ao reinício
+## 2. O back-end que já está pronto: repositório e controlador
 
-### 2.1 Extraindo a leitura e a escrita para um repositório
+### 2.1 O repositório da Aula 13, revisto em três linhas
 
-Na Aula 13 você já gravou em `data/produtos.json` com `fs/promises`. O problema é que o `readFile` e o `writeFile` foram parar dentro do controlador — e agora aparecem repetidos em cinco funções, cada uma com o seu `try/catch`. Quando o projeto trocar o arquivo JSON por um banco de dados, você vai ter que caçar essas chamadas uma a uma.
+O `data/repositorio.js` já existe desde a Aula 13 e **não muda hoje**. Relembre o essencial: ele é o único arquivo do projeto que sabe onde os produtos moram, exporta `lerTodos()`, `salvarTodos(lista)` e `proximoId(lista)`, resolve o caminho com `path.join(__dirname, 'produtos.json')` e usa `node:fs/promises`. Nenhuma das três funções menciona `res`, `req` ou status HTTP — é isso que permitirá trocar o arquivo JSON por um banco de dados no Nível 3 reescrevendo só esse arquivo.
 
-A solução é uma camada só para isso: o **repositório**. Ele conhece o arquivo; ninguém mais conhece.
+Um detalhe daquele arquivo que vale reter, porque volta a importar hoje: `proximoId` usa o maior id existente **mais um**, e não `lista.length + 1`. Com `length + 1`, basta excluir um produto do meio para o próximo cadastro reaproveitar um id já usado — e a tela passa a ter dois cards com a mesma chave.
 
-`cafe-cerrado-api/data/repositorio.js`
+### 2.2 O controlador da Aula 13 é o contrato que o front vai consumir
 
-```js
-// Camada de persistência: o único arquivo do projeto que sabe onde e como
-// os produtos são gravados. Trocar JSON por um banco de dados no futuro
-// significa reescrever só este arquivo.
-const fs = require("fs/promises");
-const path = require("path");
+O `controllers/produtosController.js` também **não é reescrito**. Vale a pena reler o que ele já faz, porque cada item desta lista vira uma funcionalidade da tela de hoje:
 
-// path.join(__dirname, ...) monta o caminho absoluto a partir da pasta DESTE
-// arquivo. Um caminho relativo como "./data/produtos.json" dependeria da pasta
-// de onde o "node" foi executado — origem clássica de ENOENT.
-const ARQUIVO = path.join(__dirname, "produtos.json");
+| O que o controlador da Aula 13 já entrega | O que a tela de hoje faz com isso |
+|---|---|
+| `?q=` com `normalizar` (sem acento, sem caixa) | O campo de busca com `debounce` |
+| `?categoria=` validado pela lista branca | O `<select>` de categoria |
+| `?ordenar=preco` / `-preco` / `nome` | O `<select>` de ordenação |
+| Campo `imagem` no objeto salvo | A foto do card |
+| `400` para id que não é inteiro positivo | Mensagem clara em vez de "não encontrado" |
+| `400` com `detalhes: [{ campo, mensagem }]` | A mensagem embaixo do `<input>` certo |
+| `201` com cabeçalho `Location` | A confirmação do cadastro |
+| `204` sem corpo no `DELETE` | O card que some sem erro no console |
 
-async function lerTodos() {
-  try {
-    const texto = await fs.readFile(ARQUIVO, "utf-8");
-    return JSON.parse(texto);
-  } catch (erro) {
-    if (erro.code === "ENOENT") return []; // primeira execução: ainda não existe
-    throw erro; // JSON corrompido ou permissão negada: quem chamou precisa saber
-  }
-}
-
-async function salvarTodos(lista) {
-  // Gravação em duas etapas (ver seção 2.3): escreve num arquivo temporário e
-  // só então substitui o original. O rename é atômico no mesmo disco.
-  const temporario = `${ARQUIVO}.tmp`;
-  await fs.writeFile(temporario, JSON.stringify(lista, null, 2), "utf-8");
-  await fs.rename(temporario, ARQUIVO);
-}
-
-function proximoId(lista) {
-  return lista.length ? Math.max(...lista.map((p) => p.id)) + 1 : 1;
-}
-
-module.exports = { lerTodos, salvarTodos, proximoId, ARQUIVO };
-```
-
-Repare em `proximoId`: ele usa `Math.max` sobre os ids existentes, e **não** `lista.length + 1`. Com `length + 1`, basta excluir um produto do meio para o próximo cadastro reaproveitar um id já usado — e você passa a ter dois produtos com o mesmo id, um bug que só aparece semanas depois.
-
-### 2.2 Controladores `async` usando o repositório
-
-O controlador volta a fazer só o que é dele: interpretar a requisição, validar, decidir o status e responder.
-
-`cafe-cerrado-api/controllers/produtosController.js`
-
-```js
-const repo = require("../data/repositorio");
-
-// Normaliza texto para busca: remove acentos e caixa. "Café" e "cafe" viram
-// a mesma coisa. A forma NFD separa a letra do seu acento; o intervalo
-// Unicode \u0300-\u036f contém justamente os acentos combinantes.
-function normalizar(texto) {
-  return String(texto ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-}
-
-// Validação do servidor: a única que vale (a do navegador é conforto).
-function validar(dados) {
-  const erros = [];
-  if (typeof dados.nome !== "string" || dados.nome.trim().length < 3) {
-    erros.push("nome deve ter ao menos 3 caracteres");
-  }
-  if (typeof dados.preco !== "number" || !Number.isFinite(dados.preco) || dados.preco < 0) {
-    erros.push("preco deve ser um número maior ou igual a zero");
-  }
-  if (dados.categoria !== undefined && typeof dados.categoria !== "string") {
-    erros.push("categoria deve ser texto");
-  }
-  return erros;
-}
-
-exports.listar = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const termo = normalizar(req.query.q);
-  if (!termo) return res.json(produtos);
-
-  const encontrados = produtos.filter(
-    (p) => normalizar(p.nome).includes(termo) || normalizar(p.descricao).includes(termo)
-  );
-  res.json(encontrados);
-};
-
-exports.obter = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const produto = produtos.find((p) => p.id === Number(req.params.id));
-  if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
-  res.json(produto);
-};
-
-exports.criar = async (req, res) => {
-  const erros = validar(req.body ?? {});
-  if (erros.length) {
-    return res.status(400).json({ erro: "Dados inválidos", detalhes: erros });
-  }
-
-  const produtos = await repo.lerTodos();
-  const novo = {
-    id: repo.proximoId(produtos),
-    nome: req.body.nome.trim(),
-    categoria: req.body.categoria?.trim() || "geral",
-    preco: req.body.preco,
-    descricao: req.body.descricao?.trim() || "",
-  };
-
-  produtos.push(novo);
-  await repo.salvarTodos(produtos);
-  res.status(201).location(`/api/produtos/${novo.id}`).json(novo);
-};
-
-exports.atualizar = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const produto = produtos.find((p) => p.id === Number(req.params.id));
-  if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
-
-  const erros = validar(req.body ?? {});
-  if (erros.length) {
-    return res.status(400).json({ erro: "Dados inválidos", detalhes: erros });
-  }
-
-  produto.nome = req.body.nome.trim();
-  produto.categoria = req.body.categoria?.trim() || "geral";
-  produto.preco = req.body.preco;
-  produto.descricao = req.body.descricao?.trim() || "";
-
-  await repo.salvarTodos(produtos);
-  res.json(produto);
-};
-
-exports.remover = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const indice = produtos.findIndex((p) => p.id === Number(req.params.id));
-  if (indice === -1) return res.status(404).json({ erro: "Produto não encontrado" });
-
-  produtos.splice(indice, 1);
-  await repo.salvarTodos(produtos);
-  res.status(204).end(); // 204: deu certo e não há corpo para devolver
-};
-```
-
-Duas coisas merecem atenção.
-
-A primeira: **os controladores são `async` e não têm `try/catch`**. Se o disco encher e o `salvarTodos` rejeitar, o Express 5 captura a rejeição sozinho e encaminha para o seu tratador de erros da Aula 12. No Express 4 isso não acontecia — cada handler `async` precisava terminar com `.catch(next)`, e esquecer disso derrubava o processo. É uma das melhores mudanças da versão 5.
-
-A segunda: `res.status(204).end()`. `204` significa "deu certo, e não há nada para dizer". Mandar `res.status(204).json({ ok: true })` é contraditório, e o navegador do outro lado vai quebrar ao tentar ler um corpo que a especificação diz não existir.
-
-As rotas não mudam nada — continuam como na Aula 14:
+E as rotas continuam as da Aula 14 — leitura pública, escrita protegida:
 
 `cafe-cerrado-api/routes/produtos.js`
 
@@ -302,7 +183,10 @@ router.delete("/:id", exigirLogin, controlador.remover);
 module.exports = router;
 ```
 
-É esse o ganho da arquitetura em camadas: você trocou o miolo da persistência e nem as rotas nem o front-end perceberam.
+> **⚠️ Atenção**
+> Resista à tentação de "simplificar" o controlador para escrever o front mais rápido — trocar `detalhes: [{ campo, mensagem }]` por um array de strings, deixar cair o `?categoria=` ou aceitar qualquer categoria. Cada uma dessas simplificações apaga uma funcionalidade da tela que você vai construir hoje, e o desafio ⭐⭐ desta aula cobra exatamente o formato de erro que você teria jogado fora.
+
+Nada muda no back-end hoje. O trabalho da aula inteira acontece em `public/`.
 
 ### 2.3 Por que gravar em duas etapas
 
@@ -413,109 +297,168 @@ Três decisões desse arquivo valem discussão em sala:
 - **Erro com status.** Uma `Error` comum só carrega a mensagem. A `ErroDeApi` carrega também o `status` e os `detalhes` da validação, e é isso que permite à tela reagir de formas diferentes a `401` (peça login) e a `400` (mostre o que está errado no formulário).
 - **O token vem do módulo de autenticação, não é passado por parâmetro.** Quem chama `api.criar(dados)` não precisa nem saber que existe token. Se amanhã a sessão mudar de mecanismo, muda só o `auth.js`.
 
-### 3.3 O módulo de autenticação, agora como módulo ES
+### 3.3 O módulo de autenticação, agora com ouvintes
 
-O `auth.js` da Aula 14 guardava o token numa variável global. Como agora `api.js` e `app.js` precisam dessa informação, ele vira um módulo ES de verdade, com uma interface pequena e explícita.
+O `auth.js` da Aula 14 já faz o essencial: pede o Client ID a `GET /api/config`, chama `google.accounts.id.initialize`, troca a credencial do Google por uma **sessão própria** em `POST /api/auth/google` e guarda `{ usuario, token }` no `sessionStorage`. Nada disso muda — mudar seria quebrar a autenticação inteira.
 
-A marcação do cabeçalho é a mesma da Aula 14, com um id a mais (`botao-google`) para conseguirmos escondê-la depois do login:
+O que falta é uma interface para o resto da aplicação: hoje `api.js` precisa do token e `app.js` precisa saber quando alguém entra ou sai. A Aula 14 avisava com um `CustomEvent`; vamos trocar o evento por três funções exportadas, que é mais explícito e mais fácil de testar.
+
+A marcação do cabeçalho é a mesma da Aula 14, sem uma linha a mais:
 
 `trecho de public/index.html — dentro de <header>`
 
 ```html
-<div id="botao-google">
-  <div id="g_id_onload"
-       data-client_id="SEU_CLIENT_ID_AQUI"
-       data-callback="aoLogar"></div>
-  <div class="g_id_signin" data-type="standard" data-locale="pt-BR"></div>
+<div class="autenticacao">
+  <div id="area-login">
+    <div id="botao-google"></div>
+  </div>
+
+  <div id="area-usuario" hidden>
+    <img id="foto-usuario" src="" alt="" width="32" height="32" class="avatar">
+    <span id="nome-usuario"></span>
+    <button type="button" id="btn-sair">Sair</button>
+  </div>
+
+  <p id="aviso-login" role="status" aria-live="polite"></p>
 </div>
 
-<div id="area-usuario" hidden>
-  <img id="foto-usuario" alt="" width="32" height="32">
-  <span id="nome-usuario"></span>
-  <button type="button" id="sair">Sair</button>
-</div>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script type="module" src="js/auth.js"></script>
 ```
+
+> **⚠️ Atenção**
+> Repare no que **não** está aqui: nenhum `data-client_id`, nenhum `data-callback`, nenhum `<div id="g_id_onload">`. O Client ID mora no `.env` do servidor e chega ao navegador por `GET /api/config`; o callback é passado por JavaScript em `google.accounts.id.initialize`. Se você encontrar um tutorial mandando colar o Client ID no HTML, saiba que ele funciona — e que você passa a ter a mesma configuração em dois lugares, que um dia vão divergir. Uma fonte só: o `.env`.
 
 `cafe-cerrado-api/public/js/auth.js`
 
 ```js
-// Sessão do usuário no cliente. O token é o ID token assinado pelo Google
-// (Aula 14); quem valida a assinatura é o servidor, sempre.
-let tokenGoogle = null;
-let usuarioLogado = null;
+// Sessão do usuário no cliente.
+// O token guardado aqui é o token de SESSÃO emitido pela nossa API
+// (HMAC, 8 horas, Aula 14) — nunca o ID token do Google, que é usado
+// uma única vez, no login, e descartado em seguida.
+const CHAVE_SESSAO = "cafe-cerrado-sessao";
+
+const areaLogin = document.querySelector("#area-login");
+const areaUsuario = document.querySelector("#area-usuario");
+const nomeUsuario = document.querySelector("#nome-usuario");
+const fotoUsuario = document.querySelector("#foto-usuario");
+const botaoSair = document.querySelector("#btn-sair");
+const aviso = document.querySelector("#aviso-login");
+
 const ouvintes = [];
 
+function lerSessao() {
+  const bruto = sessionStorage.getItem(CHAVE_SESSAO);
+  if (!bruto) return null;
+  try {
+    return JSON.parse(bruto);
+  } catch (erro) {
+    sessionStorage.removeItem(CHAVE_SESSAO);
+    return null;
+  }
+}
+
 export function obterToken() {
-  return tokenGoogle;
+  return lerSessao()?.token ?? null;
 }
 
 export function obterUsuario() {
-  return usuarioLogado;
+  return lerSessao()?.usuario ?? null;
 }
 
 // Quem quiser reagir a login/logout registra uma função aqui. É chamada
 // imediatamente com o estado atual e de novo a cada mudança.
 export function aoMudarSessao(callback) {
   ouvintes.push(callback);
-  callback(usuarioLogado);
+  callback(obterUsuario());
 }
 
 function avisarOuvintes() {
-  for (const ouvinte of ouvintes) ouvinte(usuarioLogado);
+  for (const ouvinte of ouvintes) ouvinte(obterUsuario());
 }
 
 function pintarAreaDoUsuario() {
-  const area = document.querySelector("#area-usuario");
-  const botaoGoogle = document.querySelector("#botao-google");
-  if (usuarioLogado) {
-    document.querySelector("#nome-usuario").textContent = usuarioLogado.nome;
-    document.querySelector("#foto-usuario").src = usuarioLogado.foto;
-    document.querySelector("#foto-usuario").alt = `Foto de ${usuarioLogado.nome}`;
+  const usuario = obterUsuario();
+
+  if (usuario) {
+    nomeUsuario.textContent = usuario.nome;
+    fotoUsuario.src = usuario.foto;
   }
-  area.hidden = !usuarioLogado;
-  botaoGoogle.hidden = Boolean(usuarioLogado);
+
+  areaUsuario.hidden = !usuario;
+  areaLogin.hidden = Boolean(usuario);
 }
 
-// Chamada pelo Google após o login (o nome casa com data-callback no HTML).
-async function aoLogar(resposta) {
-  tokenGoogle = resposta.credential;
-  try {
-    const r = await fetch("/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: tokenGoogle }),
-    });
-    if (!r.ok) throw new Error("O servidor recusou o token");
-    usuarioLogado = await r.json(); // dados verificados PELO SERVIDOR
-  } catch (erro) {
-    tokenGoogle = null;
-    usuarioLogado = null;
-    console.error("Falha no login:", erro);
+// Chamada pelo Google quando o login termina com sucesso.
+async function aoReceberCredencial(resposta) {
+  aviso.textContent = "Entrando…";
+
+  const requisicao = await fetch("/api/auth/google", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    // O back-end da Aula 14 espera o campo credential com o ID token do Google.
+    body: JSON.stringify({ credential: resposta.credential }),
+  });
+
+  if (!requisicao.ok) {
+    const corpo = await requisicao.json().catch(() => ({}));
+    aviso.textContent = corpo.erro ?? "Não foi possível entrar. Tente de novo.";
+    return;
   }
+
+  // A resposta é { usuario, token }: os dois campos vão inteiros para o
+  // sessionStorage, e é o "token" daqui que vai no cabeçalho Authorization.
+  const sessao = await requisicao.json();
+  sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(sessao));
+
+  aviso.textContent = "";
   pintarAreaDoUsuario();
   avisarOuvintes();
 }
 
 export function sair() {
-  tokenGoogle = null;
-  usuarioLogado = null;
-  google.accounts.id.disableAutoSelect(); // impede o login automático na volta
+  sessionStorage.removeItem(CHAVE_SESSAO);
+  window.google?.accounts?.id?.disableAutoSelect(); // impede o login automático na volta
+  aviso.textContent = "Você saiu da sua conta.";
   pintarAreaDoUsuario();
   avisarOuvintes();
 }
 
-// O Google chama a função pelo nome, a partir do atributo data-callback do
-// HTML. Módulos ES têm escopo próprio, então é preciso expor no window.
-window.aoLogar = aoLogar;
+async function iniciar() {
+  const configuracao = await fetch("/api/config").then((r) => r.json());
 
-document.querySelector("#sair").addEventListener("click", sair);
+  google.accounts.id.initialize({
+    client_id: configuracao.googleClientId,
+    callback: aoReceberCredencial,
+  });
+
+  google.accounts.id.renderButton(document.querySelector("#botao-google"), {
+    type: "standard",
+    theme: "outline",
+    size: "large",
+    text: "signin_with",
+    locale: "pt-BR",
+  });
+
+  pintarAreaDoUsuario();   // recarregar a página mantém a sessão
+  avisarOuvintes();
+}
+
+botaoSair.addEventListener("click", sair);
+
+// O script do Google carrega com "async": pode chegar antes ou depois deste módulo.
+if (window.google?.accounts?.id) {
+  iniciar();
+} else {
+  window.onGoogleLibraryLoad = iniciar;
+}
 ```
 
-> **⚠️ Atenção**
-> `window.aoLogar = aoLogar` parece gambiarra, mas é exigência do Google Identity Services: o `data-callback` do HTML é resolvido como propriedade global. Como todo módulo ES tem escopo próprio (nada vaza para `window` automaticamente), sem essa linha o login falha com `Uncaught ReferenceError: aoLogar is not defined`. Alternativa mais limpa, se quiser: chamar `google.accounts.id.initialize({ client_id, callback: aoLogar })` por JavaScript, sem os atributos `data-*`.
+Três decisões que valem discussão:
 
-> **🧠 Você sabia?**
-> O verbo `PUT` está no HTTP desde a especificação de 1996 — mas o `PATCH`, que atualiza só alguns campos, só virou padrão em 2010, na RFC 5789. Motivo: por definição, `PUT` **substitui** o recurso inteiro, e a comunidade passou anos discutindo se enviar apenas dois campos num `PUT` era abuso ou pragmatismo. Nesta disciplina usamos `PUT` com o objeto completo (é o que o formulário manda mesmo), o que mantém a semântica original honesta. Quando você vir uma API respondendo `PATCH /usuarios/9` com `{ "telefone": "..." }`, agora sabe de onde vem a diferença.
+- **`obterToken()` devolve o token da nossa sessão, não a credencial do Google.** O ID token do Google prova quem você é *para o Google*; ele é verificado uma vez, no `POST /api/auth/google`, e depois some. O que viaja em todo `Authorization: Bearer …` é o token HMAC que o seu servidor assinou, e é ele que o `exigirLogin` sabe conferir. Mandar o ID token no lugar dele resulta em `401` em **toda** escrita — é o erro mais caro que dá para cometer nesta unidade.
+- **O estado mora no `sessionStorage`, não em variáveis do módulo.** Guardar em `let usuarioLogado` funciona até a primeira tecla <kbd>F5</kbd>, quando o módulo é recarregado do zero e a pessoa "desloga sozinha". Lendo do `sessionStorage` a cada chamada, recarregar a página mantém a sessão — que é o que a Aula 14 prometeu.
+- **`window.google?.accounts?.id?.` com encadeamento opcional.** O script da GSI é `async`: se alguém clicar em "Sair" antes de ele terminar de baixar, `google` ainda não existe e um `ReferenceError` deixaria a pessoa presa na sessão.
 
 ## 4. Estado, render e os quatro estados da tela
 
@@ -593,11 +536,12 @@ O botão muda de rótulo ("Adicionar" ↔ "Salvar alterações") e um botão "Ca
 
     <div class="campo">
       <label for="categoria">Categoria</label>
-      <input id="categoria" name="categoria" type="text" list="categorias" placeholder="bebidas">
+      <input id="categoria" name="categoria" type="text" list="categorias" placeholder="cafes">
       <datalist id="categorias">
-        <option value="bebidas"></option>
-        <option value="doces"></option>
+        <option value="cafes"></option>
+        <option value="geladas"></option>
         <option value="salgados"></option>
+        <option value="doces"></option>
       </datalist>
     </div>
 
@@ -637,17 +581,22 @@ console.log(form.elements.id.value); // ""      ← o campo oculto, correto
 
 A validação do navegador é conveniência: ela evita uma ida ao servidor e dá resposta instantânea. A validação do servidor é segurança: é a única que um `curl` não consegue pular. As duas coexistem, e nenhuma substitui a outra.
 
-Quando o servidor devolve `400`, ele manda também os `detalhes` — e é responsabilidade da tela mostrá-los, não engoli-los:
+Quando o servidor devolve `400`, ele manda também os `detalhes` — e é responsabilidade da tela mostrá-los, não engoli-los. Lembre do formato do controlador da Aula 13: cada item é um objeto `{ campo, mensagem }`, não uma string solta.
 
 ```js
 try {
   await api.criar(dados);
 } catch (erro) {
-  // erro.detalhes vem do { erro, detalhes } do controlador (seção 2.2)
-  const extra = erro.detalhes?.length ? ` (${erro.detalhes.join("; ")})` : "";
+  // erro.detalhes vem do { erro, detalhes } do controlador (seção 2.2):
+  // [{ campo: "nome", mensagem: "O nome precisa ter ao menos 3 caracteres." }, …]
+  const extra = erro.detalhes?.length
+    ? ` (${erro.detalhes.map((d) => `${d.campo}: ${d.mensagem}`).join("; ")})`
+    : "";
   avisar(`${erro.message}${extra}`, "erro");
 }
 ```
+
+Isso já é melhor que engolir o erro, mas ainda é o mínimo: com o `campo` em mãos, dá para pendurar cada mensagem embaixo do `<input>` culpado. É exatamente o desafio ⭐⭐ desta aula.
 
 ## 6. Excluir sem susto: confirmação e feedback acessível
 
@@ -676,7 +625,7 @@ Vale parar um minuto e olhar o que a turma construiu. Cada clique em "Adicionar"
 2. **JavaScript no cliente (Unidade 2)** — `submit` interceptado com `preventDefault()`, dados lidos do formulário, `fetch` com `async/await`.
 3. **HTTP (Aula 01)** — uma requisição `POST /api/produtos`, com `Content-Type: application/json`, `Authorization: Bearer …` e o corpo serializado.
 4. **Express (Aulas 11–13)** — a cadeia de middlewares: `express.json()` → log → `exigirLogin` → rota → controlador.
-5. **Autenticação (Aula 14)** — `google-auth-library` confere a assinatura do ID token e preenche `req.usuario`.
+5. **Autenticação (Aula 14)** — o `exigirLogin` confere a assinatura HMAC do token de **sessão** e preenche `req.usuario`. (O `google-auth-library` já fez o trabalho dele uma única vez, lá no login.)
 6. **Validação e persistência (hoje)** — o controlador valida, o repositório grava em disco de forma atômica, o servidor responde `201`.
 7. **De volta ao cliente** — `api.criar()` resolve, o estado é atualizado, `renderizar()` redesenha a lista e o `aria-live` anuncia "Produto criado".
 
@@ -696,59 +645,71 @@ Repare que os dois padrões resolvem o mesmo problema com o mesmo remédio: **is
 
 Ao final destes passos, qualquer pessoa logada com uma conta Google consegue cadastrar, editar e excluir produtos do Café Cerrado pela interface, e os dados sobrevivem ao reinício do servidor.
 
-**Passo 1 — crie a camada de persistência.** Crie o arquivo `data/repositorio.js` com o conteúdo da seção 2.1. Confirme que `data/produtos.json` existe e contém um array (`[]` no mínimo).
+**Passo 1 — confirme o back-end, sem escrever nada.** Nada muda no servidor hoje. Só confirme que as peças das Aulas 13 e 14 estão no lugar:
 
 ```bash
 cd cafe-cerrado-api
-ls data/
-# esperado: produtos.json  repositorio.js
+ls data/ controllers/ middlewares/
+# esperado em data/:        produtos.json  repositorio.js
+# esperado em controllers/: produtosController.js  authController.js
+# esperado em middlewares/: registro.js  erros.js  exigirLogin.js
 ```
 
-**Passo 2 — reescreva o controlador.** Substitua `controllers/produtosController.js` pelo conteúdo da seção 2.2. Nenhuma linha de `routes/produtos.js` muda.
-
-**Passo 3 — confirme a API pelo `testes.http`,** antes de tocar no front. Este é o hábito que separa depurar de adivinhar: se a API está certa, todo problema que aparecer depois é do cliente.
+**Passo 2 — confirme a API pelo `testes.http`,** antes de tocar no front. Este é o hábito que separa depurar de adivinhar: se a API está certa, todo problema que aparecer depois é do cliente.
 
 `cafe-cerrado-api/testes.http`
 
 ```http
-### listar tudo
-GET http://localhost:3000/api/produtos
+@base = http://localhost:3000/api
+@token = cole-aqui-o-token-de-sessao
 
-### buscar por termo, sem acento e sem caixa
-GET http://localhost:3000/api/produtos?q=cafe
+### listar tudo
+GET {{base}}/produtos
+
+### buscar por termo, sem acento e sem caixa (acha o "Frappê de Café")
+GET {{base}}/produtos?q=cafe
+
+### filtrar e ordenar (só os doces, do mais barato ao mais caro)
+GET {{base}}/produtos?categoria=doces&ordenar=preco
 
 ### criar sem token — deve responder 401
-POST http://localhost:3000/api/produtos
+POST {{base}}/produtos
 Content-Type: application/json
 
-{ "nome": "Teste sem token", "preco": 1 }
+{ "nome": "Teste sem token", "categoria": "cafes", "preco": 1 }
 
-### criar com token — cole abaixo o valor impresso no console do navegador
-POST http://localhost:3000/api/produtos
+### criar com token — deve responder 201
+POST {{base}}/produtos
 Content-Type: application/json
-Authorization: Bearer COLE_SEU_ID_TOKEN_AQUI
+Authorization: Bearer {{token}}
 
-{ "nome": "Pão de queijo", "categoria": "salgados", "preco": 6.5, "descricao": "Da roça, assado na hora" }
+{ "nome": "Suco de Cupuaçu", "categoria": "geladas", "preco": 10.5, "descricao": "Polpa batida com água gelada e um fio de mel.", "imagem": "img/suco-cupuacu.jpg" }
 
-### corpo inválido — deve responder 400 com detalhes
-POST http://localhost:3000/api/produtos
+### corpo inválido — deve responder 400 com detalhes [{ campo, mensagem }]
+POST {{base}}/produtos
 Content-Type: application/json
-Authorization: Bearer COLE_SEU_ID_TOKEN_AQUI
+Authorization: Bearer {{token}}
 
-{ "nome": "ab", "preco": "muito caro" }
+{ "nome": "ab", "categoria": "sobremesa", "preco": "muito caro" }
 
-### excluir — deve responder 204 sem corpo
-DELETE http://localhost:3000/api/produtos/2
-Authorization: Bearer COLE_SEU_ID_TOKEN_AQUI
+### excluir o produto criado acima — deve responder 204 sem corpo
+DELETE {{base}}/produtos/11
+Authorization: Bearer {{token}}
 ```
 
-Para obter um token válido, acrescente temporariamente `console.log(tokenGoogle)` como primeira linha depois da atribuição em `aoLogar`, faça login no site e copie o valor impresso no console do navegador. Ele é longo (três blocos separados por ponto) e vale cerca de uma hora. Remova o `console.log` antes do commit: token no console é token no print de tela do colega.
+Para preencher o `@token`: faça login no site, abra o console do navegador e rode
 
-**Passo 4 — atualize o `auth.js`** para a versão em módulo ES da seção 3.3.
+```js
+JSON.parse(sessionStorage.getItem("cafe-cerrado-sessao")).token
+```
 
-**Passo 5 — crie a camada de API do cliente:** `public/js/api.js`, com o conteúdo da seção 3.2.
+Copie o valor **sem as aspas** e cole na variável. É o mesmo procedimento da Aula 14 — e é o token de **sessão**, o que o seu servidor assinou, válido por 8 horas. O ID token do Google não serve aqui: o `exigirLogin` confere a assinatura HMAC da sua própria API e responderia `401` para qualquer outra coisa.
 
-**Passo 6 — acrescente a área de gestão ao HTML.** Cole o trecho da seção 5.1 dentro do `<main>` de `public/index.html`, logo acima da lista do cardápio, e confirme que a busca e o container da lista existem com estes ids:
+**Passo 3 — atualize o `auth.js`** para a versão com ouvintes da seção 3.3.
+
+**Passo 4 — crie a camada de API do cliente:** `public/js/api.js`, com o conteúdo da seção 3.2.
+
+**Passo 5 — acrescente a área de gestão ao HTML.** Cole o trecho da seção 5.1 dentro do `<main>` de `public/index.html`, logo acima da lista do cardápio, e confirme que a busca e o container da lista existem com estes ids:
 
 `trecho de public/index.html — dentro de <main>`
 
@@ -778,7 +739,7 @@ Troque a tag do script principal para módulo:
 
 `type="module"` já se comporta como `defer` (o script só roda depois do HTML estar montado), então o atributo `defer` é ignorado ali e não precisa ser escrito.
 
-**Passo 7 — escreva o `app.js` completo.**
+**Passo 6 — escreva o `app.js` completo.**
 
 `cafe-cerrado-api/public/js/app.js`
 
@@ -1009,7 +970,7 @@ aoMudarSessao((usuario) => {
 carregarProdutos();
 ```
 
-**Passo 8 — estilo mínimo para os estados.** Acrescente ao seu CSS (o arquivo que você mantém desde a Aula 04):
+**Passo 7 — estilo mínimo para os estados.** Acrescente ao seu CSS (o arquivo que você mantém desde a Aula 04):
 
 `cafe-cerrado-api/public/css/estilo.css`
 
@@ -1059,7 +1020,7 @@ button:disabled {
 }
 ```
 
-**Passo 9 — teste o ciclo completo.**
+**Passo 8 — teste o ciclo completo.**
 
 ```bash
 npm run dev
@@ -1070,9 +1031,9 @@ npm run dev
 
 1. Sem login, a lista carrega e nenhum botão "Editar"/"Excluir" aparece; a área de gestão está oculta.
 2. Faça login com o Google: seu nome e sua foto aparecem, o formulário aparece e os cards ganham os botões.
-3. Cadastre "Bolo de castanha", `9.90`, categoria `doces`. O feedback anuncia a criação e o card aparece na lista **sem recarregar a página**. Na aba Network do DevTools: `POST /api/produtos` com status `201`.
+3. Cadastre "Torta de Limão", `9.90`, categoria `doces`. O feedback anuncia a criação e o card aparece na lista **sem recarregar a página**. Na aba Network do DevTools: `POST /api/produtos` com status `201`.
 4. Clique em "Editar" nesse card: o formulário se preenche, o botão vira "Salvar alterações" e o "Cancelar" aparece. Mude o preço para `10.50` e salve — `PUT` com `200`, card atualizado.
-5. Digite `bolo` na busca: a requisição só sai 400 ms depois da última tecla (confirme na aba Network) e a lista filtra.
+5. Digite `torta` na busca: a requisição só sai 400 ms depois da última tecla (confirme na aba Network) e a lista filtra — e traz também a "Torta de Frango", porque a busca do servidor casa por trecho do nome.
 6. Exclua o produto e confirme no `confirm()`: `DELETE` com `204`, o card some, o feedback anuncia.
 7. Derrube o servidor com <kbd>Ctrl</kbd>+<kbd>C</kbd>, suba de novo com `npm run dev` e recarregue: os produtos continuam lá. Abra `data/produtos.json` e confirme.
 8. Saia da conta ("Sair"): os botões de escrita somem, a área de gestão se esconde e a listagem continua funcionando.
@@ -1237,19 +1198,19 @@ Ligue o throttling "Slow 3G" na aba Network, digite `cafe` rápido no campo de b
 ### ⭐⭐ Erro 400 no campo certo
 Tags: formularios, acessibilidade, api, fetch
 
-Hoje, quando o servidor recusa o cadastro, todas as mensagens de validação caem no mesmo parágrafo de feedback: "Dados inválidos (nome deve ter ao menos 3 caracteres; preco deve ser um número maior ou igual a zero)". Formulários bons colocam cada mensagem embaixo do campo culpado. Faça o servidor dizer **qual campo** falhou, e a tela mostrar isso no lugar certo, do jeito que um leitor de tela entende.
+O servidor já faz a parte dele: desde a Aula 13, o `400` devolve `detalhes` como lista de objetos `{ "campo": "preco", "mensagem": "…" }`. A tela é que desperdiça essa informação — ela junta tudo num parágrafo só: "Dados inválidos (nome: O nome precisa ter ao menos 3 caracteres.; preco: O preço precisa ser um número maior que zero.)". Formulários bons colocam cada mensagem embaixo do campo culpado. Aproveite o `campo` que já vem pronto e leve cada mensagem ao lugar certo, do jeito que um leitor de tela entende.
 
 **Critérios de pronto**
 
-- O `400` do servidor passa a devolver `detalhes` como lista de objetos `{ "campo": "preco", "mensagem": "..." }`, e o `testes.http` mostra esse formato.
-- Cada campo com erro recebe `aria-invalid="true"` e um `<p>` de mensagem associado por `aria-describedby`; o campo correto recebe o foco.
+- Nenhuma mensagem de validação sobra no parágrafo genérico: toda entrada de `detalhes` é levada ao seu campo, e o `testes.http` mostra o formato `{ campo, mensagem }` que o servidor devolve.
+- Cada campo com erro recebe `aria-invalid="true"` e um `<p>` de mensagem associado por `aria-describedby`; o primeiro campo com erro recebe o foco.
 - Corrigir o campo limpa a mensagem e o `aria-invalid` daquele campo, sem recarregar nada.
 - Um cenário no `testes.http` prova que a resposta continua útil para um cliente que não é o seu front (a mensagem faz sentido sozinha).
 
 <details markdown="1">
 <summary>Pistas</summary>
 
-1. No `validar`, troque `erros.push("texto")` por `erros.push({ campo: "preco", mensagem: "..." })` — o resto do controlador não muda.
+1. Não mexa no controlador: `validarProduto` já empurra `{ campo, mensagem }` para `erros`. Todo o trabalho é do lado do cliente.
 2. No cliente, o `ErroDeApi` já carrega `detalhes`; percorra a lista e use `document.querySelector(`#${detalhe.campo}`)` para achar o input.
 3. `aria-describedby` aceita o id de qualquer elemento; crie os `<p>` de erro uma vez no HTML, vazios e escondidos, em vez de criá-los a cada falha.
 4. Para limpar, o evento `input` de cada campo é suficiente — não espere o próximo envio.
@@ -1286,7 +1247,7 @@ O `confirm()` do navegador congela a aba inteira, não pode ser estilizado, não
 | `TypeError: Cannot read properties of undefined (reading 'value')` na linha do `form.id.value` | `form.id` é o atributo id do formulário, não o campo oculto | Acesse sempre por `form.elements.id.value` (seção 5.2) |
 | `POST` responde `400 Dados inválidos (preco deve ser um número…)` com o campo preenchido | O `value` de um `<input type="number">` é **string**; `"9.9"` não passa em `typeof === "number"` | Converta no cliente: `preco: Number(formEl.elements.preco.value)` |
 | `Uncaught SyntaxError: Cannot use import statement outside a module` | O `app.js` usa `import` mas a tag não declara módulo | Troque para `<script type="module" src="js/app.js"></script>` (e remova o `defer`, que é implícito) |
-| `Uncaught ReferenceError: aoLogar is not defined` ao clicar no botão do Google | Módulos ES têm escopo próprio; o `data-callback` procura a função no `window` | Mantenha `window.aoLogar = aoLogar` no fim do `auth.js` (seção 3.3) |
+| Toda escrita responde `401`, mesmo com o usuário logado | O `Authorization` está levando o ID token do Google em vez do token de sessão | `obterToken()` tem de devolver o campo `token` da resposta de `POST /api/auth/google` (seção 3.3) |
 | `Erro HTTP 401` em toda escrita, mesmo logado | O token não está sendo enviado, ou expirou (o ID token do Google vive cerca de 1 h) | Confira na aba Network se o cabeçalho `Authorization` foi enviado; se sim, faça login de novo |
 | `SyntaxError: Unexpected end of JSON input` ao excluir | O servidor respondeu `204` (sem corpo) e o cliente chamou `resposta.json()` | A checagem `if (resposta.status === 204) return null` no `api.js` resolve |
 | `ENOENT: no such file or directory, open './data/produtos.json'` | Caminho relativo depende da pasta de onde o `node` foi executado | Use `path.join(__dirname, "produtos.json")` no repositório (seção 2.1) |
@@ -1299,7 +1260,7 @@ O `confirm()` do navegador congela a aba inteira, não pode ser estilizado, não
 
 No **projeto autoral**, replique tudo o que foi feito hoje no Café Cerrado:
 
-1. Crie a camada `data/repositorio.js` do seu recurso e migre os controladores para usá-la, com gravação atômica.
+1. Garanta que o seu recurso tem a camada `data/repositorio.js` com gravação atômica e que os controladores só falam com ela.
 2. Crie `public/js/api.js` com a fachada de acesso à sua API (listar, obter, criar, atualizar, remover) e o tratamento centralizado de erro.
 3. Implemente na interface o CRUD completo: formulário único com modo edição, exclusão com confirmação, feedback com `aria-live` e recarga da lista após cada operação.
 4. Trate os quatro estados da tela (carregando, erro, vazio, conteúdo), com mensagens escritas para o **seu** domínio — nada de "carregando produtos" num projeto de quadras esportivas.
@@ -1315,10 +1276,10 @@ No **projeto autoral**, replique tudo o que foi feito hoje no Café Cerrado:
 
 Ao final desta aula, o seu repositório precisa ter:
 
-- [ ] `data/repositorio.js` com `lerTodos`, `salvarTodos` e gravação em duas etapas.
+- [ ] `data/repositorio.js` e o controlador das Aulas 13 e 14 intactos: filtros, ordenação, lista branca de categorias e `detalhes: [{ campo, mensagem }]` continuam de pé.
 - [ ] Controladores `async`, sem `readFile`/`writeFile` espalhados, respondendo `200`, `201`, `204`, `400` e `404` corretamente.
 - [ ] `public/js/api.js` com a fachada e a classe `ErroDeApi` carregando `status` e `detalhes`.
-- [ ] `public/js/auth.js` como módulo ES, exportando `obterToken`, `obterUsuario` e `aoMudarSessao`.
+- [ ] `public/js/auth.js` como módulo ES, exportando `obterToken` (o token de **sessão**), `obterUsuario` e `aoMudarSessao`, com o Client ID vindo de `GET /api/config`.
 - [ ] `public/js/app.js` com estado, `renderizar()` e os quatro estados da tela.
 - [ ] Formulário único com modo edição funcionando (criar e editar no mesmo lugar).
 - [ ] Exclusão com confirmação, feedback anunciado por `aria-live` e foco tratado.

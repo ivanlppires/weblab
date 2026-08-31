@@ -77,12 +77,12 @@ Um script `type="module"` já é adiado por padrão (o `defer` seria redundante)
 O Console não serve só para `console.log`. Vale conhecer o resto do estojo:
 
 ```js
-const produto = { id: 1, nome: "Café coado do cerrado", preco: 6.5 };
+const produto = { id: 1, nome: "Espresso do Cerrado", preco: 6 };
 
 console.log("valor simples:", produto.preco);
-console.table([produto, { id: 2, nome: "Espresso duplo", preco: 9 }]);
+console.table([produto, { id: 2, nome: "Coado da Casa", preco: 8.5 }]);
 console.group("Renderização do cardápio");
-console.log("itens recebidos:", 9);
+console.log("itens recebidos:", 10);
 console.groupEnd();
 console.warn("Imagem sem alt encontrada.");
 console.error("Falha ao montar o card do produto 4.");
@@ -113,8 +113,8 @@ itensNoCarrinho = itensNoCarrinho + 1;   // válido
 Atenção a um detalhe que confunde: `const` congela a **ligação**, não o conteúdo. Um objeto declarado com `const` continua tendo suas propriedades alteráveis:
 
 ```js
-const produto = { nome: "Espresso duplo", preco: 9 };
-produto.preco = 9.5;      // permitido: o objeto é o mesmo, só mudou dentro
+const produto = { nome: "Espresso do Cerrado", preco: 6 };
+produto.preco = 6.5;      // permitido: o objeto é o mesmo, só mudou dentro
 // produto = { nome: "Outro" };  // TypeError: Assignment to constant variable.
 ```
 
@@ -177,7 +177,7 @@ config.itensPorPagina ?? 12;   // 0  — respeita o zero
 config.itensPorPagina || 12;   // 12 — o || trata 0 como "vazio" e atropela o valor
 
 // ?. (encadeamento opcional): interrompe o acesso em vez de estourar erro
-const produto = { nome: "Torta de baru" };
+const produto = { nome: "Torta de Frango" };
 produto.avaliacao?.media;      // undefined, sem erro
 // produto.avaliacao.media;    // TypeError: Cannot read properties of undefined (reading 'media')
 ```
@@ -193,19 +193,19 @@ Objetos merecem uma seção inteira porque tudo na Unidade 2 e na Unidade 3 é o
 
 ```js
 const produto = {
-  id: 1,
-  nome: "Café coado do cerrado",
-  categoria: "cafe",
-  preco: 6.5,
-  descricao: "Grãos torrados na casa e coados na hora, no coador de pano.",
-  imagem: "img/cafe-coado.jpg",
+  id: 2,
+  nome: "Coado da Casa",
+  categoria: "cafes",
+  preco: 8.5,
+  descricao: "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+  imagem: "img/coado.jpg",
 };
 
-produto.nome;              // "Café coado do cerrado" — notação de ponto
-produto["preco"];          // 6.5 — notação de colchetes
+produto.nome;              // "Coado da Casa" — notação de ponto
+produto["preco"];          // 8.5 — notação de colchetes
 
 const campo = "categoria";
-produto[campo];            // "cafe" — colchetes aceitam variável; o ponto não
+produto[campo];            // "cafes" — colchetes aceitam variável; o ponto não
 ```
 
 Use ponto sempre que souber o nome da propriedade ao escrever o código; use colchetes quando o nome vier de uma variável (é o caso do filtro por categoria da próxima aula).
@@ -231,13 +231,13 @@ Guarde isto para a Aula 08: `this` depende de **como** a função é chamada, e 
 ### 3.3 Atalho de propriedade e chave calculada
 
 ```js
-const nome = "Cappuccino cremoso";
+const nome = "Cappuccino Sinop";
 const preco = 12;
 
 const novoProduto = { nome, preco }; // atalho: { nome: nome, preco: preco }
 
 const chave = "categoria";
-const comCategoria = { ...novoProduto, [chave]: "cafe" }; // chave calculada
+const comCategoria = { ...novoProduto, [chave]: "cafes" }; // chave calculada
 ```
 
 ### 3.4 Desestruturação: extrair campos em uma linha
@@ -255,17 +255,17 @@ function resumirProduto({ nome, preco, categoria }) {
   return `${nome} (${categoria}): R$ ${preco.toFixed(2)}`;
 }
 
-resumirProduto(produto); // "Café coado do cerrado (cafe): R$ 6.50"
+resumirProduto(produto); // "Coado da Casa (cafes): R$ 8.50"
 ```
 
 ### 3.5 Espalhamento: copiar sem estragar o original
 
 ```js
-const original = { nome: "Bolo de milho verde", preco: 8 };
+const original = { nome: "Bolo de Milho Verde", preco: 9.5 };
 
-const comDesconto = { ...original, preco: 7.2 }; // cópia com um campo trocado
-original.preco;    // 8 — intacto
-comDesconto.preco; // 7.2
+const comDesconto = { ...original, preco: 8.5 }; // cópia com um campo trocado
+original.preco;    // 9.5 — intacto
+comDesconto.preco; // 8.5
 ```
 
 O espalhamento (`...`) copia **um nível**. Se o objeto tiver outro objeto dentro, a cópia compartilha o interno:
@@ -285,18 +285,18 @@ const copiaProfunda = structuredClone(pedido); // cópia independente de verdade
 ### 3.6 Percorrendo um objeto
 
 ```js
-const rotulos = { cafe: "Cafés", salgado: "Salgados", doce: "Doces", gelado: "Geladas" };
+const rotulos = { cafes: "Cafés", geladas: "Bebidas geladas", salgados: "Salgados", doces: "Doces" };
 
-Object.keys(rotulos);    // ["cafe", "salgado", "doce", "gelado"]
-Object.values(rotulos);  // ["Cafés", "Salgados", "Doces", "Geladas"]
-Object.entries(rotulos); // [["cafe", "Cafés"], ["salgado", "Salgados"], …]
+Object.keys(rotulos);    // ["cafes", "geladas", "salgados", "doces"]
+Object.values(rotulos);  // ["Cafés", "Bebidas geladas", "Salgados", "Doces"]
+Object.entries(rotulos); // [["cafes", "Cafés"], ["geladas", "Bebidas geladas"], …]
 
 for (const [chave, valor] of Object.entries(rotulos)) {
   console.log(`${chave} → ${valor}`);
 }
 ```
 
-Um objeto assim, usado como dicionário de tradução, é o jeito idiomático de mapear o código interno (`"cafe"`) para o texto que a pessoa lê (`"Cafés"`). O Café Cerrado vai usar exatamente isso hoje.
+Um objeto assim, usado como dicionário de tradução, é o jeito idiomático de mapear o código interno (`"cafes"`) para o texto que a pessoa lê (`"Cafés"`). O Café Cerrado vai usar exatamente isso hoje.
 
 ### 3.7 A ponte para a Unidade 3: JSON
 
@@ -343,9 +343,9 @@ Antes de digitar o cardápio em JavaScript, decida o **formato** de um item. Ess
 
 Duas decisões merecem explicação:
 
-**Por que `preco: 6.5` e não `preco: "R$ 6,50"`?** Porque texto não soma, não compara e não ordena. A formatação é responsabilidade da camada de apresentação, na hora de desenhar. Guarde número; formate na saída.
+**Por que `preco: 8.5` e não `preco: "R$ 8,50"`?** Porque texto não soma, não compara e não ordena. A formatação é responsabilidade da camada de apresentação, na hora de desenhar. Guarde número; formate na saída.
 
-**Por que `categoria: "cafe"` e não `categoria: "Cafés"`?** Porque o valor guardado é uma chave técnica: sem acento, minúsculo, estável. O texto visível pode mudar (para "Nossos cafés", para outro idioma) sem quebrar nenhum filtro. É o mesmo raciocínio do `value` de um `<option>` contra o texto que aparece nele.
+**Por que `categoria: "cafes"` e não `categoria: "Cafés"`?** Porque o valor guardado é uma chave técnica: sem acento, minúsculo, estável. O texto visível pode mudar (para "Nossos cafés", para outro idioma) sem quebrar nenhum filtro. É o mesmo raciocínio do `value` de um `<option>` contra o texto que aparece nele.
 
 > **💡 Dica**
 > `id` como número inteiro sequencial resolve por enquanto. Na Unidade 3, quem gera o `id` passa a ser o servidor — e ele nunca reaproveita um número já usado, mesmo depois de uma exclusão. Se você acostumar o código a tratar `id` como um valor opaco (comparar, nunca calcular), a migração não vai doer.
@@ -410,7 +410,7 @@ O navegador lê o HTML e constrói o **DOM**: uma árvore de objetos que represe
 const titulo = document.querySelector("h1");                  // o primeiro que casa
 const lista = document.querySelector("#lista-produtos");       // por id
 const cards = document.querySelectorAll(".card-produto");      // todos → NodeList
-const primeiroCafe = document.querySelector('[data-categoria="cafe"]');
+const primeiroCafe = document.querySelector('[data-categoria="cafes"]');
 ```
 
 `querySelector` aceita qualquer seletor CSS — todo o conhecimento da Unidade 1 vale aqui. Duas armadilhas:
@@ -452,14 +452,14 @@ campo.disabled = true;      // propriedade booleana
 Para guardar dados seus em um elemento, use `data-*`, que chega ao JavaScript pelo `dataset`:
 
 ```html
-<article class="card-produto" data-id="3" data-categoria="cafe">Cappuccino cremoso</article>
+<article class="card-produto" data-id="3" data-categoria="cafes">Cappuccino Sinop</article>
 ```
 
 ```js
 const card = document.querySelector(".card-produto");
 card.dataset.id;         // "3" — sempre string!
 Number(card.dataset.id); // 3
-card.dataset.categoria;  // "cafe"
+card.dataset.categoria;  // "cafes"
 card.dataset.emEstoque = "sim"; // vira data-em-estoque="sim" no HTML
 ```
 
@@ -483,10 +483,10 @@ card.classList.replace("antigo", "novo");
 ```js
 const item = document.createElement("li");
 item.className = "item-cardapio";
-item.textContent = "Pão de queijo (3 un.)";
+item.textContent = "Pão de Queijo Mineiro";
 
 const outroItem = document.createElement("li");
-outroItem.textContent = "Coxinha de frango caipira";
+outroItem.textContent = "Torta de Frango";
 
 const lista = document.querySelector("#lista-produtos");
 lista.appendChild(item);       // insere no fim
@@ -521,7 +521,7 @@ Montar um card inteiro com dez `createElement` funciona, mas espalha marcação 
 ```js
 const molde = document.querySelector("#template-produto");
 const copia = molde.content.cloneNode(true); // true = clona com os filhos
-copia.querySelector('[data-campo="nome"]').textContent = "Espresso duplo";
+copia.querySelector('[data-campo="nome"]').textContent = "Espresso do Cerrado";
 document.querySelector("#lista-produtos").appendChild(copia);
 ```
 
@@ -541,7 +541,7 @@ for (const produto of produtos) {
 lista.appendChild(fragmento);  // uma única alteração no DOM
 ```
 
-Para nove produtos, a diferença é imperceptível. Para quinhentos, aparece — principalmente no celular. Adotar o hábito agora não custa nada.
+Para dez produtos, a diferença é imperceptível. Para quinhentos, aparece — principalmente no celular. Adotar o hábito agora não custa nada.
 
 ### 6.8 Formatando valores para a tela
 
@@ -700,8 +700,12 @@ const els = {
 
 // 3. RENDERIZAÇÃO — desenha a tela a partir do estado
 function renderizar() {
+  const visiveis = categoriaAtiva
+    ? produtos.filter((produto) => produto.categoria === categoriaAtiva)
+    : produtos;
+
   els.lista.replaceChildren();
-  for (const produto of produtos) {
+  for (const produto of visiveis) {
     els.lista.appendChild(criarCard(produto));
   }
 }
@@ -805,83 +809,91 @@ No topo do `js/app.js`, antes de tudo:
 const produtos = [
   {
     id: 1,
-    nome: "Café coado do cerrado",
-    categoria: "cafe",
-    preco: 6.5,
-    descricao: "Grãos torrados na casa, coados na hora em coador de pano.",
-    imagem: "img/cafe-coado.jpg",
+    nome: "Espresso do Cerrado",
+    categoria: "cafes",
+    preco: 6,
+    descricao: "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    imagem: "img/espresso.jpg",
   },
   {
     id: 2,
-    nome: "Espresso duplo",
-    categoria: "cafe",
-    preco: 9,
-    descricao: "Dose dupla, corpo intenso e crema espessa.",
-    imagem: "img/espresso-duplo.jpg",
+    nome: "Coado da Casa",
+    categoria: "cafes",
+    preco: 8.5,
+    descricao: "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    imagem: "img/coado.jpg",
   },
   {
     id: 3,
-    nome: "Cappuccino cremoso",
-    categoria: "cafe",
+    nome: "Cappuccino Sinop",
+    categoria: "cafes",
     preco: 12,
-    descricao: "Espresso, leite vaporizado e canela do cerrado por cima.",
+    descricao: "Espresso duplo, leite vaporizado e canela do Cerrado por cima.",
     imagem: "img/cappuccino.jpg",
   },
   {
     id: 4,
-    nome: "Pão de queijo (3 un.)",
-    categoria: "salgado",
-    preco: 10,
-    descricao: "Queijo curado de Sinop, assado de hora em hora.",
-    imagem: "img/pao-de-queijo.jpg",
+    nome: "Latte de Baunilha",
+    categoria: "cafes",
+    preco: 14,
+    descricao: "Espresso, leite vaporizado e calda de baunilha feita na casa.",
+    imagem: "img/latte.jpg",
   },
   {
     id: 5,
-    nome: "Coxinha de frango caipira",
-    categoria: "salgado",
-    preco: 11.5,
-    descricao: "Massa de mandioca e recheio desfiado com requeijão.",
-    imagem: "img/coxinha.jpg",
+    nome: "Cold Brew da Chapada",
+    categoria: "geladas",
+    preco: 15,
+    descricao: "Extração a frio por dezoito horas, servida com gelo e rodela de laranja.",
+    imagem: "img/cold-brew.jpg",
   },
   {
     id: 6,
-    nome: "Bolo de milho verde",
-    categoria: "doce",
-    preco: 8,
-    descricao: "Milho verde fresco, fubá e um toque de erva-doce.",
-    imagem: "img/bolo-de-milho.jpg",
+    nome: "Frappê de Café",
+    categoria: "geladas",
+    preco: 16,
+    descricao: "Espresso batido com gelo, leite e chantili. Também sai sem lactose.",
+    imagem: "img/frappe.jpg",
   },
   {
     id: 7,
-    nome: "Torta de baru",
-    categoria: "doce",
-    preco: 13.5,
-    descricao: "Castanha de baru do cerrado sobre creme de leite fresco.",
-    imagem: "img/torta-de-baru.jpg",
+    nome: "Pão de Queijo Mineiro",
+    categoria: "salgados",
+    preco: 7,
+    descricao: "Porção com quatro unidades de polvilho azedo com queijo canastra.",
+    imagem: "img/pao-de-queijo.jpg",
   },
   {
     id: 8,
-    nome: "Limonada suíça",
-    categoria: "gelado",
-    preco: 12,
-    descricao: "Limão batido com casca, gelo e leite condensado.",
-    imagem: "img/limonada.jpg",
+    nome: "Torta de Frango",
+    categoria: "salgados",
+    preco: 13,
+    descricao: "Fatia generosa com massa amanteigada e recheio de frango desfiado.",
+    imagem: "img/torta-de-frango.jpg",
   },
   {
     id: 9,
-    nome: "Chá gelado de hibisco",
-    categoria: "gelado",
-    preco: 10,
-    descricao: "Infusão de hibisco com hortelã, servida bem gelada.",
-    imagem: "img/cha-gelado.jpg",
+    nome: "Bolo de Milho Verde",
+    categoria: "doces",
+    preco: 9.5,
+    descricao: "Fatia de bolo cremoso feito com milho da feira do produtor.",
+    imagem: "img/bolo-de-milho.jpg",
+  },
+  {
+    id: 10,
+    nome: "Brownie de Castanha",
+    categoria: "doces",
+    preco: 11,
+    descricao: "Chocolate meio amargo com castanha-do-pará. Sem glúten.",
+    imagem: "img/brownie.jpg",
   },
 ];
 
 const ROTULOS_CATEGORIA = {
-  cafe: "Cafés",
-  salgado: "Salgados",
-  doce: "Doces",
-  gelado: "Geladas",
+  cafes: "Cafés",
+  geladas: "Bebidas geladas",
+  salgados: "Salgados",
+  doces: "Doces",
 };
 
 const formatadorMoeda = new Intl.NumberFormat("pt-BR", {
@@ -894,17 +906,28 @@ function formatarPreco(valor) {
 }
 ```
 
-Coloque as nove imagens em `img/`. Se ainda não tem as fotos, use qualquer arquivo `.jpg` com o nome certo — o importante hoje é a estrutura. Nomes de arquivo sempre em minúsculas, sem acento e sem espaço: servidores Linux (como o do GitHub Pages) diferenciam maiúsculas de minúsculas, e `Café.JPG` funciona no seu Windows e quebra no ar.
+São **exatamente** os dez produtos que você escreveu à mão nas Aulas 03 e 04, com os mesmos nomes, os mesmos preços e as mesmas quatro categorias — agora como dados, não como marcação. Este array é o contrato do projeto: ele vira `js/dados.js` na Aula 09, `data/produtos.json` na Aula 10 e as linhas da sua API na Unidade 3. Não invente produto novo aqui.
+
+Coloque as dez imagens em `img/`. Se ainda não tem as fotos, use qualquer arquivo `.jpg` com o nome certo — o importante hoje é a estrutura. Nomes de arquivo sempre em minúsculas, sem acento e sem espaço: servidores Linux (como o do GitHub Pages) diferenciam maiúsculas de minúsculas, e `Café.JPG` funciona no seu Windows e quebra no ar.
 
 ### Passo 3 — o cardápio renderizado a partir dos dados
 
-Em `cardapio.html`, substitua os cards escritos à mão por um contêiner vazio e o molde:
+Em `cardapio.html`, substitua os quatro grids escritos à mão por **um** contêiner vazio e o molde. As quatro `<section>` por categoria deixam de existir como marcação — mas as âncoras `#cafes`, `#geladas`, `#salgados` e `#doces` **não podem sumir**: os botões "Ver" dos destaques de `index.html` (Aula 04) e a `<nav>` de atalhos apontam para elas. A solução é preservá-las como alvos de rolagem dentro da própria `<nav>` de atalhos, que agora vira o filtro visual do cardápio:
 
 `cardapio.html` (trecho do `<main>`)
 
 ```html
 <section class="container py-5" aria-labelledby="titulo-cardapio">
   <h2 id="titulo-cardapio" class="mb-4">Nosso cardápio</h2>
+
+  <nav aria-label="Seções do cardápio" class="mb-4">
+    <ul class="nav gap-2">
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="cafes" href="#cafes">Cafés</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="geladas" href="#geladas">Bebidas geladas</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="salgados" href="#salgados">Salgados</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="doces" href="#doces">Doces</a></li>
+    </ul>
+  </nav>
 
   <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="lista-produtos"></div>
 
@@ -985,7 +1008,10 @@ function iniciarCardapio() {
 }
 ```
 
-O ouvinte de clique já usa delegação: um só, no contêiner, atendendo os nove cards e os que vierem. Por enquanto ele só imprime no Console — na Aula 08 esse mesmo ouvinte vai jogar o produto no carrinho.
+O ouvinte de clique já usa delegação: um só, no contêiner, atendendo os dez cards e os que vierem. Por enquanto ele só imprime no Console — na Aula 08 esse mesmo ouvinte vai jogar o produto no carrinho.
+
+> **⚠️ Cuidado**
+> Os quatro `id` que sobraram na `<nav>` (`cafes`, `geladas`, `salgados`, `doces`) existem para que os links antigos continuem funcionando: `cardapio.html#geladas` ainda leva alguém à página certa, agora rolando até a barra de atalhos em vez de até uma seção. Na Aula 08, quando o filtro por categoria entrar, esses mesmos links passam a acionar o filtro — e aí eles voltam a fazer o que prometem. Não apague nem renomeie esses `id`: eles são referenciados por `index.html` e pela `<nav>` do cabeçalho.
 
 ### Passo 4 — botão de tema claro/escuro com memória
 
@@ -994,7 +1020,7 @@ O Bootstrap 5.3 troca de tema pelo atributo `data-bs-theme` na tag `<html>`. Um 
 `index.html`, `cardapio.html` e `contato.html` (trecho da navbar)
 
 ```html
-<button class="btn btn-outline-secondary btn-sm ms-lg-3" type="button" id="btn-tema" aria-pressed="false">
+<button class="btn btn-cafe-vazado btn-sm ms-lg-3" type="button" id="btn-tema" aria-pressed="false">
   Tema escuro
 </button>
 ```
@@ -1037,39 +1063,46 @@ Três decisões que valem comentário. O estado inicial respeita a preferência 
 
 ### Passo 5 — validação acessível do formulário de contato
 
-Ajuste o formulário em `contato.html`: `novalidate` no `<form>`, um parágrafo de erro por campo e a região de status.
+O formulário de `contato.html` **não muda de estrutura**: continuam ali os dois `<fieldset>` com `<legend>`, o `<select>` de assunto com `<optgroup>`, telefone, CEP, pessoas, data, horário, os rádios de canal, o checkbox de novidades e o de consentimento — treze campos, os mesmos das Aulas 03, 04 e 06, que a Avaliação 1 cobra. Três acréscimos, e só:
 
-`contato.html` (trecho do `<main>`)
+1. `id="form-contato"` e `novalidate` no `<form>`;
+2. um `<p class="invalid-feedback d-block m-0" id="erro-…">` logo abaixo de cada campo que você vai validar, com o `id` do campo no nome (`erro-nome`, `erro-email`, `erro-mensagem`) e um `aria-describedby` no campo apontando para ele;
+3. nada na região viva: o `<p id="status-envio">` da Aula 06 continua exatamente como está, e é ele que o JavaScript vai usar.
+
+`contato.html` (os três campos que ganham parágrafo de erro; o restante do formulário fica intacto)
 
 ```html
-<form id="form-contato" class="row g-3" novalidate>
-  <div class="col-md-6">
-    <label class="form-label" for="nome">Nome</label>
-    <input class="form-control" type="text" id="nome" name="nome"
-           required minlength="3" autocomplete="name" aria-describedby="erro-nome">
-    <p class="invalid-feedback d-block m-0" id="erro-nome"></p>
-  </div>
+<div class="mb-3">
+  <label class="form-label" for="nome">Nome completo <span class="obrigatorio">*</span></label>
+  <input class="form-control" type="text" id="nome" name="nome"
+         required minlength="3" maxlength="80" autocomplete="name"
+         aria-describedby="erro-nome">
+  <p class="invalid-feedback d-block m-0" id="erro-nome"></p>
+</div>
 
-  <div class="col-md-6">
-    <label class="form-label" for="email">E-mail</label>
-    <input class="form-control" type="email" id="email" name="email"
-           required autocomplete="email" aria-describedby="erro-email">
-    <p class="invalid-feedback d-block m-0" id="erro-email"></p>
-  </div>
+<div class="mb-3">
+  <label class="form-label" for="email">E-mail <span class="obrigatorio">*</span></label>
+  <input class="form-control" type="email" id="email" name="email"
+         required autocomplete="email" aria-describedby="erro-email">
+  <p class="invalid-feedback d-block m-0" id="erro-email"></p>
+</div>
 
-  <div class="col-12">
-    <label class="form-label" for="mensagem">Mensagem</label>
-    <textarea class="form-control" id="mensagem" name="mensagem" rows="4"
-              required minlength="10" aria-describedby="erro-mensagem"></textarea>
-    <p class="invalid-feedback d-block m-0" id="erro-mensagem"></p>
-  </div>
+<div class="mb-3">
+  <label class="form-label" for="mensagem">Mensagem <span class="obrigatorio">*</span></label>
+  <textarea class="form-control" id="mensagem" name="mensagem" rows="5"
+            required minlength="10" maxlength="500"
+            aria-describedby="erro-mensagem"></textarea>
+  <p class="invalid-feedback d-block m-0" id="erro-mensagem"></p>
+</div>
+```
 
-  <div class="col-12">
-    <button class="btn btn-primary" type="submit">Enviar mensagem</button>
-  </div>
+E, no fim do `<form>`, o botão e a região viva que já existiam desde a Aula 06 — só confira que continuam lá:
 
-  <p class="col-12 m-0" id="status-form" role="status" aria-live="polite"></p>
-</form>
+```html
+<button class="btn btn-cafe btn-enviar" type="submit" data-estado="pronto">Enviar mensagem</button>
+<button class="btn btn-cafe-vazado" type="reset">Limpar formulário</button>
+
+<p class="status-envio" id="status-envio" aria-live="polite" aria-atomic="true"></p>
 ```
 
 `js/app.js`
@@ -1099,7 +1132,7 @@ function iniciarContato() {
   if (!form) return;
 
   const campos = [form.elements.nome, form.elements.email, form.elements.mensagem];
-  const status = document.querySelector("#status-form");
+  const status = document.querySelector("#status-envio");
 
   for (const campo of campos) {
     // valida ao sair do campo e, depois do primeiro erro, a cada tecla
@@ -1116,13 +1149,13 @@ function iniciarContato() {
 
     if (invalidos.length > 0) {
       status.textContent = `Corrija ${invalidos.length} campo(s) antes de enviar.`;
-      status.className = "col-12 m-0 text-danger";
+      status.className = "status-envio text-danger";
       invalidos[0].focus(); // leva a pessoa direto ao primeiro problema
       return;
     }
 
     status.textContent = `Obrigado, ${form.elements.nome.value.trim()}! Sua mensagem foi registrada.`;
-    status.className = "col-12 m-0 text-success";
+    status.className = "status-envio text-success";
     form.reset();
     for (const campo of campos) {
       campo.removeAttribute("aria-invalid");
@@ -1139,9 +1172,9 @@ Ainda não enviamos nada para lugar nenhum — a mensagem só é registrada na t
 
 ### Como testar
 
-1. Abra `cardapio.html` com o Live Server. Devem aparecer nove cards em três colunas no desktop, uma no celular.
+1. Abra `cardapio.html` com o Live Server. Devem aparecer dez cards em três colunas no desktop, uma no celular.
 2. No DevTools, aba Elements, expanda `#lista-produtos`: os `<div class="col">` estão lá, mas não estão no arquivo `.html`. Foi o JavaScript que os criou.
-3. Cole `document.querySelectorAll(".card-produto").length` no Console. Deve devolver `9`.
+3. Cole `document.querySelectorAll(".card-produto").length` no Console. Deve devolver `10`.
 4. Clique em um card e confira a linha impressa no Console, com nome e preço formatado em reais.
 5. Clique no botão de tema. A página inteira troca de cor; recarregue (<kbd>F5</kbd>) e a escolha permanece. No DevTools, Application → Local Storage, veja a chave `cafe-cerrado:tema`.
 6. Em `contato.html`, clique em "Enviar mensagem" com tudo vazio: três mensagens aparecem, o foco vai para o campo Nome e a região de status anuncia "Corrija 3 campo(s) antes de enviar".
@@ -1163,8 +1196,8 @@ git push
 **A1.** Preveja a saída de cada linha **sem rodar**, depois confira no Console:
 
 ```js
-const p = { nome: "Espresso duplo", preco: 9, extras: { canela: false } };
-const copia = { ...p, preco: 10 };
+const p = { nome: "Espresso do Cerrado", preco: 6, extras: { canela: false } };
+const copia = { ...p, preco: 7 };
 copia.extras.canela = true;
 
 console.log(p.preco);
@@ -1189,19 +1222,19 @@ function rotuloDaCategoria(chave) {
   return ROTULOS_CATEGORIA[chave];
 }
 
-rotuloDaCategoria("doce");     // deve devolver "Doces"
-rotuloDaCategoria("bebida");   // deve devolver "Outros"
+rotuloDaCategoria("doces");    // deve devolver "Doces"
+rotuloDaCategoria("bebidas");  // deve devolver "Outros"
 ```
 
 **A5.** Verdadeiro ou falso, com justificativa de uma linha cada: (a) `card.dataset.id === 3` é `true` quando o HTML tem `data-id="3"`; (b) `textContent` é mais seguro que `innerHTML` para exibir um nome digitado por alguém; (c) `querySelectorAll` devolve um array; (d) com `novalidate` no `<form>`, `campo.validity.valueMissing` para de funcionar.
 
-**A6.** Em três linhas, explique por que o array `produtos` guarda `preco: 6.5` e `categoria: "cafe"` em vez de `preco: "R$ 6,50"` e `categoria: "Cafés"`.
+**A6.** Em três linhas, explique por que o array `produtos` guarda `preco: 8.5` e `categoria: "cafes"` em vez de `preco: "R$ 8,50"` e `categoria: "Cafés"`.
 
 ### Nível B — Aplicação
 
-**B1.** Contador de itens no cardápio. Acima da grade de cards, mostre em um `<p id="contador-cardapio">` a frase "9 itens no cardápio", calculada a partir do array e atualizada dentro de `renderizarProdutos`.
+**B1.** Contador de itens no cardápio. Acima da grade de cards, mostre em um `<p id="contador-cardapio">` a frase "10 itens no cardápio", calculada a partir do array e atualizada dentro de `renderizarProdutos`.
 
-Resultado esperado: apagar dois objetos do array e recarregar faz o texto virar "7 itens no cardápio", sem editar o HTML.
+Resultado esperado: apagar dois objetos do array e recarregar faz o texto virar "8 itens no cardápio", sem editar o HTML.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1241,7 +1274,7 @@ O evento é `input`. O número que falta é `campo.minLength - campo.value.lengt
 
 **B5.** Ordem alfabética por acento correto. Renderize o cardápio em ordem alfabética de nome usando `Intl.Collator("pt-BR")` em vez de comparar strings direto, e escreva no README uma frase explicando a diferença.
 
-Resultado esperado: nenhum nome acentuado fica fora de lugar; a lista começa por "Bolo de milho verde" e termina em "Torta de baru".
+Resultado esperado: nenhum nome acentuado fica fora de lugar; a lista começa por "Bolo de Milho Verde" e termina em "Torta de Frango".
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1293,7 +1326,7 @@ renderizarProdutos(produtos);
 
 - Um arquivo `DEPURACAO.md` no repositório lista os três defeitos, cada um com: a mensagem de erro exata que ele produz, o recurso do DevTools que o revelou e a correção aplicada.
 - Pelo menos um dos defeitos foi localizado com um ponto de parada (aba Sources ou `debugger;`), com print da tela pausada mostrando o valor da variável no painel Scope.
-- Depois das três correções, os nove cards aparecem e o Console fica limpo.
+- Depois das três correções, os dez cards aparecem e o Console fica limpo.
 - Uma frase final explica por que `cloneNode()` sem argumento devolve um nó vazio.
 
 <details markdown="1">
@@ -1302,7 +1335,7 @@ renderizarProdutos(produtos);
 1. A primeira mensagem já entrega o primeiro defeito: se `molde` é `null`, o `querySelector` não achou nada. Compare caractere por caractere o seletor com o `id` no HTML — traço e sublinhado não são a mesma coisa.
 2. `cloneNode()` aceita um argumento booleano. Leia na MDN o que muda entre `cloneNode()` e `cloneNode(true)`.
 3. Coloque `debugger;` na primeira linha de `criarCardProduto` e inspecione `copia` no painel Scope: quantos filhos ele tem?
-4. O terceiro defeito não gera erro — gera texto errado na tela. Compare o preço exibido do "Espresso duplo" com o do "Café coado do cerrado" e pense no que `"R$ " + 9` produz.
+4. O terceiro defeito não gera erro — gera texto errado na tela. Compare o preço exibido do "Coado da Casa" com o do "Espresso do Cerrado" e pense no que `"R$ " + 6` produz.
 </details>
 
 ### ⭐⭐ O cardápio que virou porta de entrada
@@ -1354,7 +1387,7 @@ Quem entra no Café Cerrado toda semana sempre pede as mesmas duas coisas. Dê a
 
 **Critérios de pronto**
 
-- Cada card tem um botão de favoritar com `aria-pressed` refletindo o estado, rótulo acessível que inclui o nome do produto (por exemplo, "Favoritar Espresso duplo") e foco visível.
+- Cada card tem um botão de favoritar com `aria-pressed` refletindo o estado, rótulo acessível que inclui o nome do produto (por exemplo, "Favoritar Espresso do Cerrado") e foco visível.
 - Os favoritos são guardados em `localStorage` sob uma única chave, como array de `id`, e sobrevivem a recarregar a página e fechar o navegador.
 - Existe um botão "Mostrar só favoritos" que alterna a lista renderizada, com contagem ("3 favoritos") atualizada, e um estado vazio próprio ("Você ainda não marcou favoritos").
 - Toda a interação funciona sem mouse: <kbd>Tab</kbd> até o botão, <kbd>Enter</kbd> ou <kbd>Espaço</kbd> para marcar, e a mudança é anunciada em uma região `aria-live`.
@@ -1367,7 +1400,7 @@ Quem entra no Café Cerrado toda semana sempre pede as mesmas duas coisas. Dê a
 1. `localStorage` só guarda strings: `JSON.stringify(favoritos)` para gravar, `JSON.parse(localStorage.getItem(chave) ?? "[]")` para ler.
 2. Um `Set` é mais confortável que um array para "contém / adiciona / remove"; converta com `[...conjunto]` na hora de salvar.
 3. Um `<button>` de verdade já responde a <kbd>Enter</kbd> e <kbd>Espaço</kbd> sem nenhum código. Se você usar `<div>` ou `<span>`, vai ter que reimplementar teclado, foco e papel — não faça isso.
-4. Para o anúncio, uma única região `aria-live="polite"` na página, com texto trocado a cada ação ("Espresso duplo adicionado aos favoritos"), é melhor do que uma região por card.
+4. Para o anúncio, uma única região `aria-live="polite"` na página, com texto trocado a cada ação ("Espresso do Cerrado adicionado aos favoritos"), é melhor do que uma região por card.
 5. Ao re-renderizar depois de favoritar, o foco se perde. Guarde o `id` do card afetado e devolva o foco ao botão correspondente depois do `render` — esse detalhe é o que separa um protótipo de um componente utilizável.
 </details>
 

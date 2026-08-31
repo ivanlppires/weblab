@@ -134,7 +134,7 @@ function buscarProdutosComCallback(aoTerminar) {
       aoTerminar(new Error("Servidor do cardápio fora do ar"), null);
       return;
     }
-    aoTerminar(null, ["Café coado do Cerrado", "Cappuccino cremoso"]);
+    aoTerminar(null, ["Espresso do Cerrado", "Coado da Casa"]);
   }, 800);
 }
 
@@ -207,8 +207,8 @@ O construtor recebe uma função chamada **executor**, que roda imediatamente e 
 ```js
 // Exemplo: uma fonte de dados que demora 1,5 s e pode falhar.
 const catalogo = [
-  { id: 1, nome: "Café coado do Cerrado", preco: 7.5 },
-  { id: 2, nome: "Cappuccino cremoso", preco: 12 },
+  { id: 1, nome: "Espresso do Cerrado", preco: 6 },
+  { id: 2, nome: "Coado da Casa", preco: 8.5 },
 ];
 
 function buscarProduto(id) {
@@ -543,7 +543,7 @@ async function buscarComProtecao(termo) {
   if (minhaVez !== requisicaoAtual) {
     return;   // chegou uma resposta mais nova depois desta: descarta
   }
-  renderizarCards(resultado);
+  renderizarProdutos(resultado);
 }
 ```
 
@@ -622,7 +622,7 @@ function comLimiteDeTempo(promessa, milissegundos) {
 async function carregarComLimite() {
   try {
     const produtos = await comLimiteDeTempo(buscarProdutos(), 3000);
-    renderizarCards(produtos);
+    renderizarProdutos(produtos);
   } catch (erro) {
     console.error(erro.message);
   }
@@ -640,7 +640,7 @@ Objetivo do dia: o array `produtos` sai de dentro do `js/app.js` e passa a vir d
 
 ### Passo 1 — Criar `js/dados.js`, a fonte que finge ser um servidor
 
-Crie o arquivo `js/dados.js` no repositório `cafe-cerrado`:
+Crie o arquivo `js/dados.js` no repositório `cafe-cerrado`. O conteúdo é **exatamente** o array `produtos` que você escreveu na Aula 07 — os mesmos dez itens, os mesmos ids, os mesmos preços, as mesmas quatro categorias. Ele só muda de casa: sai do `js/app.js` e passa a ser entregue por funções que devolvem Promises.
 
 ```js
 // cafe-cerrado/js/dados.js
@@ -651,58 +651,93 @@ Crie o arquivo `js/dados.js` no repositório `cafe-cerrado`:
 const CATALOGO = [
   {
     id: 1,
-    nome: "Café coado do Cerrado",
+    nome: "Espresso do Cerrado",
     categoria: "cafes",
-    preco: 7.5,
-    descricao: "Grãos torrados na semana, coados no pano, servidos em xícara de 200 ml.",
-    imagem: "img/cafe-coado.jpg",
+    preco: 6,
+    descricao: "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    imagem: "img/espresso.jpg",
   },
   {
     id: 2,
-    nome: "Cappuccino cremoso",
+    nome: "Coado da Casa",
     categoria: "cafes",
-    preco: 12,
-    descricao: "Espresso, leite vaporizado e canela do cerrado por cima.",
-    imagem: "img/cappuccino.jpg",
+    preco: 8.5,
+    descricao: "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    imagem: "img/coado.jpg",
   },
   {
     id: 3,
-    nome: "Açaí na tigela",
-    categoria: "doces",
-    preco: 18.5,
-    descricao: "Açaí batido na hora com banana, granola e castanha-do-pará.",
-    imagem: "img/acai.jpg",
+    nome: "Cappuccino Sinop",
+    categoria: "cafes",
+    preco: 12,
+    descricao: "Espresso duplo, leite vaporizado e canela do Cerrado por cima.",
+    imagem: "img/cappuccino.jpg",
   },
   {
     id: 4,
-    nome: "Bolo de castanha-do-pará",
-    categoria: "doces",
-    preco: 9,
-    descricao: "Fatia generosa de bolo caseiro com castanha da região.",
-    imagem: "img/bolo-castanha.jpg",
+    nome: "Latte de Baunilha",
+    categoria: "cafes",
+    preco: 14,
+    descricao: "Espresso, leite vaporizado e calda de baunilha feita na casa.",
+    imagem: "img/latte.jpg",
   },
   {
     id: 5,
-    nome: "Pão de queijo (3 unidades)",
-    categoria: "salgados",
-    preco: 8,
-    descricao: "Assados de hora em hora, servidos quentes.",
-    imagem: "img/pao-de-queijo.jpg",
+    nome: "Cold Brew da Chapada",
+    categoria: "geladas",
+    preco: 15,
+    descricao: "Extração a frio por dezoito horas, servida com gelo e rodela de laranja.",
+    imagem: "img/cold-brew.jpg",
   },
   {
     id: 6,
-    nome: "Empada de frango caipira",
+    nome: "Frappê de Café",
+    categoria: "geladas",
+    preco: 16,
+    descricao: "Espresso batido com gelo, leite e chantili. Também sai sem lactose.",
+    imagem: "img/frappe.jpg",
+  },
+  {
+    id: 7,
+    nome: "Pão de Queijo Mineiro",
     categoria: "salgados",
+    preco: 7,
+    descricao: "Porção com quatro unidades de polvilho azedo com queijo canastra.",
+    imagem: "img/pao-de-queijo.jpg",
+  },
+  {
+    id: 8,
+    nome: "Torta de Frango",
+    categoria: "salgados",
+    preco: 13,
+    descricao: "Fatia generosa com massa amanteigada e recheio de frango desfiado.",
+    imagem: "img/torta-de-frango.jpg",
+  },
+  {
+    id: 9,
+    nome: "Bolo de Milho Verde",
+    categoria: "doces",
+    preco: 9.5,
+    descricao: "Fatia de bolo cremoso feito com milho da feira do produtor.",
+    imagem: "img/bolo-de-milho.jpg",
+  },
+  {
+    id: 10,
+    nome: "Brownie de Castanha",
+    categoria: "doces",
     preco: 11,
-    descricao: "Massa amanteigada com recheio de frango desfiado e requeijão.",
-    imagem: "img/empada.jpg",
+    descricao: "Chocolate meio amargo com castanha-do-pará. Sem glúten.",
+    imagem: "img/brownie.jpg",
   },
 ];
 
+// As mesmas quatro categorias das Aulas 03 a 08, agora com id e rótulo separados:
+// o id é a chave técnica (o que está em produto.categoria), o nome é o texto da tela.
 const CATEGORIAS = [
   { id: "cafes", nome: "Cafés" },
-  { id: "doces", nome: "Doces" },
+  { id: "geladas", nome: "Bebidas geladas" },
   { id: "salgados", nome: "Salgados" },
+  { id: "doces", nome: "Doces" },
 ];
 
 // Probabilidade de falha simulada (0 = nunca falha, 1 = sempre falha).
@@ -751,6 +786,9 @@ function buscarProdutoPorId(id) {
 > **💡 Dica**
 > `CATALOGO` e `CATEGORIAS` em maiúsculas é uma convenção para constantes de configuração — não é regra da linguagem, mas ajuda a bater o olho e saber que aquilo não muda em tempo de execução.
 
+> **⚠️ Atenção**
+> Não invente produto novo aqui, não renomeie nenhum e não mexa nas chaves de categoria. Esses dez objetos são o **contrato do projeto**: eles viram `data/produtos.json` na Aula 10 e as linhas da sua API na Unidade 3. Qualquer diferença aqui vira um bug três aulas adiante, quando o filtro do front-end deixar de casar com o que o servidor devolve.
+
 ### Passo 2 — Carregar os dois arquivos, na ordem certa
 
 Em `cardapio.html`, substitua o `<script>` único pelos dois arquivos. O atributo `defer` faz o navegador baixar os scripts em paralelo e executá-los **na ordem em que aparecem**, depois que o HTML terminou de ser lido:
@@ -761,46 +799,83 @@ Em `cardapio.html`, substitua o `<script>` único pelos dois arquivos. O atribut
 <script src="js/app.js" defer></script>
 ```
 
-Faça o mesmo em `index.html` e `contato.html`, para que o site inteiro tenha acesso à mesma fonte de dados.
+Faça o mesmo em `index.html` e `contato.html`. O `app.js` é o **mesmo arquivo** nas três páginas — ele continua ligando o botão de tema (Aula 07) e a validação do formulário de contato (Aula 07), e só monta o cardápio quando encontra a grade `#lista-produtos`. Manter o par de tags igual nas três páginas evita o erro clássico de esquecer uma linha em um arquivo e passar a tarde procurando por que "no contato não funciona".
 
 > **⚠️ Atenção**
 > A ordem importa: `app.js` usa funções declaradas em `dados.js`. Se você inverter as linhas, o console mostra `Uncaught ReferenceError: buscarProdutos is not defined`. E não troque `defer` por `async` aqui — `async` executa assim que cada arquivo terminar de baixar, **sem garantir ordem**.
 
 ### Passo 3 — Reservar o espaço do status e do botão de recuperação
 
-Ainda em `cardapio.html`, dentro da `<section>` do cardápio, garanta esta estrutura (as classes `row`, `g-3` e `btn` vêm do Bootstrap 5.3 adotado na Aula 04):
+O `cardapio.html` que você fechou na Aula 08 já tem quase tudo: o formulário `#controles-cardapio` com busca, filtro e ordenação, o parágrafo `#resumo-cardapio`, a grade `#lista-produtos`, o aviso `#cardapio-vazio`, o `<template id="template-produto">` e o painel do pedido. **Nada disso muda.** Faltam duas coisas: a região que anuncia o carregamento e o botão que oferece uma saída quando a busca falha.
+
+Acrescente as duas linhas entre o resumo e a grade:
 
 ```html
-<!-- cafe-cerrado/cardapio.html — região do cardápio -->
-<section id="cardapio" aria-labelledby="titulo-cardapio">
-  <h2 id="titulo-cardapio">Cardápio</h2>
+<!-- cafe-cerrado/cardapio.html — entre o #resumo-cardapio e a grade de cards -->
+<p class="status" id="status-cardapio" role="status" aria-live="polite"></p>
 
-  <div class="filtros">
-    <label for="busca">Buscar</label>
-    <input type="search" id="busca" placeholder="café, açaí, pão…">
+<button class="btn btn-cafe-vazado mb-3" type="button" id="tentar-de-novo" hidden>
+  Tentar de novo
+</button>
+```
 
-    <label for="filtro-categoria">Categoria</label>
-    <select id="filtro-categoria">
-      <option value="">Todas as categorias</option>
-    </select>
+A região do cardápio fica assim (só as duas linhas marcadas com `<!-- novo -->` são de hoje):
 
-    <label for="ordenacao">Ordenar por</label>
-    <select id="ordenacao">
-      <option value="nome">Nome (A–Z)</option>
-      <option value="preco-asc">Menor preço</option>
-      <option value="preco-desc">Maior preço</option>
-    </select>
-  </div>
+```html
+<!-- cafe-cerrado/cardapio.html — região do cardápio, versão da Aula 09 -->
+<section class="container py-5" aria-labelledby="titulo-cardapio">
+  <h2 id="titulo-cardapio" class="mb-4">Nosso cardápio</h2>
 
-  <p id="status-cardapio" class="status" role="status" aria-live="polite"></p>
-  <button type="button" id="tentar-de-novo" class="btn btn-outline-dark" hidden>Tentar de novo</button>
+  <nav aria-label="Seções do cardápio" class="mb-4">
+    <ul class="nav gap-2">
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="cafes" href="#cafes">Cafés</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="geladas" href="#geladas">Bebidas geladas</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="salgados" href="#salgados">Salgados</a></li>
+      <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" id="doces" href="#doces">Doces</a></li>
+    </ul>
+  </nav>
 
-  <div id="cards" class="row g-3" aria-busy="false"></div>
-  <p id="resumo" class="resumo"></p>
+  <form class="row g-3 align-items-end mb-4" id="controles-cardapio" role="search">
+    <div class="col-12 col-md-5">
+      <label class="form-label" for="busca">Buscar no cardápio</label>
+      <input class="form-control" type="search" id="busca" name="busca"
+             placeholder="café, pão de queijo, brownie" autocomplete="off">
+    </div>
+
+    <div class="col-6 col-md-3">
+      <label class="form-label" for="filtro-categoria">Categoria</label>
+      <select class="form-select" id="filtro-categoria" name="categoria">
+        <option value="">Todas</option>
+      </select>
+    </div>
+
+    <div class="col-6 col-md-4">
+      <label class="form-label" for="ordenacao">Ordenar por</label>
+      <select class="form-select" id="ordenacao" name="ordenacao">
+        <option value="nome">Nome (A a Z)</option>
+        <option value="preco-asc">Preço (menor primeiro)</option>
+        <option value="preco-desc">Preço (maior primeiro)</option>
+      </select>
+    </div>
+  </form>
+
+  <p class="text-secondary" id="resumo-cardapio" role="status" aria-live="polite"></p>
+
+  <p class="status" id="status-cardapio" role="status" aria-live="polite"></p>          <!-- novo -->
+
+  <button class="btn btn-cafe-vazado mb-3" type="button" id="tentar-de-novo" hidden>    <!-- novo -->
+    Tentar de novo
+  </button>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4" id="lista-produtos" aria-busy="false"></div>
+
+  <p class="text-center text-secondary d-none" id="cardapio-vazio" role="status">
+    Nenhum item do cardápio para mostrar.
+  </p>
 </section>
 ```
 
-O `<option value="">Todas as categorias</option>` fica fixo no HTML; as outras opções o JavaScript acrescenta quando as categorias chegarem.
+Repare que a grade ganhou `aria-busy="false"`: é o atributo que o JavaScript vai virar para `"true"` durante a espera. E note que existem agora **duas** regiões vivas com papéis diferentes — `#resumo-cardapio` fala sobre o resultado dos filtros ("3 de 10 itens…"), `#status-cardapio` fala sobre a operação ("Carregando o cardápio…", "Não foi possível carregar…"). Estado vazio e estado de erro deixam de se confundir porque cada um tem o seu lugar na tela.
 
 ### Passo 4 — O estilo do carregando
 
@@ -819,13 +894,13 @@ Acrescente ao final de `css/estilo.css`:
 }
 
 .status--vazio {
-  color: #5c5c5c;
+  color: var(--cor-texto-suave);
   font-weight: 500;
 }
 
 .esqueleto {
   height: 11rem;
-  border-radius: 0.5rem;
+  border-radius: var(--raio);
   background: linear-gradient(90deg, #e9e4dd 25%, #f5f1ec 50%, #e9e4dd 75%);
   background-size: 200% 100%;
   animation: brilho 1.2s linear infinite;
@@ -846,211 +921,206 @@ Acrescente ao final de `css/estilo.css`:
 
 O bloco `prefers-reduced-motion` não é enfeite: é a mesma regra de acessibilidade da Aula 05, e vale para qualquer animação nova que você criar.
 
-### Passo 5 — Reescrever `js/app.js` com carregamento assíncrono
+### Passo 5 — Refatorar `js/app.js`: os dados passam a chegar
 
-Este é o arquivo completo. Ele mantém a busca, o filtro e a ordenação da Aula 08, mas agora o estado começa **vazio** e é preenchido quando os dados chegam.
+Aqui está a diferença entre um profissional e um copiador de tutorial: **nada do que você escreveu nas Aulas 07 e 08 é apagado hoje.** O `<template>`, `criarCardProduto`, `renderizarProdutos`, `produtosVisiveis`, o objeto `ORDENADORES`, `atualizarResumo`, `render`, o carrinho inteiro (`adicionarAoCarrinho`, `removerDoCarrinho`, `totalDoCarrinho`, `renderizarCarrinho`), o `comAtraso`, a delegação de cliques, `iniciarTema` e `iniciarContato` continuam **byte por byte iguais**. Muda só a origem dos dados — quatro edições cirúrgicas.
+
+**Edição 1 — o array deixa de ser literal.** No topo do `js/app.js`, apague as oitenta linhas do `const produtos = [ … ]` e o objeto `ROTULOS_CATEGORIA` escrito à mão. Eles agora moram no `js/dados.js`. No lugar deles:
 
 ```js
-// cafe-cerrado/js/app.js
-// Cardápio do Café Cerrado — versão assíncrona (Aula 09).
-// Depende de js/dados.js, carregado antes deste arquivo.
+// cafe-cerrado/js/app.js — topo do arquivo (Aula 09)
+// Os dados não estão mais aqui: eles chegam de js/dados.js, por Promise.
 
-const estado = {
-  produtos: [],
-  categorias: [],
-  termo: "",
-  categoria: "",
-  ordem: "nome",
-};
+let produtos = [];                  // preenchido quando buscarProdutos() resolve
+const ROTULOS_CATEGORIA = {};       // preenchido quando buscarCategorias() resolve
+```
 
-const elementos = {
-  cards: document.querySelector("#cards"),
-  status: document.querySelector("#status-cardapio"),
-  resumo: document.querySelector("#resumo"),
-  busca: document.querySelector("#busca"),
-  filtroCategoria: document.querySelector("#filtro-categoria"),
-  ordenacao: document.querySelector("#ordenacao"),
-  tentarDeNovo: document.querySelector("#tentar-de-novo"),
-};
+`let` no lugar de `const` porque `produtos` passa a ser **reatribuído** quando os dados chegam. `ROTULOS_CATEGORIA` continua `const`: o objeto é sempre o mesmo, ele só ganha chaves. E é por isso que `produtosVisiveis()`, `atualizarResumo()` e `adicionarAoCarrinho()` não precisam de uma vírgula sequer: elas leem `produtos` como sempre leram — só que agora o array começa vazio e enche depois.
 
-function formatarPreco(valor) {
-  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+O `formatadorMoeda` e a `formatarPreco` da Aula 07 ficam onde estão: formatação é assunto de tela, não de dados.
 
-function mostrarStatus(mensagem, modificador) {
-  elementos.status.textContent = mensagem;
-  elementos.status.className = modificador ? `status ${modificador}` : "status";
-}
+**Edição 2 — o filtro de categorias vem da fonte, não do array.** Na Aula 08, `preencherFiltroDeCategorias` deduzia as categorias com um `Set` sobre os produtos. Agora elas chegam prontas, com id e rótulo, e a mesma função aproveita para preencher o `ROTULOS_CATEGORIA` que os cards usam:
 
-function renderizarEsqueleto(quantidade) {
-  elementos.cards.innerHTML = "";
-  elementos.cards.setAttribute("aria-busy", "true");
+```js
+function preencherFiltroDeCategorias(categorias) {
+  const select = document.querySelector("#filtro-categoria");
 
-  for (let i = 0; i < quantidade; i += 1) {
-    const coluna = document.createElement("div");
-    coluna.className = "col-12 col-sm-6 col-lg-4";
-    const caixa = document.createElement("div");
-    caixa.className = "esqueleto";
-    coluna.appendChild(caixa);
-    elementos.cards.appendChild(coluna);
-  }
-}
+  const opcoes = categorias.map((categoria) => {
+    ROTULOS_CATEGORIA[categoria.id] = categoria.nome;   // rótulo do badge do card
 
-function criarCard(produto) {
-  const coluna = document.createElement("div");
-  coluna.className = "col-12 col-sm-6 col-lg-4";
-
-  const card = document.createElement("article");
-  card.className = "card h-100";
-
-  const imagem = document.createElement("img");
-  imagem.src = produto.imagem;
-  imagem.alt = `Foto de ${produto.nome}`;
-  imagem.className = "card-img-top";
-  imagem.loading = "lazy";
-
-  const corpo = document.createElement("div");
-  corpo.className = "card-body";
-
-  const titulo = document.createElement("h3");
-  titulo.className = "card-title h5";
-  titulo.textContent = produto.nome;
-
-  const descricao = document.createElement("p");
-  descricao.className = "card-text";
-  descricao.textContent = produto.descricao;
-
-  const preco = document.createElement("p");
-  preco.className = "preco fw-bold";
-  preco.textContent = formatarPreco(produto.preco);
-
-  corpo.append(titulo, descricao, preco);
-  card.append(imagem, corpo);
-  coluna.appendChild(card);
-  return coluna;
-}
-
-function renderizarCards(lista) {
-  elementos.cards.innerHTML = "";
-  lista.forEach((produto) => elementos.cards.appendChild(criarCard(produto)));
-  elementos.cards.setAttribute("aria-busy", "false");
-}
-
-function atualizarResumo(lista) {
-  if (lista.length === 0) {
-    elementos.resumo.textContent = "";
-    return;
-  }
-  const total = lista.reduce((acumulado, produto) => acumulado + produto.preco, 0);
-  elementos.resumo.textContent =
-    `${lista.length} item(ns) — soma dos preços: ${formatarPreco(total)}`;
-}
-
-function preencherFiltroCategorias(categorias) {
-  categorias.forEach((categoria) => {
     const opcao = document.createElement("option");
     opcao.value = categoria.id;
     opcao.textContent = categoria.nome;
-    elementos.filtroCategoria.appendChild(opcao);
+    return opcao;
   });
+
+  select.append(...opcoes);
+}
+```
+
+Duas responsabilidades em uma função pequena, e nenhuma delas repetida em outro lugar: o nome legível de cada categoria passa a existir em **um** ponto do sistema, o `js/dados.js`. Quando a Unidade 3 trocar o `dados.js` por uma API, o rótulo vem do servidor e nada mais muda aqui.
+
+**Edição 3 — três funções novas: status, esqueleto e carregamento.** Acrescente-as acima de `iniciarCardapio`:
+
+```js
+function mostrarStatus(mensagem, modificador = "") {
+  const status = document.querySelector("#status-cardapio");
+  status.textContent = mensagem;
+  status.className = modificador ? `status ${modificador}` : "status";
 }
 
-function ordenar(lista, criterio) {
-  const copia = [...lista];
-  if (criterio === "preco-asc") {
-    return copia.sort((a, b) => a.preco - b.preco);
+function renderizarEsqueleto(quantidade) {
+  const container = document.querySelector("#lista-produtos");
+  container.replaceChildren();
+  container.setAttribute("aria-busy", "true");
+
+  const fragmento = document.createDocumentFragment();
+
+  for (let i = 0; i < quantidade; i += 1) {
+    const coluna = document.createElement("div");
+    coluna.className = "col";
+
+    const caixa = document.createElement("div");
+    caixa.className = "esqueleto";
+    caixa.setAttribute("aria-hidden", "true");   // decoração: o leitor de tela ignora
+
+    coluna.appendChild(caixa);
+    fragmento.appendChild(coluna);
   }
-  if (criterio === "preco-desc") {
-    return copia.sort((a, b) => b.preco - a.preco);
-  }
-  return copia.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
-}
 
-function aplicarFiltros() {
-  const termo = estado.termo.trim().toLowerCase();
-
-  const filtrados = estado.produtos
-    .filter((produto) => produto.nome.toLowerCase().includes(termo))
-    .filter((produto) => estado.categoria === "" || produto.categoria === estado.categoria);
-
-  const lista = ordenar(filtrados, estado.ordem);
-
-  renderizarCards(lista);
-  atualizarResumo(lista);
-
-  if (lista.length === 0) {
-    mostrarStatus("Nenhum item do cardápio combina com esses filtros.", "status--vazio");
-  } else {
-    mostrarStatus("");
-  }
+  container.appendChild(fragmento);
 }
 
 async function carregarCardapio() {
-  elementos.tentarDeNovo.hidden = true;
+  const container = document.querySelector("#lista-produtos");
+  const botaoTentarDeNovo = document.querySelector("#tentar-de-novo");
+
+  botaoTentarDeNovo.hidden = true;
+  document.querySelector("#cardapio-vazio").classList.add("d-none");
   mostrarStatus("Carregando o cardápio…");
   renderizarEsqueleto(6);
 
   const inicio = performance.now();
 
   try {
-    const [produtos, categorias] = await Promise.all([buscarProdutos(), buscarCategorias()]);
+    const [produtosRecebidos, categorias] = await Promise.all([
+      buscarProdutos(),
+      buscarCategorias(),
+    ]);
 
-    estado.produtos = produtos;
-    estado.categorias = categorias;
+    produtos = produtosRecebidos;            // a variável declarada no topo do arquivo
+    preencherFiltroDeCategorias(categorias);
 
-    preencherFiltroCategorias(categorias);
-    aplicarFiltros();
+    container.setAttribute("aria-busy", "false");
+    mostrarStatus("");
+    render();                                 // a mesma render() da Aula 08, sem alteração
 
     console.log(`Cardápio carregado em ${Math.round(performance.now() - inicio)} ms`);
   } catch (erro) {
     console.error(erro);
-    elementos.cards.innerHTML = "";
-    elementos.cards.setAttribute("aria-busy", "false");
-    elementos.resumo.textContent = "";
+    container.replaceChildren();
+    container.setAttribute("aria-busy", "false");
+    document.querySelector("#resumo-cardapio").textContent = "";
     mostrarStatus("Não foi possível carregar o cardápio. Verifique sua conexão.", "status--erro");
-    elementos.tentarDeNovo.hidden = false;
+    botaoTentarDeNovo.hidden = false;
+    botaoTentarDeNovo.focus();                // quem navega por teclado não precisa procurar
   }
 }
+```
 
-function ligarEventos() {
-  elementos.busca.addEventListener("input", (evento) => {
-    estado.termo = evento.target.value;
-    aplicarFiltros();
-  });
+O `catch` faz cinco coisas, e nenhuma delas é decorativa: registra o erro técnico no console (para você), tira os esqueletos da tela (senão eles pulsam para sempre), desliga o `aria-busy`, mostra uma mensagem em português para a pessoa e oferece o caminho de volta. Um `catch` que só faz `console.error` é um `catch` que mente: a tela continua dizendo "Carregando…".
 
-  elementos.filtroCategoria.addEventListener("change", (evento) => {
-    estado.categoria = evento.target.value;
-    aplicarFiltros();
-  });
+**Edição 4 — `iniciarCardapio` chama o carregamento.** É a única função da Aula 08 que muda, e muda em três linhas. Substitua-a inteira por esta versão:
 
-  elementos.ordenacao.addEventListener("change", (evento) => {
-    estado.ordem = evento.target.value;
-    aplicarFiltros();
-  });
+```js
+function iniciarCardapio() {
+  const container = document.querySelector("#lista-produtos");
+  if (!container) return; // não estamos no cardapio.html
 
-  elementos.tentarDeNovo.addEventListener("click", () => {
-    elementos.filtroCategoria.length = 1;   // remove as categorias antigas, mantém "Todas"
+  renderizarCarrinho();   // o pedido começa vazio e não depende da rede
+  carregarCardapio();     // no lugar de preencherFiltroDeCategorias() + render()
+
+  document.querySelector("#tentar-de-novo").addEventListener("click", () => {
+    const select = document.querySelector("#filtro-categoria");
+    select.length = 1;        // descarta as opções da tentativa anterior, mantém "Todas"
+    select.value = "";
+    estado.categoria = "";
     carregarCardapio();
   });
-}
 
-// Este arquivo é carregado nas três páginas; só a página do cardápio tem o container.
-if (elementos.cards) {
-  ligarEventos();
-  carregarCardapio();
+  const busca = document.querySelector("#busca");
+  busca.addEventListener(
+    "input",
+    comAtraso((evento) => {
+      estado.termo = evento.target.value.trim().toLowerCase();
+      render();
+    }, 300),
+  );
+
+  document.querySelector("#filtro-categoria").addEventListener("change", (evento) => {
+    estado.categoria = evento.target.value;
+    render();
+  });
+
+  document.querySelector("#ordenacao").addEventListener("change", (evento) => {
+    estado.ordenacao = evento.target.value;
+    render();
+  });
+
+  document.querySelector("#controles-cardapio").addEventListener("submit", (evento) => {
+    evento.preventDefault(); // <Enter> na busca não deve recarregar a página
+  });
+
+  // Delegação: um ouvinte para os cards, outro para o pedido
+  container.addEventListener("click", (evento) => {
+    const botao = evento.target.closest('[data-acao="adicionar"]');
+    if (!botao) return;
+    const card = botao.closest(".card-produto");
+    adicionarAoCarrinho(Number(card.dataset.id));
+  });
+
+  document.querySelector("#lista-carrinho").addEventListener("click", (evento) => {
+    const botao = evento.target.closest('[data-acao="remover"]');
+    if (!botao) return;
+    removerDoCarrinho(Number(botao.dataset.id));
+  });
 }
 ```
+
+Compare com a versão da Aula 08: os oito ouvintes são idênticos, `estado.termo`, `estado.categoria` e `estado.ordenacao` continuam com os mesmos nomes, e a delegação segue apontando para os mesmos seletores. As três linhas novas são `carregarCardapio()` no lugar do par `preencherFiltroDeCategorias() + render()` e o ouvinte do botão "Tentar de novo".
+
+E a chamada final do arquivo, escrita na Aula 07, continua exatamente como estava:
+
+```js
+function iniciar() {
+  iniciarTema();
+  iniciarCardapio();
+  iniciarContato();
+}
+
+iniciar();
+```
+
+Note o que **não** aconteceu: a delegação de cliques foi registrada uma vez, em `iniciarCardapio`, e vale para cards que ainda nem existiam quando o ouvinte nasceu. É por isso que trocar todos os cards por Promises não quebrou o carrinho — o ouvinte está no contêiner, não nos cards. Essa decisão da Aula 07 é o que torna a refatoração de hoje tão pequena.
 
 ### Passo 6 — Como testar
 
 1. Clique com o botão direito em `cardapio.html` no VS Code e escolha **Open with Live Server**. A URL precisa começar com `http://127.0.0.1`, não com `file://`.
-2. Recarregue a página algumas vezes. Em cerca de três de cada quatro vezes você deve ver: os seis retângulos cinza pulsando por ~1,2 s, depois os cards reais e a mensagem de status sumindo.
-3. Nas outras vezes, aparece **"Não foi possível carregar o cardápio"** em vermelho e o botão **Tentar de novo**. Clique nele: o ciclo recomeça.
-4. Digite `café` na busca e depois `zzz`. Com `zzz`, o status precisa mostrar "Nenhum item do cardápio combina com esses filtros" — o estado **vazio**, diferente do erro.
-5. No console, confira a linha `Cardápio carregado em N ms`. Ela deve ficar perto de **1200 ms**, não de 2000 ms: as duas buscas rodaram em paralelo. Para provar, troque temporariamente o `Promise.all` por dois `await` em sequência e recarregue — o número pula para cerca de 2000 ms.
-6. Na aba **Network** do DevTools, mude a velocidade de "No throttling" para **Slow 4G** e recarregue. Os arquivos demoram mais para chegar, mas a página continua rolável durante toda a espera — a prova de que o `await` não bloqueia nada.
+2. Recarregue a página algumas vezes. Em cerca de três de cada quatro vezes você deve ver: os seis retângulos cinza pulsando por ~1,2 s, depois os **dez** cards reais, o `<select>` de categoria com cinco opções ("Todas" mais as quatro) e a mensagem de status sumindo.
+3. Nas outras vezes, aparece **"Não foi possível carregar o cardápio"** em vermelho, os esqueletos somem e o botão **Tentar de novo** recebe o foco. Clique nele: o ciclo recomeça e o `<select>` não fica com categorias duplicadas.
+4. Digite `caf` na busca: sobra um card, o Frappê de Café. Agora `zzz`: nenhum card, o aviso `#cardapio-vazio` aparece e o resumo diz "Nenhum item corresponde à sua busca." Esse é o estado **vazio** — texto neutro, sem botão de recuperação —, visivelmente diferente do estado de **erro** do passo anterior.
+5. Clique duas vezes em "Adicionar ao pedido" no Coado da Casa e uma vez na Torta de Frango: o pedido mostra "Total: R$ 30,00" e o contador `3`. O carrinho da Aula 08 continua inteiro — se ele quebrou, alguma função foi apagada em vez de refatorada.
+6. Abra `contato.html` e envie o formulário vazio: as mensagens de erro da Aula 07 continuam aparecendo e o foco vai para o primeiro campo inválido. A validação também sobreviveu.
+7. No console, confira a linha `Cardápio carregado em N ms`. Ela deve ficar perto de **1200 ms**, não de 2000 ms: as duas buscas rodaram em paralelo. Para provar, troque temporariamente o `Promise.all` por dois `await` em sequência e recarregue — o número pula para cerca de 2000 ms.
+8. Na aba **Network** do DevTools, mude a velocidade de "No throttling" para **Slow 4G** e recarregue. Os arquivos demoram mais para chegar, mas a página continua rolável durante toda a espera — a prova de que o `await` não bloqueia nada.
 
-**Resultado esperado:** o cardápio nunca aparece "do nada"; ele sempre passa por um estado visível de carregamento, e qualquer falha resulta em mensagem clara com caminho de recuperação — sem tela branca e sem console silencioso.
+**Resultado esperado:** o cardápio nunca aparece "do nada"; ele sempre passa por um estado visível de carregamento, e qualquer falha resulta em mensagem clara com caminho de recuperação — sem tela branca e sem console silencioso. Busca, filtro, ordenação, carrinho e validação continuam funcionando como na Aula 08.
+
+```bash
+git add .
+git commit -m "refactor: cardapio carregado por Promises com estados de carregando, erro e vazio"
+git push
+```
 
 ## 🧪 Laboratório
 
@@ -1092,7 +1162,7 @@ function mostrar() {
 ```js
 mostrarStatus("Carregando…");
 buscarProdutos()
-  .then((produtos) => renderizarCards(produtos))
+  .then((produtos) => renderizarProdutos(produtos))
   .catch((erro) => mostrarStatus(erro.message, "status--erro"));
 ```
 
@@ -1144,7 +1214,7 @@ function carregar() {
   mostrarStatus("Carregando…");
   return buscarProdutos()
     .then((produtos) => {
-      renderizarCards(produtos);
+      renderizarProdutos(produtos);
       return produtos.length;
     })
     .then((quantidade) => console.log("itens:", quantidade))
@@ -1168,7 +1238,7 @@ Resultado esperado: buscar por `zzz` mostra a mensagem e o botão; clicar no bot
 <details markdown="1">
 <summary>Dica</summary>
 
-O botão pode ficar no HTML com `hidden`, como o "Tentar de novo". Ao limpar, lembre-se de atualizar também `elementos.busca.value` e `elementos.filtroCategoria.value` — o estado do objeto e o estado dos campos precisam andar juntos.
+O botão pode ficar no HTML com `hidden`, como o "Tentar de novo". Ao limpar, lembre-se de atualizar também `document.querySelector("#busca").value` e o `value` do `#filtro-categoria` — o estado do objeto e o estado dos campos precisam andar juntos.
 </details>
 
 **B5.** Meça e documente. Crie no `app.js` uma função `medirCarregamento()` que rode a versão sequencial e a versão paralela do carregamento (cinco vezes cada) e imprima a média de cada uma com `performance.now()`.
@@ -1257,7 +1327,7 @@ Feche os olhos e navegue no seu cardápio usando só o teclado e o leitor de tel
 
 1. Um elemento decorativo se esconde do leitor de tela com `aria-hidden="true"`.
 2. `elemento.focus()` move o foco; para que faça sentido, o elemento precisa estar visível — mude o `hidden` antes de chamar o foco.
-3. Anunciar "6 itens carregados" é mais útil que "carregado": diga **o que mudou**, não que algo mudou.
+3. Anunciar "10 itens carregados" é mais útil que "carregado": diga **o que mudou**, não que algo mudou.
 4. Se o mesmo texto for atribuído duas vezes seguidas ao elemento com `aria-live`, o leitor não repete o anúncio. Se você precisar reanunciar, limpe o texto antes.
 </details>
 

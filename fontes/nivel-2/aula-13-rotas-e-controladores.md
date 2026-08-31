@@ -45,7 +45,7 @@ Olhe o arquivo de rotas que você terminou na Aula 12. Ele provavelmente parece 
 ```js
 // cafe-cerrado-api/routes/produtos.js — versão da Aula 12
 const express = require('express');
-const produtos = require('../data/produtos');
+const produtos = require('../data/produtos.json');
 
 const router = express.Router();
 
@@ -85,7 +85,6 @@ cafe-cerrado-api/
 │   └── repositorio.js
 ├── public/
 │   ├── index.html
-│   ├── cardapio.html
 │   ├── css/
 │   └── js/
 ├── routes/
@@ -187,12 +186,12 @@ E o formato de um produto, que é o mesmo na entrada e na saída (menos o `id`, 
 
 ```json
 {
-  "id": 3,
-  "nome": "Bolo de castanha-de-baru",
+  "id": 9,
+  "nome": "Bolo de Milho Verde",
   "categoria": "doces",
   "preco": 9.5,
-  "descricao": "Fatia generosa com castanha nativa do cerrado.",
-  "imagem": "img/bolo-baru.jpg"
+  "descricao": "Fatia de bolo cremoso feito com milho da feira do produtor.",
+  "imagem": "img/bolo-de-milho.jpg"
 }
 ```
 
@@ -249,7 +248,7 @@ Três cuidados que separam uma listagem robusta de uma quebradiça:
 
 ### 4.1 Busca que não depende de acento nem de caixa
 
-O cliente digita `cafe` no celular, sem acento e sem maiúscula. O produto se chama `Café coado da casa`. Comparação literal não acha nada, e o usuário conclui que a cafeteria não vende café.
+O cliente digita `cafe` no celular, sem acento e sem maiúscula. O produto se chama `Frappê de Café`. Comparação literal não acha nada, e o usuário conclui que a cafeteria não vende café.
 
 A solução é normalizar os dois lados da comparação com a mesma função:
 
@@ -303,7 +302,7 @@ Em projetos maiores você usaria uma biblioteca de validação por esquema (Zod,
 
 ## 6. Persistência: os dados precisam sobreviver ao <kbd>Ctrl</kbd> + <kbd>C</kbd>
 
-Até a Aula 12, os produtos moravam em um array dentro de `data/produtos.js`. Isso significa que reiniciar o servidor apaga tudo que foi criado — e o `node --watch` reinicia sozinho a cada arquivo salvo. Você cria três produtos, corrige uma vírgula, e eles somem.
+Até a Aula 12, o `routes/produtos.js` carregava o `data/produtos.json` com um `require` e trabalhava sobre esse array **em memória**: o arquivo era lido uma vez, na inicialização, e o `POST` só empurrava o produto novo para dentro do array. Isso significa que reiniciar o servidor apaga tudo que foi criado — e o `node --watch` reinicia sozinho a cada arquivo salvo. Você cria três produtos, corrige uma vírgula, e eles somem.
 
 A solução definitiva é um banco de dados; ela chega no Nível 3. Para o Café Cerrado, um arquivo JSON entrega o conceito de persistência com o que você já sabe: ler arquivo, converter texto em objeto, converter objeto em texto, gravar.
 
@@ -345,7 +344,9 @@ Objetivo desta prática: sair de duas rotas de leitura e chegar a cinco endpoint
 
 ### Passo 1 — Os dados saem do código e vão para o disco
 
-Crie o arquivo de dados. Note que ele é **só dados**: nenhum `module.exports`, nenhuma vírgula sobrando, aspas duplas em todas as chaves — é JSON, não JavaScript.
+O `data/produtos.json` existe desde a Aula 11 e **não muda hoje**: são os mesmos dez produtos do cardápio, com os mesmos ids, nomes, preços e categorias. O que muda é quem o lê e quem escreve nele — até a Aula 12 o arquivo era carregado uma vez por um `require` e o resto acontecia na memória; a partir de hoje toda leitura e toda escrita passam por um repositório.
+
+Confira que o seu está exatamente assim. Note que ele é **só dados**: nenhum `module.exports`, nenhuma vírgula sobrando, aspas duplas em todas as chaves — é JSON, não JavaScript.
 
 `cafe-cerrado-api/data/produtos.json`
 
@@ -353,43 +354,83 @@ Crie o arquivo de dados. Note que ele é **só dados**: nenhum `module.exports`,
 [
   {
     "id": 1,
-    "nome": "Café coado da casa",
+    "nome": "Espresso do Cerrado",
     "categoria": "cafes",
-    "preco": 6.5,
-    "descricao": "Grãos do cerrado mato-grossense, torra média, coado na hora.",
-    "imagem": "img/cafe-coado.jpg"
+    "preco": 6,
+    "descricao": "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    "imagem": "img/espresso.jpg"
   },
   {
     "id": 2,
-    "nome": "Cappuccino cremoso",
+    "nome": "Coado da Casa",
     "categoria": "cafes",
-    "preco": 12.9,
-    "descricao": "Espresso, leite vaporizado e canela em pó.",
-    "imagem": "img/cappuccino.jpg"
+    "preco": 8.5,
+    "descricao": "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    "imagem": "img/coado.jpg"
   },
   {
     "id": 3,
-    "nome": "Bolo de castanha-de-baru",
-    "categoria": "doces",
-    "preco": 9.5,
-    "descricao": "Fatia generosa com castanha nativa do cerrado.",
-    "imagem": "img/bolo-baru.jpg"
+    "nome": "Cappuccino Sinop",
+    "categoria": "cafes",
+    "preco": 12,
+    "descricao": "Espresso duplo, leite vaporizado e canela do Cerrado por cima.",
+    "imagem": "img/cappuccino.jpg"
   },
   {
     "id": 4,
-    "nome": "Pão de queijo mineiro",
-    "categoria": "salgados",
-    "preco": 5.0,
-    "descricao": "Assado a cada duas horas, servido quente.",
-    "imagem": "img/pao-de-queijo.jpg"
+    "nome": "Latte de Baunilha",
+    "categoria": "cafes",
+    "preco": 14,
+    "descricao": "Espresso, leite vaporizado e calda de baunilha feita na casa.",
+    "imagem": "img/latte.jpg"
   },
   {
     "id": 5,
-    "nome": "Açaí batido na hora",
-    "categoria": "bebidas-geladas",
-    "preco": 18.0,
-    "descricao": "Polpa pura com granola e banana.",
-    "imagem": "img/acai.jpg"
+    "nome": "Cold Brew da Chapada",
+    "categoria": "geladas",
+    "preco": 15,
+    "descricao": "Extração a frio por dezoito horas, servida com gelo e rodela de laranja.",
+    "imagem": "img/cold-brew.jpg"
+  },
+  {
+    "id": 6,
+    "nome": "Frappê de Café",
+    "categoria": "geladas",
+    "preco": 16,
+    "descricao": "Espresso batido com gelo, leite e chantili. Também sai sem lactose.",
+    "imagem": "img/frappe.jpg"
+  },
+  {
+    "id": 7,
+    "nome": "Pão de Queijo Mineiro",
+    "categoria": "salgados",
+    "preco": 7,
+    "descricao": "Porção com quatro unidades de polvilho azedo com queijo canastra.",
+    "imagem": "img/pao-de-queijo.jpg"
+  },
+  {
+    "id": 8,
+    "nome": "Torta de Frango",
+    "categoria": "salgados",
+    "preco": 13,
+    "descricao": "Fatia generosa com massa amanteigada e recheio de frango desfiado.",
+    "imagem": "img/torta-de-frango.jpg"
+  },
+  {
+    "id": 9,
+    "nome": "Bolo de Milho Verde",
+    "categoria": "doces",
+    "preco": 9.5,
+    "descricao": "Fatia de bolo cremoso feito com milho da feira do produtor.",
+    "imagem": "img/bolo-de-milho.jpg"
+  },
+  {
+    "id": 10,
+    "nome": "Brownie de Castanha",
+    "categoria": "doces",
+    "preco": 11,
+    "descricao": "Chocolate meio amargo com castanha-do-pará. Sem glúten.",
+    "imagem": "img/brownie.jpg"
   }
 ]
 ```
@@ -438,13 +479,6 @@ module.exports = { lerTodos, salvarTodos, proximoId };
 
 Repare no `path.join(__dirname, 'produtos.json')`. Se você escrevesse `'./data/produtos.json'`, o caminho seria resolvido a partir do diretório de onde você **rodou** o `node`, não de onde o arquivo está. Rodar `npm run dev` de dentro de outra pasta quebraria tudo. `__dirname` é a pasta do arquivo atual e resolve isso de vez.
 
-Por fim, apague o antigo `data/produtos.js` — ele foi substituído.
-
-```bash
-cd cafe-cerrado-api
-rm data/produtos.js
-```
-
 ### Passo 2 — O controlador: leitura
 
 Crie a pasta e o arquivo do controlador. Começamos pelas duas operações de leitura, já com busca, filtro e ordenação.
@@ -454,7 +488,8 @@ Crie a pasta e o arquivo do controlador. Começamos pelas duas operações de le
 ```js
 const repositorio = require('../data/repositorio');
 
-const CATEGORIAS = ['cafes', 'doces', 'salgados', 'bebidas-geladas'];
+// A mesma lista branca de sempre: as quatro categorias do cardápio.
+const CATEGORIAS = ['cafes', 'geladas', 'salgados', 'doces'];
 
 // Deixa o texto comparável: sem acento, sem maiúscula, sem espaço nas pontas.
 function normalizar(texto) {
@@ -495,12 +530,23 @@ exports.listar = async (req, res) => {
   res.json(lista);
 };
 
+// Converte o :id da rota. Se não for um inteiro positivo, já responde 400
+// e devolve null — os três handlers de id usam esta mesma checagem.
+function idDaRota(req, res) {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    res.status(400).json({ erro: 'O id precisa ser um número inteiro positivo.' });
+    return null;
+  }
+
+  return id;
+}
+
 // GET /api/produtos/7
 exports.obter = async (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id <= 0) {
-    return res.status(400).json({ erro: 'O id precisa ser um número inteiro positivo.' });
-  }
+  const id = idDaRota(req, res);
+  if (id === null) return;
 
   const lista = await repositorio.lerTodos();
   const produto = lista.find((item) => item.id === id);
@@ -516,7 +562,7 @@ Três decisões que valem comentário:
 
 - `typeof categoria === 'string'` protege contra a query string repetida (`?categoria=a&categoria=b`), que chegaria como array e quebraria o `normalizar`.
 - `[...lista].sort(...)` ordena uma **cópia**. `sort` altera o array original, e o original aqui veio direto do arquivo — ordenar no lugar não faria estrago hoje, mas é o tipo de efeito colateral que assombra depois.
-- `Number('abc')` é `NaN`, e `Number.isInteger(NaN)` é `false`. Por isso `/api/produtos/abc` devolve `400`, e não uma busca silenciosa por `undefined`.
+- `Number('abc')` é `NaN`, e `Number.isInteger(NaN)` é `false`. Por isso `/api/produtos/abc` devolve `400`, e não uma busca silenciosa por `undefined`. A checagem virou a função `idDaRota` justamente porque `obter`, `atualizar` e `remover` precisam **da mesma** regra: se ela existisse só no `obter`, `PUT /api/produtos/abacaxi` devolveria `404` e a sua API passaria a mentir sobre a diferença entre "id inválido" e "produto inexistente".
 
 ### Passo 3 — Validação e escrita
 
@@ -600,7 +646,9 @@ exports.criar = async (req, res) => {
 
 // PUT /api/produtos/7
 exports.atualizar = async (req, res) => {
-  const id = Number(req.params.id);
+  const id = idDaRota(req, res);
+  if (id === null) return;
+
   const lista = await repositorio.lerTodos();
   const indice = lista.findIndex((item) => item.id === id);
 
@@ -625,7 +673,9 @@ exports.atualizar = async (req, res) => {
 
 // DELETE /api/produtos/7
 exports.remover = async (req, res) => {
-  const id = Number(req.params.id);
+  const id = idDaRota(req, res);
+  if (id === null) return;
+
   const lista = await repositorio.lerTodos();
   const indice = lista.findIndex((item) => item.id === id);
 
@@ -671,51 +721,57 @@ module.exports = router;
 > **⚠️ Atenção**
 > A ordem importa. Se você acrescentar depois uma rota fixa como `router.get('/destaques', ...)`, ela precisa vir **antes** de `router.get('/:id', ...)`. O Express testa na ordem de registro, e `/:id` casa com qualquer coisa — inclusive com a palavra `destaques`, que viraria `req.params.id = 'destaques'` e devolveria `400`. Esse é o desafio ⭐ de hoje.
 
-E o `server.js` só muda no 404 da API, que agora usa o curinga do Express 5:
+E o `server.js` **não é reescrito**: ele continua sendo o índice enxuto da Aula 12, com os middlewares em `middlewares/`, os dois routers montados e o fallback da SPA. Muda uma linha só — o 404 da API, que agora usa o curinga do Express 5 para cobrir também `/api` sozinho:
 
 `cafe-cerrado-api/server.js`
 
 ```js
+const path = require('node:path');
 const express = require('express');
+
 const produtosRouter = require('./routes/produtos');
+const categoriasRouter = require('./routes/categorias');
+const registrarRequisicao = require('./middlewares/registro');
+const { naoEncontradoApi, tratadorDeErros } = require('./middlewares/erros');
 
 const app = express();
-const PORTA = 3000;
+const PORTA = process.env.PORT || 3000;
 
 // 1. Interpreta corpos JSON e coloca o resultado em req.body.
 app.use(express.json());
 
-// 2. Log de toda requisição, com status e duração.
-app.use((req, res, next) => {
-  const inicio = Date.now();
-  res.on('finish', () => {
-    const duracao = Date.now() - inicio;
-    console.log(`${req.method} ${req.originalUrl} -> ${res.statusCode} (${duracao} ms)`);
-  });
-  next();
-});
+// 2. Log de toda requisição, com status e duração (middlewares/registro.js).
+app.use(registrarRequisicao);
 
 // 3. Site estático do Café Cerrado (Unidades 1 e 2).
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 4. Recurso produtos.
+// 4. Recursos da API — um app.use por recurso.
 app.use('/api/produtos', produtosRouter);
+app.use('/api/categorias', categoriasRouter);
 
 // 5. Qualquer outra rota sob /api que não casou: 404 em JSON.
-app.all('/api/{*splat}', (req, res) => {
-  res.status(404).json({ erro: `Rota ${req.method} ${req.originalUrl} não existe.` });
+//    Mesmo middleware da Aula 12, agora montado com o curinga do Express 5.
+app.all('/api/{*splat}', naoEncontradoApi);
+
+// 6. Fora da API, devolve o index.html: quem resolve a rota é a SPA da Aula 10.
+app.get('/{*splat}', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 6. Tratador de erros: quatro parâmetros, sempre por último.
-app.use((erro, req, res, next) => {
-  console.error(erro);
-  res.status(500).json({ erro: 'Erro interno do servidor.' });
-});
+// 7. Tratador de erros: quatro parâmetros, sempre por último.
+app.use(tratadorDeErros);
 
 app.listen(PORTA, () => {
   console.log(`Café Cerrado API em http://localhost:${PORTA}`);
 });
 ```
+
+Três coisas que **continuam** exatamente como estavam, e não é por acaso:
+
+- `process.env.PORT || 3000`. Fixar `3000` no código funciona na sua máquina e quebra no primeiro deploy: os serviços de hospedagem definem a porta por variável de ambiente, e o Capítulo 05 da trilha Deploy cobra isso.
+- `path.join(__dirname, 'public')` em vez de `'public'`. Pelo mesmo motivo do `__dirname` no repositório: caminho relativo é resolvido a partir de onde você **rodou** o `node`.
+- O fallback `app.get('/{*splat}', …)`. Sem ele, recarregar a página em `/#/cardapio` funciona (o hash não vai ao servidor), mas qualquer caminho novo devolve o 404 padrão do Express em HTML — e o Checkpoint da Aula 12 deixa de valer.
 
 O padrão `'/api/{*splat}'` é a sintaxe de curinga do Express 5. As chaves tornam o trecho opcional (então `/api` sozinho também casa) e `*splat` captura o resto do caminho em `req.params.splat`, que é um **array** de segmentos. No Express 4 isso se escrevia `'/api/*'` — se você encontrar essa forma em um tutorial antigo, saiba que ela não funciona mais.
 
@@ -731,10 +787,10 @@ Substitua o `testes.http` da Aula 12 por este roteiro completo. Cada bloco separ
 ```http
 @base = http://localhost:3000/api
 
-### 1. Listar tudo (200, array com 5 itens)
+### 1. Listar tudo (200, array com 10 itens)
 GET {{base}}/produtos
 
-### 2. Buscar por nome, sem acento e em minúscula (200, acha "Café coado da casa")
+### 2. Buscar por nome, sem acento e em minúscula (200, acha o "Frappê de Café")
 GET {{base}}/produtos?q=cafe
 
 ### 3. Filtrar por categoria e ordenar do mais barato ao mais caro (200)
@@ -749,19 +805,19 @@ GET {{base}}/produtos/9999
 ### 6. Detalhar um id que nem é número (400)
 GET {{base}}/produtos/abacaxi
 
-### 7. Criar produto válido (201 + cabeçalho Location)
+### 7. Criar produto válido (201 + cabeçalho Location, id 11)
 POST {{base}}/produtos
 Content-Type: application/json
 
 {
-  "nome": "Suco de cupuaçu",
-  "categoria": "bebidas-geladas",
+  "nome": "Suco de Cupuaçu",
+  "categoria": "geladas",
   "preco": 11.5,
   "descricao": "Polpa batida com água gelada, sem açúcar.",
   "imagem": "img/suco-cupuacu.jpg"
 }
 
-### 8. Criar produto inválido (400 com dois itens em detalhes)
+### 8. Criar produto inválido (400 com três itens em detalhes)
 POST {{base}}/produtos
 Content-Type: application/json
 
@@ -772,7 +828,7 @@ Content-Type: application/json
 }
 
 ### 9. Atualizar só o preço (200, os outros campos continuam iguais)
-PUT {{base}}/produtos/6
+PUT {{base}}/produtos/11
 Content-Type: application/json
 
 {
@@ -788,10 +844,10 @@ Content-Type: application/json
 }
 
 ### 11. Excluir (204, sem corpo)
-DELETE {{base}}/produtos/6
+DELETE {{base}}/produtos/11
 
 ### 12. Excluir de novo (404 — o recurso já não existe)
-DELETE {{base}}/produtos/6
+DELETE {{base}}/produtos/11
 
 ### 13. Rota de API que não existe (404 em JSON, não em HTML)
 GET {{base}}/pedidos
@@ -799,7 +855,7 @@ GET {{base}}/pedidos
 
 ### Como testar
 
-Com `npm run dev` rodando, execute os 13 blocos **na ordem**. O roteiro foi montado para contar uma história: o bloco 7 cria o produto de id 6, o 9 altera esse mesmo produto, o 11 o exclui e o 12 prova que ele sumiu.
+Com `npm run dev` rodando, execute os 13 blocos **na ordem**. O roteiro foi montado para contar uma história: o bloco 7 cria o produto de id 11 (o cardápio vai até o 10), o 9 altera esse mesmo produto, o 11 o exclui e o 12 prova que ele sumiu.
 
 O resultado esperado, bloco a bloco:
 
@@ -807,7 +863,7 @@ O resultado esperado, bloco a bloco:
 |---|---|---|
 | 1 a 4 | `200` | Leitura, busca, filtro e ordenação |
 | 5 e 6 | `404` e `400` | Id inexistente × id malformado |
-| 7 e 8 | `201` e `400` | Criação e validação com `detalhes` |
+| 7 e 8 | `201` e `400` | Criação e validação: o bloco 8 viola as três regras de uma vez (nome curto, categoria fora da lista branca e preço negativo), então `detalhes` traz **três** itens |
 | 9 a 13 | `200`, `404`, `204`, `404`, `404` | Atualização parcial, exclusão e 404 de API |
 
 Duas provas finais, e só então a prática está encerrada:
@@ -844,9 +900,9 @@ curl -i -X DELETE http://localhost:3000/api/produtos/2
 
 ### Nível B — Aplicação
 
-**B1.** Endpoint de contagem. Implemente `GET /api/produtos/contagem`, que devolve `{ "total": 5 }` respeitando os mesmos filtros de `q` e `categoria` do `listar`.
+**B1.** Endpoint de contagem. Implemente `GET /api/produtos/contagem`, que devolve `{ "total": 10 }` respeitando os mesmos filtros de `q` e `categoria` do `listar`.
 
-Resultado esperado: `GET /api/produtos/contagem?categoria=cafes` devolve `200` com `{"total":2}`; sem query string, devolve o total geral. A rota nova não pode ser engolida por `/:id`.
+Resultado esperado: `GET /api/produtos/contagem?categoria=cafes` devolve `200` com `{"total":4}`; sem query string, devolve o total geral. A rota nova não pode ser engolida por `/:id`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -854,17 +910,17 @@ Resultado esperado: `GET /api/produtos/contagem?categoria=cafes` devolve `200` c
 Duas coisas: a rota fixa precisa ser registrada **antes** de `router.get('/:id', ...)`, e a lógica de filtro está duplicada — extraia-a para uma função `aplicarFiltros(lista, req.query)` usada pelos dois controladores.
 </details>
 
-**B2.** Segundo recurso completo. Crie o recurso `categorias` com rota e controlador próprios: `GET /api/categorias` devolve a lista de categorias com a quantidade de produtos de cada uma, e `GET /api/categorias/:slug/produtos` devolve os produtos daquela categoria.
+**B2.** Categorias com controlador próprio. O `routes/categorias.js` da Aula 12 responde `GET /api/categorias`, mas ainda com a lógica dentro do router. Aplique a ele a arquitetura de hoje: crie `controllers/categoriasController.js`, faça o `GET /api/categorias` devolver também a quantidade de produtos de cada categoria e acrescente `GET /api/categorias/:slug/produtos`.
 
-Resultado esperado: `GET /api/categorias` devolve `[{"slug":"cafes","total":2}, ...]`; `GET /api/categorias/doces/produtos` devolve só os doces; `GET /api/categorias/inexistente/produtos` devolve `404`.
+Resultado esperado: `GET /api/categorias` devolve `[{"slug":"cafes","total":4}, {"slug":"geladas","total":2}, {"slug":"salgados","total":2}, {"slug":"doces","total":2}]`; `GET /api/categorias/doces/produtos` devolve só os doces; `GET /api/categorias/inexistente/produtos` devolve `404`.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-Crie `routes/categorias.js` e `controllers/categoriasController.js`, e monte com `app.use('/api/categorias', categoriasRouter)` no `server.js`. Para contar por categoria, `reduce` sobre a lista de produtos acumulando em um objeto resolve em cinco linhas.
+O `app.use('/api/categorias', categoriasRouter)` já está no `server.js` desde a Aula 12: o trabalho é mover o corpo dos handlers para `controllers/categoriasController.js` e ler os produtos pelo `repositorio`, não por `require` do JSON. Para contar por categoria, `reduce` sobre a lista de produtos acumulando em um objeto resolve em cinco linhas.
 </details>
 
-**B3.** Nome duplicado devolve `409`. Hoje é possível criar dois produtos chamados "Cappuccino cremoso". Impeça isso no `criar` e no `atualizar`, devolvendo `409 Conflict` com uma mensagem clara.
+**B3.** Nome duplicado devolve `409`. Hoje é possível criar dois produtos chamados "Cappuccino Sinop". Impeça isso no `criar` e no `atualizar`, devolvendo `409 Conflict` com uma mensagem clara.
 
 Resultado esperado: criar um produto com nome já existente (ignorando acento e caixa) devolve `409`; renomear um produto para o nome de outro também; renomear um produto para o **próprio** nome continua funcionando.
 
@@ -1004,7 +1060,7 @@ Seu `criar` faz três coisas em sequência: lê o arquivo, acrescenta um item, g
 
 | Sintoma | Causa | Solução |
 |---|---|---|
-| `Cannot find module '../data/produtos'` ao subir o servidor | Sobrou um `require('../data/produtos')` apontando para o arquivo apagado | Trocar por `require('../data/repositorio')` e usar `await repositorio.lerTodos()` |
+| O `POST` responde `201` mas o produto some no reinício | Sobrou o `require('../data/produtos.json')` da Aula 12, que carrega o array uma vez e só mexe na memória | Trocar por `require('../data/repositorio')` e usar `await repositorio.lerTodos()` / `salvarTodos()` |
 | `TypeError: Cannot read properties of undefined (reading 'nome')` no `POST` | `express.json()` ausente ou depois do router: `req.body` é `undefined` | Manter `app.use(express.json())` antes de `app.use('/api/produtos', ...)` |
 | `GET /api/produtos/destaques` devolve `400` | `router.get('/:id')` foi registrado antes da rota fixa e casou primeiro | Mover as rotas fixas para antes das rotas com parâmetro |
 | `SyntaxError: Unexpected end of JSON input` ao ler o arquivo | `produtos.json` vazio ou gravado pela metade em uma queda anterior | Repor `[]` no arquivo e gravar sempre via arquivo temporário + `rename` |

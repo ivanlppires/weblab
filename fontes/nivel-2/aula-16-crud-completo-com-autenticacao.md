@@ -40,7 +40,7 @@ Ao final desta aula você será capaz de:
 
 ### 1.1 Quem é você × o que você pode
 
-A Aula 14 respondeu à primeira pergunta. O middleware `exigirLogin` verifica a assinatura do ID token com o `google-auth-library` e preenche `req.usuario` com dados em que dá para confiar — nome, e-mail e foto, atestados pelo Google. Isso é **autenticação**.
+A Aula 14 respondeu à primeira pergunta. Lá, o `authController` usou o `google-auth-library` **uma única vez**, no login, para conferir o ID token do Google e emitir uma sessão própria — um token assinado com HMAC pelo seu servidor, válido por 8 horas. O middleware `exigirLogin` confere a assinatura **dessa sessão** a cada requisição e preenche `req.usuario` com dados em que dá para confiar: nome, e-mail e foto, que vieram do Google no momento do login. Isso é **autenticação**.
 
 Falta a segunda pergunta. Hoje, com um token válido de qualquer conta Google, dá para apagar o cardápio inteiro do Café Cerrado. O sistema sabe quem você é e não faz absolutamente nada com essa informação. Decidir **o que cada identidade pode fazer** é **autorização** — e é a parte que quase todo projeto de aula esquece.
 
@@ -76,7 +76,7 @@ Regra de ouro: **autorização é regra de negócio, e regra de negócio mora no
 
 ### 2.1 O dono vem do token, nunca do corpo
 
-O middleware `exigirLogin` já deixa `req.usuario` preenchido com o payload verificado do ID token. Basta usá-lo no momento da criação:
+O middleware `exigirLogin` já deixa `req.usuario` preenchido com os dados da sessão verificada — o e-mail veio do Google no login e viajou dentro de um token que só o seu servidor sabe assinar. Basta usá-lo no momento da criação:
 
 ```js
 const novo = {
@@ -150,27 +150,80 @@ Duas linhas de checagem entram em `atualizar` e `remover`. Como a regra é idên
 `cafe-cerrado-api/controllers/produtosController.js`
 
 ```js
-const repo = require("../data/repositorio");
+const repositorio = require("../data/repositorio");
 
+// A lista branca de categorias do cardápio (Aula 13).
+const CATEGORIAS = ["cafes", "geladas", "salgados", "doces"];
+
+// Deixa o texto comparável: sem acento, sem maiúscula, sem espaço nas pontas.
 function normalizar(texto) {
   return String(texto ?? "")
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 }
 
-function validar(dados) {
+// Converte o :id da rota. Se não for inteiro positivo, já responde 400.
+function idDaRota(req, res) {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id) || id <= 0) {
+    res.status(400).json({ erro: "O id precisa ser um número inteiro positivo." });
+    return null;
+  }
+
+  return id;
+}
+
+// Valida e normaliza o corpo (Aula 13). Com { parcial: true }, ignora ausentes.
+function validarProduto(corpo = {}, { parcial = false } = {}) {
   const erros = [];
-  if (typeof dados.nome !== "string" || dados.nome.trim().length < 3) {
-    erros.push("nome deve ter ao menos 3 caracteres");
+  const dados = {};
+
+  if (corpo.nome !== undefined || !parcial) {
+    const nome = typeof corpo.nome === "string" ? corpo.nome.trim() : "";
+    if (nome.length < 3) {
+      erros.push({ campo: "nome", mensagem: "O nome precisa ter ao menos 3 caracteres." });
+    } else {
+      dados.nome = nome;
+    }
   }
-  if (typeof dados.preco !== "number" || !Number.isFinite(dados.preco) || dados.preco < 0) {
-    erros.push("preco deve ser um número maior ou igual a zero");
+
+  if (corpo.preco !== undefined || !parcial) {
+    const preco = Number(corpo.preco);
+    if (!Number.isFinite(preco) || preco <= 0) {
+      erros.push({ campo: "preco", mensagem: "O preço precisa ser um número maior que zero." });
+    } else {
+      dados.preco = Math.round(preco * 100) / 100;
+    }
   }
-  if (dados.categoria !== undefined && typeof dados.categoria !== "string") {
-    erros.push("categoria deve ser texto");
+
+  if (corpo.categoria !== undefined || !parcial) {
+    const categoria = typeof corpo.categoria === "string" ? normalizar(corpo.categoria) : "";
+    if (!CATEGORIAS.includes(categoria)) {
+      erros.push({
+        campo: "categoria",
+        mensagem: `A categoria precisa ser uma destas: ${CATEGORIAS.join(", ")}.`,
+      });
+    } else {
+      dados.categoria = categoria;
+    }
   }
-  return erros;
+
+  if (corpo.descricao !== undefined) {
+    dados.descricao = String(corpo.descricao).trim();
+  } else if (!parcial) {
+    dados.descricao = "";
+  }
+
+  if (corpo.imagem !== undefined) {
+    dados.imagem = String(corpo.imagem).trim();
+  } else if (!parcial) {
+    dados.imagem = "";
+  }
+
+  return { erros, dados };
 }
 
 // Única definição da regra de autorização do projeto.
@@ -178,86 +231,127 @@ function podeAlterar(produto, usuario) {
   return produto.dono === usuario.email;
 }
 
+// GET /api/produtos?q=cafe&categoria=cafes&ordenar=preco
 exports.listar = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const termo = normalizar(req.query.q);
-  if (!termo) return res.json(produtos);
+  const { q, categoria, ordenar } = req.query;
+  let lista = await repositorio.lerTodos();
 
-  const encontrados = produtos.filter(
-    (p) => normalizar(p.nome).includes(termo) || normalizar(p.descricao).includes(termo)
-  );
-  res.json(encontrados);
+  if (typeof categoria === "string" && categoria !== "") {
+    const alvo = normalizar(categoria);
+    lista = lista.filter((produto) => normalizar(produto.categoria) === alvo);
+  }
+
+  if (typeof q === "string" && q !== "") {
+    const termo = normalizar(q);
+    lista = lista.filter(
+      (produto) =>
+        normalizar(produto.nome).includes(termo) ||
+        normalizar(produto.descricao).includes(termo),
+    );
+  }
+
+  if (ordenar === "preco") {
+    lista = [...lista].sort((a, b) => a.preco - b.preco);
+  } else if (ordenar === "-preco") {
+    lista = [...lista].sort((a, b) => b.preco - a.preco);
+  } else if (ordenar === "nome") {
+    lista = [...lista].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  }
+
+  res.json(lista);
 };
 
 exports.obter = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const produto = produtos.find((p) => p.id === Number(req.params.id));
-  if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
+  const id = idDaRota(req, res);
+  if (id === null) return;
+
+  const lista = await repositorio.lerTodos();
+  const produto = lista.find((item) => item.id === id);
+  if (!produto) return res.status(404).json({ erro: `Produto ${id} não encontrado.` });
+
   res.json(produto);
 };
 
 exports.criar = async (req, res) => {
-  const erros = validar(req.body ?? {});
-  if (erros.length) {
-    return res.status(400).json({ erro: "Dados inválidos", detalhes: erros });
+  const { erros, dados } = validarProduto(req.body);
+  if (erros.length > 0) {
+    return res.status(400).json({ erro: "Dados inválidos.", detalhes: erros });
   }
 
-  const produtos = await repo.lerTodos();
+  const lista = await repositorio.lerTodos();
   const novo = {
-    id: repo.proximoId(produtos),
-    nome: req.body.nome.trim(),
-    categoria: req.body.categoria?.trim() || "geral",
-    preco: req.body.preco,
-    descricao: req.body.descricao?.trim() || "",
-    dono: req.usuario.email, // do token verificado, nunca do corpo
+    id: repositorio.proximoId(lista),
+    ...dados,
+    dono: req.usuario.email, // do token verificado, NUNCA do corpo
     criadoEm: new Date().toISOString(),
   };
 
-  produtos.push(novo);
-  await repo.salvarTodos(produtos);
+  lista.push(novo);
+  await repositorio.salvarTodos(lista);
+
   res.status(201).location(`/api/produtos/${novo.id}`).json(novo);
 };
 
 exports.atualizar = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const produto = produtos.find((p) => p.id === Number(req.params.id));
-  if (!produto) return res.status(404).json({ erro: "Produto não encontrado" });
+  const id = idDaRota(req, res);
+  if (id === null) return;
 
-  if (!podeAlterar(produto, req.usuario)) {
-    return res.status(403).json({ erro: "Este produto foi cadastrado por outra pessoa" });
+  const lista = await repositorio.lerTodos();
+  const indice = lista.findIndex((item) => item.id === id);
+  if (indice === -1) return res.status(404).json({ erro: `Produto ${id} não encontrado.` });
+
+  if (!podeAlterar(lista[indice], req.usuario)) {
+    return res.status(403).json({ erro: "Este produto foi cadastrado por outra pessoa." });
   }
 
-  const erros = validar(req.body ?? {});
-  if (erros.length) {
-    return res.status(400).json({ erro: "Dados inválidos", detalhes: erros });
+  const { erros, dados } = validarProduto(req.body, { parcial: true });
+  if (erros.length > 0) {
+    return res.status(400).json({ erro: "Dados inválidos.", detalhes: erros });
+  }
+  if (Object.keys(dados).length === 0) {
+    return res.status(400).json({ erro: "Envie ao menos um campo para atualizar." });
   }
 
-  produto.nome = req.body.nome.trim();
-  produto.categoria = req.body.categoria?.trim() || "geral";
-  produto.preco = req.body.preco;
-  produto.descricao = req.body.descricao?.trim() || "";
-  produto.atualizadoEm = new Date().toISOString();
+  // O id, o dono e a data de criação são preservados de propósito: nenhum
+  // deles pode ser trocado por um campo vindo do corpo da requisição.
+  const atualizado = {
+    ...lista[indice],
+    ...dados,
+    id,
+    dono: lista[indice].dono,
+    criadoEm: lista[indice].criadoEm,
+    atualizadoEm: new Date().toISOString(),
+  };
 
-  await repo.salvarTodos(produtos);
-  res.json(produto);
+  lista[indice] = atualizado;
+  await repositorio.salvarTodos(lista);
+
+  res.json(atualizado);
 };
 
 exports.remover = async (req, res) => {
-  const produtos = await repo.lerTodos();
-  const indice = produtos.findIndex((p) => p.id === Number(req.params.id));
-  if (indice === -1) return res.status(404).json({ erro: "Produto não encontrado" });
+  const id = idDaRota(req, res);
+  if (id === null) return;
 
-  if (!podeAlterar(produtos[indice], req.usuario)) {
-    return res.status(403).json({ erro: "Este produto foi cadastrado por outra pessoa" });
+  const lista = await repositorio.lerTodos();
+  const indice = lista.findIndex((item) => item.id === id);
+  if (indice === -1) return res.status(404).json({ erro: `Produto ${id} não encontrado.` });
+
+  if (!podeAlterar(lista[indice], req.usuario)) {
+    return res.status(403).json({ erro: "Este produto foi cadastrado por outra pessoa." });
   }
 
-  produtos.splice(indice, 1);
-  await repo.salvarTodos(produtos);
+  lista.splice(indice, 1);
+  await repositorio.salvarTodos(lista);
+
   res.status(204).end();
 };
 ```
 
-Repare na **ordem das verificações**: existe? (`404`) → é seu? (`403`) → os dados estão válidos? (`400`). Inverter isso produz respostas estranhas, como um `400` de validação para um produto que nem existe. Cada verificação sai por um `return` próprio — o padrão das *guard clauses*, que evita o aninhamento de `if` dentro de `if` dentro de `if`.
+Este é o controlador da Aula 13 — filtros, ordenação, lista branca de categorias, `400` para id malformado e `detalhes: [{ campo, mensagem }]` intactos — com **três** acréscimos de hoje: a função `podeAlterar`, os campos `dono` e `criadoEm` no `criar`, e a checagem de `403` no `atualizar` e no `remover`. Nada foi removido; autorização se **soma** ao que existe.
+
+Repare também no objeto montado dentro de `atualizar`: `dono` e `criadoEm` são reafirmados a partir do registro que já estava no disco. Sem isso, bastaria mandar `{"dono": "eu@gmail.com"}` no corpo de um `PUT` para tomar posse de um produto alheio — a mesma armadilha do `id` que a Aula 13 fechou, agora com consequência de segurança.
+
 
 ### 3.2 A versão em middleware (e a armadilha da referência)
 
@@ -312,48 +406,48 @@ Se você adotar o middleware, os controladores `atualizar` e `remover` passam a 
 
 ### 3.3 Provando pelo `testes.http`
 
-Antes de tocar na interface, prove a regra com requisições cruas. Você vai precisar de dois tokens: um seu e um de uma segunda conta (a institucional, ou a do colega ao lado).
+Antes de tocar na interface, prove a regra com requisições cruas. Você vai precisar de dois **tokens de sessão**: um seu e um de uma segunda conta (a institucional, ou a do colega ao lado). Cada um se obtém do mesmo jeito da Aula 14: faça login com a conta, abra o console do navegador e rode `JSON.parse(sessionStorage.getItem("cafe-cerrado-sessao")).token`. Não use o ID token do Google — o `exigirLogin` confere a assinatura HMAC da sua própria API e recusaria qualquer outra coisa com `401`.
 
 `cafe-cerrado-api/testes.http`
 
 ```http
-@tokenA = COLE_AQUI_O_ID_TOKEN_DA_CONTA_A
-@tokenB = COLE_AQUI_O_ID_TOKEN_DA_CONTA_B
+@tokenA = cole-aqui-o-token-de-sessao-da-conta-A
+@tokenB = cole-aqui-o-token-de-sessao-da-conta-B
 
-### A conta A cria um produto — 201, com "dono" igual ao e-mail da conta A
+### A conta A cria um produto — 201, id 11, com "dono" igual ao e-mail da conta A
 POST http://localhost:3000/api/produtos
 Content-Type: application/json
 Authorization: Bearer {{tokenA}}
 
-{ "nome": "Espresso duplo", "categoria": "bebidas", "preco": 8.5, "descricao": "Curto e forte" }
+{ "nome": "Espresso Duplo", "categoria": "cafes", "preco": 8.5, "descricao": "Duas doses curtas na mesma xícara." }
 
 ### A conta A edita o próprio produto — 200
-PUT http://localhost:3000/api/produtos/7
+PUT http://localhost:3000/api/produtos/11
 Content-Type: application/json
 Authorization: Bearer {{tokenA}}
 
-{ "nome": "Espresso duplo", "categoria": "bebidas", "preco": 9, "descricao": "Curto e forte" }
+{ "nome": "Espresso Duplo", "categoria": "cafes", "preco": 9, "descricao": "Duas doses curtas na mesma xícara." }
 
 ### A conta B tenta editar o produto da conta A — 403
-PUT http://localhost:3000/api/produtos/7
+PUT http://localhost:3000/api/produtos/11
 Content-Type: application/json
 Authorization: Bearer {{tokenB}}
 
-{ "nome": "Sequestrado", "categoria": "bebidas", "preco": 1, "descricao": "Não deve funcionar" }
+{ "nome": "Sequestrado", "categoria": "cafes", "preco": 1, "descricao": "Não deve funcionar" }
 
 ### A conta B tenta excluir o produto da conta A — 403
-DELETE http://localhost:3000/api/produtos/7
+DELETE http://localhost:3000/api/produtos/11
 Authorization: Bearer {{tokenB}}
 
 ### Ninguém tenta excluir sem token — 401
-DELETE http://localhost:3000/api/produtos/7
+DELETE http://localhost:3000/api/produtos/11
 
 ### Excluir um produto que não existe — 404
 DELETE http://localhost:3000/api/produtos/99999
 Authorization: Bearer {{tokenA}}
 
 ### A conta A exclui o próprio produto — 204
-DELETE http://localhost:3000/api/produtos/7
+DELETE http://localhost:3000/api/produtos/11
 Authorization: Bearer {{tokenA}}
 ```
 
@@ -499,7 +593,14 @@ Para que outra pessoa saiba **quais** variáveis existem, versione um exemplo se
 
 ```text
 GOOGLE_CLIENT_ID=cole-aqui-o-client-id-do-google-cloud-console
+SESSAO_SEGREDO=gere-com-node-e-crypto-randomBytes-32-hex
 PORT=3000
+```
+
+As três variáveis são obrigatórias, e o `SESSAO_SEGREDO` é a mais fácil de esquecer: sem ele o `server.js` da Aula 14 encerra com `process.exit(1)` e a mensagem "Variável SESSAO_SEGREDO ausente" — o que reprova na hora o teste da pasta limpa da próxima seção. Gere um valor com:
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 ```
 
 ### 6.2 O teste da pasta limpa
@@ -557,29 +658,32 @@ Pré-requisitos: Node.js 22 ou superior e uma conta Google.
    tipo "Aplicativo da Web" e adicione `http://localhost:3000` às origens
    JavaScript autorizadas.
 
-3. Copie `.env.exemplo` para `.env` e preencha o Client ID:
+3. Copie `.env.exemplo` para `.env` e preencha o `GOOGLE_CLIENT_ID` e o
+   `SESSAO_SEGREDO` (o Client ID chega ao navegador por `GET /api/config`;
+   não há nada para colar no HTML):
 
         cp .env.exemplo .env
+        node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
 
-4. Coloque o mesmo Client ID no atributo `data-client_id` de
-   `public/index.html`.
-
-5. Suba o servidor:
+4. Suba o servidor:
 
         npm run dev
 
-6. Acesse <http://localhost:3000>.
+5. Acesse <http://localhost:3000>.
 
 ## Endpoints da API
 
 | Método | Caminho | Descrição |
 |---|---|---|
-| GET | /api/produtos | Lista produtos; aceita `?q=termo` |
+| GET | /api/produtos | Lista produtos; aceita `?q=`, `?categoria=` e `?ordenar=` |
 | GET | /api/produtos/:id | Um produto |
 | POST | /api/produtos | Cria (exige login) |
 | PUT | /api/produtos/:id | Atualiza (exige login e ser o dono) |
 | DELETE | /api/produtos/:id | Remove (exige login e ser o dono) |
-| POST | /api/auth/google | Verifica o ID token e devolve os dados do usuário |
+| GET | /api/categorias | Lista as categorias do cardápio, como `{ id, nome }` |
+| GET | /api/config | Configuração pública do front (Client ID do Google) |
+| POST | /api/auth/google | Recebe `{ credential }`, verifica o ID token e devolve `{ usuario, token }` |
+| GET | /api/auth/eu | Dados do usuário da sessão atual (exige login) |
 
 Status possíveis: 200, 201, 204, 400, 401, 403, 404 e 500.
 
@@ -722,14 +826,14 @@ A rota `GET /api/produtos` é pública, então ela não pode exigir login — ma
 O ponto onde as pessoas mais travam é o Client ID do Google: escreva o passo a passo do Cloud Console com os nomes exatos dos menus, incluindo a origem `http://localhost:3000`. Se o seu projeto precisa de dados de exemplo para não abrir vazio, versione um `data/` com dois ou três registros.
 </details>
 
-**B4.** Faça a sessão sobreviver ao <kbd>F5</kbd>: guarde o ID token no `sessionStorage` ao logar, restaure-o ao carregar a página e valide-o no servidor (chamando `POST /api/auth/google` de novo) antes de considerar o usuário logado. Se o servidor recusar, limpe o armazenamento e volte ao estado de visitante.
+**B4.** A sessão já sobrevive ao <kbd>F5</kbd> (o `auth.js` da Aula 15 lê o `sessionStorage`), mas hoje a interface acredita cegamente no que está guardado: um token expirado ou adulterado à mão pelo DevTools continua desenhando os botões de escrita, que só falham quando alguém clica. Conserte isso: ao carregar a página, confirme a sessão no servidor com `GET /api/auth/eu` antes de considerar o usuário logado. Se a resposta for `401`, limpe o `sessionStorage` e volte ao estado de visitante.
 
 **Resultado esperado:** logar, recarregar a página e continuar logado, com os botões de escrita visíveis; abrir uma aba anônima e continuar deslogado; esperar o token expirar e ver a aplicação voltar sozinha ao estado de visitante.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-`sessionStorage` some ao fechar a aba, o que é mais adequado para um token de curta duração do que `localStorage`. Nunca confie no que veio do armazenamento: o servidor precisa validar de novo, porque qualquer pessoa pode escrever qualquer string ali pelo DevTools. Faça a restauração dentro de uma função `async` chamada no início do `auth.js`.
+`GET /api/auth/eu` já existe desde a Aula 14 e passa pelo `exigirLogin`: ele responde `200` com o usuário quando o token é válido e `401` quando não é — exatamente a pergunta que você precisa fazer. Chame-o dentro da função `async iniciar()` do `auth.js`, antes de `pintarAreaDoUsuario()`, e trate o `401` como logout. Para testar, edite o token no DevTools (Application → Session Storage), troque um caractere e recarregue: a página tem de voltar ao estado de visitante sozinha.
 </details>
 
 ### Nível C — Desafio em sala
@@ -855,8 +959,8 @@ Um pedido tem, no mínimo: `id`, `produtoId`, `quantidade`, `observacao`, `clien
 | `TypeError: Cannot read properties of undefined (reading 'email')` no controlador | A rota não passa por `exigirLogin`, então `req.usuario` não existe | Confira a ordem em `routes/produtos.js`: `exigirLogin` vem antes do controlador |
 | Qualquer usuário logado consegue editar tudo | A comparação usa `req.body.dono` ou o campo nem é comparado | Use `produto.dono === req.usuario.email`, com o e-mail vindo do token |
 | `PUT` responde `200` mas nada muda no arquivo | O objeto alterado veio de uma leitura diferente da lista que foi salva | Altere um item **de dentro** da lista que será passada a `salvarTodos` (seção 3.2) |
-| `Error: Wrong recipient, payload audience != requiredAudience` | O Client ID do `.env` é diferente do usado no `data-client_id` do HTML | Use o mesmo Client ID nos dois lugares e reinicie o servidor |
-| Tudo funciona por uma hora e depois só dá `401` | O ID token do Google expirou (validade de cerca de 1 h) | Faça login de novo; para não perder a sessão no F5, veja o exercício B4 |
+| `Error: Wrong recipient, payload audience != requiredAudience` | O `GOOGLE_CLIENT_ID` do `.env` não é o do projeto que emitiu o token (dois projetos no Google Cloud, ou o `.env` de outra máquina) | Corrija o `.env` e reinicie o servidor; o front lê o mesmo valor por `GET /api/config`, então não há um segundo lugar para ajustar |
+| Tudo funciona por um tempo e depois só dá `401` | O token de sessão emitido em `POST /api/auth/google` expirou (8 horas, Aula 14) | Faça login de novo e atualize o `@tokenA`/`@tokenB` do `testes.http` |
 | `Cannot find module 'google-auth-library'` num clone limpo | A dependência não está no `package.json` | `npm install google-auth-library` na pasta original e comite `package.json` e `package-lock.json` |
 | A aplicação sobe vazia no computador do avaliador | `data/produtos.json` está no `.gitignore` ou nunca foi comitado | Versione um arquivo de dados com dois ou três itens de exemplo |
 | `git push` recusado com aviso de segredo detectado | O `.env` (ou um token) entrou no commit | `git rm -r --cached .env`, comite, e gere um Client ID novo no Google Cloud Console |
@@ -931,7 +1035,7 @@ Ao final desta aula, o seu repositório precisa ter:
 | README, `testes.http` e higiene do repositório (roda num clone limpo) | 0,5 |
 | **Total** | **10,0** |
 
-**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até cinco dias; depois disso, a entrega não é aceita.
+**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até o limite de 5 dias; depois desse limite a avaliação recebe zero, salvo justificativa formal protocolada junto à coordenação do curso. O horário de referência é o registrado pelo SIGAA.
 
 **Plágio e uso de IA.** Ferramentas de IA são permitidas como apoio: tirar dúvidas, sugerir abordagens, revisar código. O trabalho, porém, precisa ser seu — você pode ser chamado a explicar qualquer trecho do que entregou, e não saber explicar equivale a não ter feito. Cópia entre colegas, total ou parcial, com ou sem alterações cosméticas, resulta em nota zero para todos os envolvidos.
 

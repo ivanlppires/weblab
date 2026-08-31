@@ -20,7 +20,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos
 
-Na aula passada você criou o repositório `cafe-cerrado-api`, subiu um servidor Express 5, serviu o site pela pasta `public/` e escreveu os endpoints `GET /api/produtos`, `GET /api/produtos/:id` e `GET /api/categorias`. Tudo isso mora em um único `server.js`. Hoje esse arquivo é quebrado em peças, ganha a capacidade de **receber** dados (não só devolver) e aprende a falhar de forma organizada.
+Na aula passada você criou o repositório `cafe-cerrado-api`, subiu um servidor Express 5, serviu o site pela pasta `public/` e escreveu os endpoints `GET /api/produtos`, `GET /api/produtos/:id` e `GET /api/categorias`. Tudo isso mora em um único `server.js`. Hoje esse arquivo é quebrado em peças, ganha a capacidade de **receber** dados (não só devolver) e aprende a falhar de forma organizada. Os três endpoints continuam existindo do começo ao fim — eles apenas mudam de casa, cada recurso no seu `Router`.
 
 Antes de começar, confirme:
 
@@ -453,6 +453,8 @@ No Express 5, um `throw` dentro de um handler `async` é capturado automaticamen
 
 ```js
 // Rota de teste: derruba de propósito, para ver o tratador funcionando.
+// Acrescente-a TEMPORARIAMENTE ao routes/produtos.js, rode o curl abaixo e
+// apague-a em seguida — ela não entra no arquivo final do Mão na massa.
 router.get("/teste/erro", async (req, res) => {
   throw new Error("Explosão proposital para testar o tratador de erros");
 });
@@ -629,7 +631,42 @@ router.post("/", (req, res) => {
 module.exports = router;
 ```
 
-### Passo 5 — O `server.js` enxuto
+### Passo 5 — As rotas de categorias
+
+O `GET /api/categorias` da Aula 11 não pode sumir na refatoração: o `<select>` de categoria da SPA depende dele. Ele sai do `server.js` e vira o segundo Router do projeto — pequeno, mas com o mesmo formato dos demais.
+
+`routes/categorias.js`
+
+```js
+const express = require("express");
+
+const router = express.Router();
+
+// O MESMO array que routes/produtos.js carregou: o require guarda o módulo em
+// cache, então os dois arquivos enxergam o mesmo objeto na memória.
+const produtos = require("../data/produtos.json");
+
+// As quatro categorias do cardápio, na ordem em que aparecem no site.
+// Esta lista estava no server.js da Aula 11; ela só mudou de arquivo.
+const CATEGORIAS = [
+  { id: "cafes", nome: "Cafés" },
+  { id: "geladas", nome: "Bebidas geladas" },
+  { id: "salgados", nome: "Salgados" },
+  { id: "doces", nome: "Doces" },
+];
+
+// GET /api/categorias → [{ id, nome }], só as categorias que têm produto hoje
+router.get("/", (req, res) => {
+  const usadas = new Set(produtos.map((p) => p.categoria));
+  res.json(CATEGORIAS.filter((categoria) => usadas.has(categoria.id)));
+});
+
+module.exports = router;
+```
+
+Doze linhas úteis, um recurso inteiro. É essa a promessa do `express.Router`: recurso novo é arquivo novo, e o `server.js` cresce **uma** linha.
+
+### Passo 6 — O `server.js` enxuto
 
 `server.js`
 
@@ -638,6 +675,7 @@ const path = require("node:path");
 const express = require("express");
 
 const produtosRouter = require("./routes/produtos");
+const categoriasRouter = require("./routes/categorias");
 const registrarRequisicao = require("./middlewares/registro");
 const { naoEncontradoApi, tratadorDeErros } = require("./middlewares/erros");
 
@@ -653,8 +691,9 @@ app.use(registrarRequisicao);
 // 3. Arquivos estáticos: o site das Unidades 1 e 2
 app.use(express.static(path.join(__dirname, "public")));
 
-// 4. Rotas da API
+// 4. Rotas da API — um app.use por recurso
 app.use("/api/produtos", produtosRouter);
+app.use("/api/categorias", categoriasRouter);
 
 // 5. Qualquer /api que não casou acima vira 404 em JSON
 app.use("/api", naoEncontradoApi);
@@ -672,9 +711,9 @@ app.listen(PORTA, () => {
 });
 ```
 
-Sete linhas comentadas, sete responsabilidades, nenhuma regra de negócio. Esse é o formato de `server.js` que o projeto vai manter até a Aula 16.
+Sete blocos comentados, sete responsabilidades, nenhuma regra de negócio. Esse é o formato de `server.js` que o projeto vai manter até a Aula 16 — inclusive o fallback `/{*splat}`, que é o que mantém a SPA da Aula 10 funcionando quando alguém recarrega a página em `/#/cardapio`.
 
-### Passo 6 — O arquivo de testes
+### Passo 7 — O arquivo de testes
 
 Crie na raiz do projeto:
 
@@ -698,16 +737,19 @@ GET {{base}}/api/produtos/999
 ### Id que não é número (espera 400)
 GET {{base}}/api/produtos/abacaxi
 
+### Listar as categorias (espera 200 com objetos {id, nome})
+GET {{base}}/api/categorias
+
 ### Criar um produto válido (espera 201 + o recurso criado)
 POST {{base}}/api/produtos
 Content-Type: application/json
 
 {
-  "nome": "Bolo de milho verde",
-  "categoria": "doces",
+  "nome": "Suco de Cupuaçu",
+  "categoria": "geladas",
   "preco": 10.5,
-  "descricao": "Receita da vó, com milho da feira do produtor.",
-  "imagem": "img/bolo-milho.jpg"
+  "descricao": "Polpa batida na hora com água gelada e um fio de mel.",
+  "imagem": "img/suco-cupuacu.jpg"
 }
 
 ### Criar sem nome (espera 400 com a lista de problemas)
@@ -753,9 +795,9 @@ No VS Code, com o REST Client instalado, aparece um link **Send Request** acima 
 
 1. `npm run dev`. O terminal mostra `Café Cerrado no ar em http://localhost:3000`.
 2. Abra `http://localhost:3000` e navegue pelo site. O terminal deve imprimir uma linha de log por arquivo carregado, com status e duração.
-3. No `testes.http`, dispare os blocos de cima para baixo e confira os status: `200`, `200`, `200`, `404`, `400`, `201`, `400`, `400`, `400`, `404`, `200`.
-4. Depois do `POST` que devolveu `201`, dispare de novo o primeiro bloco: o "Bolo de milho verde" está na lista, com o id seguinte ao do último produto.
-5. Pare o servidor (<kbd>Ctrl</kbd>+<kbd>C</kbd>), suba de novo e liste outra vez: o bolo sumiu. É o comportamento esperado hoje — e o problema que a próxima aula resolve.
+3. No `testes.http`, dispare os blocos de cima para baixo e confira os status: `200`, `200`, `200`, `404`, `400`, `200`, `201`, `400`, `400`, `400`, `404`, `200`.
+4. Depois do `POST` que devolveu `201`, dispare de novo o primeiro bloco: o "Suco de Cupuaçu" está na lista, com o id `11` — o seguinte ao do último produto do cardápio.
+5. Pare o servidor (<kbd>Ctrl</kbd>+<kbd>C</kbd>), suba de novo e liste outra vez: o suco sumiu. É o comportamento esperado hoje — e o problema que a próxima aula resolve.
 6. Peça `curl -i http://localhost:3000/api/pedidos`: a resposta é `404` com `Content-Type: application/json`, não uma página HTML.
 7. Comente a linha `app.use(express.json());` do `server.js`, salve e dispare o `POST` válido: veja o `500` e a mensagem `TypeError: Cannot destructure property 'nome' of 'req.body' as it is undefined.` no terminal. Descomente antes de seguir.
 
@@ -817,14 +859,14 @@ function limitarCampos(req, res, next) {
 
 ### Nível B — Aplicação
 
-**B1.** Rota de categorias em arquivo próprio. Crie `routes/categorias.js` com um Router que responde `GET /api/categorias` (lista de categorias distintas) e `GET /api/categorias/:nome/produtos` (os produtos daquela categoria). Monte-o no `server.js` com **uma** linha.
+**B1.** Produtos de uma categoria. Acrescente ao `routes/categorias.js` do Mão na massa a rota `GET /api/categorias/:id/produtos`, que devolve os produtos daquela categoria — sem tocar no `server.js` e sem duplicar o filtro que já existe em `routes/produtos.js`.
 
-Resultado esperado: `curl http://localhost:3000/api/categorias` devolve o array de categorias; `curl http://localhost:3000/api/categorias/cafes/produtos` devolve só os cafés; uma categoria inexistente devolve `[]` com status `200`.
+Resultado esperado: `curl http://localhost:3000/api/categorias/cafes/produtos` devolve os quatro cafés; `curl http://localhost:3000/api/categorias/geladas/produtos` devolve os dois itens gelados; uma categoria inexistente devolve `[]` com status `200`.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-O `server.js` não pode crescer mais que uma linha: `app.use("/api/categorias", categoriasRouter)`. Dentro do router, os caminhos são `"/"` e `"/:nome/produtos"`. Para as categorias distintas, `[...new Set(produtos.map((p) => p.categoria))]`.
+O `app.use("/api/categorias", categoriasRouter)` já existe desde o Passo 5: dentro do router, o caminho novo é `"/:id/produtos"`. O filtro é o mesmo `produtos.filter((p) => p.categoria === req.params.id)`; se quiser evitar a duplicação de verdade, extraia a comparação para uma função em um arquivo compartilhado e chame-a nos dois routers.
 </details>
 
 **B2.** Middleware de autorização simulada. Escreva `middlewares/chaveApi.js`, que exige o cabeçalho `X-Chave-Api: cafe-cerrado-2` em todas as requisições `POST` de `/api`. Sem o cabeçalho, responde `401` com `{ "erro": "..." }`; com ele, chama `next()`.

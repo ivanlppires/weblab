@@ -141,21 +141,26 @@ O que falta — e é o que esta aula acrescenta — são cinco camadas: **contra
 
 A WCAG 1.4.3 exige razão de contraste de **4,5:1** para texto normal e **3:1** para texto grande (a partir de 24 px, ou 18,5 px em negrito). A 1.4.11 exige **3:1** para elementos não textuais que carreguem significado: borda de campo de formulário, ícone que comunica estado e — este é o mais esquecido — o **indicador de foco**.
 
-A razão de contraste é um número entre 1:1 (mesma cor) e 21:1 (preto sobre branco). Ela é calculada a partir da luminância relativa de cada cor, o que significa que **você não consegue estimar no olho**: dourado sobre marrom escuro e dourado sobre creme parecem igualmente "legíveis" na sua tela calibrada, e um passa folgado enquanto o outro reprova.
+A razão de contraste é um número entre 1:1 (mesma cor) e 21:1 (preto sobre branco). Ela é calculada a partir da luminância relativa de cada cor, o que significa que **você não consegue estimar no olho**: a mesma cor de destaque sobre o marrom da navbar e sobre o creme do conteúdo parece igualmente "legível" na sua tela calibrada, e nos dois casos ela reprova por motivos diferentes.
 
-A paleta do Café Cerrado, medida:
+A paleta do Café Cerrado — a mesma do `:root` desde a Aula 02, sem uma cor a mais — medida par a par:
 
 | Uso | Texto sobre fundo | Razão | Situação |
 |---|---|---|---|
-| Texto do corpo | `#2b1e1c` sobre `#f5efe6` | 14,1:1 | Passa AAA |
-| Navbar e rodapé | `#f5efe6` sobre `#3e2723` | 11,8:1 | Passa AAA |
-| Botão principal | `#f5efe6` sobre `#6d4c41` | 7,6:1 | Passa AAA |
-| Destaque dourado no escuro | `#d99e33` sobre `#3e2723` | 5,7:1 | Passa AA |
-| Selo verde | `#ffffff` sobre `#4e7c59` | 4,8:1 | Passa AA |
-| Dourado sobre o creme | `#d99e33` sobre `#f5efe6` | 2,1:1 | **Reprova** |
+| Texto do corpo | `#2b2118` sobre `#fdfaf6` | 15,1:1 | Passa AAA |
+| Rodapé | `#ffffff` sobre `#4a3325` | 11,7:1 | Passa AAA |
+| Texto secundário | `#5c4b3c` sobre `#fdfaf6` | 8,0:1 | Passa AAA |
+| Navbar | `#ffffff` sobre `#6f4e37` | 7,4:1 | Passa AAA |
+| Link no corpo | `#6f4e37` sobre `#fdfaf6` | 7,2:1 | Passa AAA |
+| Botão de destaque | `#ffffff` sobre `#c2703d` | 3,7:1 | **Reprova** (texto normal exige 4,5:1) |
+| Anel de foco na navbar | `#c2703d` sobre `#6f4e37` | 2,0:1 | **Reprova** (1.4.11 exige 3:1) |
 | Cinza "discreto" | `#9e9e9e` sobre `#ffffff` | 2,7:1 | **Reprova** |
 
-As duas últimas linhas são o padrão da turma inteira: a cor de destaque usada fora do lugar dela e o cinza-claro que os tutoriais chamam de "texto secundário". Cinza-claro sobre branco é o erro de contraste mais comum da web.
+Leia a tabela de baixo para cima, porque é ali que está a lição. As cinco primeiras linhas passam com folga: marrom escuro sobre creme e branco sobre marrom são combinações seguras, e foi por isso que ninguém percebeu nada de errado nas Aulas 02 a 05.
+
+As três últimas são o padrão da turma inteira. O **botão de destaque** que você escreveu na Aula 02 (`background: var(--cor-destaque)` com texto branco) reprova por pouco — 3,7:1 onde a norma pede 4,5:1 — e "por pouco" não existe em acessibilidade. O **anel de foco** que você escreveu na Aula 05 com `var(--cor-destaque)` passa sobre o fundo claro do conteúdo (3,6:1, e o critério 1.4.11 pede 3:1) e reprova em cima da navbar marrom, que é justamente onde o `Tab` começa. E o cinza-claro que os tutoriais chamam de "texto secundário" é o erro de contraste mais comum da web — no Café Cerrado ele nem existe, porque `--cor-texto-suave` foi escolhido escuro o bastante.
+
+Nenhum desses três defeitos é visível a olho nu. Todos os três aparecem no Lighthouse e no seletor de cor do DevTools. O Passo 6 do Mão na massa corrige os dois primeiros.
 
 Três formas de medir:
 
@@ -184,14 +189,14 @@ Se qualquer resposta for "não", há gente que não usa o seu site — e não é
 
 /* Correto: um anel de dois tons, visível em fundo claro e em fundo escuro */
 :focus-visible {
-  outline: 3px solid var(--cafe-escuro);
+  outline: 3px solid var(--cor-marca-escura);
   outline-offset: 3px;
-  box-shadow: 0 0 0 6px var(--creme);
+  box-shadow: 0 0 0 6px var(--cor-superficie);
   border-radius: 2px;
 }
 ```
 
-O anel de dois tons resolve um problema real: um anel de cor única sempre reprova em algum fundo. O escuro (`--cafe-escuro`) aparece sobre o creme das seções; o halo claro (`--creme`) aparece sobre a navbar marrom. Juntos, garantem os 3:1 da 1.4.11 em qualquer lugar do site.
+O anel de dois tons resolve um problema real: um anel de cor única sempre reprova em algum fundo — é exatamente o que a tabela da §5 mostrou sobre o anel da Aula 05. O escuro (`--cor-marca-escura`, 11,3:1 sobre o fundo claro) aparece nas seções de conteúdo; o halo claro (`--cor-superficie`, 7,4:1 sobre o marrom) aparece sobre a navbar. Juntos, garantem os 3:1 da 1.4.11 em qualquer lugar do site.
 
 A diferença entre `:focus` e `:focus-visible` importa: `:focus` casa **sempre** que o elemento recebe foco, inclusive por clique de mouse (é por isso que designers pedem para "tirar aquele contorno"); `:focus-visible` casa quando o navegador julga que o indicador é útil — na prática, quando o foco veio do teclado. Estilize `:focus-visible` e o problema estético desaparece sem tirar o retorno de quem precisa.
 
@@ -226,8 +231,8 @@ Quem navega por teclado passaria pelos oito links do menu em **cada** página an
   left: 0;
   z-index: 1100;
   padding: 0.75rem 1rem;
-  background-color: var(--dourado);
-  color: var(--cafe-escuro);
+  background-color: var(--cor-marca-escura);   /* 11,7:1 com o texto branco */
+  color: var(--cor-superficie);
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-120%);
@@ -273,7 +278,7 @@ Existem **três** formas de esconder algo, e elas não são intercambiáveis:
 }
 ```
 
-A terceira serve para dar título a uma seção que visualmente não precisa dele, ou para completar o texto de um link ("Ver detalhes <span class="oculto-visualmente">do Espresso do Cerrado</span>"). O Bootstrap 5.3 já traz essa classe com o nome `visually-hidden` — use a dele se preferir, o efeito é o mesmo.
+A terceira serve para dar título a uma seção que visualmente não precisa dele, ou para completar o texto de um link (`Ver detalhes <span class="oculto-visualmente">do Espresso do Cerrado</span>`). O Bootstrap 5.3 já traz essa classe com o nome `visually-hidden` — use a dele se preferir, o efeito é o mesmo.
 
 > **🔎 Por baixo do capô**
 > Por que `clip-path: inset(50%)` e não `width: 0; height: 0`? Porque um elemento de dimensão zero é tratado como inexistente por vários motores e some da árvore de acessibilidade junto com o conteúdo. A receita acima mantém 1 pixel de área real, tira o conteúdo da visão por recorte e impede que o texto quebre linha (`white-space: nowrap`) — ela existe há mais de uma década e cada linha resolve um bug específico de um navegador. Copie-a inteira; não "otimize".
@@ -494,7 +499,7 @@ Três verificações:
 
     <section aria-labelledby="titulo-sobre">
       <h2 id="titulo-sobre">Nossa história</h2>
-      <p>Começamos em 2019 com um torrador de 3 kg e uma bicicleta de entregas.</p>
+      <p>Começamos em uma garagem no Setor Comercial, com um torrador de dois quilos.</p>
     </section>
 
     <section aria-labelledby="titulo-destaques">
@@ -534,8 +539,8 @@ Cole o `<a class="link-pular">` como **primeiro** elemento do `<body>` das três
   left: 0;
   z-index: 1100;
   padding: 0.75rem 1rem;
-  background-color: var(--dourado);
-  color: var(--cafe-escuro);
+  background-color: var(--cor-marca-escura);   /* 11,7:1 com o texto branco */
+  color: var(--cor-superficie);
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-120%);
@@ -556,52 +561,68 @@ main:focus {
 
 ### Passo 5 — Corrigir o anel de foco da Aula 05
 
-Na Aula 05 você usou `outline: 3px solid var(--dourado)`. Meça: dourado `#d99e33` sobre o creme `#f5efe6` dá 2,1:1 — reprova no critério 1.4.11, que exige 3:1 para o indicador de foco. Troque pelo anel de dois tons.
+Na Aula 05 você escreveu `outline: 3px solid var(--cor-destaque)`. Meça os dois fundos em que esse anel aparece:
+
+- sobre o fundo claro das seções (`#c2703d` sobre `#fdfaf6`): **3,6:1** — passa, porque o critério 1.4.11 exige 3:1 para o indicador de foco;
+- sobre a navbar marrom (`#c2703d` sobre `#6f4e37`): **2,0:1** — **reprova**. E a navbar é o primeiro lugar onde o <kbd>Tab</kbd> chega.
+
+Uma cor sozinha não resolve: não existe tom que fique a 3:1 do creme **e** a 3:1 do marrom. A saída é o anel de dois tons.
 
 **`css/estilo.css`**
 
 ```css
 /* Anel de foco global: escuro por dentro, claro por fora, visível em qualquer fundo */
 :focus-visible {
-  outline: 3px solid var(--cafe-escuro);
+  outline: 3px solid var(--cor-marca-escura);   /* 11,3:1 sobre o fundo claro */
   outline-offset: 3px;
-  box-shadow: 0 0 0 6px var(--creme);
+  box-shadow: 0 0 0 6px var(--cor-superficie);
   border-radius: 2px;
 }
 
 /* Dentro da navbar escura, inverte as duas camadas */
 .navbar :focus-visible {
-  outline-color: var(--creme);
-  box-shadow: 0 0 0 6px var(--cafe-escuro);
+  outline-color: var(--cor-superficie);         /* 7,1:1 sobre o marrom da marca */
+  box-shadow: 0 0 0 6px var(--cor-marca-escura);
 }
 ```
 
-Repare que isto **substitui** a regra de foco da aula passada. Apague a antiga: duas regras de foco disputando é a origem clássica de "no meu computador aparece e no seu não".
+Repare que isto **substitui** a regra de foco da aula passada. Apague a antiga (`.btn:focus-visible, .nav-link:focus-visible, .rodape a:focus-visible`): duas regras de foco disputando é a origem clássica de "no meu computador aparece e no seu não".
 
 ### Passo 6 — Corrigir o contraste
 
 Rode o Lighthouse de novo e leia os itens de contraste. Para cada par reprovado, decida entre escurecer o texto ou escurecer o fundo — nunca "aumentar a fonte para virar texto grande", que é como se burla a regra.
 
+O par reprovado do Café Cerrado é um só, e vem lá da Aula 02: `--cor-destaque` (`#c2703d`) como fundo de botão com texto branco dá **3,7:1**, e texto normal exige 4,5:1. A correção é escurecer o fundo até passar — sem trocar a família de cor, para a identidade visual não mudar. Acrescente **uma** variável ao `:root` e use-a em tudo que leve texto sobre a cor de destaque:
+
 **`css/estilo.css`**
 
 ```css
-/* Antes: dourado sobre creme (2,1:1) — reprovado */
-/* Depois: dourado só sobre fundos escuros; no claro, use o café escuro */
-.destaque-claro {
-  color: var(--cafe-escuro);        /* 11,8:1 sobre o creme */
-  background-color: var(--creme);
+:root {
+  /* … a paleta das Aulas 02 e 04 continua aqui, sem alteração … */
+  --cor-destaque-escura: #a3521f;   /* 5,6:1 com o branco; 5,3:1 sobre o fundo claro */
 }
 
-.destaque-escuro {
-  color: var(--dourado);            /* 5,7:1 sobre o café escuro */
-  background-color: var(--cafe-escuro);
+/* Texto sobre a cor de destaque: sempre a versão escura */
+.btn-destaque,
+.badge-destaque {
+  background-color: var(--cor-destaque-escura);
+  color: var(--cor-superficie);      /* 5,6:1 — passa AA com folga */
+}
+
+/* A cor de destaque original continua válida onde não carrega texto:
+   bordas, ícones decorativos e o sublinhado do menu (só precisam de 3:1). */
+.produto__preco {
+  color: var(--cor-destaque-escura);  /* 5,3:1 sobre o fundo claro */
 }
 
 /* Texto secundário: nada de cinza-claro */
 .texto-secundario {
-  color: var(--cafe-medio);         /* 6,7:1 sobre o creme */
+  color: var(--cor-texto-suave);      /* 8,0:1 sobre o fundo claro */
 }
 ```
+
+> **🧠 Você sabia?**
+> A diferença entre `#c2703d` e `#a3521f` é quase invisível lado a lado — e é a diferença entre reprovar e passar. Foi por isso que a §5 abriu com "pare de decidir cor no olho": a percepção humana de "mais escuro" não é linear, e a fórmula da luminância relativa da WCAG eleva cada canal a 2,4 justamente para corrigir isso.
 
 Confirme cada número no seletor de cor do DevTools antes de commitar. A frase "está bom assim" não é evidência.
 
@@ -703,7 +724,7 @@ Substitua o formulário de `contato.html` pela versão da §8, incluindo `<field
 
 /* Campo obrigatório: a marca não é só cor */
 .form-label .obrigatorio {
-  color: var(--cafe-escuro);
+  color: var(--cor-marca-escura);
   font-weight: 700;
 }
 ```
@@ -744,28 +765,28 @@ A tabela da Aula 03 precisa de duas coisas que quase todo mundo esquece: uma leg
     <tr>
       <th scope="row">Espresso do Cerrado</th>
       <td>Dose curta, torra média, notas de chocolate</td>
-      <td>R$ 7,00</td>
+      <td>R$ 6,00</td>
     </tr>
     <tr>
-      <th scope="row">Coado da casa</th>
-      <td>Método V60, grãos de Alto Paraíso, 250 ml</td>
-      <td>R$ 9,00</td>
+      <th scope="row">Coado da Casa</th>
+      <td>Coador de papel, moagem média na hora, 200 ml</td>
+      <td>R$ 8,50</td>
     </tr>
     <tr>
-      <th scope="row">Cappuccino de baunilha</th>
-      <td>Leite vaporizado, baunilha natural, canela</td>
-      <td>R$ 13,00</td>
-    </tr>
-    <tr>
-      <th scope="row">Café gelado do Cerrado</th>
-      <td>Extração a frio de 14 horas, servido com gelo</td>
+      <th scope="row">Cappuccino Sinop</th>
+      <td>Espresso duplo, leite vaporizado e canela do Cerrado</td>
       <td>R$ 12,00</td>
+    </tr>
+    <tr>
+      <th scope="row">Cold Brew da Chapada</th>
+      <td>Extração a frio de 18 horas, servido com gelo</td>
+      <td>R$ 15,00</td>
     </tr>
   </tbody>
 </table>
 ```
 
-`<caption>` dá nome à tabela na lista de tabelas do leitor de tela. `scope="col"` e `scope="row"` dizem a que cabeçalho cada célula pertence, para que a leitura seja "Coado da casa, Preço, R$ 9,00" em vez de "R$ 9,00" solto. A classe `caption-top` do Bootstrap coloca a legenda acima da tabela; sem ela, o Bootstrap a exibe embaixo.
+`<caption>` dá nome à tabela na lista de tabelas do leitor de tela. `scope="col"` e `scope="row"` dizem a que cabeçalho cada célula pertence, para que a leitura seja "Coado da Casa, Preço, R$ 8,50" em vez de "R$ 8,50" solto. A classe `caption-top` do Bootstrap coloca a legenda acima da tabela; sem ela, o Bootstrap a exibe embaixo.
 
 ### Passo 11 — Passar o site inteiro pelo teclado
 
@@ -841,7 +862,7 @@ Substitua os números pelos **seus** — inventar nota é plágio de dados, e o 
 
 **A6.** Qual a razão de contraste mínima da WCAG AA para texto normal, texto grande e indicador de foco? Cite o critério de cada uma.
 
-**A7.** Por que `#d99e33` passa sobre `#3e2723` e reprova sobre `#f5efe6`, se é a mesma cor?
+**A7.** Por que `#c2703d` passa no critério 1.4.11 sobre `#fdfaf6` (3,6:1) e reprova sobre `#6f4e37` (2,0:1), se é a mesma cor?
 
 **A8.** Qual a diferença entre `:focus` e `:focus-visible`? Em qual dos dois o link de salto deve ser estilizado, e por quê?
 
@@ -1082,7 +1103,7 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 
 | Sintoma | Causa | Solução |
 |---|---|---|
-| Lighthouse: *"Background and foreground colors do not have a sufficient contrast ratio"* | Texto claro sobre fundo claro (o clássico cinza sobre branco ou dourado sobre creme) | Meça no seletor de cor do DevTools e escureça o texto ou o fundo até passar de 4,5:1 |
+| Lighthouse: *"Background and foreground colors do not have a sufficient contrast ratio"* | Texto claro sobre fundo claro (o clássico cinza sobre branco, ou a cor de destaque sobre o creme) | Meça no seletor de cor do DevTools e escureça o texto ou o fundo até passar de 4,5:1 |
 | Lighthouse: *"Buttons do not have an accessible name"* | Botão cujo conteúdo é só ícone, imagem de fundo ou SVG com `aria-hidden` | `aria-label` descrevendo a **ação** ("Abrir o menu"), não o desenho |
 | Lighthouse: *"Links do not have a discernible name"* | Link contendo só uma imagem sem `alt`, ou só um `<svg aria-hidden>` | `alt` descrevendo o **destino**, ou texto com `.oculto-visualmente` |
 | Lighthouse: *"Form elements do not have associated labels"* | Campo com `placeholder` no lugar de `<label>`, ou `for` diferente do `id` | Um `<label for="x">` para cada `<input id="x">`; confira caractere por caractere |

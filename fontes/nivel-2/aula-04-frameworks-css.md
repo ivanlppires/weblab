@@ -39,7 +39,7 @@ Ao final desta aula você será capaz de:
 
 ### 1.1 A lista de coisas que ninguém quer reescrever
 
-Abra o `css/estilo.css` que você escreveu na Aula 03 e conte: são umas 130 linhas para três páginas simples. Agora imagine o site inteiro de uma prefeitura, com quarenta páginas. Toda equipe que começa um projeto do zero precisa resolver, na mão, exatamente os mesmos seis problemas:
+Abra o `css/estilo.css` que você escreveu nas Aulas 02 e 03 e conte: são cerca de 250 linhas para três páginas simples. Agora imagine o site inteiro de uma prefeitura, com quarenta páginas. Toda equipe que começa um projeto do zero precisa resolver, na mão, exatamente os mesmos seis problemas:
 
 1. **Normalizar o navegador.** Chrome, Firefox e Safari têm margens, tamanhos de fonte e estilos de botão diferentes por padrão. Sem um reset, a mesma página fica com espaçamentos distintos em cada um.
 2. **Um sistema de grid.** Colocar três blocos lado a lado no desktop e um embaixo do outro no celular é o problema de layout mais repetido da Web.
@@ -779,6 +779,19 @@ Substitua o `<main>` da página inicial:
           </div>
         </article>
       </div>
+
+      <div class="col">
+        <article class="card card-produto h-100">
+          <div class="card-body">
+            <h3 class="h5 card-title">Bolo de Milho Verde</h3>
+            <p class="card-text">Fatia de bolo cremoso feito com milho da feira do produtor.</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <span class="fw-bold">R$ 9,50</span>
+            <a class="btn btn-sm btn-cafe-vazado" href="cardapio.html#doces">Ver</a>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -822,8 +835,6 @@ Substitua o `<main>` da página inicial:
 </main>
 ```
 
-Falta o terceiro destaque, o Bolo de Milho Verde (R$ 9,50, link para `cardapio.html#doces`): copie o bloco `<div class="col">` inteiro e troque o conteúdo.
-
 Três decisões para reparar:
 
 - O `container` saiu do `<main>` e entrou em **cada seção**. Isso permite que uma seção futura ocupe a largura toda da tela (uma faixa colorida, por exemplo) sem quebrar o alinhamento das outras.
@@ -832,15 +843,34 @@ Três decisões para reparar:
 
 ### Passo 4 — `cardapio.html`: dez produtos em grid
 
-Cada categoria vira uma `<section>` com um grid próprio. Este é o bloco de **Cafés**; repita o padrão para Bebidas geladas, Salgados e Doces com os produtos da Aula 03.
+Cada categoria vira uma `<section>` com um grid próprio, e as quatro âncoras da Aula 03 (`#cafes`, `#geladas`, `#salgados`, `#doces`) continuam sendo os `id` das seções — é para elas que apontam os botões "Ver" dos destaques e a `<nav>` de atalhos. São os mesmos dez produtos da Aula 03, com os mesmos preços.
 
-**`cafe-cerrado/cardapio.html`** (uma seção do `<main>`)
+**`cafe-cerrado/cardapio.html`** (o `<main>` inteiro)
 
 ```html
-<section id="cafes" class="container py-5">
-  <h2 class="mb-4">Cafés</h2>
+<main>
+  <section class="container pt-5">
+    <h1>Cardápio</h1>
+    <p class="lead">
+      Preços válidos para consumo no local. Todos os cafés podem ser preparados
+      com leite vegetal por R$ 2,00 adicionais.
+    </p>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <nav aria-label="Seções do cardápio">
+      <ul class="nav gap-2">
+        <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#cafes">Cafés</a></li>
+        <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#geladas">Bebidas geladas</a></li>
+        <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#salgados">Salgados</a></li>
+        <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#doces">Doces</a></li>
+        <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#torras">Guia de torras</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section id="cafes" class="container py-5">
+    <h2 class="mb-4">Cafés</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <div class="col">
       <article class="card card-produto h-100">
         <img src="img/espresso.jpg" class="card-img-top"
@@ -874,19 +904,174 @@ Cada categoria vira uma `<section>` com um grid próprio. Este é o bloco de **C
         </div>
       </article>
     </div>
-  </div>
-</section>
+
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/cappuccino.jpg" class="card-img-top"
+             alt="Cappuccino com canela polvilhada sobre a espuma">
+        <div class="card-body">
+          <h3 class="h5 card-title">Cappuccino Sinop</h3>
+          <p class="card-text">
+            Espresso duplo, leite vaporizado e canela do Cerrado por cima.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 12,00</span>
+          <span class="badge text-bg-secondary">Com leite</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/latte.jpg" class="card-img-top"
+             alt="Copo de latte com camadas de leite e café visíveis">
+        <div class="card-body">
+          <h3 class="h5 card-title">Latte de Baunilha</h3>
+          <p class="card-text">
+            Espresso, leite vaporizado e calda de baunilha feita na casa.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 14,00</span>
+          <span class="badge text-bg-secondary">Com leite</span>
+        </div>
+      </article>
+    </div>
+    </div>
+  </section>
+
+  <section id="geladas" class="container py-5">
+    <h2 class="mb-4">Bebidas geladas</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/cold-brew.jpg" class="card-img-top"
+             alt="Copo alto de cold brew com gelo e rodela de laranja">
+        <div class="card-body">
+          <h3 class="h5 card-title">Cold Brew da Chapada</h3>
+          <p class="card-text">
+            Extração a frio por dezoito horas, servida com gelo e rodela de laranja.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 15,00</span>
+          <span class="badge text-bg-secondary">Gelado</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/frappe.jpg" class="card-img-top"
+             alt="Frappê de café coberto com chantili em copo de vidro">
+        <div class="card-body">
+          <h3 class="h5 card-title">Frappê de Café</h3>
+          <p class="card-text">
+            Espresso batido com gelo, leite e chantili. Também sai sem lactose.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 16,00</span>
+          <span class="badge text-bg-secondary">Gelado</span>
+        </div>
+      </article>
+    </div>
+    </div>
+  </section>
+
+  <section id="salgados" class="container py-5">
+    <h2 class="mb-4">Salgados</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/pao-de-queijo.jpg" class="card-img-top"
+             alt="Porção de pães de queijo dourados em um prato branco">
+        <div class="card-body">
+          <h3 class="h5 card-title">Pão de Queijo Mineiro</h3>
+          <p class="card-text">
+            Porção com quatro unidades de polvilho azedo com queijo canastra.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 7,00</span>
+          <span class="badge text-bg-secondary">Sem glúten</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/torta-de-frango.jpg" class="card-img-top"
+             alt="Fatia de torta de frango em um prato de cerâmica">
+        <div class="card-body">
+          <h3 class="h5 card-title">Torta de Frango</h3>
+          <p class="card-text">
+            Fatia generosa com massa amanteigada e recheio de frango desfiado.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 13,00</span>
+          <span class="badge text-bg-secondary">Assado do dia</span>
+        </div>
+      </article>
+    </div>
+    </div>
+  </section>
+
+  <section id="doces" class="container py-5">
+    <h2 class="mb-4">Doces</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/bolo-de-milho.jpg" class="card-img-top"
+             alt="Fatia de bolo de milho verde sobre papel manteiga">
+        <div class="card-body">
+          <h3 class="h5 card-title">Bolo de Milho Verde</h3>
+          <p class="card-text">
+            Fatia de bolo cremoso feito com milho da feira do produtor.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 9,50</span>
+          <span class="badge text-bg-secondary">Feito na casa</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="col">
+      <article class="card card-produto h-100">
+        <img src="img/brownie.jpg" class="card-img-top"
+             alt="Brownie de chocolate com castanhas por cima">
+        <div class="card-body">
+          <h3 class="h5 card-title">Brownie de Castanha</h3>
+          <p class="card-text">
+            Chocolate meio amargo com castanha-do-pará. Sem glúten.
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold">R$ 11,00</span>
+          <span class="badge text-bg-secondary">Sem glúten</span>
+        </div>
+      </article>
+    </div>
+    </div>
+  </section>
+</main>
 ```
 
-Faltam o Cappuccino Sinop (R$ 12,00) e o Latte de Baunilha (R$ 14,00): copie o bloco `<div class="col">` inteiro, troque nome, preço, descrição, arquivo da imagem e `alt`. Depois repita a seção completa para Bebidas geladas (`#geladas`), Salgados (`#salgados`) e Doces (`#doces`), com os produtos que você já escreveu na Aula 03.
+Guarde esta lista: são **os** dez produtos do Café Cerrado, com estes nomes, estes preços, estas quatro categorias e estes arquivos de imagem. Eles voltam na Aula 07 como um array de objetos, na Aula 09 como `js/dados.js`, na Aula 10 como `data/produtos.json` e na Unidade 3 como as linhas da sua API. Mudar um preço aqui obriga a mudar em todos os outros lugares — por isso não mude.
 
 Não tem foto de cada produto? Duas saídas honestas: fotografe com o celular (uma xícara, uma mesa, luz de janela — leva dez minutos) ou remova a tag `<img>` do card, como nos destaques da página inicial. **Não** use uma imagem qualquer da internet: além do problema de direito autoral, você vai carregar 3 MB por card.
 
-Mantenha, logo abaixo dos grids, a `<nav>` de atalhos, a `<figure>` do guia de torras e a tabela de grãos da Aula 03 — só acrescente `class="table table-striped caption-top"` na tabela e envolva-a em `<div class="table-responsive">`.
+Mantenha, logo abaixo dos grids, a `<figure>` do guia de torras e a tabela de grãos da Aula 03 dentro de uma `<section id="torras" class="container py-5">` — só acrescente `class="table table-striped caption-top"` na tabela e envolva-a em `<div class="table-responsive">`, como você fez na página inicial.
 
 ### Passo 5 — `contato.html`: o formulário com classes do Bootstrap
 
-A estrutura do formulário não muda: mesmos campos, mesmos `name`, mesma validação nativa. O que muda são as classes e a troca dos `<p class="campo">` por `<div class="mb-3">`.
+A estrutura do formulário não muda: **os mesmos treze campos** da Aula 03, com os mesmos `name`, os mesmos `<optgroup>` e a mesma validação nativa. O que muda são as classes e a troca dos `<p class="campo">` por `<div class="mb-3">`. Nenhum campo pode desaparecer — o requisito 5 da Avaliação 1 cobra o formulário completo.
 
 **`cafe-cerrado/contato.html`** (trecho do `<main>`)
 
@@ -940,22 +1125,32 @@ A estrutura do formulário não muda: mesmos campos, mesmos `name`, mesma valida
         <label for="assunto" class="form-label">Assunto *</label>
         <select id="assunto" name="assunto" class="form-select" required>
           <option value="">Selecione um assunto</option>
-          <option value="reserva">Reserva de mesa</option>
-          <option value="encomenda">Encomenda de bolos e tortas</option>
-          <option value="graos">Compra de grãos em pacote</option>
-          <option value="evento">Evento ou parceria</option>
+          <optgroup label="Atendimento">
+            <option value="reserva">Reserva de mesa</option>
+            <option value="encomenda">Encomenda de bolos e tortas</option>
+            <option value="graos">Compra de grãos em pacote</option>
+          </optgroup>
+          <optgroup label="Institucional">
+            <option value="evento">Evento ou parceria</option>
+            <option value="trabalhe">Trabalhe conosco</option>
+          </optgroup>
         </select>
       </div>
 
       <div class="row g-3 mb-3">
-        <div class="col-6">
+        <div class="col-12 col-sm-4">
           <label for="pessoas" class="form-label">Pessoas</label>
           <input type="number" id="pessoas" name="pessoas" class="form-control"
                  min="1" max="40" step="1" value="2">
         </div>
-        <div class="col-6">
+        <div class="col-12 col-sm-4">
           <label for="data" class="form-label">Data desejada</label>
           <input type="date" id="data" name="data" class="form-control">
+        </div>
+        <div class="col-12 col-sm-4">
+          <label for="horario" class="form-label">Horário</label>
+          <input type="time" id="horario" name="horario" class="form-control"
+                 min="07:00" max="20:00" step="900">
         </div>
       </div>
 
@@ -990,6 +1185,14 @@ A estrutura do formulário não muda: mesmos campos, mesmos `name`, mesma valida
     </fieldset>
 
     <div class="col-12">
+      <div class="form-check">
+        <input type="checkbox" id="novidades" name="novidades" value="sim"
+               class="form-check-input">
+        <label for="novidades" class="form-check-label">
+          Quero receber avisos de novos lotes de café por e-mail
+        </label>
+      </div>
+
       <div class="form-check">
         <input type="checkbox" id="consentimento" name="consentimento" value="sim"
                class="form-check-input" required>
@@ -1450,7 +1653,7 @@ A melhor forma de entender um framework é escrever um. Não um clone do Bootstr
 1. O framework escolhido aplicado às três páginas, com menu responsivo, grid de no mínimo três cards e formulário estilizado (exercício **C1**).
 2. `README.md` com a seção "Framework CSS": qual, por quê (dois a quatro argumentos), como foi carregado e o que é seu contra o que é do framework.
 3. `docs/peso.md` com a auditoria do exercício **B4**.
-4. Nenhum `!important` no seu CSS. Se houver algum, troque por variável do framework ou por um seletor honesto, e registre a troca no `README.md`.
+4. Nenhum `!important` no seu CSS — fora do bloco `prefers-reduced-motion` da Aula 05, onde ele é a forma correta. Se houver algum, troque por variável do framework ou por um seletor honesto, e registre a troca no `README.md`.
 
 **Parte 3 — Fórum (10 min).** No fórum "Qual framework e por quê" do SIGAA, poste o link do seu projeto publicado, o framework escolhido e **um** argumento contra a sua própria escolha (todo framework tem um). Depois comente o post de um colega que escolheu diferente, apontando uma situação concreta em que a escolha dele seria melhor que a sua.
 
@@ -1468,7 +1671,7 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 - [ ] Grid do framework em uso com pelo menos três cards que passam de 3 para 1 coluna conforme a largura.
 - [ ] Formulário de contato inteiro estilizado pelas classes do framework, com a validação nativa ainda funcionando.
 - [ ] Estrutura semântica da Aula 03 intacta: `header`, `nav`, `main`, `footer`, `fieldset`, `legend`, `caption`, `th scope`, `alt` em todas as imagens.
-- [ ] Paleta da marca aplicada por variáveis do framework; **zero** `!important` no seu CSS.
+- [ ] Paleta da marca aplicada por variáveis do framework; **zero** `!important` no seu CSS. A única exceção aceita no curso inteiro é o bloco `@media (prefers-reduced-motion: reduce)` que você vai escrever na Aula 05: ali o `!important` é o mecanismo previsto para desligar animações que qualquer outra regra tenha ligado.
 - [ ] Nenhuma rolagem horizontal em 360 px de largura, em nenhuma das três páginas.
 - [ ] Um único framework CSS no projeto.
 - [ ] `README.md` com a seção "Framework CSS" justificando a escolha em texto próprio.

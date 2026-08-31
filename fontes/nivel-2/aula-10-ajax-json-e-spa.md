@@ -85,8 +85,8 @@ O padrão moderno é a **Fetch API**, baseada em Promises — exatamente o que v
 ```json
 {
   "id": 1,
-  "nome": "Café coado do Cerrado",
-  "preco": 7.5,
+  "nome": "Espresso do Cerrado",
+  "preco": 6,
   "disponivel": true,
   "observacao": null,
   "tamanhos": ["pequeno", "médio", "grande"],
@@ -114,14 +114,14 @@ Não existe tipo data em JSON: datas viajam como string (normalmente no formato 
 ### 2.3 As duas conversões
 
 ```js
-const produto = { id: 1, nome: "Café coado do Cerrado", preco: 7.5 };
+const produto = { id: 1, nome: "Espresso do Cerrado", preco: 6 };
 
 const texto = JSON.stringify(produto);
 console.log(texto);
 console.log(typeof texto);        // "string" — pronto para ENVIAR pela rede
 
 const objeto = JSON.parse(texto);
-console.log(objeto.nome);         // "Café coado do Cerrado"
+console.log(objeto.nome);         // "Espresso do Cerrado"
 console.log(typeof objeto);       // "object" — pronto para USAR no código
 ```
 
@@ -220,7 +220,7 @@ async function buscarProdutos() {
 A distinção 4xx × 5xx é prática: **4xx é culpa sua** (URL errada, dados inválidos, sem permissão) e você conserta no código; **5xx é culpa do servidor** e a única saída do cliente é avisar o usuário e oferecer nova tentativa.
 
 > **🔎 Por baixo do capô**
-> Abra a aba **Network** do DevTools, recarregue qualquer página e clique em uma requisição. Em "Headers" você vê exatamente o que foi trocado: o método (`GET`), a URL, os cabeçalhos de requisição (`Accept`, `User-Agent`) e os de resposta (`Content-Type`, `Cache-Control`). É o mesmo protocolo HTTP da Aula 02, só que agora **você** é quem escreve as requisições. Tudo o que o `fetch` faz aparece ali — inclusive as que falharam.
+> Abra a aba **Network** do DevTools, recarregue qualquer página e clique em uma requisição. Em "Headers" você vê exatamente o que foi trocado: o método (`GET`), a URL, os cabeçalhos de requisição (`Accept`, `User-Agent`) e os de resposta (`Content-Type`, `Cache-Control`). É o mesmo protocolo HTTP da Aula 01 (§3), só que agora **você** é quem escreve as requisições. Tudo o que o `fetch` faz aparece ali — inclusive as que falharam.
 
 ### 3.4 Uma função reutilizável
 
@@ -456,51 +456,83 @@ Crie a pasta `data/` e, dentro dela, `produtos.json`:
 [
   {
     "id": 1,
-    "nome": "Café coado do Cerrado",
+    "nome": "Espresso do Cerrado",
     "categoria": "cafes",
-    "preco": 7.5,
-    "descricao": "Grãos torrados na semana, coados no pano, em xícara de 200 ml.",
-    "imagem": "img/cafe-coado.jpg"
+    "preco": 6,
+    "descricao": "Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.",
+    "imagem": "img/espresso.jpg"
   },
   {
     "id": 2,
-    "nome": "Cappuccino cremoso",
+    "nome": "Coado da Casa",
     "categoria": "cafes",
-    "preco": 12,
-    "descricao": "Espresso, leite vaporizado e canela por cima.",
-    "imagem": "img/cappuccino.jpg"
+    "preco": 8.5,
+    "descricao": "Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.",
+    "imagem": "img/coado.jpg"
   },
   {
     "id": 3,
-    "nome": "Açaí na tigela",
-    "categoria": "doces",
-    "preco": 18.5,
-    "descricao": "Açaí batido na hora com banana, granola e castanha-do-pará.",
-    "imagem": "img/acai.jpg"
+    "nome": "Cappuccino Sinop",
+    "categoria": "cafes",
+    "preco": 12,
+    "descricao": "Espresso duplo, leite vaporizado e canela do Cerrado por cima.",
+    "imagem": "img/cappuccino.jpg"
   },
   {
     "id": 4,
-    "nome": "Bolo de castanha-do-pará",
-    "categoria": "doces",
-    "preco": 9,
-    "descricao": "Fatia generosa de bolo caseiro com castanha da região.",
-    "imagem": "img/bolo-castanha.jpg"
+    "nome": "Latte de Baunilha",
+    "categoria": "cafes",
+    "preco": 14,
+    "descricao": "Espresso, leite vaporizado e calda de baunilha feita na casa.",
+    "imagem": "img/latte.jpg"
   },
   {
     "id": 5,
-    "nome": "Pão de queijo (3 unidades)",
-    "categoria": "salgados",
-    "preco": 8,
-    "descricao": "Assados de hora em hora, servidos quentes.",
-    "imagem": "img/pao-de-queijo.jpg"
+    "nome": "Cold Brew da Chapada",
+    "categoria": "geladas",
+    "preco": 15,
+    "descricao": "Extração a frio por dezoito horas, servida com gelo e rodela de laranja.",
+    "imagem": "img/cold-brew.jpg"
   },
   {
     "id": 6,
-    "nome": "Empada de frango caipira",
+    "nome": "Frappê de Café",
+    "categoria": "geladas",
+    "preco": 16,
+    "descricao": "Espresso batido com gelo, leite e chantili. Também sai sem lactose.",
+    "imagem": "img/frappe.jpg"
+  },
+  {
+    "id": 7,
+    "nome": "Pão de Queijo Mineiro",
     "categoria": "salgados",
+    "preco": 7,
+    "descricao": "Porção com quatro unidades de polvilho azedo com queijo canastra.",
+    "imagem": "img/pao-de-queijo.jpg"
+  },
+  {
+    "id": 8,
+    "nome": "Torta de Frango",
+    "categoria": "salgados",
+    "preco": 13,
+    "descricao": "Fatia generosa com massa amanteigada e recheio de frango desfiado.",
+    "imagem": "img/torta-de-frango.jpg"
+  },
+  {
+    "id": 9,
+    "nome": "Bolo de Milho Verde",
+    "categoria": "doces",
+    "preco": 9.5,
+    "descricao": "Fatia de bolo cremoso feito com milho da feira do produtor.",
+    "imagem": "img/bolo-de-milho.jpg"
+  },
+  {
+    "id": 10,
+    "nome": "Brownie de Castanha",
+    "categoria": "doces",
     "preco": 11,
-    "descricao": "Massa amanteigada com recheio de frango desfiado e requeijão.",
-    "imagem": "img/empada.jpg"
+    "descricao": "Chocolate meio amargo com castanha-do-pará. Sem glúten.",
+    "imagem": "img/brownie.jpg"
   }
 ]
 ```
@@ -510,8 +542,9 @@ E `data/categorias.json`:
 ```json
 [
   { "id": "cafes", "nome": "Cafés" },
-  { "id": "doces", "nome": "Doces" },
-  { "id": "salgados", "nome": "Salgados" }
+  { "id": "geladas", "nome": "Bebidas geladas" },
+  { "id": "salgados", "nome": "Salgados" },
+  { "id": "doces", "nome": "Doces" }
 ]
 ```
 
@@ -847,7 +880,7 @@ function criarCard(produto) {
   const corpo = document.createElement("div");
   corpo.className = "card-body";
 
-  const titulo = document.createElement("h4");
+  const titulo = document.createElement("h3");
   titulo.className = "card-title h5";
   titulo.textContent = produto.nome;
 
@@ -1125,7 +1158,7 @@ Acrescente ao final de `css/estilo.css` (o `.status` e o `.esqueleto` já vieram
 
 ```text
 {
-  nome: 'Café coado',
+  nome: 'Espresso do Cerrado',
   "preco": 7.5,
   "tags": ["quente", "coado",],
 }
@@ -1161,7 +1194,7 @@ const resposta = await fetch("https://jsonplaceholder.typicode.com/posts", {
 
 **B1.** Acrescente ao `js/api.js` a função `buscarProdutoPorId(id)`, que busca `data/produtos.json` e devolve apenas o produto com aquele id, lançando `Error` com mensagem clara se não existir. Teste no console do navegador com um id válido e um inválido.
 
-Resultado esperado: `buscarProdutoPorId(3)` devolve o objeto do Açaí; `buscarProdutoPorId(99)` cai no `catch` com a mensagem "Produto 99 não encontrado", e o console não mostra `Uncaught (in promise)`.
+Resultado esperado: `buscarProdutoPorId(3)` devolve o objeto do Cappuccino Sinop; `buscarProdutoPorId(99)` cai no `catch` com a mensagem "Produto 99 não encontrado", e o console não mostra `Uncaught (in promise)`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1427,4 +1460,4 @@ Total: **10,0 pontos**.
 - ALVES, W. P. *Projetos de Sistemas Web*. Érica, 2015 — integração entre camadas de uma aplicação web.
 - PUREWAL, S. *Aprendendo a Desenvolver Aplicações Web*. Novatec, 2014 — AJAX e consumo de APIs.
 
-Na próxima aula começa a **Unidade 3**, e o JavaScript atravessa a rede: com **Node.js e Express** você deixa de consumir a API dos outros e passa a construir a sua. Aquele `data/produtos.json` que hoje é servido por acaso pelo Live Server vira o banco de dados de um servidor que você mesmo escreveu — e o `fetch` do front-end continuará exatamente igual, apontando para `/api/produtos` em vez de um arquivo.
+Na próxima aula começa a **Unidade 3**, e o JavaScript atravessa a rede: com **Node.js e Express** você deixa de consumir a API dos outros e passa a construir a sua — num repositório novo, o `cafe-cerrado-api`, que a Aula 11 cria no primeiro passo. Aquele `data/produtos.json` que hoje é servido por acaso pelo Live Server vira o banco de dados de um servidor que você mesmo escreveu — e o `fetch` do front-end continuará exatamente igual, apontando para `/api/produtos` em vez de um arquivo.

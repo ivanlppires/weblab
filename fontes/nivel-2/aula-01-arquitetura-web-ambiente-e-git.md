@@ -107,7 +107,7 @@ As três avaliações são **individuais**, **práticas** e recaem sobre o **mes
 > **⚠️ Atenção**
 > A carga assíncrona não é bônus. Ela é parte da carga horária oficial e alimenta diretamente a avaliação da unidade: quem pula a atividade da semana chega na aula seguinte sem o pré-requisito, porque cada aula assume que a anterior foi concluída.
 
-**Atendimento:** segundas-feiras, das 18h às 19h, com agendamento por e-mail (<ivanpires@unemat.br>).
+**Atendimento:** segundas-feiras, das 18h às 19h, com agendamento por e-mail ([ivanpires@unemat.br](mailto:ivanpires@unemat.br)).
 
 ### 1.5 O projeto fio-condutor e o projeto autoral
 
@@ -778,7 +778,7 @@ A partir de hoje a regra é: **o que o Café Cerrado ganha em sala, o seu projet
 
 **A1.** Explique, em no máximo quatro linhas, a diferença entre **cliente** e **servidor** no modelo da §2.1, e diga quem inicia a conversa.
 
-**A2.** Coloque em ordem: (a) resposta HTTP; (b) resolução DNS; (c) renderização; (d) handshake TCP; (e) requisição HTTP; (f) análise da URL; (g) handshake TLS.
+**A2.** Coloque em ordem as oito etapas da §2.2: (a) resposta HTTP; (b) resolução DNS; (c) renderização e sub-requisições; (d) conexão TCP; (e) requisição HTTP; (f) análise da URL; (g) handshake TLS; (h) processamento no servidor.
 
 **A3.** Decomponha a URL abaixo, nomeando as seis partes da §3.4:
 

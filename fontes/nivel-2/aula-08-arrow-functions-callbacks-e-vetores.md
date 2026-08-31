@@ -24,7 +24,7 @@ Na aula passada o Café Cerrado ganhou `js/app.js`: o cardápio virou o array `p
 
 Checklist antes de começar:
 
-- [ ] `js/app.js` da Aula 07 funcionando: nove cards renderizados a partir do array `produtos`.
+- [ ] `js/app.js` da Aula 07 funcionando: dez cards renderizados a partir do array `produtos`.
 - [ ] O elemento `<template id="template-produto">` e o contêiner `#lista-produtos` no `cardapio.html`.
 - [ ] As funções `criarCardProduto`, `renderizarProdutos` e `formatarPreco` no seu `app.js`.
 - [ ] O dicionário `ROTULOS_CATEGORIA` mapeando as chaves de categoria para o texto exibido.
@@ -127,8 +127,8 @@ Arrow functions **não têm `this` próprio**. Elas herdam o `this` do lugar ond
 ```js
 const carrinho = {
   itens: [
-    { nome: "Espresso duplo", preco: 9, quantidade: 2 },
-    { nome: "Torta de baru", preco: 13.5, quantidade: 1 },
+    { nome: "Espresso do Cerrado", preco: 6, quantidade: 2 },
+    { nome: "Torta de Frango", preco: 13, quantidade: 1 },
   ],
 
   // Certo: sintaxe de método — this é o objeto carrinho
@@ -242,7 +242,7 @@ buscarProdutos((produtos) => {
 Isso ficou conhecido como *callback hell* — ou "pirâmide da perdição". Três problemas: a indentação cresce sem limite, a ordem de leitura não é a ordem de execução, e tratar erro exige repetir verificação em cada nível. Foi exatamente para resolver isso que as **Promises** foram criadas. Você as conhece na próxima aula; hoje basta entender o problema.
 
 > **🧠 Você sabia?**
-> A ideia de passar funções como valores não nasceu no JavaScript — vem do Lisp, de 1958, e da programação funcional. `map`, `filter` e `reduce` são desse mesmo tronco: já existiam em Lisp antes de existir mouse. O que mudou foi a escala: em 2004, dois engenheiros do Google publicaram o artigo *MapReduce*, mostrando como aplicar essas duas operações em milhares de máquinas para processar a web inteira. O `map` que você vai escrever agora, em nove produtos, é a mesma ideia — em outra ordem de grandeza.
+> A ideia de passar funções como valores não nasceu no JavaScript — vem do Lisp, de 1958, e da programação funcional. `map`, `filter` e `reduce` são desse mesmo tronco: já existiam em Lisp antes de existir mouse. O que mudou foi a escala: em 2004, dois engenheiros do Google publicaram o artigo *MapReduce*, mostrando como aplicar essas duas operações em milhares de máquinas para processar a web inteira. O `map` que você vai escrever agora, em dez produtos, é a mesma ideia — em outra ordem de grandeza.
 
 ## 4. Operações em vetores: processar dados sem `for`
 
@@ -252,15 +252,16 @@ A base de exemplos é o cardápio da Aula 07:
 
 ```js
 const produtos = [
-  { id: 1, nome: "Café coado do cerrado", categoria: "cafe", preco: 6.5 },
-  { id: 2, nome: "Espresso duplo", categoria: "cafe", preco: 9 },
-  { id: 3, nome: "Cappuccino cremoso", categoria: "cafe", preco: 12 },
-  { id: 4, nome: "Pão de queijo (3 un.)", categoria: "salgado", preco: 10 },
-  { id: 5, nome: "Coxinha de frango caipira", categoria: "salgado", preco: 11.5 },
-  { id: 6, nome: "Bolo de milho verde", categoria: "doce", preco: 8 },
-  { id: 7, nome: "Torta de baru", categoria: "doce", preco: 13.5 },
-  { id: 8, nome: "Limonada suíça", categoria: "gelado", preco: 12 },
-  { id: 9, nome: "Chá gelado de hibisco", categoria: "gelado", preco: 10 },
+  { id: 1, nome: "Espresso do Cerrado", categoria: "cafes", preco: 6 },
+  { id: 2, nome: "Coado da Casa", categoria: "cafes", preco: 8.5 },
+  { id: 3, nome: "Cappuccino Sinop", categoria: "cafes", preco: 12 },
+  { id: 4, nome: "Latte de Baunilha", categoria: "cafes", preco: 14 },
+  { id: 5, nome: "Cold Brew da Chapada", categoria: "geladas", preco: 15 },
+  { id: 6, nome: "Frappê de Café", categoria: "geladas", preco: 16 },
+  { id: 7, nome: "Pão de Queijo Mineiro", categoria: "salgados", preco: 7 },
+  { id: 8, nome: "Torta de Frango", categoria: "salgados", preco: 13 },
+  { id: 9, nome: "Bolo de Milho Verde", categoria: "doces", preco: 9.5 },
+  { id: 10, nome: "Brownie de Castanha", categoria: "doces", preco: 11 },
 ];
 ```
 
@@ -282,7 +283,7 @@ produtos.forEach((produto, indice) => {
 
 ```js
 const nomes = produtos.map((produto) => produto.nome);
-// ["Café coado do cerrado", "Espresso duplo", "Cappuccino cremoso", …] — 9 nomes
+// ["Espresso do Cerrado", "Coado da Casa", "Cappuccino Sinop", …] — 10 nomes
 
 const comDesconto = produtos.map((produto) => ({ ...produto, preco: produto.preco * 0.9 }));
 // novo array, 10% mais barato; o array original continua intacto
@@ -295,8 +296,8 @@ const opcoes = produtos.map((produto) => `<option value="${produto.id}">${produt
 ### 4.3 `filter` — selecione itens
 
 ```js
-const cafes = produtos.filter((produto) => produto.categoria === "cafe");        // 3 itens
-const baratos = produtos.filter((produto) => produto.preco < 10);               // 3 itens
+const cafes = produtos.filter((produto) => produto.categoria === "cafes");      // 4 itens
+const baratos = produtos.filter((produto) => produto.preco < 10);               // 4 itens
 const nenhum = produtos.filter((produto) => produto.preco > 100);               // [] — array vazio
 ```
 
@@ -305,14 +306,14 @@ O callback do `filter` é um **teste**: devolva `true` para manter o item, `fals
 ### 4.4 `find`, `findIndex`, `some`, `every` e `includes`
 
 ```js
-produtos.find((p) => p.preco > 12);        // { id: 7, nome: "Torta de baru", … } — o PRIMEIRO
+produtos.find((p) => p.preco > 12);        // { id: 4, nome: "Latte de Baunilha", … } — o PRIMEIRO
 produtos.find((p) => p.preco > 100);       // undefined — cuidado ao acessar .nome depois
 produtos.findIndex((p) => p.id === 5);     // 4 — a posição, ou -1 se não achar
 
 produtos.some((p) => p.preco > 13);        // true  — ALGUM passa no teste?
 produtos.every((p) => p.preco < 20);       // true  — TODOS passam?
 
-nomes.includes("Espresso duplo");          // true — comparação direta, sem callback
+nomes.includes("Espresso do Cerrado");     // true — comparação direta, sem callback
 ```
 
 `find` é o irmão eficiente do `filter`: para na primeira ocorrência e devolve **o item**, não um array. Depois de um `find`, sempre lembre que o resultado pode ser `undefined`:
@@ -329,10 +330,10 @@ console.log(escolhido.nome);
 
 ```js
 const total = produtos.reduce((soma, produto) => soma + produto.preco, 0);
-// 92.5 — soma começa em 0 e vai acumulando
+// 112 — soma começa em 0 e vai acumulando
 ```
 
-Passo a passo, o acumulador vale: `0` → `6.5` → `15.5` → `27.5` → `37.5` → `49` → `57` → `70.5` → `82.5` → `92.5`.
+Passo a passo, o acumulador vale: `0` → `6` → `14.5` → `26.5` → `40.5` → `55.5` → `71.5` → `78.5` → `91.5` → `101` → `112`.
 
 O acumulador não precisa ser um número. Pode ser um objeto — e aí `reduce` vira uma ferramenta de agrupamento:
 
@@ -343,15 +344,15 @@ const porCategoria = produtos.reduce((acumulador, produto) => {
   return acumulador;
 }, {});
 
-// { cafe: [3 produtos], salgado: [2], doce: [2], gelado: [2] }
-Object.keys(porCategoria);   // ["cafe", "salgado", "doce", "gelado"]
+// { cafes: [4 produtos], geladas: [2], salgados: [2], doces: [2] }
+Object.keys(porCategoria);   // ["cafes", "geladas", "salgados", "doces"]
 ```
 
 Ou o próprio item, para achar extremos:
 
 ```js
 const maisCaro = produtos.reduce((maior, produto) => (produto.preco > maior.preco ? produto : maior));
-// { id: 7, nome: "Torta de baru", preco: 13.5, … }
+// { id: 6, nome: "Frappê de Café", preco: 16, … }
 ```
 
 > **⚠️ Atenção**
@@ -409,17 +410,17 @@ Como `map` e `filter` devolvem arrays, as operações se encaixam umas nas outra
 ```js
 // "Nomes dos cafés e doces abaixo de R$ 12, do mais barato ao mais caro"
 const resultado = produtos
-  .filter((p) => p.categoria === "cafe" || p.categoria === "doce")
+  .filter((p) => p.categoria === "cafes" || p.categoria === "doces")
   .filter((p) => p.preco < 12)
   .sort((a, b) => a.preco - b.preco)
   .map((p) => p.nome);
 
-// ["Café coado do cerrado", "Bolo de milho verde", "Espresso duplo"]
+// ["Espresso do Cerrado", "Coado da Casa", "Bolo de Milho Verde", "Brownie de Castanha"]
 ```
 
 Repare que o `.sort()` aqui é seguro **sem copiar**: o `filter` anterior já produziu um array novo, e é esse array intermediário que é ordenado. `produtos` continua intacto. A regra fica assim: copie antes de ordenar apenas quando o `sort` for a **primeira** operação da cadeia.
 
-Uma cadeia percorre a lista uma vez por operação — quatro passagens no exemplo acima. Para nove produtos isso é irrelevante; para cem mil, um único `reduce` seria mais rápido. Legibilidade primeiro; otimize quando medir e comprovar que precisa.
+Uma cadeia percorre a lista uma vez por operação — quatro passagens no exemplo acima. Para dez produtos isso é irrelevante; para cem mil, um único `reduce` seria mais rápido. Legibilidade primeiro; otimize quando medir e comprovar que precisa.
 
 > **🔬 Investigue**
 > Cole no Console: `[10, 9, 100, 25].sort()` e depois `[10, 9, 100, 25].sort((a, b) => a - b)`. Agora o teste que revela a mutação: `const n = [3, 1, 2]; const m = n.sort(); m.push(99); console.log(n);`. O `99` aparece em `n` também — porque `m` e `n` são **o mesmo array**. Repita trocando `n.sort()` por `[...n].sort()` e veja a diferença.
@@ -451,36 +452,6 @@ const trocado = produtos.with(0, { ...produtos[0], preco: 7 });     // cópia co
 ```
 
 `[...array].sort(…)` continua sendo o jeito mais compatível, e é o que este curso usa. Conheça `toSorted` para ler código moderno.
-
-## 🧩 Padrão de projeto em uso: Strategy
-
-Você vai precisar de três ordenações no cardápio. A solução ingênua é uma escada de `if`:
-
-```js
-function ordenar(lista, criterio) {
-  if (criterio === "nome") return [...lista].sort((a, b) => a.nome.localeCompare(b.nome));
-  if (criterio === "preco-asc") return [...lista].sort((a, b) => a.preco - b.preco);
-  if (criterio === "preco-desc") return [...lista].sort((a, b) => b.preco - a.preco);
-  return lista;
-}
-```
-
-Cada critério novo exige editar a função. A alternativa guarda as estratégias em um objeto e escolhe uma pela chave:
-
-```js
-const ORDENADORES = {
-  nome: (a, b) => comparadorPtBr.compare(a.nome, b.nome),
-  "preco-asc": (a, b) => a.preco - b.preco,
-  "preco-desc": (a, b) => b.preco - a.preco,
-};
-
-function ordenar(lista, criterio) {
-  const comparador = ORDENADORES[criterio] ?? ORDENADORES.nome;
-  return [...lista].sort(comparador);
-}
-```
-
-Isso é o padrão **Strategy** (Estratégia): um conjunto de algoritmos intercambiáveis, encapsulados atrás de uma mesma interface, escolhidos em tempo de execução. Acrescentar "ordenar por categoria" agora é acrescentar uma linha ao objeto — a função `ordenar` não muda. Em JavaScript o padrão fica quase invisível, porque funções são valores e um objeto já serve de registro de estratégias; em linguagens sem essa facilidade, ele exige uma interface e uma classe por algoritmo. Você vai reencontrar Strategy no Nível 3, e a essa altura ele já vai parecer óbvio.
 
 ## 6. Estado → derivação → renderização
 
@@ -520,7 +491,7 @@ Quando quiser um filtro novo, o roteiro é sempre o mesmo: um campo a mais no `e
 
 ## 7. `debounce`: não trabalhar à toa
 
-O evento `input` dispara a cada tecla. Digitar "cappuccino" são dez renderizações completas do cardápio. Com nove produtos ninguém percebe; com uma busca que consulta um servidor (Aula 10), são dez requisições para uma pesquisa só.
+O evento `input` dispara a cada tecla. Digitar "cappuccino" são dez renderizações completas do cardápio. Com dez produtos ninguém percebe; com uma busca que consulta um servidor (Aula 10), são dez requisições para uma pesquisa só.
 
 A técnica é **adiar** a execução até que a pessoa pare de digitar por um instante. E o mais bonito: ela se escreve como uma função que **devolve outra função** — o auge de "função é valor".
 
@@ -548,6 +519,36 @@ buscar("caf");   // só esta chega ao console, 300 ms depois
 > **🔎 Por baixo do capô**
 > `setTimeout` devolve um identificador numérico, não a função agendada. `clearTimeout(id)` diz ao navegador para descartar aquele agendamento antes que a fila de tarefas o alcance. Nenhuma das chamadas canceladas chega a executar — não é que elas rodem e o resultado seja ignorado: elas simplesmente somem da fila. Você vai olhar essa fila de frente na próxima aula, quando falarmos de event loop.
 
+## 🧩 Padrão de projeto em uso: Strategy
+
+Você vai precisar de três ordenações no cardápio. A solução ingênua é uma escada de `if`:
+
+```js
+function ordenar(lista, criterio) {
+  if (criterio === "nome") return [...lista].sort((a, b) => a.nome.localeCompare(b.nome));
+  if (criterio === "preco-asc") return [...lista].sort((a, b) => a.preco - b.preco);
+  if (criterio === "preco-desc") return [...lista].sort((a, b) => b.preco - a.preco);
+  return lista;
+}
+```
+
+Cada critério novo exige editar a função. A alternativa guarda as estratégias em um objeto e escolhe uma pela chave:
+
+```js
+const ORDENADORES = {
+  nome: (a, b) => comparadorPtBr.compare(a.nome, b.nome),
+  "preco-asc": (a, b) => a.preco - b.preco,
+  "preco-desc": (a, b) => b.preco - a.preco,
+};
+
+function ordenar(lista, criterio) {
+  const comparador = ORDENADORES[criterio] ?? ORDENADORES.nome;
+  return [...lista].sort(comparador);
+}
+```
+
+Isso é o padrão **Strategy** (Estratégia): um conjunto de algoritmos intercambiáveis, encapsulados atrás de uma mesma interface, escolhidos em tempo de execução. Acrescentar "ordenar por categoria" agora é acrescentar uma linha ao objeto — a função `ordenar` não muda. Em JavaScript o padrão fica quase invisível, porque funções são valores e um objeto já serve de registro de estratégias; em linguagens sem essa facilidade, ele exige uma interface e uma classe por algoritmo. Você vai reencontrar Strategy no Nível 3, e a essa altura ele já vai parecer óbvio.
+
 ## 💻 Mão na massa — busca, filtros, ordenação e carrinho
 
 Cinco passos, todos no `cardapio.html` e no `js/app.js` da Aula 07.
@@ -563,7 +564,7 @@ Logo acima da grade de cards, em `cardapio.html`:
   <div class="col-12 col-md-5">
     <label class="form-label" for="busca">Buscar no cardápio</label>
     <input class="form-control" type="search" id="busca" name="busca"
-           placeholder="café, coxinha, baru" autocomplete="off">
+           placeholder="café, pão de queijo, brownie" autocomplete="off">
   </div>
 
   <div class="col-6 col-md-3">
@@ -593,7 +594,7 @@ Acrescente também o botão ao template do card, dentro do `card-body`, depois d
 `cardapio.html` (dentro do `<template id="template-produto">`)
 
 ```html
-<button class="btn btn-sm btn-outline-primary mt-3 align-self-start" type="button" data-acao="adicionar">
+<button class="btn btn-sm btn-cafe-vazado mt-3 align-self-start" type="button" data-acao="adicionar">
   Adicionar ao pedido
 </button>
 ```
@@ -606,7 +607,7 @@ E, ao final da seção do cardápio, o painel do pedido:
 <aside class="card mt-5" aria-labelledby="titulo-pedido">
   <div class="card-body">
     <h2 class="h5 card-title" id="titulo-pedido">
-      Seu pedido <span class="badge text-bg-primary" id="contador-carrinho">0</span>
+      Seu pedido <span class="badge text-bg-secondary" id="contador-carrinho">0</span>
     </h2>
     <ul class="list-group list-group-flush" id="lista-carrinho"></ul>
     <p class="mt-3 mb-0 fw-bold" id="total-carrinho" role="status" aria-live="polite">Total: R$ 0,00</p>
@@ -733,7 +734,7 @@ function renderizarCarrinho() {
       texto.textContent = `${item.quantidade}x ${item.nome} — ${formatarPreco(item.preco * item.quantidade)}`;
 
       const botao = document.createElement("button");
-      botao.className = "btn btn-sm btn-outline-danger";
+      botao.className = "btn btn-sm btn-cafe-vazado";
       botao.type = "button";
       botao.dataset.acao = "remover";
       botao.dataset.id = item.id;
@@ -841,12 +842,12 @@ Esta `iniciarCardapio` substitui a da Aula 07. As funções `criarCardProduto`, 
 ### Como testar
 
 1. Abra `cardapio.html`. O `<select>` de categoria deve ter cinco opções: "Todas" mais as quatro geradas do array.
-2. Digite `caf` na busca. Sobram dois cards ("Café coado do cerrado" e "Cappuccino cremoso") e o resumo diz "2 de 9 itens".
+2. Digite `caf` na busca. Sobra **um** card ("Frappê de Café" — é o único nome que contém `caf`) e o resumo começa com "1 de 10 itens". Troque para `co` e sobram dois ("Coado da Casa" e "Cold Brew da Chapada").
 3. Digite `zzz`. Nenhum card, a mensagem de lista vazia aparece e o resumo diz "Nenhum item corresponde à sua busca."
-4. Limpe a busca, escolha "Doces" e ordene por "Preço (maior primeiro)": Torta de baru (R$ 13,50) antes de Bolo de milho verde (R$ 8,00).
-5. Ordene por "Nome (A a Z)" com "Todas" selecionado. O primeiro card deve ser "Bolo de milho verde" e o último "Torta de baru" — nomes acentuados no lugar certo, graças ao `Intl.Collator`.
-6. Clique duas vezes em "Adicionar ao pedido" no Espresso duplo e uma vez na Torta de baru. O pedido mostra "2x Espresso duplo — R$ 18,00", "1x Torta de baru — R$ 13,50", contador `3` e "Total: R$ 31,50".
-7. Clique em "Remover" no Espresso duplo. O total cai para R$ 13,50 e o contador para `1`.
+4. Limpe a busca, escolha "Doces" e ordene por "Preço (maior primeiro)": Brownie de Castanha (R$ 11,00) antes de Bolo de Milho Verde (R$ 9,50).
+5. Ordene por "Nome (A a Z)" com "Todas" selecionado. O primeiro card deve ser "Bolo de Milho Verde" e o último "Torta de Frango", com "Frappê de Café" entre "Espresso do Cerrado" e "Latte de Baunilha" — acento no lugar certo, graças ao `Intl.Collator`.
+6. Clique duas vezes em "Adicionar ao pedido" no Coado da Casa e uma vez na Torta de Frango. O pedido mostra "2x Coado da Casa — R$ 17,00", "1x Torta de Frango — R$ 13,00", contador `3` e "Total: R$ 30,00".
+7. Clique em "Remover" no Coado da Casa. O total cai para R$ 13,00 e o contador para `1`.
 8. No Console, rode `produtos.map((p) => p.nome)` depois de ordenar por preço na tela. A ordem original tem que estar intacta — se mudou, algum `sort` está mordendo o array de origem.
 9. Prova do `debounce`: coloque `console.count("render")` como primeira linha de `render()` e digite "cappuccino" na busca. Devem aparecer uma ou duas contagens, não dez.
 
@@ -880,13 +881,13 @@ const b = (n) => n * 3;
 const c = (n) => { return n * 3 };
 ```
 
-**A3.** Escreva, em uma linha cada, usando o array `produtos` da aula: (a) os nomes de todos os produtos da categoria `"gelado"`; (b) quantos produtos custam R$ 10 ou mais; (c) `true` ou `false` para "existe algum produto abaixo de R$ 7"; (d) a soma dos preços dos salgados.
+**A3.** Escreva, em uma linha cada, usando o array `produtos` da aula: (a) os nomes de todos os produtos da categoria `"geladas"`; (b) quantos produtos custam R$ 10 ou mais; (c) `true` ou `false` para "existe algum produto abaixo de R$ 7"; (d) a soma dos preços dos salgados.
 
 **A4.** A função abaixo devolve `undefined` e o Console acusa `TypeError: Cannot read properties of undefined (reading 'itens')`. Explique em duas linhas por quê e corrija sem mudar a lógica.
 
 ```js
 const pedido = {
-  itens: ["Espresso duplo", "Torta de baru"],
+  itens: ["Espresso do Cerrado", "Torta de Frango"],
   quantos: () => this.itens.length,
 };
 ```
@@ -928,7 +929,7 @@ Use `data-acao="aumentar"` e `data-acao="diminuir"` no mesmo ouvinte delegado qu
 
 **B3.** Resumo por categoria. Abaixo da grade, mostre quantos itens e qual o preço médio de cada categoria presente na lista visível, gerado com `reduce`.
 
-Resultado esperado: uma linha por categoria ("Cafés: 3 itens · média R$ 9,17"), recalculada a cada filtro; categorias sem itens visíveis não aparecem.
+Resultado esperado: uma linha por categoria ("Cafés: 4 itens · média R$ 10,13"), recalculada a cada filtro; categorias sem itens visíveis não aparecem.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -948,7 +949,7 @@ Para inverter uma ordenação existente, envolva o comparador: `(a, b) => ORDENA
 
 **B5.** Busca em mais de um campo. Faça a busca considerar também a `descricao`, e mostre no resumo quantos resultados vieram só pela descrição.
 
-Resultado esperado: buscar "mandioca" encontra a Coxinha, cujo nome não contém a palavra; o resumo informa "1 resultado encontrado na descrição".
+Resultado esperado: buscar "polvilho" encontra o Pão de Queijo Mineiro, cujo nome não contém a palavra; o resumo informa "1 resultado encontrado na descrição".
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -960,12 +961,12 @@ Um `filter` cujo teste é `nome.includes(termo) || descricao.includes(termo)`. P
 
 **C1.** Uma passada só. Hoje o `render()` percorre a lista cinco vezes: dois `filter`, um `sort`, o `forEach` do render e dois `reduce` do resumo. Reescreva a derivação e o resumo para que a lista seja percorrida **uma vez** para filtrar e calcular todas as estatísticas ao mesmo tempo (contagem, soma, média, mais barato, mais caro), mantendo o `sort` como única passagem adicional. Depois prove, com medição, se valeu a pena.
 
-Resultado esperado: um único `reduce` devolve `{ visiveis, total, media, maisBarato, maisCaro }`; a tela continua idêntica; e uma tabela no README compara o tempo das duas versões com 9 e com 50.000 produtos gerados.
+Resultado esperado: um único `reduce` devolve `{ visiveis, total, media, maisBarato, maisCaro }`; a tela continua idêntica; e uma tabela no README compara o tempo das duas versões com 10 e com 50.000 produtos gerados.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-O acumulador do `reduce` é um objeto com todos os campos, inicializado com `{ visiveis: [], soma: 0, maisBarato: null, maisCaro: null }`. Dentro do callback, teste o produto: se não passar nos filtros, devolva o acumulador sem mudança. Meça com `performance.now()` em volta de `render()` e rode cada versão 5 vezes, comparando a mediana. Prepare-se para a possibilidade de a diferença ser irrelevante em 9 itens — esse também é um resultado válido, e a conclusão honesta é o que vale nota.
+O acumulador do `reduce` é um objeto com todos os campos, inicializado com `{ visiveis: [], soma: 0, maisBarato: null, maisCaro: null }`. Dentro do callback, teste o produto: se não passar nos filtros, devolva o acumulador sem mudança. Meça com `performance.now()` em volta de `render()` e rode cada versão 5 vezes, comparando a mediana. Prepare-se para a possibilidade de a diferença ser irrelevante em 10 itens — esse também é um resultado válido, e a conclusão honesta é o que vale nota.
 </details>
 
 ## 🏆 Desafios
@@ -977,7 +978,7 @@ Um colega escreveu a ordenação por preço assim e jurou que testou: `produtos.
 
 **Critérios de pronto**
 
-- Um arquivo `INVESTIGACAO.md` mostra a saída errada com os nove produtos e explica, com base na documentação, qual valor o comparador deveria devolver e o que acontece quando ele devolve um booleano.
+- Um arquivo `INVESTIGACAO.md` mostra a saída errada com os dez produtos e explica, com base na documentação, qual valor o comparador deveria devolver e o que acontece quando ele devolve um booleano.
 - O texto responde: por que o resultado pode variar entre navegadores, se todos seguem o mesmo padrão?
 - Uma segunda parte demonstra o efeito colateral: rodar a versão errada **duas vezes seguidas** e mostrar que `produtos` já não está na ordem original.
 - A correção usa subtração para números e `Intl.Collator` para texto, e o array de origem permanece intacto.
@@ -1021,7 +1022,7 @@ function relatorio(lista) {
 
 - Versão A: cada bloco vira o método de array adequado (`reduce`, `filter`, `map`, `Set`), com no máximo uma linha por estatística.
 - Versão B: um único `reduce` produz o objeto inteiro em uma passagem.
-- As três versões (original, A e B) devolvem exatamente o mesmo objeto para o array de nove produtos e para um array vazio — este último documentado, porque a original quebra com lista vazia.
+- As três versões (original, A e B) devolvem exatamente o mesmo objeto para o array de dez produtos e para um array vazio — este último documentado, porque a original quebra com lista vazia.
 - Uma tabela no README compara o tempo das três com 100.000 itens gerados, com pelo menos 5 execuções e a mediana registrada.
 - Um parágrafo final escolhe uma versão para o projeto e justifica considerando legibilidade **e** número.
 
@@ -1037,12 +1038,12 @@ function relatorio(lista) {
 ### ⭐⭐ O filtro que respeita quem não vê a tela
 Tags: acessibilidade, eventos, javascript
 
-Sua busca funciona lindamente com o mouse. Agora feche os olhos: como alguém que usa leitor de tela sabe que a lista mudou? Que 2 de 9 itens sobraram? Que a busca não achou nada? Faça o cardápio filtrado ser tão utilizável de ouvido quanto de olho — e prove com um leitor de tela de verdade.
+Sua busca funciona lindamente com o mouse. Agora feche os olhos: como alguém que usa leitor de tela sabe que a lista mudou? Que 2 de 10 itens sobraram? Que a busca não achou nada? Faça o cardápio filtrado ser tão utilizável de ouvido quanto de olho — e prove com um leitor de tela de verdade.
 
 **Critérios de pronto**
 
 - O resumo de resultados é anunciado a cada filtragem por uma região `aria-live="polite"`, sem interromper o que a pessoa está digitando.
-- O anúncio só acontece depois que a digitação para (o `debounce` também protege o leitor de tela de ser bombardeado a cada tecla) e informa quantidade e critério ("2 de 9 itens, categoria Cafés").
+- O anúncio só acontece depois que a digitação para (o `debounce` também protege o leitor de tela de ser bombardeado a cada tecla) e informa quantidade e critério ("2 de 10 itens, categoria Cafés").
 - O estado vazio é anunciado com um texto útil, que sugere o que fazer ("Nenhum item corresponde a 'zzz'. Limpe a busca ou escolha outra categoria.").
 - Navegar com <kbd>Tab</kbd> do campo de busca até o primeiro card funciona, e o foco nunca é jogado para o topo por causa de uma re-renderização.
 - Um vídeo ou roteiro escrito documenta o teste com NVDA, VoiceOver ou o leitor do Android, listando o que foi anunciado em cada passo.
