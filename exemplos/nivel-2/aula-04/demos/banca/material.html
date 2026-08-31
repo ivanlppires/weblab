@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bancada — o mesmo card em Material Web 2</title>
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web@2.5.0/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+
+  <style>
+    /* Design tokens do Material 3: trocar duas variáveis recolore tudo. */
+    :root {
+      --md-sys-color-primary: #6f4e37;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-surface: #ffffff;
+    }
+
+    body {
+      font-family: Roboto, system-ui, sans-serif;
+      background: #fdfaf6;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 72rem; margin-inline: auto; }
+
+    /* CUSTO DECLARADO: o Material Web não tem sistema de grid.
+       Este bloco é CSS Grid escrito à mão — o Bootstrap resolveria
+       com row-cols-1 row-cols-md-2 row-cols-lg-3 e zero linhas de CSS. */
+    .grade {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+    @media (min-width: 768px) { .grade { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 992px) { .grade { grid-template-columns: repeat(3, 1fr); } }
+
+    /* O componente card nunca saiu da pasta labs: também é escrito à mão. */
+    .cartao {
+      display: flex;
+      flex-direction: column;
+      background: var(--md-sys-color-surface);
+      border: 1px solid rgba(111, 78, 55, .15);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .cartao img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+    .cartao__corpo { flex-grow: 1; padding: 1rem; }
+    .cartao__rodape {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem; border-top: 1px solid rgba(111, 78, 55, .15);
+    }
+    .cartao h2 { margin: 0 0 .5rem; }
+    .cartao p { margin: 0; color: #5c4b3c; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="md-typescale-headline-small">Material Web 2 — Web Components</h1>
+
+    <div class="grade">
+      <!-- ===== O MESMO CARD: tags próprias no lugar de classes ===== -->
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/espresso.jpg" alt="Xícara de espresso sobre a mesa de madeira">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Espresso do Cerrado</h2>
+          <p class="md-typescale-body-medium">Torra média, corpo encorpado e final achocolatado.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 6,00</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+      <!-- ===== fim do card ===== -->
+
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/coado.jpg" alt="Café sendo coado em filtro de papel" loading="lazy">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Coado da Casa</h2>
+          <p class="md-typescale-body-medium">Duzentos mililitros em coador de papel, moagem na hora.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 8,50</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/cappuccino.jpg" alt="Cappuccino com canela sobre a espuma" loading="lazy">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Cappuccino Sinop</h2>
+          <p class="md-typescale-body-medium">Espresso duplo, leite vaporizado e canela do Cerrado.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 12,00</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/latte.jpg" alt="Copo de latte com camadas visíveis" loading="lazy">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Latte de Baunilha</h2>
+          <p class="md-typescale-body-medium">Espresso, leite vaporizado e calda de baunilha da casa.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 14,00</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/cold-brew.jpg" alt="Copo alto de cold brew com gelo" loading="lazy">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Cold Brew da Chapada</h2>
+          <p class="md-typescale-body-medium">Extração a frio por dezoito horas, com rodela de laranja.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 15,00</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+
+      <article class="cartao">
+        <img src="../../cafe-cerrado/img/brownie.jpg" alt="Brownie de chocolate com castanhas" loading="lazy">
+        <div class="cartao__corpo">
+          <h2 class="md-typescale-title-medium">Brownie de Castanha</h2>
+          <p class="md-typescale-body-medium">Chocolate meio amargo com castanha-do-pará. Sem glúten.</p>
+        </div>
+        <div class="cartao__rodape">
+          <span class="md-typescale-title-small">R$ 11,00</span>
+          <md-filled-button>Pedir</md-filled-button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+</body>
+</html>

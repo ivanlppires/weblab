@@ -144,7 +144,7 @@ def cabecalho_aula(trilha, a, apostila=False):
     return (
         '<div class="cabecalho">'
         f'<div class="tags">{"".join(tags)}</div>{h1}'
-        f'<div class="sub">{e(trilha["nome"])} · {e(trilha["codigo"])} · WebLab</div>'
+        f'<div class="sub">{e(trilha["nome"])} · WebLab</div>'
         "</div>"
     )
 
@@ -271,10 +271,11 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
     n_aulas = len(t["aulas"])
     corpo = f"""
 <div class="hero">
-  <div class="eyebrow">{e(t["codigo"])} · {e(t["carga"])} · Pré-requisito: {e(t["prerequisito"])}</div>
+  <div class="eyebrow">{e(t["codigo"])} · {n_aulas} {"capítulos" if t["id"] == "deploy" else "aulas"} · {e(t["carga"])}</div>
   <h1><span class="marca-texto">{e(t["titulo_curto"])}</span></h1>
   <p class="lead">{e(t["resumo"])}</p>
   {barra_progresso(t)}
+  <p class="nota">{e(t.get("origem", ""))} — publicado aberto, para qualquer pessoa que queira estudar.</p>
 </div>
 <div class="stats">
   <div class="stat"><div class="n">{n_aulas}</div><div class="l">{"Capítulos" if t["id"] == "deploy" else "Aulas"}</div></div>

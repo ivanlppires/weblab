@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 01 — As duas filosofias lado a lado</title>
+  <style>
+    :root { --marca: #6f4e37; --escura: #4a3325; --creme: #fdfaf6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           background: var(--creme); color: #2b2118; }
+    .aula { background: #2b2118; color: var(--creme); padding: 1rem 1.25rem; }
+    .aula h1 { margin: 0 0 .35rem; font-size: 1.1rem; }
+    .aula p { margin: .25rem 0; max-width: 90ch; }
+    .aula code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+    .aula a { color: #f0c9a5; }
+
+    .bancada { display: grid; grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
+    @media (min-width: 62rem) { .bancada { grid-template-columns: 1fr 1fr; } }
+
+    .painel { border: 1px solid rgba(111,78,55,.2); border-radius: .75rem; background: #fff; overflow: hidden; }
+    .painel > h2 { margin: 0; padding: .75rem 1rem; background: var(--marca); color: #fff; font-size: 1rem; }
+    .painel iframe { width: 100%; height: 26rem; border: 0; border-bottom: 1px solid rgba(111,78,55,.2); display: block; }
+    .painel pre { margin: 0; padding: 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5;
+                  background: #f6f1ea; color: #2b2118; }
+    .painel figcaption { padding: .75rem 1rem; font-size: .85rem; color: #5c4b3c; }
+    .placar { padding: 0 1rem 1rem; font-size: .85rem; color: #5c4b3c; }
+    .placar b { color: var(--escura); }
+  </style>
+</head>
+<body>
+
+<header class="aula">
+  <h1>Demo 01 — §2. As duas filosofias</h1>
+  <p>
+    O <b>mesmo</b> card, o <b>mesmo</b> resultado visual, duas filosofias opostas.
+    Cada painel é um <code>&lt;iframe&gt;</code> com um documento independente — é assim que se compara
+    dois frameworks sem violar a regra de <b>um framework por projeto</b> (§7.3).
+  </p>
+  <p>
+    <b>Para a turma:</b> leia só os nomes das classes. À esquerda elas dizem <b>o que a coisa é</b>
+    (<code>card</code>, <code>card-body</code>, <code>btn</code>); à direita, <b>como a coisa parece</b>
+    (<code>flex</code>, <code>rounded-xl</code>, <code>px-3</code>). Essa é a regra prática do 📌 Na prova.
+  </p>
+</header>
+
+<div class="bancada">
+
+  <figure class="painel" style="margin:0">
+    <h2>Componentes prontos — Bootstrap 5.3</h2>
+    <iframe src="banca/bootstrap.html" title="Cards em Bootstrap 5.3" loading="lazy"></iframe>
+    <pre><code>&lt;article class="card card-produto h-100"&gt;
+  &lt;img src="espresso.jpg" class="card-img-top" alt="…"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h2 class="h5 card-title"&gt;Espresso do Cerrado&lt;/h2&gt;
+    &lt;p class="card-text"&gt;Torra média, corpo encorpado…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-footer d-flex justify-content-between align-items-center"&gt;
+    &lt;span class="fw-bold"&gt;R$ 6,00&lt;/span&gt;
+    &lt;a href="#" class="btn btn-sm btn-cafe"&gt;Pedir&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+    <figcaption>
+      <b>9 classes.</b> A decisão visual mora no framework; você só escolhe o componente.
+      Para mudar a cor da marca em todos os cards, edite <code>--bs-btn-bg</code> uma vez.
+    </figcaption>
+  </figure>
+
+  <figure class="painel" style="margin:0">
+    <h2>Utility-first — Tailwind 4</h2>
+    <iframe src="banca/tailwind.html" title="Cards em Tailwind 4" loading="lazy"></iframe>
+    <pre><code>&lt;article class="flex h-full flex-col overflow-hidden rounded-xl
+                border border-cafe/15 bg-white shadow-sm"&gt;
+  &lt;img src="espresso.jpg" class="aspect-[4/3] w-full object-cover" alt="…"&gt;
+  &lt;div class="grow p-4"&gt;
+    &lt;h2 class="mb-2 text-lg font-semibold text-stone-800"&gt;Espresso do Cerrado&lt;/h2&gt;
+    &lt;p class="text-stone-600"&gt;Torra média, corpo encorpado…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="flex items-center justify-between border-t border-cafe/15 p-4"&gt;
+    &lt;span class="font-bold text-stone-800"&gt;R$ 6,00&lt;/span&gt;
+    &lt;a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold
+                      text-white hover:bg-cafe-escuro"&gt;Pedir&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/article&gt;</code></pre>
+    <figcaption>
+      <b>31 classes.</b> A decisão visual mora no seu HTML. A cor da marca só é um token
+      porque foi declarada em <code>@theme { --color-cafe }</code> — sem isso, mudá-la
+      significaria editar todas as ocorrências de <code>bg-amber-800</code>.
+    </figcaption>
+  </figure>
+
+</div>
+
+<p class="placar">
+  <b>Conte com a turma:</b> 9 classes contra 31, mesmo pixel na tela.
+  E abra a aba <b>Network</b> nos dois: o CSS do Bootstrap transfere ~32 KB fixos;
+  o Play CDN do Tailwind transfere ~90 KB de <i>compilador</i> — que em produção
+  viraria um CSS de poucos KB depois do build. Comparar peso sem dizer <i>em qual etapa</i>
+  é o erro mais comum dessa discussão.
+</p>
+
+</body>
+</html>

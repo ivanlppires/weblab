@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bancada — o mesmo card em Tailwind 4</title>
+
+  <!-- Play CDN do Tailwind 4: o compilador roda no navegador. Só para estudo. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style type="text/tailwindcss">
+    /* §5.3 — a configuração mora no CSS. Declarar um token cria as classes
+       bg-cafe, text-cafe, border-cafe e todas as variantes. */
+    @theme {
+      --color-cafe: #6f4e37;
+      --color-cafe-escuro: #4a3325;
+      --color-creme: #fdfaf6;
+    }
+  </style>
+</head>
+<body class="bg-creme py-8">
+
+  <div class="mx-auto max-w-6xl px-4">
+    <h1 class="mb-6 text-xl font-bold text-stone-800">Tailwind 4 — classes utilitárias</h1>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+
+      <!-- ===== O MESMO CARD: 12 linhas, 30+ classes, todas com nome de PROPRIEDADE ===== -->
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/espresso.jpg" alt="Xícara de espresso sobre a mesa de madeira"
+             class="aspect-[4/3] w-full object-cover">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Espresso do Cerrado</h2>
+          <p class="text-stone-600">Torra média, corpo encorpado e final achocolatado.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 6,00</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cafe">Pedir</a>
+        </div>
+      </article>
+      <!-- ===== fim do card ===== -->
+
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/coado.jpg" alt="Café sendo coado em filtro de papel"
+             class="aspect-[4/3] w-full object-cover" loading="lazy">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Coado da Casa</h2>
+          <p class="text-stone-600">Duzentos mililitros em coador de papel, moagem na hora.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 8,50</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro">Pedir</a>
+        </div>
+      </article>
+
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/cappuccino.jpg" alt="Cappuccino com canela sobre a espuma"
+             class="aspect-[4/3] w-full object-cover" loading="lazy">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Cappuccino Sinop</h2>
+          <p class="text-stone-600">Espresso duplo, leite vaporizado e canela do Cerrado.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 12,00</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro">Pedir</a>
+        </div>
+      </article>
+
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/latte.jpg" alt="Copo de latte com camadas visíveis"
+             class="aspect-[4/3] w-full object-cover" loading="lazy">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Latte de Baunilha</h2>
+          <p class="text-stone-600">Espresso, leite vaporizado e calda de baunilha da casa.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 14,00</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro">Pedir</a>
+        </div>
+      </article>
+
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/cold-brew.jpg" alt="Copo alto de cold brew com gelo"
+             class="aspect-[4/3] w-full object-cover" loading="lazy">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Cold Brew da Chapada</h2>
+          <p class="text-stone-600">Extração a frio por dezoito horas, com rodela de laranja.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 15,00</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro">Pedir</a>
+        </div>
+      </article>
+
+      <article class="flex h-full flex-col overflow-hidden rounded-xl border border-cafe/15 bg-white shadow-sm">
+        <img src="../../cafe-cerrado/img/brownie.jpg" alt="Brownie de chocolate com castanhas"
+             class="aspect-[4/3] w-full object-cover" loading="lazy">
+        <div class="grow p-4">
+          <h2 class="mb-2 text-lg font-semibold text-stone-800">Brownie de Castanha</h2>
+          <p class="text-stone-600">Chocolate meio amargo com castanha-do-pará. Sem glúten.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-cafe/15 p-4">
+          <span class="font-bold text-stone-800">R$ 11,00</span>
+          <a href="#" class="rounded-lg bg-cafe px-3 py-1.5 text-sm font-semibold text-white hover:bg-cafe-escuro">Pedir</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+</body>
+</html>

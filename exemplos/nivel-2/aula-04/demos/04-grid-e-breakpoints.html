@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 04 — Grid de 12 colunas e breakpoints</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <style>
+    body { background: #fdfaf6; padding-bottom: 6rem; }
+    .aula { background: #2b2118; color: #fdfaf6; }
+    .aula code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+
+    /* Só para ENXERGAR as colunas. Nada disso faz parte do grid. */
+    .row > * > .bloco {
+      background: #6f4e37; color: #fff; border-radius: .5rem;
+      padding: .75rem .5rem; text-align: center; font-size: .85rem;
+    }
+    .row > * > .bloco.claro { background: #c2703d; }
+    .demo-row { outline: 2px dashed rgba(111,78,55,.35); outline-offset: 4px; margin-bottom: 2rem; }
+
+    /* Régua de breakpoint fixa na tela — só utilitários de display, zero JavaScript. */
+    .regua {
+      position: fixed; inset: auto 0 0 0; z-index: 1030;
+      background: #2b2118; color: #fdfaf6; padding: .6rem 1rem; text-align: center;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem;
+    }
+    .regua b { color: #f0c9a5; }
+  </style>
+</head>
+<body>
+
+<header class="aula p-4">
+  <div class="container">
+    <h1 class="h5">Demo 04 — §4.2 e §4.3. O grid e os breakpoints</h1>
+    <p class="mb-0">
+      <b>Arraste a borda da janela devagar</b> enquanto a turma olha a régua presa no rodapé.
+      Ela mostra qual breakpoint está ativo — e é feita só com <code>d-none</code> /
+      <code>d-*-block</code>, sem uma linha de JavaScript.
+    </p>
+  </div>
+</header>
+
+<main class="container py-4">
+
+  <section class="mb-5">
+    <h2 class="h5">1. Doze colunas são só uma tabela de porcentagens</h2>
+
+    <div class="row demo-row">
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+      <div class="col-1"><div class="bloco">1</div></div>
+    </div>
+
+    <div class="row demo-row">
+      <div class="col-6"><div class="bloco claro">col-6 &nbsp;(50 %)</div></div>
+      <div class="col-6"><div class="bloco claro">col-6 &nbsp;(50 %)</div></div>
+    </div>
+
+    <div class="row demo-row">
+      <div class="col-4"><div class="bloco">col-4</div></div>
+      <div class="col-4"><div class="bloco">col-4</div></div>
+      <div class="col-4"><div class="bloco">col-4</div></div>
+    </div>
+
+    <div class="row demo-row">
+      <div class="col-8"><div class="bloco claro">col-8 &nbsp;(66,6 %)</div></div>
+      <div class="col-4"><div class="bloco claro">col-4</div></div>
+    </div>
+
+    <p class="text-body-secondary mb-0">
+      A borda tracejada é a <code>row</code>. Repare que ela "vaza" para fora do
+      <code>container</code>: é a margem negativa que compensa o <i>padding</i> das colunas (a calha).
+      É exatamente por isso que uma <code>col-*</code> fora de uma <code>row</code> fica com um
+      espaço estranho na borda.
+    </p>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5">2. Leia como três frases</h2>
+<pre class="p-3 bg-body-tertiary rounded-3"><code>&lt;div class="col-12 col-md-6 col-lg-4"&gt;</code></pre>
+    <p>
+      No celular ocupa a linha inteira (12/12); no tablet, metade; no notebook, um terço.
+      Os três blocos abaixo têm essa classe — arraste a janela:
+    </p>
+
+    <div class="row demo-row g-3">
+      <div class="col-12 col-md-6 col-lg-4"><div class="bloco">Bloco 1<br><small>col-12 col-md-6 col-lg-4</small></div></div>
+      <div class="col-12 col-md-6 col-lg-4"><div class="bloco">Bloco 2<br><small>col-12 col-md-6 col-lg-4</small></div></div>
+      <div class="col-12 col-md-12 col-lg-4"><div class="bloco">Bloco 3<br><small>col-12 col-md-<b>12</b> col-lg-4</small></div></div>
+    </div>
+
+    <div class="alert alert-warning">
+      <b>Mobile-first:</b> <code>col-md-6</code> quer dizer "6 colunas <b>a partir de</b> 768 px",
+      nunca "apenas no tablet". Por isso se escreve <code>col-12 col-md-6</code> — do menor para o
+      maior — e nunca o contrário.
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5">3. O atalho <code>row-cols-*</code></h2>
+<pre class="p-3 bg-body-tertiary rounded-3"><code>&lt;div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"&gt;
+  &lt;div class="col"&gt;…&lt;/div&gt;   &lt;!-- e só. Acrescente um quarto: nada a recalcular --&gt;</code></pre>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 demo-row">
+      <div class="col"><div class="bloco claro">Card 1</div></div>
+      <div class="col"><div class="bloco claro">Card 2</div></div>
+      <div class="col"><div class="bloco claro">Card 3</div></div>
+      <div class="col"><div class="bloco claro">Card 4</div></div>
+      <div class="col"><div class="bloco claro">Card 5</div></div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5">4. <code>container</code> × <code>container-fluid</code></h2>
+  </section>
+</main>
+
+<div class="container mb-3">
+  <div class="p-3 text-bg-secondary rounded-3 text-center">container — largura máxima por breakpoint, centralizado</div>
+</div>
+<div class="container-fluid mb-5">
+  <div class="p-3 text-bg-dark rounded-3 text-center">container-fluid — 100 % da largura, sempre</div>
+</div>
+
+<main class="container">
+  <section>
+    <h2 class="h5">5. Por baixo do capô — é CSS comum</h2>
+<pre class="p-3 bg-body-tertiary rounded-3"><code>.row {
+  --bs-gutter-x: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+.row &gt; * {
+  flex-shrink: 0;
+  width: 100%;                                    /* ← por que a coluna ocupa tudo no celular */
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+}
+
+.col-md-4 { flex: 0 0 auto; width: 33.33333333%; } /* ← o "12 colunas" inteiro */</code></pre>
+    <p class="mb-0">
+      Mostre isso no <b>Sources</b> do DevTools, no arquivo real. Quem sabe que
+      <code>col-md-6</code> é <code>width: 50%</code> resolve o bug; quem decorou a classe, trava.
+    </p>
+  </section>
+</main>
+
+<!-- Régua de breakpoint: um span por faixa, escondido/ mostrado por utilitário de display. -->
+<div class="regua">
+  breakpoint ativo:
+  <span class="d-inline d-sm-none"><b>xs</b> — abaixo de 576 px (prefixo nenhum)</span>
+  <span class="d-none d-sm-inline d-md-none"><b>sm</b> — a partir de 576 px</span>
+  <span class="d-none d-md-inline d-lg-none"><b>md</b> — a partir de 768 px</span>
+  <span class="d-none d-lg-inline d-xl-none"><b>lg</b> — a partir de 992 px</span>
+  <span class="d-none d-xl-inline d-xxl-none"><b>xl</b> — a partir de 1200 px</span>
+  <span class="d-none d-xxl-inline"><b>xxl</b> — a partir de 1400 px</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
