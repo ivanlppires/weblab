@@ -124,7 +124,7 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
  capítulo(s) da bibliografia da disciplina, listada em config.py)
 ```
 
-Nas aulas que fecham unidade (**N1: 06, 10, 15 · N2: 06, 10, 16 · N3: 04, 08, 15**), acrescentar **antes** de "Para aprofundar":
+Nas aulas que fecham unidade (**N1: 06, 10, 15 · N2: 06, 10, 16 · N3: 04, 08, 15**), acrescentar **antes** de "Para aprofundar" (sem prazo literal: "até o prazo publicado no SIGAA"):
 
 ```
 ## 📝 Avaliação N — instruções de entrega
@@ -209,7 +209,7 @@ Scaffold oficial do Nível 3 (testado): `npx create-vue@latest unieventos-web --
 - **Tom:** direto, prático, sem enrolação. Frases curtas. Voz ativa. Sem "vamos agora" repetido. Fale com o estudante na segunda pessoa ("você").
 - **Tamanho:** aulas de nível: 900 a 1.500 linhas de Markdown (o lint exige ≥ 600); capítulos de deploy: 600 a 1.000 (lint ≥ 400). Precisa sustentar 150 min de aula. Não resuma.
 - **Código:** completo e executável. Nada de `// ...resto do código`, `TODO`, `TBD`. Todo bloco com linguagem declarada: ```` ```html ````, ```` ```css ````, ```` ```js ````, ```` ```vue ````, ```` ```bash ````, ```` ```sql ````, ```` ```json ````, ```` ```http ````, ```` ```yaml ````, ```` ```dockerfile ````, ```` ```nginx ````, ```` ```text ````. Caminho do arquivo antes do bloco.
-- **Sem datas** no corpo das aulas (o cronograma vive em `build/config.py` e no índice da trilha). Exceção: a Aula 01 de cada nível, que apresenta a disciplina, pode trazer a tabela de cronograma e prazos de `config.py`.
+- **Sem datas, sem semestre, sem turma — em nenhuma aula, nem na 01.** O material serve a qualquer oferta: a Aula 01 apresenta a sequência das aulas e o escopo das avaliações **sem** datas, dizendo que o calendário e os prazos saem no SIGAA. Nada de `2026.2`, `Turma 01`, `dd/mm/aaaa` ou dia da semana fixo. O calendário de um semestre é opcional e vive só em `build/config.py` (`SEMESTRE`, `CRONOGRAMA`, `prazo` das avaliações) — ver `docs/calendario-2026-2.md`. Em dados de exemplo (eventos fictícios, `<time>`, seeds), use o ano **2030**; datas históricas e didáticas (1995, `31/02/2000`) permanecem.
 - **Continuidade:** cada aula retoma em 3 linhas onde a anterior parou e termina anunciando a próxima ("Na próxima aula…" sem data). Não reintroduza o que já foi ensinado — referencie ("como vimos na Aula 03").
 - **Sem invenção:** se não tiver certeza de uma API, use as versões e trechos deste documento. Prefira links para documentação oficial (MDN pt-BR: `https://developer.mozilla.org/pt-BR/docs/...`).
 - **Tabelas com no máximo 4 colunas** (quebram na projeção e no celular).

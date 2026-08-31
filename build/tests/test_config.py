@@ -24,16 +24,21 @@ def test_unidades_cobrem_todas_as_aulas():
             assert a["unidade"] in config.trilha(t)["unidades"]
 
 
-def test_cronograma_literal_do_plano():
-    n1 = config.CRONOGRAMA["nivel-1"]
-    assert n1[0]["data"] == "11/08/2026" and n1[-1]["data"] == "17/11/2026"
-    assert len(n1) == 15
-    n2 = config.CRONOGRAMA["nivel-2"]
-    assert n2[0]["data"] == "11/08/2026" and n2[-1]["data"] == "24/11/2026"
-    assert len(n2) == 16
-    n3 = config.CRONOGRAMA["nivel-3"]
-    assert len(n3) == 15
-    assert "deploy" not in config.CRONOGRAMA
+def test_material_atemporal_por_padrao():
+    """O site padrão não mostra datas: sem semestre, sem cronograma, sem prazos."""
+    assert config.SEMESTRE == ""
+    assert config.CRONOGRAMA == {}
+    for trilha, avs in config.AVALIACOES.items():
+        for av in avs:
+            assert "prazo" not in av, f"{trilha}: avaliação {av['n']} tem prazo fixo"
+
+
+def test_calendario_opcional_tem_o_formato_esperado():
+    """Quando um semestre é configurado, o índice sabe renderizá-lo."""
+    cron = {"nivel-1": [{"data": "10/03/2027", "num": "01", "descricao": "Aula inaugural", "prazo": True}]}
+    item = cron["nivel-1"][0]
+    assert set(item) >= {"data", "num", "descricao"}
+    assert item["num"] in [a["num"] for a in config.aulas("nivel-1")]
 
 
 def test_avaliacoes_marcadas_nas_aulas():

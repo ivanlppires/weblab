@@ -245,20 +245,25 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
             for c in config.CRONOGRAMA[t["id"]]
         )
         cron = f"""
-<h2 id="cronograma">Cronograma {e(config.SEMESTRE)}</h2>
+<h2 id="cronograma">Cronograma{" " + e(config.SEMESTRE) if config.SEMESTRE else ""}</h2>
 <p class="nota">Datas conforme o Plano de Curso da turma no SIGAA. ⏰ marca o dia de entrega de uma avaliação. Em caso de divergência com o calendário da turma, vale o aviso do professor.</p>
 <div class="tabela-wrap"><table><thead><tr><th>Data</th><th>{rot}</th><th>Conteúdo</th></tr></thead><tbody>{linhas}</tbody></table></div>"""
 
     avals = ""
     if t["id"] in config.AVALIACOES:
+        com_prazo = any(av.get("prazo") for av in config.AVALIACOES[t["id"]])
+        col_prazo = "<th>Prazo</th>" if com_prazo else ""
         linhas = "".join(
-            f'<tr><td>Avaliação {av["n"]}</td><td>{e(av["escopo"])}</td><td>{e(av["prazo"])}</td></tr>'
+            f'<tr><td>Avaliação {av["n"]}</td><td>{e(av["escopo"])}</td>'
+            + (f'<td>{e(av.get("prazo", ""))}</td>' if com_prazo else "")
+            + "</tr>"
             for av in config.AVALIACOES[t["id"]]
         )
+        nota_prazo = "" if com_prazo else " Os prazos de cada avaliação são publicados no SIGAA e anunciados em aula."
         avals = f"""
 <h2 id="avaliacao">Avaliação</h2>
-<p>{e(config.REGRAS_APROVACAO)} Entregas via SIGAA. O exame final é uma prova teórica, presencial e individual sobre as três unidades.</p>
-<div class="tabela-wrap"><table><thead><tr><th>Instrumento</th><th>Escopo</th><th>Prazo</th></tr></thead><tbody>{linhas}</tbody></table></div>"""
+<p>{e(config.REGRAS_APROVACAO)} Entregas via SIGAA.{nota_prazo} O exame final é uma prova teórica, presencial e individual sobre as três unidades.</p>
+<div class="tabela-wrap"><table><thead><tr><th>Instrumento</th><th>Escopo</th>{col_prazo}</tr></thead><tbody>{linhas}</tbody></table></div>"""
 
     stack = "".join(f"<tr><td>{e(k)}</td><td>{e(v)}</td></tr>" for k, v in t["stack"])
     biblio = config.BIBLIOGRAFIA.get(t["id"], [])
@@ -301,7 +306,7 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
 """
     itens = [("2", "aulas", "Aulas"), ("2", "projeto", "Projeto fio-condutor")]
     if cron:
-        itens.append(("2", "cronograma", f"Cronograma {config.SEMESTRE}"))
+        itens.append(("2", "cronograma", "Cronograma" + (f" {config.SEMESTRE}" if config.SEMESTRE else "")))
     if avals:
         itens.append(("2", "avaliacao", "Avaliação"))
     itens += [("2", "stack", "Stack")]

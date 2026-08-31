@@ -20,15 +20,15 @@
 
 Cada trilha constrói um **projeto fio-condutor** em sala (site do evento acadêmico · Café Cerrado · UniEventos) e você constrói o **seu projeto autoral** com a mesma arquitetura e um tema que só você tem. É esse projeto que vai para o portfólio.
 
-## Para a turma 2026.2
+## Se você está cursando a disciplina
 
-Os índices de cada nível trazem o **cronograma**, os **prazos das avaliações** e as regras de aprovação, conforme o Plano de Curso no SIGAA:
+O índice de cada nível traz o escopo das três avaliações, as regras de aprovação e a stack usada:
 
-- [Nível 1 — FACET-SNP-319 · Introdução ao Desenvolvimento Web](nivel-1/#cronograma)
-- [Nível 2 — FACET-SNP-307 · Desenvolvimento Web](nivel-2/#cronograma)
-- [Nível 3 — FACET-SNP-310 · Frameworks Modernos](nivel-3/#cronograma)
+- [Nível 1 — FACET-SNP-319 · Introdução ao Desenvolvimento Web](nivel-1/#avaliacao)
+- [Nível 2 — FACET-SNP-307 · Desenvolvimento Web](nivel-2/#avaliacao)
+- [Nível 3 — FACET-SNP-310 · Frameworks Modernos](nivel-3/#avaliacao)
 
-Entregas sempre pelo SIGAA. Dúvidas: no horário de atendimento ou por e-mail institucional.
+As **datas** dos encontros e os **prazos** de cada entrega mudam a cada semestre: valem os do Plano de Curso da sua turma, publicado no SIGAA. Entregas sempre pelo SIGAA. Dúvidas: no horário de atendimento ou por e-mail institucional.
 
 ## Sobre este material
 

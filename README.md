@@ -45,7 +45,9 @@ python3 -m venv --system-site-packages .venv && .venv/bin/pip install pytest mar
 
 Para escrever ou alterar uma aula, siga `fontes/ESPECIFICACAO.md`. O lint rejeita aulas sem a estrutura completa (Objetivos → Pré-requisitos → Roteiro → teoria → Mão na massa → Laboratório A/B/C → 🏆 Desafios → Erros comuns → Atividade assíncrona → Checkpoint → Para aprofundar).
 
-Para adicionar uma aula ou trilha: inclua-a em `build/config.py`, crie o arquivo em `fontes/<trilha>/` e rode o build. Para reutilizar em outro semestre: troque `CRONOGRAMA` e `AVALIACOES` em `build/config.py`.
+Para adicionar uma aula ou trilha: inclua-a em `build/config.py`, crie o arquivo em `fontes/<trilha>/` e rode o build.
+
+O conteúdo é **atemporal** — nenhuma aula tem datas, semestre ou turma —, então ele serve a qualquer oferta sem edição. Para publicar o calendário de um semestre no índice das trilhas, preencha `SEMESTRE`, `CRONOGRAMA` e o `prazo` de cada avaliação em `build/config.py`; o formato e o calendário de 2026.2 estão em [`docs/calendario-2026-2.md`](docs/calendario-2026-2.md).
 
 ## Recursos do site
 
