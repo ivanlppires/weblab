@@ -299,7 +299,7 @@ AUTORES = [
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
         "instituicao": "UNEMAT — Campus Sinop",
-        "orcid": "",  # PENDENTE: o identificador informado antes pertence a outra pessoa
+        "orcid": "0000-0001-8752-201X",
         "lattes": "",
     },
     {
