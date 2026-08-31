@@ -208,6 +208,9 @@ async function buscar(termo) {
 }
 ```
 
+> **🔬 Investigue**
+> Remova temporariamente o `if (controlador) controlador.abort()` acima (ou comente essa linha) e abra a aba **Network** do DevTools. Digite um termo de busca rápido, letra por letra, sem pausar (ex.: "workshop"). Quantas requisições `GET /eventos?titulo_like=...` aparecem? Agora observe a coluna de tempo: alguma requisição mais antiga (por uma letra a menos) termina **depois** de uma mais nova? Se sim, a tela pode acabar mostrando o resultado da busca errada — a resposta que "chegou por último" nem sempre é a da última letra digitada. Restaure a linha removida e repita o teste.
+
 ### Upload com `FormData`
 
 Quando o UniEventos precisar permitir upload de uma imagem de evento (em vez de só uma URL), o corpo da requisição deixa de ser JSON e passa a ser `multipart/form-data`, construído com `FormData`:
@@ -338,10 +341,16 @@ O Pinia já vem instalado e registrado se você criou o projeto com a flag `--pi
 
 ```js
 // src/main.js (trecho, já presente no scaffold)
+import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-// ...
+import App from './App.vue'
+
+const app = createApp(App)
 app.use(createPinia())
 ```
+
+> **🧠 Você sabia?**
+> "Pinia" é a palavra em espanhol para "abacaxi" (piña). O nome foi escolhido por Eduardo San Martin Morote, membro da equipe do Vue, quando ele começou a biblioteca em 2019 como uma experiência pessoal de "como seria o Vuex 5". A experiência foi tão bem recebida pela comunidade que a própria equipe do Vue a adotou oficialmente como gerenciador de estado recomendado no Vue 3 — hoje Vuex está em modo de manutenção, e todo projeto novo usa Pinia.
 
 ### `defineStore`: dois estilos
 
@@ -1203,17 +1212,60 @@ Com o `json-server` rodando em um terminal e `npm run dev` em outro: a home carr
 
 ## 🧪 Laboratório
 
-**1. Cancelamento de requisição na busca**
-Aplique a técnica de `AbortController` da §2 no `eventosService.listar`, cancelando a busca anterior sempre que o usuário digitar um novo termo antes da resposta anterior chegar.
+### Nível A — Fixação
 
-<details markdown="1">
-<summary>Dica</summary>
+**A1.** Preveja: com `fetch('/eventos/999')` (endpoint inexistente, responde `404`), o código abaixo roda até o fim, sem lançar exceção:
 
-Guarde a instância de `AbortController` em uma variável de módulo dentro do próprio serviço, como no exemplo da §2.
-</details>
+```js
+const resposta = await fetch('/eventos/999')
+console.log('Cheguei aqui:', resposta.status)
+```
 
-**2. Getter `totalPorCategoria` na store**
-Adicione um `computed` em `eventosStore.js` chamado `totalPorCategoria`, que retorna um objeto `{ palestra: n, minicurso: n, workshop: n }` contando eventos de cada categoria. Exiba isso em três `v-chip` no `AdminHomeView.vue`.
+Trocando `fetch` pela instância `http` do Axios, dentro de um `try/catch`, a mesma chamada cai no `catch`. Por que essa diferença?
+
+Resultado esperado: com `fetch`, qualquer status HTTP (incluindo 404/500) resolve a Promise normalmente — só falha de rede rejeita; é preciso checar `resposta.ok` manualmente. Com Axios, qualquer status fora da faixa 2xx já rejeita a Promise automaticamente, então cai no `catch`.
+
+**A2.** Complete a linha que falta no interceptor de request, para que o token salvo seja anexado ao cabeçalho correto:
+
+```js
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem('uniEventosToken')
+  if (token) {
+    ____
+  }
+  return config
+})
+```
+
+Resultado esperado: `config.headers.Authorization = \`Bearer ${token}\`` — o padrão `Bearer <token>` é o esperado pela maioria das APIs que leem esse cabeçalho.
+
+**A3.** Em uma frase: por que `const { eventos, carregando } = store` quebra a reatividade, mas `store.carregarEventos()` continua funcionando normalmente, sem precisar de `storeToRefs`?
+
+Resultado esperado: `eventos`/`carregando` são state — desestruturar copia o **valor** naquele instante, perdendo a ligação com o Proxy reativo da store; `carregarEventos` é uma ação (função), e chamá-la direto de `store.carregarEventos()` sempre executa o código atual da store, sem precisar de nenhum "encanamento" reativo.
+
+**A4.** Ache o erro nas linhas abaixo — nenhum componente que usa essa store percebe quando `valor` muda:
+
+```js
+export const useContadorStore = defineStore('contador', () => {
+  const valor = ref(0)
+  function incrementar() {
+    valor.value++
+  }
+  return { valor: valor.value, incrementar }
+})
+```
+
+Resultado esperado: `return { valor: valor.value, ... }` devolve o número puro (`0`) capturado no instante da criação da store, não o `ref` — a store deveria devolver `valor` (o `ref` inteiro), não `valor.value`. Assim como desestruturar quebra a reatividade fora da store, devolver `.value` de dentro da própria store causa o mesmo problema.
+
+**A5.** Preveja: seu componente chama `http.delete('/eventos/7')`. A aba **Network** mostra duas requisições: uma `OPTIONS` e uma `DELETE`. Qual delas carrega o cabeçalho `Authorization`, e por quê?
+
+Resultado esperado: só a requisição `DELETE` real carrega `Authorization` — o interceptor de request do Axios roda apenas na chamada que o seu código de fato disparou. O `OPTIONS` é o preflight, gerado automaticamente pelo **navegador** (não pelo Axios) para perguntar ao servidor se ele aceita aquele método com aqueles cabeçalhos, antes de enviar a requisição real.
+
+### Nível B — Aplicação
+
+**B1.** Getter `totalPorCategoria` na store. Adicione um `computed` em `eventosStore.js` chamado `totalPorCategoria`, que retorna um objeto `{ palestra: n, minicurso: n, workshop: n }` contando eventos de cada categoria. Exiba isso em três `v-chip` no `AdminHomeView.vue`.
+
+Resultado esperado: os três `v-chip` mostram a contagem correta de cada categoria e atualizam sozinhos (sem F5) se um evento for criado, editado ou excluído durante a sessão.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1221,8 +1273,9 @@ Adicione um `computed` em `eventosStore.js` chamado `totalPorCategoria`, que ret
 `eventos.value.reduce((acc, e) => { acc[e.categoria] = (acc[e.categoria] || 0) + 1; return acc }, {})`.
 </details>
 
-**3. `$subscribe` para log de auditoria**
-No `main.js`, use `eventosStore.$subscribe` para imprimir no console, a cada mudança, quantos eventos existem na store — útil para depurar sincronizações inesperadas.
+**B2.** `$subscribe` para log de auditoria. No `main.js`, use `eventosStore.$subscribe` para imprimir no console, a cada mudança, quantos eventos existem na store — útil para depurar sincronizações inesperadas.
+
+Resultado esperado: toda ação que muda `eventos` (carregar, criar, editar, excluir) imprime uma linha no console com o novo total, sem que você precise espalhar `console.log` dentro de cada ação da store.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1230,8 +1283,9 @@ No `main.js`, use `eventosStore.$subscribe` para imprimir no console, a cada mud
 `store.$subscribe((mutation, state) => console.log('eventos:', state.eventos.length))`, chamado após `app.mount('#app')`.
 </details>
 
-**4. Tratamento de erro de rede real**
-Derrube o `json-server` propositalmente e force um `erro.request` (não `erro.response`). Ajuste `eventosStore.carregarEventos` para mostrar uma mensagem diferente quando o erro for de conexão (sem resposta) versus quando for um erro HTTP com resposta.
+**B3.** Tratamento de erro de rede real. Derrube o `json-server` propositalmente e force um `erro.request` (não `erro.response`). Ajuste `eventosStore.carregarEventos` para mostrar uma mensagem diferente quando o erro for de conexão (sem resposta) versus quando for um erro HTTP com resposta.
+
+Resultado esperado: com o `json-server` no ar e um erro de validação simulado, a mensagem exibida fala em "dados inválidos"; com o `json-server` derrubado, a mensagem é claramente outra (ex.: "não foi possível conectar ao servidor"), sem misturar as duas.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1239,13 +1293,123 @@ Derrube o `json-server` propositalmente e force um `erro.request` (não `erro.re
 Dentro do `catch`, verifique `if (e.response) { ... } else if (e.request) { ... }`, como na §2.
 </details>
 
-**5. Persistência de tema com Pinia**
-Crie `src/stores/preferenciasStore.js` com uma setup store que guarda o tema atual (`'light'`/`'dark'`), persiste em `localStorage` e é usada pelo `CabecalhoApp.vue` no lugar da lógica local de `useTheme()` isolada.
+**B4.** Persistência de tema com Pinia. Crie `src/stores/preferenciasStore.js` com uma setup store que guarda o tema atual (`'light'`/`'dark'`), persiste em `localStorage` e é usada pelo `CabecalhoApp.vue` no lugar da lógica local de `useTheme()` isolada.
+
+Resultado esperado: o tema escolhido persiste entre recarregamentos de página (F5), lido de `preferenciasStore` — e não de um `ref` local isolado que reiniciaria a cada visita.
 
 <details markdown="1">
 <summary>Dica</summary>
 
 A store guarda o nome do tema em um `ref`; um `watch` sobre esse `ref` chama `tema.global.name.value = novoValor` e `localStorage.setItem`.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Cancelamento de requisição na busca. Aplique a técnica de `AbortController` da §2 no `eventosService.listar`, cancelando a busca anterior sempre que o usuário digitar um novo termo antes da resposta anterior chegar. Prove que funciona sob condições realistas: digite rapidamente, sem pausar, e confirme na aba Network que as respostas antigas não sobrescrevem a lista com resultados desatualizados.
+
+Resultado esperado: digitar uma palavra inteira rapidamente gera várias requisições na aba Network, mas só a última é exibida como bem-sucedida — as anteriores aparecem como "canceled" (ou equivalente), e a lista de eventos na tela sempre corresponde ao último termo digitado, nunca a um termo anterior.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Guarde a instância de `AbortController` em uma variável de módulo dentro do próprio serviço, como no exemplo da §2. Trate o erro de cancelamento (`axios.isCancel(erro)`) separadamente de um erro de verdade — ele não deve acionar a mensagem de erro da store.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ Token fantasma
+Tags: axios, javascript, bug
+
+Um colega "simplificou" o interceptor de request removendo a checagem, para deixar o código mais enxuto:
+
+```js
+// src/services/http.js — trecho com o bug plantado
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem('uniEventosToken')
+  config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+```
+
+Agora, mesmo sem nenhum usuário logado, toda requisição sai com o cabeçalho `Authorization: Bearer null`. Abra a aba Network e confirme. Por que isso é um problema pior do que "só um cabeçalho inútil"?
+
+**Critérios de pronto**
+
+- O interceptor volta a só adicionar o cabeçalho quando existe um token de verdade salvo.
+- Um teste manual: com `localStorage` vazio, a aba Network confirma que a requisição sai **sem** o cabeçalho `Authorization` (não com o valor literal `"null"`).
+- Um comentário no código explica por que enviar `Authorization: Bearer null` pode ser pior do que não enviar cabeçalho nenhum (ex.: um servidor mal implementado poderia tratar a string `"null"` como um token válido, ou logs de erro ficam poluídos com um "token" que não existe).
+- Uma segunda checagem: se alguém salvar por engano a string literal `"null"` no `localStorage` (com `localStorage.setItem('uniEventosToken', null)`), seu código também trata esse caso — e não só o `null` de verdade do JavaScript.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `localStorage.getItem` retorna o valor `null` do JavaScript quando a chave não existe — mas se alguém já salvou a string `"null"` por engano, `if (token)` não pega esse caso, porque a string `"null"` é truthy.
+2. Confira o valor exato de `token` (não só sua truthiness) antes de decidir se o cabeçalho deve ser adicionado.
+3. Uma verificação mais robusta: `if (token && token !== 'null')`.
+</details>
+
+### ⭐⭐ Persistência sem repetir código
+Tags: pinia, refatoracao, padroes-de-projeto
+
+`inscricoesStore` (e, se você fez o Laboratório B4, `preferenciasStore` também) implementam persistência em `localStorage` cada uma com sua própria lógica de leitura/escrita repetida. Extraia isso para uma função reutilizável — no mesmo espírito estrutural dos interceptors do Axios, vistos no box de padrões desta aula.
+
+**Critérios de pronto**
+
+- Uma função `usarPersistencia(store, chave)` em `src/stores/plugins/persistencia.js` que: lê o valor salvo do `localStorage` e usa `store.$patch` para inicializar o state, e assina `store.$subscribe` para salvar automaticamente a cada mudança.
+- `inscricoesStore` e ao menos uma outra store passam a chamar só `usarPersistencia(useInscricoesStore(), 'uniEventosInscricoes')` (uma linha), sem repetir `localStorage.getItem`/`setItem` manualmente dentro de cada ação.
+- Remover a chamada de `usarPersistencia` de uma store faz ela parar de persistir, sem quebrar nenhuma outra funcionalidade — prova de que a persistência está de fato desacoplada da lógica de negócio da store.
+- Um comentário no arquivo `persistencia.js` explica por que essa função é, estruturalmente, um Decorator: ela "envolve" uma store existente adicionando um comportamento (persistência) sem que a store precise saber disso.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `store.$subscribe((mutation, state) => localStorage.setItem(chave, JSON.stringify(state)))` cobre a parte de salvar.
+2. Para inicializar, leia o `localStorage` **antes** de assinar o `$subscribe` (senão a leitura inicial dispara uma escrita desnecessária), e use `store.$patch(JSON.parse(valorSalvo))` só se `valorSalvo` existir.
+3. Pinia tem um conceito oficial de "plugin" (`pinia.use(...)`) que resolve exatamente esse tipo de problema para todas as stores de uma vez — se quiser ir além, pesquise "Pinia plugins" na documentação oficial.
+</details>
+
+### ⭐⭐⭐ Cache de 30 segundos para não repetir a mesma pergunta
+Tags: performance, axios, javascript
+
+Toda vez que o usuário volta para a Home vindo do detalhe de um evento, `carregarEventos()` dispara um novo `GET /eventos` — mesmo que a lista não tenha mudado nos últimos segundos. Em uma API de verdade (não o `json-server` local), cada requisição desnecessária custa tempo de rede e carga no servidor. Implemente um cache simples: se os mesmos parâmetros de busca já foram pedidos há menos de 30 segundos, devolva o resultado guardado, sem nova requisição.
+
+**Critérios de pronto**
+
+- Uma camada de cache (um `Map` em memória, chave = URL + parâmetros, valor = `{ dados, expiraEm }`) na frente de `eventosService.listar`, ou dentro da própria store.
+- Chamar `carregarEventos()` duas vezes seguidas, em menos de 30 segundos, gera **uma** requisição na aba Network — a segunda vem do cache.
+- Depois de 30 segundos, uma nova chamada gera uma requisição de verdade — o cache expira, não é permanente.
+- Uma ação explícita (ex.: botão "Atualizar" na tela) ignora o cache e força uma requisição nova, mesmo dentro da janela de 30 segundos.
+- Uma tabela no README do projeto autoral compara o número de requisições feitas em um minuto de uso típico, antes e depois do cache (contado na aba Network).
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Um `Map` declarado no próprio módulo do serviço (fora de qualquer função) sobrevive entre chamadas — exatamente como a variável `controlador` do exemplo de `AbortController` na §2.
+2. Guarde `Date.now() + 30000` como o momento de expiração, e compare com `Date.now()` antes de decidir se serve do cache ou busca de novo.
+3. O botão "Atualizar" pode simplesmente apagar a entrada do cache (ou passar um parâmetro `forcar: true` que pula a checagem) antes de chamar o serviço normalmente.
+</details>
+
+### 🔥 Boss — Painel de inscrições com filtros persistentes na URL
+Tags: vue, pinia, axios, projeto
+
+A Unidade 2 terminou. Você sabe componentizar de verdade, sincronizar filtros com a URL (Aula 05), e agora consumir uma API real com Axios e Pinia (hoje). Prove que tudo isso funciona junto, numa única funcionalidade nova: um painel administrativo que mostra quem se inscreveu em cada evento, com filtros que sobrevivem a um F5.
+
+**Critérios de pronto**
+
+- Uma nova rota aninhada `/admin/inscricoes` (rota-filha de `AdminLayoutView`), listando, em uma `v-data-table`, todas as inscrições (`useInscricoesStore`) já cruzadas com os dados do evento correspondente (`useEventosStore`) — cada linha mostra o título do evento e a categoria, não só o ID.
+- Um filtro de categoria (`v-select`) e um campo de busca por título (`v-text-field`), ambos sincronizados com a URL via query string (`?categoria=...&busca=...`), seguindo o padrão da Aula 05 — recarregar a página com uma URL filtrada mantém o filtro aplicado.
+- Uma store Pinia (setup store) dedicada a essa tela, que **compõe** `useEventosStore` e `useInscricoesStore` (nenhuma duplica dados das outras duas).
+- Estados de carregando, erro e "nenhuma inscrição encontrada" tratados visualmente (skeleton/spinner, `v-alert` de erro, `v-alert` informativo), exatamente como no restante da aplicação.
+- Uma ação de "cancelar inscrição" direto da tabela, com `v-dialog` de confirmação (reaproveitando `DialogoConfirmacao.vue` da Aula 05) e feedback de `v-snackbar` ao concluir.
+- Um teste documentado no README: derrubar o `json-server`, recarregar a tela e confirmar que aparece uma mensagem de erro clara — nunca uma tela em branco ou quebrada.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. A store nova pode ter um `computed` que cruza `inscricoesStore.idsInscritos` com `eventosStore.eventos`, parecido com o que `eventosInscritos` já faz na `inscricoesStore` — só que organizando por inscrição, não por evento.
+2. Reaproveite a técnica de query string ↔ filtro da Aula 05 (`watch` + `router.push({ query: {...} })`) para os dois campos de filtro juntos, não um de cada vez.
+3. `useEventosStore()` e `useInscricoesStore()` chamados dentro da nova store funcionam exatamente como no exemplo de composição de stores da seção 5 — Pinia garante que é a mesma instância em qualquer lugar que você chame.
+4. Para o teste de API fora do ar, `erro.request` (sem `erro.response`) é o sinal de que não houve resposta nenhuma — mostre uma mensagem diferente desse caso comparado a um erro HTTP normal (ver seção 2).
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1293,4 +1457,4 @@ No seu **projeto autoral**:
 - Pinia — `storeToRefs`: <https://pinia.vuejs.org/core-concepts/state.html#accessing-the-state>
 - Referências básicas do plano de curso: capítulos sobre consumo de API e gerenciamento de estado.
 
-Isso encerra a Unidade 2. A **Avaliação 2** vence em **07/10/2026**, com as instruções completas de entrega na Aula 08 — mas o escopo, resumido em 5 linhas: seu projeto autoral deve consumir dados de uma API (própria ou `json-server`) através de uma camada de serviços com Axios; ter estado gerenciado por pelo menos uma store Pinia com `carregando`/`erro`; refletir esses estados visualmente na interface; persistir algum dado em `localStorage`; e manter tudo isso rodando em cima da estrutura de rotas e componentes que você já construiu nas Aulas 04 e 05. Comece a organizar seu `db.json` e sua camada de serviços desde já — não deixe para a última semana.
+Isso encerra a Unidade 2. A **Avaliação 2** vence no **prazo do cronograma da trilha** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), com as instruções completas de entrega na Aula 08 — mas o escopo, resumido em 5 linhas: seu projeto autoral deve consumir dados de uma API (própria ou `json-server`) através de uma camada de serviços com Axios; ter estado gerenciado por pelo menos uma store Pinia com `carregando`/`erro`; refletir esses estados visualmente na interface; persistir algum dado em `localStorage`; e manter tudo isso rodando em cima da estrutura de rotas e componentes que você já construiu nas Aulas 04 e 05. Comece a organizar seu `db.json` e sua camada de serviços desde já — não deixe para a última semana.

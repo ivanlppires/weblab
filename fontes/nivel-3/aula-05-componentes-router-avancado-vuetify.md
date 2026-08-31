@@ -232,6 +232,9 @@ defineOptions({ inheritAttrs: false })
 
 `defineOptions({ inheritAttrs: false })` desliga o comportamento automático; `v-bind="$attrs"` aplica manualmente todos os atributos não declarados como props no elemento que você escolher.
 
+> **🔬 Investigue**
+> Renderize `<EventoCard :evento="evento" class="destaque" data-testid="card-evento" />` sem declarar `class` nem `data-testid` como props em `EventoCard`. Abra o DevTools, aba **Elements**, e inspecione o `<v-card>` renderizado: a classe `destaque` e o atributo `data-testid` apareceram nele, mesmo sem você ter escrito nada a mais no template do componente — esse é o fallthrough automático. Agora adicione `defineOptions({ inheritAttrs: false })` ao `EventoCard`, sem adicionar `v-bind="$attrs"` em lugar nenhum, e inspecione de novo: para onde os atributos foram?
+
 ## 2. Slots: componentes de layout reutilizáveis
 
 Props resolvem "que dados entram". Slots resolvem "que **conteúdo/template** entra" — permitem que um componente pai injete HTML/componentes dentro de um "buraco" definido pelo componente filho.
@@ -382,6 +385,9 @@ const { eventosFiltrados: eventosDaHome } = useEventos()
 ```
 
 Não há mágica de mesclagem por trás — é só uma função JavaScript comum retornando um objeto. Essa clareza de origem é a razão pela qual a comunidade Vue abandonou mixins como padrão recomendado.
+
+> **🧠 Você sabia?**
+> A Composition API do Vue 3 (2020) foi diretamente influenciada pelos React Hooks, lançados em 2018 — ambos resolvem o mesmo problema (reutilizar lógica com estado sem herança nem mixins) com uma ideia parecida: funções que encapsulam `ref`/`state`, `computed`/`useMemo`, `watch`/`useEffect`. A diferença prática que mais ajuda no dia a dia: hooks do React têm regras rígidas de ordem de chamada (não pode chamar dentro de `if`), enquanto composables do Vue são só funções JavaScript comuns — sem essa restrição, porque a reatividade do Vue não depende da ordem em que os hooks foram chamados na renderização anterior.
 
 ## 4. Vue Router avançado
 
@@ -556,7 +562,7 @@ const regrasVagas = [
 async function salvar() {
   const { valid } = await formRef.value.validate()
   if (!valid) return
-  // ... enviar dados
+  console.log('Formulário válido — dados prontos para envio:', { titulo: titulo.value, vagas: vagas.value })
 }
 </script>
 
@@ -568,6 +574,8 @@ async function salvar() {
   </v-form>
 </template>
 ```
+
+Nesta seção o objetivo é validação — o envio real (para uma API ou para uma store) aparece completo nas seções 4 e 5 desta aula, e de novo, com Axios, na Aula 06.
 
 `rules` é um array de funções que recebem o valor atual do campo e retornam `true` (válido) ou uma string (mensagem de erro exibida abaixo do campo). Chamar `formRef.value.validate()` executa todas as regras de todos os campos do formulário de uma vez e retorna `{ valid, errors }`.
 
@@ -870,7 +878,7 @@ function alternarTema() {
 
 <template>
   <v-footer color="primary" class="d-flex justify-center pa-4">
-    <span class="text-white">UNEMAT · FACET · FACET-SNP-310 · 2026.2</span>
+    <span class="text-white">UNEMAT · FACET · FACET-SNP-310</span>
   </v-footer>
 </template>
 ```
@@ -1264,8 +1272,50 @@ async function salvar() {
 
 ## 🧪 Laboratório
 
-**1. `CartaoBase` com slots nomeados**
-Crie o componente `src/components/CartaoBase.vue` com slots `titulo`, padrão e `acoes` (como na §2), e use-o para reescrever a tela `SobreView.vue`.
+### Nível A — Fixação
+
+**A1.** Preveja a saída no console: `EventoCard` declara `defineProps({ evento: { type: Object, required: true } })`, e o componente pai usa `<EventoCard />` sem passar a prop `evento`.
+
+Resultado esperado: um aviso no console (`[Vue warn]: Missing required prop: "evento"`), e o template do componente provavelmente quebra ao tentar ler `evento.titulo` de `undefined` — props `required` não impedem a renderização, só avisam.
+
+**A2.** Complete a linha que falta para que o evento `favoritar` só seja aceito se o payload for um número:
+
+```js
+const emit = defineEmits({
+  favoritar: ____,
+})
+```
+
+Resultado esperado: `(idEvento) => typeof idEvento === 'number'` — uma função validadora que recebe o payload do evento e retorna `true`/`false`, no mesmo espírito do `validator` de `defineProps`.
+
+**A3.** Em uma frase: por que `useEventos()` chamado duas vezes, em dois componentes diferentes, resulta em dois estados de carregamento independentes — enquanto uma store Pinia, chamada duas vezes, resulta num único estado compartilhado?
+
+Resultado esperado: porque um composable é só uma função JavaScript comum — cada chamada executa o corpo de novo e cria `ref`s novos; uma store Pinia é um singleton gerenciado pelo framework, então toda chamada de `useXStore()` devolve a mesma instância.
+
+**A4.** Ache o erro nas linhas abaixo — a rota `admin-eventos` nunca renderiza nada quando o usuário acessa `/admin` diretamente (só a URL-base, sem sub-caminho):
+
+```js
+{
+  path: '/admin',
+  component: AdminLayoutView,
+  children: [
+    { path: 'home', name: 'admin-home', component: AdminHomeView },
+    { path: 'eventos', name: 'admin-eventos', component: AdminEventosView },
+  ],
+}
+```
+
+Resultado esperado: falta uma rota-filha com `path: ''` (caminho vazio) para cobrir exatamente `/admin` sem sub-caminho nenhum — hoje `/admin` sozinho não bate com nenhuma rota-filha declarada, porque todas exigem um segmento extra (`/admin/home`, `/admin/eventos`).
+
+**A5.** Preveja o comportamento: o `scrollBehavior` do router **não** foi declarado (a opção inteira foi omitida de `createRouter`). O usuário rola a página até o rodapé e clica em um `<RouterLink>` para outra rota.
+
+Resultado esperado: a nova página aparece já rolada — o Vue Router preserva a posição de scroll atual por padrão quando `scrollBehavior` não está definido; é preciso declará-lo explicitamente (retornando `{ top: 0 }`) para voltar ao topo a cada navegação.
+
+### Nível B — Aplicação
+
+**B1.** `CartaoBase` com slots nomeados. Crie o componente `src/components/CartaoBase.vue` com slots `titulo`, padrão e `acoes` (como na §2), e use-o para reescrever a tela `SobreView.vue`.
+
+Resultado esperado: `SobreView.vue` usa `<CartaoBase>` com `<template #titulo>` e `<template #acoes>`, e a tela renderiza visualmente igual (ou melhor) do que antes.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1273,8 +1323,9 @@ Crie o componente `src/components/CartaoBase.vue` com slots `titulo`, padrão e 
 `<template #titulo>`, conteúdo solto (sem `<template>`) cai no slot padrão, `<template #acoes>`.
 </details>
 
-**2. Composable `useAlternanciaTema`**
-Extraia a lógica de `alternarTema`/`ehEscuro` do `CabecalhoApp.vue` para um composable `src/composables/useAlternanciaTema.js`, e use-o também em uma nova tela de configurações.
+**B2.** Composable `useAlternanciaTema`. Extraia a lógica de `alternarTema`/`ehEscuro` do `CabecalhoApp.vue` para um composable `src/composables/useAlternanciaTema.js`, e use-o também em uma nova tela de configurações.
+
+Resultado esperado: `CabecalhoApp.vue` e a nova tela de configurações chamam `useAlternanciaTema()` e o clique em qualquer um dos dois lugares alterna o tema da aplicação inteira (porque `useTheme()` internamente já é global — o composable só organiza o acesso a ele).
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1282,8 +1333,9 @@ Extraia a lógica de `alternarTema`/`ehEscuro` do `CabecalhoApp.vue` para um com
 O composable recebe `useTheme()` internamente e retorna `{ ehEscuro, alternarTema }`.
 </details>
 
-**3. Guard de confirmação no formulário de novo evento**
-No `AdminEventoFormView.vue`, o `onBeforeRouteLeave` já existe, mas `formularioAlterado` nunca vira `true` ao digitar em campos que não passam por `@update:model-value` do form (ex.: se o navegador não disparar esse evento para todo campo). Ajuste para marcar `formularioAlterado.value = true` de forma confiável usando `watch` sobre os campos do formulário.
+**B3.** Guard de confirmação no formulário de novo evento. No `AdminEventoFormView.vue`, o `onBeforeRouteLeave` já existe, mas `formularioAlterado` nunca vira `true` ao digitar em campos que não passam por `@update:model-value` do form (ex.: se o navegador não disparar esse evento para todo campo). Ajuste para marcar `formularioAlterado.value = true` de forma confiável usando `watch` sobre os campos do formulário.
+
+Resultado esperado: alterar qualquer campo do formulário e tentar sair da rota (clicar em "Cancelar" ou em um link do menu) dispara o `window.confirm`; salvar o formulário com sucesso não dispara mais o aviso ao sair em seguida.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1291,22 +1343,122 @@ No `AdminEventoFormView.vue`, o `onBeforeRouteLeave` já existe, mas `formulario
 `watch([titulo, descricao, categoria, local, vagas], () => { formularioAlterado.value = true })`.
 </details>
 
-**4. Query string de paginação**
-Adicione um `v-pagination` na `AdminEventosView.vue` (fora do `v-data-table`, como exercício) e sincronize a página atual com `?pagina=N` na URL, seguindo o padrão da §4.
+**B4.** `v-menu` de ações rápidas no `EventoCard`. Adicione um `v-menu` com um botão de três pontinhos no `EventoCard`, com opções "Compartilhar" e "Favoritar", que emitem eventos `compartilhar` e `favoritar` para o componente pai.
 
-<details markdown="1">
-<summary>Dica</summary>
-
-`ref(Number(rota.query.pagina) || 1)` mais um `watch` que chama `router.push({ query: { ...rota.query, pagina } })`.
-</details>
-
-**5. `v-menu` de ações rápidas no `EventoCard`**
-Adicione um `v-menu` com um botão de três pontinhos no `EventoCard`, com opções "Compartilhar" e "Favoritar", que emitem eventos `compartilhar` e `favoritar` para o componente pai.
+Resultado esperado: clicar no botão de três pontinhos abre um menu com as duas opções; clicar em cada uma emite o evento correspondente, capturável com `@compartilhar`/`@favoritar` em quem usa o `EventoCard`.
 
 <details markdown="1">
 <summary>Dica</summary>
 
 Use o slot `#activator="{ props }"` do `v-menu`, como no exemplo da §5.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Query string de paginação. Adicione um `v-pagination` na `AdminEventosView.vue` (fora do `v-data-table`, como exercício) e sincronize a página atual com `?pagina=N` na URL, seguindo o padrão da §4. A URL precisa ser a fonte da verdade: recarregar a página em `/admin/eventos?pagina=3` deve abrir já na página 3, e voltar/avançar no navegador entre páginas visitadas deve funcionar sem recarregar a tela.
+
+Resultado esperado: `/admin/eventos?pagina=2` abre direto na página 2 do `v-pagination`; clicar em outra página atualiza a URL sem recarregar; o botão "voltar" do navegador retorna à página anterior corretamente.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+`ref(Number(rota.query.pagina) || 1)` inicializa o estado a partir da URL; um `watch` sobre esse `ref` chama `router.push({ query: { ...rota.query, pagina } })` para refletir de volta; e um `watch` sobre `rota.query.pagina` (o caminho inverso) é o que faz o botão "voltar" do navegador também atualizar o `v-pagination` — sem ele, só a URL muda ao clicar em "voltar", não a tela.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ O emit que ninguém escuta
+Tags: vue, bug, investigacao
+
+Um colega criou `DialogoConfirmacao.vue` reaproveitando o da Aula 05, mas trocou um detalhe sem perceber. Ao clicar em "Excluir" no diálogo, nada acontece — o evento aparentemente nunca chega ao componente pai. Este é o trecho relevante:
+
+```vue
+<!-- src/components/DialogoConfirmacao.vue — trecho com o bug plantado -->
+<script setup>
+const emit = defineEmits(['confirmar'])
+
+function confirmar() {
+  emit('confirmado')
+}
+</script>
+```
+
+Abra o Vue DevTools (aba **Components**), selecione o `DialogoConfirmacao` e observe a lista de eventos emitidos ao clicar em "Excluir". O nome que aparece bate com o que o componente pai está escutando?
+
+**Critérios de pronto**
+
+- Um comentário no topo do arquivo registra qual nome de evento o `defineEmits` declarava, qual nome estava realmente sendo emitido, e qual dos dois estava errado.
+- Clicar em "Excluir" agora dispara a função `confirmarExclusao` (ou equivalente) no componente pai, de forma confirmável no Vue DevTools ou com um `console.log` temporário.
+- Uma frase explica por que `defineEmits` **não** impede emitir um evento com nome diferente do declarado — e por que isso torna esse tipo de bug silencioso (sem erro, sem aviso).
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `defineEmits(['confirmar'])` só documenta e valida payloads — ele não bloqueia `emit('outroNome')`, mesmo que `'outroNome'` não esteja na lista.
+2. No Vue DevTools, a aba **Components** tem uma seção "Events" no painel de detalhes do componente selecionado — ela mostra o nome exato de cada evento emitido, em tempo real.
+3. Compare, char por char, o nome usado em `@confirmar="..."` no componente pai com o nome usado em `emit(...)` no filho.
+</details>
+
+### ⭐⭐ Menu de contexto sem mouse
+Tags: acessibilidade, vuetify, vue
+
+O `v-menu` de ações rápidas do Laboratório B4 funciona perfeitamente no mouse. Agora teste só com teclado: `Tab` até o botão de três pontinhos, `Enter` para abrir, `Tab`/setas para navegar pelas opções, `Enter` para escolher, `Esc` para fechar sem escolher nada. Em qual desses passos a experiência quebra?
+
+**Critérios de pronto**
+
+- O botão de três pontinhos recebe foco visível com `Tab` e tem um `aria-label` descritivo (ex.: "Mais ações para o evento X" — o nome do evento entra dinamicamente no rótulo).
+- Abrir o menu com `Enter` (não só com clique) funciona, e o foco move para dentro do menu.
+- `Esc` fecha o menu e devolve o foco ao botão de três pontinhos — sem deixar o foco "perdido" em um elemento que sumiu da tela.
+- Um vídeo curto (ou GIF) de 10-15 segundos, gravado sem tocar no mouse, mostra o fluxo completo funcionando, anexado ao README do projeto autoral.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `v-btn` aceita `aria-label` como qualquer atributo HTML — inclua o título do evento na string, usando template literal.
+2. Verifique a documentação de acessibilidade do `v-menu` na versão do Vuetify instalada — componentes de menu geralmente já implementam boa parte da navegação por teclado, mas o `aria-label` do ativador é responsabilidade sua.
+3. Para gravar sem mouse, o gravador de tela nativo do sistema operacional (ou a gravação de tela do próprio DevTools) já basta — não precisa de ferramenta especial.
+</details>
+
+### ⭐⭐⭐ Prop drilling até o neto
+Tags: vue, refatoracao, padroes-de-projeto
+
+O código abaixo passa o usuário logado por três componentes até chegar a quem realmente precisa dele — clássico **prop drilling**. `PainelAdmin` e `CabecalhoSecao` não usam `usuarioLogado` para nada além de repassar adiante:
+
+```vue
+<!-- App.vue: <PainelAdmin :usuario-logado="usuarioLogado" /> -->
+
+<!-- PainelAdmin.vue -->
+<script setup>
+defineProps({ usuarioLogado: { type: Object, required: true } })
+</script>
+<template>
+  <CabecalhoSecao :usuario-logado="usuarioLogado" />
+</template>
+
+<!-- CabecalhoSecao.vue -->
+<script setup>
+defineProps({ usuarioLogado: { type: Object, required: true } })
+</script>
+<template>
+  <PainelPerfil :usuario-logado="usuarioLogado" />
+</template>
+```
+
+Refatore essa cadeia usando `provide`/`inject` (§1), e depois responda: o que muda se `PainelPerfil` for renderizado em um lugar da árvore onde ninguém chamou `provide('usuarioLogado', ...)` acima dele?
+
+**Critérios de pronto**
+
+- `PainelAdmin` e `CabecalhoSecao` não recebem mais `usuarioLogado` como prop — o dado só é declarado uma vez, no ancestral comum, com `provide`.
+- `PainelPerfil` continua funcionando exatamente igual, agora usando `inject('usuarioLogado')`.
+- Um teste deliberado: renderize `PainelPerfil` em uma tela isolada, sem nenhum ancestral chamando `provide`. `inject` recebe um segundo argumento de valor padrão que evita a aplicação quebrar nesse caso — implemente e documente esse valor padrão.
+- Um parágrafo no README compara as duas abordagens: em quantos arquivos você precisou tocar para adicionar um novo dado "ambiental" (ex.: idioma da interface) em cada uma, e qual delas você escolheria para o seu projeto autoral, e por quê.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `provide('usuarioLogado', usuarioLogado)` no componente ancestral mais alto que faz sentido (geralmente `App.vue`); `inject('usuarioLogado', valorPadrao)` em qualquer descendente, não importa a profundidade.
+2. O segundo argumento de `inject` é o valor usado quando nenhum ancestral fez `provide` daquela chave — útil para não quebrar em testes isolados ou em Storybook.
+3. Prop drilling não é "sempre errado" — em cadeias curtas (um ou dois níveis), a prop explícita ainda é mais fácil de rastrear do que `provide`/`inject`. O parágrafo do README deve refletir esse trade-off, não só repetir "provide/inject é melhor".
 </details>
 
 ## 🐛 Erros comuns e como resolver

@@ -56,6 +56,9 @@ Fazer isso corretamente — hash com salt, custo ajustável, fluxo de "esqueci m
 > **⚠️ Atenção**
 > Delegar autenticação não elimina a responsabilidade de proteger seus endpoints. O Firebase resolve "provar quem é o usuário". Decidir "o que esse usuário pode fazer no meu sistema" continua sendo trabalho do seu back-end.
 
+> **🧠 Você sabia?**
+> "Hash" para senha é técnica dos anos 1970, mas o erro mais comum em vazamentos reais não é a falta de hash — é usar um hash **rápido demais**. Em 2012, o vazamento do LinkedIn expôs mais de 100 milhões de senhas com hash SHA-1 sem salt; a maioria foi quebrada em poucos dias, porque hardware moderno calcula bilhões de SHA-1 por segundo. `bcrypt` e `Argon2` são desenhados de propósito para serem **lentos** (milhares de cálculos por segundo, não bilhões) — a lentidão em si é a defesa contra força bruta.
+
 ## 2. Anatomia de um JWT
 
 O Firebase (e a grande maioria dos sistemas de autenticação modernos) usa **JSON Web Token (JWT)** como formato do token de identidade. Um JWT é uma string com três partes separadas por ponto:
@@ -105,6 +108,15 @@ Essa separação existe porque um token de vida curta limita o estrago se ele va
 
 > **📌 Na prova**
 > JWT tem três partes (header.payload.assinatura), é codificado em Base64URL (não criptografado) e assinado (não pode ser alterado sem invalidar a assinatura). ID token expira em 1h; o SDK renova sozinho usando o refresh token.
+
+> **🔬 Investigue**
+> Faça login no UniEventos, abra o console do navegador e rode:
+> ```js
+> const token = await auth.currentUser.getIdToken()
+> console.log(token)
+> console.log(JSON.parse(atob(token.split('.')[1])))
+> ```
+> Compare o resultado com o que aparece ao colar o mesmo token em jwt.io. Calcule `exp - iat` em segundos — deve dar exatamente `3600` (a validade de 1 hora do ID token). Agora rode `JSON.parse(atob(token.split('.')[0]))`: o que aparece é o header, não o payload — qual das duas partes diz **qual algoritmo** assinou o token?
 
 ## 3. Habilitando autenticação no console do Firebase
 
@@ -982,20 +994,178 @@ curl -i http://localhost:3000/api/eventos/1 -X DELETE \
 
 ## 🧪 Laboratório
 
-**1. Cadastro e login funcionando.** Crie uma conta pelo formulário de cadastro do seu projeto autoral, faça logout e faça login de novo.
-<details><summary>Dica</summary>Abra o DevTools → Application → verifique se há chaves salvas pelo Firebase no IndexedDB/LocalStorage após o login.</details>
+### Nível A — Fixação
 
-**2. Login com Google.** Habilite o provedor Google no console e teste `entrarComGoogle()`.
-<details><summary>Dica</summary>Se o popup fechar sozinho sem erro visível, confira o console — geralmente é domínio não autorizado em Authentication → Settings → Authorized domains.</details>
+**A1.** Verdadeiro ou falso, com justificativa de uma linha: "Um JWT é criptografado — por isso ninguém além do Firebase consegue ler o que tem dentro do payload."
 
-**3. Rota protegida.** Crie uma rota `meta: { requerAuth: true }` no seu projeto e confirme que, deslogado, você é redirecionado para `/login?redirect=...` e volta para a rota certa após logar.
-<details><summary>Dica</summary>Teste apertando F5 na rota protegida já logado — não pode redirecionar para login.</details>
+Resultado esperado: falso. JWT é **assinado**, não criptografado; qualquer pessoa decodifica o payload em Base64URL (com `atob()` ou em jwt.io). A assinatura só impede alterar o conteúdo sem invalidar o token — ela não esconde nada.
 
-**4. Middleware `autenticar` na API.** Proteja um endpoint de escrita do seu projeto autoral e teste os três cenários de `curl` da seção anterior.
-<details><summary>Dica</summary>Um token expira em 1h — se testar depois de muito tempo, gere outro logando de novo no front.</details>
+**A2.** Complete a linha que falta no trecho abaixo para que o guard de rota não redirecione um usuário já logado para `/login` logo depois de um F5:
 
-**5. Custom claim de admin.** Rode o script `promoverAdmin.js` com seu próprio e-mail, deslogue e logue de novo, e confirme que `authStore.ehAdmin` fica `true` e que o menu de administração aparece.
-<details><summary>Dica</summary>Se continuar `false`, o token em cache é o antigo — force `getIdTokenResult(true)` ou deslogue mesmo.</details>
+```js
+router.beforeEach(async (to) => {
+  const authStore = useAuthStore()
+  ______________________________________
+  if (to.meta.requerAuth && !authStore.estaLogado) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+  return true
+})
+```
+
+Resultado esperado: `await authStore.inicializar()`.
+
+**A3.** Em uma frase: por que o middleware `autorizar(['admin'])` precisa sempre vir **depois** de `autenticar` na cadeia de uma rota, nunca antes ou sozinho?
+
+Resultado esperado: porque `autorizar` só lê `req.usuario.admin`, e é `autenticar` quem popula `req.usuario` a partir do token — sem `autenticar` antes, `req.usuario` é `undefined` e o acesso a `.admin` quebra.
+
+**A4.** Ache o erro nas linhas abaixo (a rota deveria exigir login e papel de admin para excluir, mas está com a cadeia de middlewares na ordem errada):
+
+```js
+router.delete(
+  '/:id',
+  autorizar(['admin']),
+  autenticar,
+  eventosController.remover,
+)
+```
+
+Resultado esperado: `autorizar` está antes de `autenticar` — a ordem correta é `autenticar, autorizar(['admin']), eventosController.remover`.
+
+**A5.** Preveja a saída: um usuário está logado há duas horas, com a aba aberta o tempo todo, sem nunca ter recarregado a página, e faz uma requisição autenticada agora. O ID token que o interceptor enviaria, se nada tivesse mudado, já expirou (dura só 1h). A requisição falha com `401`?
+
+Resultado esperado: não. `getIdToken()` renova o token automaticamente (usando o refresh token) sempre que ele está a menos de 5 minutos de expirar — o interceptor sempre envia um token válido, mesmo em uma aba aberta há horas.
+
+### Nível B — Aplicação
+
+**B1.** Cadastro e login funcionando. Crie uma conta pelo formulário de cadastro do seu projeto autoral, faça logout e faça login de novo.
+
+Resultado esperado: a conta aparece no console do Firebase (Authentication → Users); depois do logout, a sessão salva pelo Firebase desaparece; um novo login recria a mesma sessão.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Abra o DevTools → Application → verifique se há chaves salvas pelo Firebase no IndexedDB/LocalStorage após o login.
+</details>
+
+**B2.** Login com Google. Habilite o provedor Google no console e teste `entrarComGoogle()`.
+
+Resultado esperado: o popup do Google fecha sozinho, o usuário aparece logado, e `displayName`/`photoURL` vêm preenchidos automaticamente pela conta Google.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Se o popup fechar sozinho sem erro visível, confira o console — geralmente é domínio não autorizado em Authentication → Settings → Authorized domains.
+</details>
+
+**B3.** Rota protegida. Crie uma rota `meta: { requerAuth: true }` no seu projeto e confirme que, deslogado, você é redirecionado para `/login?redirect=...` e volta para a rota certa após logar.
+
+Resultado esperado: deslogado, a rota redireciona para `/login` preservando o destino em `redirect`; logado (inclusive logo após um F5 na própria rota protegida), o conteúdo aparece sem nenhum redirecionamento.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Teste apertando F5 na rota protegida já logado — não pode redirecionar para login.
+</details>
+
+**B4.** Middleware `autenticar` na API. Proteja um endpoint de escrita do seu projeto autoral e teste os três cenários de `curl` da seção anterior.
+
+Resultado esperado: sem token → `401`; com token inválido/forjado → `401`; com token válido → o status de sucesso do endpoint (`200`/`201`/`204`, conforme o método).
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Um token expira em 1h — se testar depois de muito tempo, gere outro logando de novo no front.
+</details>
+
+**B5.** Custom claim de admin. Rode o script `promoverAdmin.js` com seu próprio e-mail, deslogue e logue de novo, e confirme que `authStore.ehAdmin` fica `true` e que o menu de administração aparece.
+
+Resultado esperado: depois de deslogar e logar de novo, `authStore.ehAdmin` vira `true` e o item de menu de administração passa a aparecer na barra de navegação.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Se continuar `false`, o token em cache é o antigo — force `getIdTokenResult(true)` ou deslogue mesmo.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Sessão comprometida, ponta a ponta. Hoje, se um usuário desconfiar que seu token vazou (ex.: perdeu o notebook destravado), trocar a senha **não** invalida tokens já emitidos: o ID token continua válido até expirar (até 1h) e o refresh token, que renova automaticamente, também segue válido. Implemente um endpoint `POST /api/usuarios/revogar-sessoes` (autenticado) que chama `authAdmin.revokeRefreshTokens(uid)`, e prove com `curl` que o efeito é real de imediato — não só depois de o token expirar sozinho.
+
+Resultado esperado: antes da revogação, uma chamada a um endpoint protegido com um token guardado retorna sucesso normalmente; depois de `POST /api/usuarios/revogar-sessoes`, a mesma chamada com o **mesmo** token (ainda dentro da validade de 1h) passa a retornar `401` com uma mensagem clara (`{"erro": "Sessão revogada, faça login novamente."}`).
+
+<details markdown="1">
+<summary>Dica</summary>
+
+1. `verifyIdToken(token, true)` — o segundo argumento `true` faz o SDK checar revogação; sem ele, `revokeRefreshTokens` não tem efeito nenhum sobre um ID token ainda dentro da validade.
+2. `authAdmin.revokeRefreshTokens(uid)` grava um timestamp no usuário; qualquer ID token emitido **antes** desse timestamp passa a ser considerado revogado quando a checagem está ligada.
+3. Ajuste o middleware `autenticar` (Seção 8.2) para `authAdmin.verifyIdToken(token, true)` e trate o erro específico (`erro.code === 'auth/id-token-revoked'`) com uma mensagem diferente da de "token inválido comum".
+4. Para provar com `curl`: pegue um token, chame um endpoint protegido (sucesso), chame o novo endpoint de revogação, e chame o mesmo endpoint protegido de novo com o **mesmo** token (401).
+</details>
+
+## 🏆 Desafios
+
+### ⭐ Onde o Firebase guarda sua sessão
+Tags: firebase, autenticacao, devtools, investigacao
+
+Você já viu que dar F5 não desloga o usuário — mas onde exatamente o SDK guarda essa informação para sobreviver ao recarregamento da página? Abra o DevTools no UniEventos já logado e investigue, sem ler a documentação antes.
+
+**Critérios de pronto**
+
+- Um comentário (ou nota no README do seu projeto) diz em qual mecanismo de armazenamento do navegador (Local Storage, IndexedDB ou cookie) o Firebase Auth guarda a sessão, com o nome exato da chave/banco encontrado.
+- Uma frase explica por que essa chave não some quando você fecha e reabre a aba, mas some quando você limpa os dados do site.
+- Um teste documentado: apague manualmente essa entrada pelo DevTools e recarregue a página — confirme que o usuário é deslogado, provando que aquele é de fato o mecanismo responsável.
+- Uma comparação de uma linha com onde o **ID token** em si (não a sessão persistente) fica durante a execução da página.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. No Chrome DevTools, olhe Application → IndexedDB, procurando um banco com nome parecido com "firebaseLocalStorageDb" — e também Application → Local Storage, para comparar.
+2. Depois de apagar a entrada certa, recarregue com F5 e observe `authStore.usuario` no Vue DevTools.
+3. Para o ID token durante a execução, pense em onde `auth.currentUser` vive — em disco ou só em memória do processo do navegador?
+</details>
+
+### ⭐⭐ O menu pisca errado no F5
+Tags: vue, firebase, bug, investigacao
+
+Ao dar F5 numa página do UniEventos com o usuário já logado, por uma fração de segundo aparecem os botões "Entrar"/"Cadastrar" antes de trocarem para o menu de usuário logado. É rápido demais para notar em conexão boa — mas ative o throttling "Slow 3G" na aba Network do DevTools e o "pisca" fica bem visível e feio. A store já resolve esse mesmo problema para o guard de rota (aguardando `inicializar()`), mas o componente `BarraNavegacao` (Seção 6) não faz o mesmo. Corrija o flicker sem duplicar a lógica de aguardar a Promise dentro do template.
+
+**Critérios de pronto**
+
+- Com throttling "Slow 3G" ativo, um F5 numa página logada não mostra mais os botões de "Entrar"/"Cadastrar", nem que seja por um instante.
+- A solução não usa `setTimeout` nem "esconder com CSS" — o componente só decide o que renderizar depois que `authStore.inicializado` é `true`.
+- Enquanto `inicializado` ainda é `false`, um indicador de carregamento simples aparece no lugar do menu (`v-progress-linear` ou um spinner pequeno).
+- Um comentário de uma linha explica por que esse problema não existe na **primeira** visita (sem sessão salva) — só aparece em F5 com sessão já existente.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `authStore.inicializado` já existe (Seção 5) — falta alguém no template ler essa ref antes de decidir o que mostrar.
+2. `v-if="authStore.inicializado"` envolvendo o `<v-app-bar>` inteiro (ou só a parte que depende do login) resolve sem duplicar a Promise do guard de rota.
+3. Ative "Slow 3G" em DevTools → Network → Throttling para conseguir ver o flicker devagar o bastante para testar com calma.
+</details>
+
+### ⭐⭐⭐ Ninguém publica sem confirmar o e-mail
+Tags: firebase, autenticacao, seguranca, express
+
+Hoje, qualquer conta criada por e-mail/senha pode criar um evento imediatamente — mesmo com um e-mail inventado (`fulano@empresa-que-nao-existe.com`) que a pessoa nem é dona de verdade. Ainda não confirmamos que o e-mail é real. Implemente a confirmação de e-mail de ponta a ponta: o cadastro dispara a verificação, o front bloqueia a criação de eventos até o e-mail estar confirmado, e o **back-end confirma isso de novo** — porque, como vimos na Seção 1, guard de rota é UX, não segurança.
+
+**Critérios de pronto**
+
+- `cadastrar()` dispara `sendEmailVerification(credencial.user)` logo após criar a conta.
+- Uma tela avisa "confirme seu e-mail" e não deixa o formulário de criação de evento habilitado enquanto `usuario.emailVerified` for `false` (a store precisa recarregar esse dado com `user.reload()` depois de o usuário clicar em "já confirmei").
+- No back-end, o middleware `autenticar` (ou um novo `exigirEmailConfirmado`) rejeita `POST /api/eventos` com `403` e uma mensagem clara se `tokenDecodificado.email_verified` for `false`, mesmo que alguém tenha contornado a tela do front.
+- Um teste com `curl`, usando um token de conta não confirmada, prova que o back-end bloqueia mesmo sem passar pelo front.
+- Um parágrafo no README explica por que essa checagem não pode viver só no front.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `sendEmailVerification` vem do mesmo `firebase/auth` que os outros métodos do `authService.js` — importe e chame logo depois de `createUserWithEmailAndPassword`.
+2. `usuarioFirebase.emailVerified` fica desatualizado até você chamar `usuarioFirebase.reload()` e ler de novo — o SDK não observa essa mudança automaticamente como faz com login/logout.
+3. O `tokenDecodificado` que `verifyIdToken` devolve já traz `email_verified` (com underscore — é assim que o Firebase nomeia essa claim).
+4. Crie o middleware como uma função separada (`exigirEmailConfirmado`) para poder aplicá-la só nas rotas de escrita em que fizer sentido, sem misturar com `autenticar`.
+</details>
 
 ## 🐛 Erros comuns e como resolver
 

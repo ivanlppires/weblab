@@ -65,6 +65,9 @@ Duas ferramentas do ecossistema Swagger que usaremos hoje:
 
 O `swagger-ui` é a interface visual que você provavelmente já viu em várias APIs públicas — aquela página com os endpoints agrupados por tag, cada um expansível, com botão "Try it out" para testar direto do navegador.
 
+> **🧠 Você sabia?**
+> Até a versão 2.0, a especificação se chamava literalmente "Swagger Specification". Em 2015, a empresa por trás dela doou o formato para a Linux Foundation, que criou a **OpenAPI Initiative** — um consórcio com Google, Microsoft, IBM, PayPal e dezenas de outras empresas — para governar a especificação de forma neutra, sem depender de uma única companhia. Foi nesse momento que o nome do *formato* virou "OpenAPI" e o nome "Swagger" ficou só com o *conjunto de ferramentas* (que a mesma empresa continuou mantendo, hoje sob a SmartBear).
+
 ## 2. Anatomia de um documento OpenAPI 3.0
 
 Um documento OpenAPI é um único objeto JSON (ou YAML) com estas chaves de topo:
@@ -105,11 +108,69 @@ Explicando cada bloco com o UniEventos:
 - **`responses`** — para cada status HTTP possível (`200`, `400`, `404`...), o formato do corpo de resposta.
 - **`$ref`** — mecanismo de referência: em vez de repetir a definição de `Evento` em 5 endpoints diferentes, cada um aponta para `#/components/schemas/Evento`. Mude uma vez, atualiza em todo lugar.
 
+> **🔬 Investigue**
+> Abra [https://petstore.swagger.io](https://petstore.swagger.io) — a "API de exemplo" oficial do ecossistema Swagger, publicada há anos exatamente para esse tipo de teste. Expanda um endpoint, clique em "Try it out" e "Execute"; depois abra a aba Network do DevTools e confira a URL exata que foi chamada — ela deve bater com o que está declarado em `servers`. Agora abra direto no navegador `https://petstore.swagger.io/v2/swagger.json`: é o documento OpenAPI cru, em JSON, o mesmo que alimenta a interface bonita que você acabou de usar. Ache, nesse JSON, a chave `paths` e conte quantos métodos HTTP diferentes o endpoint `/pet/{petId}` responde.
+
 ## 3. Duas abordagens para gerar o documento
 
 ### 3.1 Abordagem (a): anotações `@openapi` com `swagger-jsdoc` — a que vamos implementar
 
-A ideia: você escreve um comentário JSDoc especial, com bloco YAML dentro, logo acima da definição da rota no próprio arquivo de rotas. O `swagger-jsdoc` varre os arquivos configurados, extrai esses comentários e monta o documento OpenAPI completo em tempo de execução.
+A ideia: você escreve um comentário JSDoc especial, com bloco YAML dentro, logo acima da definição da rota no próprio arquivo de rotas. O `swagger-jsdoc` varre os arquivos configurados, extrai esses comentários e monta o documento OpenAPI completo em tempo de execução. É a abordagem que implementamos, passo a passo, na seção "💻 Mão na massa" logo adiante.
+
+### 3.2 Abordagem (b): `openapi.yaml` escrito à mão
+
+A alternativa é escrever o documento OpenAPI inteiro em um arquivo `.yaml`, sem anotação nenhuma no código, e servir esse arquivo estático:
+
+```yaml
+# openapi.yaml (resumo — não é o que vamos usar hoje, é só para você conhecer a alternativa)
+openapi: 3.0.0
+info:
+  title: UniEventos API
+  version: 1.0.0
+paths:
+  /api/eventos:
+    get:
+      tags: [Eventos]
+      summary: Lista eventos
+      responses:
+        '200':
+          description: Lista de eventos
+```
+
+```js
+// server.js — servindo o YAML escrito à mão, em vez de gerado por anotação
+import { readFileSync } from 'node:fs'
+import yaml from 'yaml' // npm install yaml
+import swaggerUi from 'swagger-ui-express'
+
+const documentoOpenApi = yaml.parse(readFileSync('./openapi.yaml', 'utf-8'))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(documentoOpenApi))
+```
+
+Vantagem: controle total do texto, sem depender de comentário no meio do código. Desvantagem: fica fácil o YAML "descolar" do código real, porque nada obriga a atualizá-lo junto com a rota. Por isso, nesta disciplina, a abordagem oficial é a (a) — anotações junto ao código, sempre atualizadas na mesma revisão.
+
+## 🧩 Padrão de projeto em uso — Decorator (documentação como anotação)
+
+O padrão **Decorator** adiciona comportamento ou informação a um objeto sem alterar sua estrutura original. As anotações `@openapi` fazem exatamente isso, só que no nível de **documentação de código-fonte** em vez de tempo de execução: o comentário JSDoc "decora" a rota com metadados (parâmetros, respostas, segurança) sem alterar uma linha da lógica real do `router.get(...)`. Remova o comentário e a rota continua funcionando idêntica — a documentação é uma camada adicionada por cima, não uma dependência funcional.
+
+```js
+/**
+ * @openapi
+ * /api/eventos:
+ *   get:
+ *     summary: Lista eventos                    ← "decoração": metadado
+ *     tags: [Eventos]                            ← "decoração": metadado
+ */
+router.get('/', eventosController.listar)         // ← comportamento real, intocado
+```
+
+É a mesma lógica dos decorators de linguagens como TypeScript/Java (`@Component`, `@Test`) — mas aqui implementada via convenção de comentário, lida por uma ferramenta externa (`swagger-jsdoc`), porque JavaScript puro (sem TypeScript) não tem decorators nativos estáveis no runtime do Node.
+
+## 💻 Mão na massa — documentando a unieventos-api com Swagger
+
+Chega de teoria: agora você instala as duas bibliotecas, configura a spec, serve a interface, documenta os schemas e todos os endpoints do UniEventos, e liga a segurança `bearerAuth` — na ordem em que você faria isso de verdade num projeto novo.
+
+### Passo 1 — Instalar e configurar o `swagger-jsdoc`
 
 ```bash
 npm install swagger-jsdoc swagger-ui-express
@@ -169,39 +230,7 @@ export const swaggerSpec = swaggerJsdoc(opcoes)
 > **⚠️ Atenção**
 > Repare na chave `definition` dentro de `opcoes`. Em versões antigas do `swagger-jsdoc` (2.x/3.x) essa chave se chamava `swaggerDefinition`. Nesta disciplina usamos `swagger-jsdoc@6.3.0`, que exige `definition`. Se você copiar um tutorial antigo da internet com `swaggerDefinition`, a spec gerada fica com `paths: {}` vazio e nenhum erro é lançado — o bug é silencioso.
 
-### 3.2 Abordagem (b): `openapi.yaml` escrito à mão
-
-A alternativa é escrever o documento OpenAPI inteiro em um arquivo `.yaml`, sem anotação nenhuma no código, e servir esse arquivo estático:
-
-```yaml
-# openapi.yaml (resumo — não é o que vamos usar hoje, é só para você conhecer a alternativa)
-openapi: 3.0.0
-info:
-  title: UniEventos API
-  version: 1.0.0
-paths:
-  /api/eventos:
-    get:
-      tags: [Eventos]
-      summary: Lista eventos
-      responses:
-        '200':
-          description: Lista de eventos
-```
-
-```js
-// server.js — servindo o YAML escrito à mão, em vez de gerado por anotação
-import { readFileSync } from 'node:fs'
-import yaml from 'yaml' // npm install yaml
-import swaggerUi from 'swagger-ui-express'
-
-const documentoOpenApi = yaml.parse(readFileSync('./openapi.yaml', 'utf-8'))
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(documentoOpenApi))
-```
-
-Vantagem: controle total do texto, sem depender de comentário no meio do código. Desvantagem: fica fácil o YAML "descolar" do código real, porque nada obriga a atualizá-lo junto com a rota. Por isso, nesta disciplina, a abordagem oficial é a (a) — anotações junto ao código, sempre atualizadas na mesma revisão.
-
-## 4. Servindo com `swagger-ui-express`
+### Passo 2 — Servir a documentação com `swagger-ui-express`
 
 ```js
 // src/app.js — trecho adicionado à montagem da aplicação (depois das rotas de negócio)
@@ -233,26 +262,7 @@ npm run dev
 > **💡 Dica**
 > `swaggerUi.serve` é um **array** de middlewares (serve os arquivos estáticos da interface: CSS, JS, HTML); `swaggerUi.setup(spec, opcoes)` é o middleware que injeta sua spec nessa interface. Os dois sempre andam juntos, nessa ordem, no mesmo `app.use`.
 
-## 🧩 Padrão de projeto em uso
-
-> ### 🧩 Padrão de projeto em uso — Decorator (documentação como anotação)
->
-> O padrão **Decorator** adiciona comportamento ou informação a um objeto sem alterar sua estrutura original. As anotações `@openapi` fazem exatamente isso, só que no nível de **documentação de código-fonte** em vez de tempo de execução: o comentário JSDoc "decora" a rota com metadados (parâmetros, respostas, segurança) sem alterar uma linha da lógica real do `router.get(...)`. Remova o comentário e a rota continua funcionando idêntica — a documentação é uma camada adicionada por cima, não uma dependência funcional.
->
-> ```js
-> /**
->  * @openapi
->  * /api/eventos:
->  *   get:
->  *     summary: Lista eventos                    ← "decoração": metadado
->  *     tags: [Eventos]                            ← "decoração": metadado
->  */
-> router.get('/', eventosController.listar)         // ← comportamento real, intocado
-> ```
->
-> É a mesma lógica dos decorators de linguagens como TypeScript/Java (`@Component`, `@Test`) — mas aqui implementada via convenção de comentário, lida por uma ferramenta externa (`swagger-jsdoc`), porque JavaScript puro (sem TypeScript) não tem decorators nativos estáveis no runtime do Node.
-
-## 5. Documentando os schemas reutilizáveis
+### Passo 3 — Documentar os schemas reutilizáveis
 
 Antes de anotar cada rota, definimos os formatos de objeto que se repetem — assim cada endpoint só referencia (`$ref`) em vez de redigitar os mesmos campos.
 
@@ -384,11 +394,11 @@ export {}
 ```
 
 > **🔎 Por baixo do capô**
-> Esses arquivos `*.schema.js` não exportam nada útil em termos de código JavaScript — servem só para o `swagger-jsdoc` encontrar o comentário (por isso estão incluídos em `apis: [...]` na configuração da Seção 3.1). É uma convenção comum para não poluir arquivos de rota reais com blocos de schema grandes.
+> Esses arquivos `*.schema.js` não exportam nada útil em termos de código JavaScript — servem só para o `swagger-jsdoc` encontrar o comentário (por isso estão incluídos em `apis: [...]` na configuração do Passo 1). É uma convenção comum para não poluir arquivos de rota reais com blocos de schema grandes.
 
-## 6. Documentando todos os endpoints do UniEventos
+### Passo 4 — Documentar os endpoints do UniEventos
 
-### 6.1 Eventos — as 5 operações (CRUD completo)
+#### Eventos — as 5 operações (CRUD completo)
 
 ```js
 // src/routes/eventos.routes.js — versão anotada
@@ -571,7 +581,7 @@ export function criarRotasDeEventos({ eventosController }) {
 }
 ```
 
-### 6.2 Inscrições
+#### Inscrições
 
 ```js
 // src/routes/inscricoes.routes.js — versão anotada
@@ -665,7 +675,7 @@ export function criarRotasDeInscricoes({ inscricoesController }) {
 }
 ```
 
-### 6.3 Autenticação
+#### Autenticação
 
 O UniEventos não implementa login no back-end — o login acontece no front, direto contra o Firebase Auth (Aula 10). O back-end só **verifica** o token recebido. Ainda assim, documentamos esse fluxo, porque quem consumir a API precisa saber como obter o token:
 
@@ -715,9 +725,9 @@ export function criarRotasDeAutenticacao() {
 }
 ```
 
-## 7. Segurança com bearerAuth e o botão "Authorize"
+### Passo 5 — Segurança com bearerAuth e o botão "Authorize"
 
-O esquema `bearerAuth` já foi declarado em `components.securitySchemes` (Seção 3.1):
+O esquema `bearerAuth` já foi declarado em `components.securitySchemes` (Passo 1):
 
 ```yaml
 securitySchemes:
@@ -743,20 +753,22 @@ Cada endpoint protegido referencia esse esquema com `security: [{ bearerAuth: []
 > ```
 > Copie o valor impresso e cole no botão "Authorize" do Swagger UI.
 
-## 8. Testando pelo Swagger UI ("Try it out")
+### Como testar
 
 1. Abra `http://localhost:3000/api-docs`.
 2. Expanda `GET /api/eventos`, clique em **"Try it out"**, depois em **"Execute"** — a resposta real da API aparece embaixo, com status e corpo formatado.
-3. Para testar `POST /api/eventos`, clique em **"Authorize"** primeiro (Seção 7), depois expanda a operação, edite o JSON de exemplo no campo de corpo, e execute.
+3. Para testar `POST /api/eventos`, clique em **"Authorize"** primeiro (Passo 5), depois expanda a operação, edite o JSON de exemplo no campo de corpo, e execute.
+
+Resultado esperado: as três chamadas respondem com o status e o corpo documentados — a lista de eventos em `GET`, e o evento recém-criado com `201` em `POST` depois de autorizar.
 
 > **⚠️ Atenção — CORS e `servers`**
 > O Swagger UI faz a requisição **do navegador**, então as mesmas regras de CORS da Aula 13 se aplicam: se `servers` apontar para uma URL diferente da que está rodando o front (ou se a API não liberar a origem da própria página do Swagger UI), o "Try it out" falha com erro de CORS no console — mesmo a API estando no ar. Garanta que `CORS_ORIGEM_PERMITIDA` inclua a origem de onde o Swagger UI está sendo servido (geralmente a própria API, `http://localhost:3000`, o que já é liberado por padrão pelo mesmo processo).
 
-## 9. Além do Swagger: documentação completa do projeto
+## 4. Além do Swagger: documentação completa do projeto
 
-### 9.1 README de qualidade
+### 4.1 README de qualidade
 
-```markdown
+````markdown
 <!-- README.md -->
 # UniEventos API
 
@@ -765,7 +777,7 @@ Cada endpoint protegido referencia esse esquema com `security: [{ bearerAuth: []
 ![Licença](https://img.shields.io/badge/licença-MIT-lightgrey)
 
 API REST da plataforma **UniEventos** — divulgação e inscrição em eventos acadêmicos.
-Projeto desenvolvido na disciplina FACET-SNP-310 (UNEMAT/Sinop, 2026.2).
+Projeto desenvolvido na disciplina FACET-SNP-310 (UNEMAT/Sinop).
 
 ## Requisitos
 
@@ -775,14 +787,14 @@ Projeto desenvolvido na disciplina FACET-SNP-310 (UNEMAT/Sinop, 2026.2).
 
 ## Instalação
 
-\`\`\`bash
+```bash
 git clone https://github.com/seu-usuario/unieventos-api.git
 cd unieventos-api
 npm install
 cp .env.example .env   # preencha com suas credenciais
 npm run migrar
 npm run dev
-\`\`\`
+```
 
 ## Variáveis de ambiente
 
@@ -821,13 +833,13 @@ Resumo:
 ## Licença
 
 MIT — veja o arquivo LICENSE.
-```
+````
 
-### 9.2 Coleção de API exportada
+### 4.2 Coleção de API exportada
 
 Além do Swagger UI, exporte uma coleção do Insomnia ou Postman e comite no repositório em `docs/insomnia-collection.json` — facilita quem prefere testar fora do navegador. No Insomnia: menu **Application → Preferences → Data → Export Data**, escolha a workspace do projeto, formato Insomnia v4, e salve o arquivo na pasta `docs/` do repositório.
 
-### 9.3 `CONTRIBUTING.md` mínimo
+### 4.3 `CONTRIBUTING.md` mínimo
 
 ```markdown
 <!-- CONTRIBUTING.md -->
@@ -840,7 +852,7 @@ Além do Swagger UI, exporte uma coleção do Insomnia ou Postman e comite no re
 5. Abra o Pull Request descrevendo o que mudou e por quê.
 ```
 
-### 9.4 Documentação do front: JSDoc em composables
+### 4.4 Documentação do front: JSDoc em composables
 
 ```js
 // src/composables/useEventos.js
@@ -863,7 +875,7 @@ export function useEventos(opcoes = {}) {
 
 Comentários JSDoc em composables dão autocomplete e checagem de tipo básica no VS Code, mesmo em projetos JavaScript puro (sem TypeScript) — o editor lê o `@param`/`@returns` e sugere os campos corretos a quem consome o composable.
 
-### 9.5 ADR — Architecture Decision Record
+### 4.5 ADR — Architecture Decision Record
 
 Um ADR é um documento curto (10 a 20 linhas) que registra **uma decisão técnica**, o contexto que levou a ela, e as alternativas consideradas — para que, meses depois, ninguém precise adivinhar "por que fizemos assim?".
 
@@ -892,7 +904,7 @@ Um ADR é um documento curto (10 a 20 linhas) que registra **uma decisão técni
 # ADR 0001: Usar o padrão Repository para acesso a dados
 
 **Status:** aceito
-**Data:** 2026-11-23
+**Data:** 2025-08-12
 
 ## Contexto
 O service de eventos precisava consultar o MySQL diretamente, o que impedia
@@ -918,17 +930,57 @@ código pela primeira vez.
 
 ## 🧪 Laboratório
 
-**1. Configure `swagger-jsdoc` e `swagger-ui-express`** no seu projeto autoral, com `definition` (não `swaggerDefinition`), `info`, pelo menos uma `tag` e o `securityScheme` `bearerAuth`.
+### Nível A — Fixação
+
+**A1.** Verdadeiro ou falso, com justificativa de uma linha: "`swagger-jsdoc` gera a documentação automaticamente a partir dos tipos declarados nas funções JavaScript, sem precisar de comentário nenhum."
+
+Resultado esperado: falso — o `swagger-jsdoc` só lê comentários `@openapi` com bloco YAML dentro; ele não infere nada a partir da assinatura de funções ou do corpo do código.
+
+**A2.** Complete a linha que falta para que as opções abaixo gerem a spec corretamente na versão 6.x do `swagger-jsdoc`:
+
+```js
+const opcoes = {
+  ______________: { openapi: '3.0.0', info: { title: 'UniEventos API', version: '1.0.0' } },
+  apis: ['./src/routes/*.js'],
+}
+```
+
+Resultado esperado: `definition` (nunca `swaggerDefinition`, que é a chave das versões antigas 2.x/3.x).
+
+**A3.** Em uma frase: qual a diferença entre OpenAPI e Swagger?
+
+Resultado esperado: OpenAPI é a **especificação** — o formato que descreve a API; Swagger é o **conjunto de ferramentas** (`swagger-jsdoc`, `swagger-ui-express`) construído em torno dessa especificação.
+
+**A4.** Ache o erro nas linhas abaixo (o Swagger UI mostra "not found" ao tentar exibir o exemplo do corpo de resposta):
+
+```yaml
+responses:
+  200:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schema/Evento'
+```
+
+Resultado esperado: falta o "s" em "schemas" — o caminho correto é `#/components/schemas/Evento`.
+
+**A5.** Preveja a saída: dois endpoints diferentes referenciam `$ref: '#/components/schemas/Erro'`. Você muda um campo desse schema. Quantos lugares no Swagger UI mostram a mudança?
+
+Resultado esperado: todos os endpoints que referenciam esse schema por `$ref` mudam juntos, imediatamente — é justamente a vantagem de não repetir a definição em cada endpoint.
+
+### Nível B — Aplicação
+
+**B1.** Configure `swagger-jsdoc` e `swagger-ui-express` no seu projeto autoral, com `definition` (não `swaggerDefinition`), `info`, pelo menos uma `tag` e o `securityScheme` `bearerAuth`.
 
 Resultado esperado: `http://localhost:3000/api-docs` abre com o título e a descrição da sua API.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-Copie `src/docs/swaggerSpec.js` da Seção 3.1 e troque só o `title`, `description` e as `tags` para o domínio do seu projeto.
+Copie `src/docs/swaggerSpec.js` do Passo 1 e troque só o `title`, `description` e as `tags` para o domínio do seu projeto.
 </details>
 
-**2. Documente 3 endpoints** do seu projeto autoral com anotações `@openapi` completas (parâmetros, requestBody quando houver, respostas para pelo menos 2 status diferentes).
+**B2.** Documente 3 endpoints do seu projeto autoral com anotações `@openapi` completas (parâmetros, requestBody quando houver, respostas para pelo menos 2 status diferentes).
 
 Resultado esperado: os 3 endpoints aparecem expansíveis no Swagger UI, com exemplos de corpo preenchidos.
 
@@ -938,17 +990,7 @@ Resultado esperado: os 3 endpoints aparecem expansíveis no Swagger UI, com exem
 Comece pelo endpoint de listagem (mais simples, sem `requestBody`) e depois avance para um de criação (com `requestBody` e `security`).
 </details>
 
-**3. Crie os schemas reutilizáveis** da entidade principal do seu domínio (equivalente a `Evento`/`EventoInput`/`Erro`) e referencie com `$ref` nos 3 endpoints do exercício anterior.
-
-Resultado esperado: mudar um campo no schema reflete automaticamente em todos os endpoints que o referenciam.
-
-<details markdown="1">
-<summary>Dica</summary>
-
-Coloque os schemas em `src/docs/schemas/*.schema.js` e inclua o caminho no array `apis` da configuração do `swagger-jsdoc`.
-</details>
-
-**4. Teste um endpoint protegido pelo "Authorize"** — obtenha um token do Firebase (Seção 7) e confirme que a requisição autenticada funciona pelo Swagger UI.
+**B3.** Teste um endpoint protegido pelo "Authorize" — obtenha um token do Firebase (Passo 5) e confirme que a requisição autenticada funciona pelo Swagger UI.
 
 Resultado esperado: sem token, a rota protegida retorna `401`; com token válido, retorna `200`/`201`.
 
@@ -958,14 +1000,89 @@ Resultado esperado: sem token, a rota protegida retorna `401`; com token válido
 Se a resposta continuar `401` mesmo com token colado, confira se você colou só o token puro, sem o prefixo `Bearer `.
 </details>
 
-**5. Escreva um ADR** para uma decisão técnica real do seu projeto (ex.: por que escolheu MySQL ou Supabase, por que escolheu determinado padrão de rota).
+**B4.** Escreva um ADR para uma decisão técnica real do seu projeto (ex.: por que escolheu MySQL ou Supabase, por que escolheu determinado padrão de rota).
 
-Resultado esperado: arquivo `docs/adr/0001-<slug>.md` seguindo o formato de 10 linhas da Seção 9.5.
+Resultado esperado: arquivo `docs/adr/0001-<slug>.md` seguindo o formato de 10 linhas da Seção 4.5.
 
 <details markdown="1">
 <summary>Dica</summary>
 
 Escolha uma decisão que você realmente tomou e hesitou entre alternativas — é mais fácil escrever o "Contexto" quando a dúvida foi real.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Crie os schemas reutilizáveis da entidade principal do seu domínio (equivalente a `Evento`/`EventoInput`/`Erro`/`Paginacao`) e referencie com `$ref` nos 3 endpoints do exercício B2 — nenhum campo pode ser redigitado à mão dentro de uma anotação de rota.
+
+Resultado esperado: mudar um campo no schema reflete automaticamente em todos os endpoints que o referenciam, sem editar nenhuma rota; o Swagger UI mostra o mesmo exemplo de corpo em todas elas.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Coloque os schemas em `src/docs/schemas/*.schema.js` e inclua o caminho no array `apis` da configuração do `swagger-jsdoc` (Passo 1) — sem isso, o arquivo do schema é ignorado silenciosamente.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ As tags sumidas
+Tags: swagger, api, bug, investigacao
+
+Um colega documentou um novo endpoint `PATCH /api/eventos/{id}/destaque` (marca um evento como destaque na home) com uma anotação `@openapi` completa — mas o Swagger UI insiste em mostrar essa operação isolada, fora dos grupos "Eventos"/"Inscrições"/"Autenticação", num grupo solto chamado "default" no fim da página. Antes de olhar o código, abra `/api-docs` do seu projeto e investigue: o que diferencia visualmente uma operação agrupada de uma "solta"?
+
+**Critérios de pronto**
+
+- Um comentário registra qual chave do bloco `@openapi` **da operação** (não da configuração global) estava faltando.
+- Depois de corrigida, a operação aparece dentro do grupo correto no Swagger UI.
+- Uma frase explica a diferença entre a lista `tags` da configuração global (`definition.tags`, Passo 1) e a lista `tags: [...]` escrita dentro de cada anotação de rota — os dois têm o mesmo nome, mas papéis diferentes.
+- Você documenta pelo menos um outro endpoint do seu projeto autoral usando o mesmo padrão de agrupamento, para confirmar que entendeu a diferença.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Compare a anotação da operação "solta" com uma que aparece agrupada corretamente — falta exatamente uma chave dentro do bloco `@openapi` da operação.
+2. `tags` na configuração global só declara o **nome** e a **descrição** do grupo — quem coloca de fato uma operação dentro dele é o `tags: [...]` escrito na anotação de cada rota.
+3. Depois de corrigir, reinicie a API (ou deixe `npm run dev` reiniciar sozinho, já que ele roda com `--watch`) e recarregue `/api-docs` — a spec só é montada de novo quando o módulo `swaggerSpec.js` é reimportado.
+</details>
+
+### ⭐⭐ O schema que não bate mais
+Tags: swagger, refatoracao, api, json
+
+Um refactor recente trocou o nome de um campo no banco (de `dataHora` para `data_hora`, para bater com a convenção de colunas do MySQL), e o controller já devolve o campo novo — mas a documentação Swagger de `GET /api/eventos/{id}` ainda mostra `dataHora` no exemplo, porque só uma das rotas foi corrigida manualmente na correria. Quem está integrando o front pelo Swagger UI está escrevendo código para um campo que não existe mais na resposta real. Encontre e corrija a origem da divergência — sem editar o mesmo nome de campo em três lugares diferentes.
+
+**Critérios de pronto**
+
+- O nome correto do campo aparece em **todas** as operações que retornam um evento — não só na que foi corrigida na correria.
+- A correção acontece em **um único lugar** (o schema `Evento` em `components.schemas`), referenciado por `$ref` em todos os endpoints — não copiado em cada anotação de rota.
+- Um teste manual (`curl` num endpoint real) confirma que o nome do campo na resposta bate exatamente com o que a documentação promete.
+- Um comentário de uma linha explica por que documentar o mesmo campo em vários lugares (em vez de usar `$ref`) foi o que permitiu essa divergência passar despercebida.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Procure todas as ocorrências do nome antigo do campo dentro de `src/docs/schemas/` e `src/routes/` — um `grep -r` no terminal encontra rápido.
+2. Se um endpoint declarar o exemplo do corpo "na mão", em vez de usar `$ref: '#/components/schemas/Evento'`, ele fica exposto a esse tipo de esquecimento — troque para `$ref` sempre que possível.
+3. Depois de corrigir o schema, confirme visualmente no Swagger UI que o exemplo de **todas** as operações relacionadas ao evento mudou junto.
+</details>
+
+### ⭐⭐⭐ Documentação como teste de contrato
+Tags: testes, api, swagger, ci-cd
+
+Na Seção 1 você leu que "documentação vira uma fonte de verdade verificável" quando existe uma ferramenta de teste de contrato comparando a resposta real com o que foi documentado. Hoje isso ainda é só teoria no UniEventos: nada garante que a resposta real de `GET /api/eventos` continua batendo com o schema `Evento` documentado depois de um refactor. Construa esse teste de contrato mínimo, sem depender de biblioteca externa pesada.
+
+**Critérios de pronto**
+
+- Um script `scripts/testar-contrato.js` busca `/api-docs.json`, extrai o schema `Evento` de `components.schemas`, faz uma chamada real a `GET /api/eventos`, e confere que cada campo obrigatório do schema existe na resposta real e bate com o `type` declarado (string, integer etc.).
+- O script termina com código de saída diferente de zero e uma mensagem clara se algum campo estiver faltando ou com tipo errado.
+- Um teste proposital: remova temporariamente um campo do controller que monta a resposta de `/api/eventos` e confirme que o script acusa a divergência.
+- O script está incluído como um passo do workflow de CI (ou de um script `npm`), rodando antes ou depois da suíte de testes de unidade.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `fetch('http://localhost:3000/api-docs.json')` devolve o JSON completo da spec — o schema fica em `components.schemas.Evento.properties`.
+2. Para cada chave de `properties`, confira `typeof valorReal` contra o `type` declarado (`"integer"`/`"number"` → `typeof === 'number'`; `"string"` → `typeof === 'string'`).
+3. Registre o script como um script `npm` (ex.: `"testar:contrato": "node scripts/testar-contrato.js"`).
+4. Não tente validar formatos complexos (`date-time`, `uri`) de início — comece só conferindo presença do campo e o tipo primitivo.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -983,7 +1100,7 @@ Escolha uma decisão que você realmente tomou e hesitou entre alternativas — 
 
 1. Documente **todos** os endpoints do seu projeto autoral com anotações `@openapi` (não só os 3 do laboratório).
 2. Garanta que os schemas `Erro` e de paginação (se aplicável) estão presentes e referenciados.
-3. Revise o `README.md` seguindo a estrutura da Seção 9.1: badges, requisitos, instalação, variáveis de ambiente, scripts, endpoints (com link para `/api-docs`), licença.
+3. Revise o `README.md` seguindo a estrutura da Seção 4.1: badges, requisitos, instalação, variáveis de ambiente, scripts, endpoints (com link para `/api-docs`), licença.
 4. Escreva pelo menos 1 ADR adicional sobre uma decisão do seu back-end.
 
 **Critério de pronto:** `/api-docs` mostra 100% dos endpoints do projeto autoral documentados; README revisado; ao menos 2 ADRs no repositório.
@@ -1010,4 +1127,4 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 
 ---
 
-**Próxima aula (15, 16/12/2026):** fechamos o semestre com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, guia de estudo para o exame final e as instruções completas da Avaliação 3. Traga a API documentada e pronta para publicar.
+**Na próxima aula:** fechamos o semestre com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, guia de estudo para o exame final e as instruções completas da Avaliação 3. Traga a API documentada e pronta para publicar.

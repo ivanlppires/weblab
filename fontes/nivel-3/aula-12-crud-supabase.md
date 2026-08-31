@@ -139,6 +139,9 @@ Rode isso agora e tente buscar eventos do front (ou do próprio SQL Editor simul
 
 Row Level Security é um recurso nativo do Postgres: em vez de controlar acesso só por tabela (você pode ou não fazer `SELECT` em `eventos`), ele controla acesso **linha por linha**, com uma condição SQL avaliada para cada linha. O Supabase se apoia nisso porque expõe o banco diretamente via API para o front — sem RLS, qualquer chave `anon` vazada (e ela É pública) daria acesso irrestrito. RLS é o que torna seguro o front conversar direto com o banco.
 
+> **🧠 Você sabia?**
+> A "API REST autogerada" do Supabase não é código deles: é o **PostgREST**, projeto de código aberto criado por Joe Nelson em 2014 que transforma qualquer schema Postgres em uma API HTTP. Cada `supabase.from('eventos').select('*').eq('categoria', 'palestra')` vira, na prática, um `GET /rest/v1/eventos?select=*&categoria=eq.palestra` — e é o PostgREST que repassa o seu JWT ao Postgres para que `auth.uid()` funcione dentro das policies. O RLS, por sua vez, existe no Postgres desde a versão 9.5, lançada em 2016 — bem antes de o Supabase existir.
+
 ### Policies: leitura pública, inserção autenticada, edição/exclusão só do dono
 
 ```sql
@@ -286,6 +289,9 @@ const { data: evento, error: erroUnico } = await supabase
 
 > **⚠️ Atenção**
 > `single()` **estoura em erro** se a consulta não retornar exatamente uma linha — nem zero, nem duas ou mais. Se o `id` pode não existir (ex.: usuário editou a URL na mão), trate o `error` em vez de assumir que `data` sempre vem preenchido. Para o caso "pode não existir, e tudo bem", use `.maybeSingle()` no lugar de `.single()` — ele devolve `data: null` sem erro quando não encontra.
+
+> **🔬 Investigue**
+> Rode a consulta paginada acima (com `count: 'exact'`) com a aba Network aberta e filtre por `rest/v1`. Abra a requisição: repare na URL (`/rest/v1/eventos?select=*&order=data_hora.asc`), nos cabeçalhos `apikey` (a chave `anon`) e `Authorization: Bearer ...` (a mesma chave `anon` quando você está deslogado; o token de sessão do usuário quando está logado), no cabeçalho de requisição `Range: 0-9` e no de resposta `Content-Range: 0-9/34`. Agora peça `.range(500, 509)` numa tabela com poucas linhas e anote o status e o `Content-Range` que voltam — eles explicam por que uma página "além do fim" merece tratamento na sua store.
 
 ### `{ data, error }`: por que `try/catch` sozinho não basta
 
@@ -854,20 +860,195 @@ Nenhuma linha da store (`eventosStore.js`) ou das telas (`EventosListaView.vue`,
 
 ## 🧪 Laboratório
 
-**1. Projeto e tabelas.** Crie seu projeto no Supabase e as tabelas da sua entidade principal (autoral), com `uuid` como PK, `timestamptz` para datas e RLS habilitado desde o início.
-<details><summary>Dica</summary>Habilite RLS na mesma migração/script SQL em que cria a tabela — não deixe para depois, é fácil esquecer.</details>
+### Nível A — Fixação
 
-**2. Policies completas.** Escreva as quatro policies (leitura pública, inserção autenticada, edição e exclusão só do dono) para sua tabela principal.
-<details><summary>Dica</summary>Teste cada uma isoladamente: logado como usuário A, tente editar uma linha do usuário B — deve falhar silenciosamente (nenhuma linha afetada), não com erro.</details>
+**A1.** A tabela `eventos` está com RLS habilitado e tem **só** a policy `eventos_leitura_publica`. Um usuário autenticado roda `supabase.from('eventos').insert({ ... }).select()`. Preveja o que vem em `{ data, error }` — e compare com o que vem num `select` quando não existe policy nenhuma. Por que os dois casos se comportam de forma diferente?
 
-**3. CRUD com `supabase-js`.** Implemente `select`, `insert`, `update`, `delete` da sua entidade, sempre desestruturando `{ data, error }` e tratando o erro.
-<details><summary>Dica</summary>Se `data` vier vazio sem erro nenhum, sua primeira suspeita deve ser RLS sem policy — releia a seção 4 antes de procurar bug no seu código.</details>
+**A2.** Complete as lacunas da policy que permite a um usuário alterar **apenas as próprias** inscrições, sem poder transferi-las para outra pessoa. Depois diga qual das duas cláusulas impede o "roubo" de uma inscrição.
 
-**4. Realtime funcionando.** Assine mudanças na sua tabela principal e demonstre, em duas abas, uma lista atualizando sozinha.
-<details><summary>Dica</summary>Confirme que o Realtime está habilitado para a tabela em Database → Replication no painel do Supabase — em alguns planos/tabelas ele vem desligado por padrão.</details>
+```sql
+create policy "inscricoes_edicao_propria"
+on inscricoes for update
+to authenticated
+using (________________)
+with check (________________);
+```
 
-**5. Adapter comparativo.** Implemente as duas versões do repositório (`Repo...Express` e `Repo...Supabase`) para sua entidade principal, com a mesma interface, e alterne entre elas por variável de ambiente.
-<details><summary>Dica</summary>O ponto de verificação: você deve conseguir trocar `VITE_BACKEND` no `.env`, reiniciar o `npm run dev`, e a tela continuar funcionando sem tocar em nenhuma linha de `store` ou `view`.</details>
+**A3.** Verdadeiro ou falso, com justificativa: "Um `try/catch` ao redor de `await supabase.from('eventos').delete().eq('id', id)` captura a violação de policy quando o usuário tenta apagar um evento alheio."
+
+**A4.** Uma tabela tem 15 eventos. Preveja `data.length` e `count` para `.select('*', { count: 'exact' }).range(10, 19)`. E para `.range(0, 4)`? Que combinação de `pagina`/`limite` da store produz cada chamada?
+
+**A5.** Em duas linhas: a chave `anon` vai para o bundle público do front e isso é seguro por design; a `service_role` não pode ir. O que exatamente cada uma "respeita" ou "ignora" dentro do Postgres?
+
+**A6.** `carregarUm(id)` da store usa `.maybeSingle()`; `buscarPorId` do `eventosRepoSupabase` usa `.single()`. Para um `id` inexistente, preveja o `{ data, error }` de cada um e diga qual dos dois comportamentos o `eventosRepoExpress` (que devolve `404`) espelha melhor.
+
+### Nível B — Aplicação
+
+**B1.** Projeto e tabelas. Crie seu projeto no Supabase e as tabelas da sua entidade principal (autoral), com `uuid` como PK, `timestamptz` para datas e RLS habilitado desde o início.
+
+Resultado esperado: as tabelas aparecem no Table Editor e um `select` feito do front devolve `data: []` sem erro — o sinal de que o RLS está ligado e ainda não há policy.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Habilite RLS na mesma migração/script SQL em que cria a tabela — não deixe para depois, é fácil esquecer.
+</details>
+
+**B2.** Policies completas. Escreva as quatro policies (leitura pública, inserção autenticada, edição e exclusão só do dono) para sua tabela principal.
+
+Resultado esperado: deslogado, `select` funciona e `insert` devolve `error` de policy; logado como A, editar uma linha de B afeta zero linhas.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Teste cada uma isoladamente: logado como usuário A, tente editar uma linha do usuário B — deve falhar silenciosamente (nenhuma linha afetada), não com erro.
+</details>
+
+**B3.** CRUD com `supabase-js`. Implemente `select`, `insert`, `update`, `delete` da sua entidade, sempre desestruturando `{ data, error }` e tratando o erro.
+
+Resultado esperado: cada operação passa por um `if (error)`; um `insert` que viola uma `check constraint` mostra a mensagem real do Postgres na tela, não um `null` silencioso.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Se `data` vier vazio sem erro nenhum, sua primeira suspeita deve ser RLS sem policy — releia a seção 4 antes de procurar bug no seu código.
+</details>
+
+**B4.** Realtime funcionando. Assine mudanças na sua tabela principal e demonstre, em duas abas, uma lista atualizando sozinha.
+
+Resultado esperado: criar um registro numa aba faz a lista da outra atualizar em menos de um segundo, sem F5, e sair da tela remove o canal (`removeChannel`).
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Confirme que o Realtime está habilitado para a tabela em Database → Replication no painel do Supabase — em alguns planos/tabelas ele vem desligado por padrão.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Adapter comparativo. Implemente as duas versões do repositório (`Repo...Express` e `Repo...Supabase`) para sua entidade principal, com a mesma interface, e alterne entre elas por variável de ambiente. Atenção ao detalhe que costuma quebrar: os `id` são `INT` no MySQL e `uuid` no Supabase — a store e as rotas precisam funcionar com os dois.
+
+Resultado esperado: trocar `VITE_BACKEND` no `.env` e reiniciar o `npm run dev` mantém a tela funcionando sem tocar em nenhuma linha de `store` ou `view`, inclusive o formulário de edição.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+O ponto de verificação: você deve conseguir trocar `VITE_BACKEND` no `.env`, reiniciar o `npm run dev`, e a tela continuar funcionando sem tocar em nenhuma linha de `store` ou `view`. Se a edição quebrar só num dos back-ends, procure um `Number(id)` que não deveria estar na store.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ A tabela que parecia vazia
+Tags: supabase, seguranca, bug, investigacao
+
+Um colega criou a tabela de comentários de eventos com o SQL abaixo e reclamou de dois "bugs do Supabase": visitantes deslogados não veem comentário nenhum (a página fica vazia, sem erro), e um usuário conseguiu "roubar" o comentário de outro. Os dois problemas estão nas policies — o Supabase está fazendo exatamente o que foi mandado.
+
+```sql
+create table comentarios (
+  id uuid primary key default gen_random_uuid(),
+  evento_id uuid not null references eventos(id) on delete cascade,
+  usuario_id uuid not null references auth.users(id),
+  texto text not null check (char_length(texto) between 1 and 500),
+  criado_em timestamptz not null default now()
+);
+
+alter table comentarios enable row level security;
+
+create policy "comentarios_leitura"
+on comentarios for select
+to authenticated
+using (true);
+
+create policy "comentarios_insercao"
+on comentarios for insert
+to authenticated
+with check (auth.uid() = usuario_id);
+
+create policy "comentarios_edicao"
+on comentarios for update
+to authenticated
+using (auth.uid() = usuario_id);
+```
+
+**Critérios de pronto**
+
+- Você reproduz os dois problemas antes de corrigir: um `select` deslogado devolvendo `data: []` e um `update({ usuario_id: '<uuid de outro usuário>' })` bem-sucedido feito pelo dono original.
+- As policies corrigidas: leitura pública de verdade e edição que não permite trocar o dono.
+- Um teste manual documentado em `docs/policies-comentarios.md`: quatro chamadas (`select` deslogado, `insert` deslogado, `update` do próprio texto, `update` tentando mudar `usuario_id`) com o `{ data, error }` observado em cada uma.
+- A policy de `delete` para o dono, que estava faltando.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Releia "USING × WITH CHECK" na seção 4: uma das policies só tem metade do que precisa.
+2. `to authenticated` exclui explicitamente o papel `anon` — e qual é o papel de quem nunca fez login?
+3. Para testar como outro usuário sem trocar de conta, procure "Testing policies" na documentação de RLS do Supabase: a ideia é trocar o papel (`set role authenticated`) e injetar o `sub` do JWT antes da consulta no SQL Editor.
+</details>
+
+### ⭐⭐ O que dá para fazer só com a chave pública
+Tags: supabase, seguranca, http, investigacao
+
+Rode `npm run build` e procure `eyJ` dentro de `dist/assets/*.js`: a sua chave `anon` está lá, legível para qualquer pessoa que abrir o site. Isso é esperado — mas o que exatamente alguém consegue fazer com ela e um terminal? Descubra usando só `curl` contra a API REST do seu projeto, sem `supabase-js`, e mostre que a única coisa entre a chave pública e os seus dados são as policies.
+
+**Critérios de pronto**
+
+- Um script `docs/anon-vs-rls.sh` com pelo menos quatro chamadas `curl` a `https://<projeto>.supabase.co/rest/v1/eventos`: `GET` sem token, `POST` sem token, `POST` com o token de sessão de um usuário logado e `DELETE` de um evento de outro usuário com esse mesmo token.
+- Cada chamada tem, em comentário, o status HTTP e o corpo observados — e a policy (ou a falta dela) que explica o resultado.
+- O token de sessão é obtido pela própria API de auth (`/auth/v1/token?grant_type=password`), não copiado do DevTools.
+- Um parágrafo final responde: se você desabilitasse o RLS de `eventos` por um minuto, o que o segundo `curl` passaria a fazer?
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. A API REST espera dois cabeçalhos: `apikey: <anon>` e `Authorization: Bearer <anon ou token de sessão>`. Sem `Authorization`, a resposta já é reveladora.
+2. Para o login por `curl`: `POST /auth/v1/token?grant_type=password` com `Content-Type: application/json` e `{ "email": "...", "password": "..." }` — o `access_token` vem na resposta.
+3. Um `DELETE` barrado por policy não devolve erro: devolve `204` e não apaga nada. Confira com um `GET` em seguida — ou peça `Prefer: return=representation` para ver o que foi afetado.
+4. Nunca cole a `service_role` nesse script — o objetivo é provar o que a chave **pública** consegue.
+</details>
+
+### ⭐⭐ Vagas ao vivo: inscrições com join, contagem e Realtime
+Tags: supabase, crud, vue, banco-de-dados
+
+O card de evento mostra `vagas`, mas não quantas já foram ocupadas — e o botão "Inscrever-se" nem existe na versão Supabase. Construa o fluxo completo usando só o que a aula ensinou: contagem de relacionados no `select`, `insert`/`delete` em `inscricoes` respeitando as policies, e Realtime para que "12/40 vagas" mude na tela de todo mundo quando alguém se inscreve.
+
+**Critérios de pronto**
+
+- O card mostra `ocupadas/vagas` vindo de um único `select` com `inscricoes(count)` — sem uma segunda consulta por evento.
+- "Inscrever-se" vira "Cancelar inscrição" quando o usuário logado já tem inscrição naquele evento; deslogado, o botão leva ao login.
+- Tentar se inscrever duas vezes mostra a mensagem da constraint `unique (evento_id, usuario_id)` traduzida para o usuário, não o texto cru do Postgres.
+- Com duas abas abertas, inscrever-se em uma faz o contador da outra mudar sem F5, assinando a tabela `inscricoes` (não `eventos`).
+- Um comentário no código explica por que o contador pode, por alguns instantes, estar errado numa aba que perdeu a conexão WebSocket.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `select('*, inscricoes(count)')` devolve `inscricoes: [{ count: 12 }]` — um array com um objeto, não um número.
+2. Para saber se "eu" estou inscrito sem uma consulta por card, busque as inscrições do usuário logado uma vez (`.eq('usuario_id', id)`) e guarde os `evento_id` num `Set` na store.
+3. O código de violação de `unique` no Postgres é `23505`; `error.code` chega intacto no `supabase-js`.
+4. O Realtime precisa estar habilitado para `inscricoes` em Database → Replication; o `.on('postgres_changes', { table: 'inscricoes' }, ...)` pode simplesmente recarregar a lista.
+</details>
+
+### ⭐⭐⭐ A última vaga, sem condição de corrida — dentro do banco
+Tags: supabase, banco-de-dados, seguranca, api
+
+Na Aula 11, a última vaga foi protegida com uma transação e `FOR UPDATE` dentro do Express. Com Supabase não existe "seu servidor" para colocar essa lógica — e um `select` de contagem seguido de `insert` no front deixa a porta aberta: vinte pessoas clicando ao mesmo tempo num evento com cinco vagas podem gerar vinte inscrições. Resolva onde o Supabase espera que você resolva: numa **função Postgres** chamada por `supabase.rpc()`, que confere e insere de forma atômica.
+
+**Critérios de pronto**
+
+- Existe a função `inscrever(p_evento_id uuid)` no schema `public`, que lê o evento com trava de linha, conta as inscrições, recusa com uma exceção clara quando não há vaga e insere a inscrição para `auth.uid()` — tudo na mesma transação.
+- O front chama `supabase.rpc('inscrever', { p_evento_id })` e mostra "Evento lotado" quando `error.message` indicar isso.
+- Um script no console dispara 20 chamadas simultâneas com `Promise.all` (com 20 usuários de teste, ou temporariamente sem a `unique`) contra um evento de 5 vagas; o `count` final é 5.
+- Um ADR curto (`docs/adr/000X-inscricao-por-rpc.md`, no formato que a Aula 14 apresenta) registra por que a regra foi para o banco e o que se perde com isso (testes unitários em JS, portabilidade).
+- A função não pode ser usada para inscrever outra pessoa: `usuario_id` vem de `auth.uid()`, nunca de parâmetro.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Leia "Database Functions" e a parte sobre `security definer` na documentação de RLS do Supabase; decida se a função roda como `security invoker` (respeita RLS) ou `security definer` (ignora RLS e, por isso, precisa checar `auth.uid()` sozinha).
+2. O esqueleto é `create or replace function inscrever(p_evento_id uuid) returns uuid language plpgsql as $$ declare ... begin ... end $$;` — dentro, `select vagas into v_vagas from eventos where id = p_evento_id for update;` é a trava.
+3. `raise exception 'SEM_VAGAS'` aborta a transação inteira; o texto chega em `error.message` no front.
+4. Para o teste de concorrência, `Promise.all(Array.from({ length: 20 }, () => supabase.rpc('inscrever', { p_evento_id })))` no console — e conte com `select count(*) from inscricoes where evento_id = '...'` no SQL Editor.
+</details>
 
 ## 🐛 Erros comuns e como resolver
 

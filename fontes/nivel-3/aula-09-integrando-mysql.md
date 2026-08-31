@@ -61,6 +61,9 @@ O UniEventos tem entidades com relações claras entre si: um evento tem várias
 > **🔎 Por baixo do capô**
 > Você já viu o Firestore (Aula 07) como alternativa de persistência. A diferença central: o Firestore é um banco **NoSQL orientado a documentos** — cada documento é um JSON flexível, sem schema fixo entre documentos da mesma coleção, e relações entre coleções são geridas manualmente pela aplicação. Um SGBD relacional como o MySQL exige schema definido antes de inserir dados (as tabelas do script abaixo), mas em troca oferece integridade referencial garantida pelo próprio banco (`FOREIGN KEY`), consultas relacionais poderosas (`JOIN`) e transações ACID robustas. Nenhum dos dois é "melhor" em absoluto — a escolha depende do formato dos dados e das garantias que a aplicação precisa. O UniEventos usa MySQL a partir de hoje porque suas entidades são fortemente relacionadas (evento ↔ inscrição ↔ usuário), o caso de uso clássico para modelagem relacional.
 
+> **🧠 Você sabia?**
+> O nome "MySQL" não é uma sigla técnica: "My" é o nome da filha de um dos criadores originais, Michael Widenius, que trabalhava na empresa sueca MySQL AB nos anos 1990. O banco passou por várias mãos corporativas desde então — foi comprado pela Sun Microsystems em 2008, e a Sun foi comprada pela Oracle em 2010, dona atual do MySQL. Apesar das trocas de dono, o MySQL continua open source e é, até hoje, um dos bancos relacionais mais usados do mundo — inclusive por empresas que competem diretamente com produtos da própria Oracle.
+
 ## 2. Modelagem relacional aplicada ao UniEventos
 
 Relembrando o modelo de dados do projeto (Aula 07, §3), as três entidades centrais do UniEventos:
@@ -448,6 +451,9 @@ O caminho de sucesso e o caminho de falha, lado a lado:
 
 Note que `release()` roda em **ambos** os caminhos — é justamente o papel do `finally`: executar independentemente de a `try` ter chegado ao `commit()` ou de o `catch` ter chegado ao `rollback()`.
 
+> **🔬 Investigue**
+> Abra duas conexões simultâneas ao MySQL (duas abas do MySQL Workbench/DBeaver, ou dois terminais com `mysql -u root -p`). Na primeira, rode `START TRANSACTION;` seguido de `SELECT vagas FROM eventos WHERE id = 1 FOR UPDATE;`, e **não** dê `COMMIT` ainda. Na segunda aba, tente rodar a mesma consulta (`SELECT ... FOR UPDATE`) para o mesmo `id`. O que acontece? Volte à primeira aba e rode `COMMIT;` — o que muda imediatamente na segunda?
+
 ## 5. Configuração por ambiente
 
 ```bash
@@ -798,7 +804,54 @@ Teste com o mesmo `requests.http` da Aula 08 — nenhuma linha dele precisa muda
 
 ## 🧪 Laboratório
 
-**1. Repositório de usuários.** Escreva `src/repositories/usuariosRepository.js` com `listarUsuarios()`, `buscarUsuarioPorId(id)` e `inserirUsuario({ nome, email })`. Use consultas parametrizadas em todas.
+### Nível A — Fixação
+
+**A1.** Preveja, sem rodar, o valor de `linhas` e de `evento` no trecho abaixo, considerando que a tabela `eventos` desta aula só tem os ids 1, 2 e 3:
+
+```js
+const [linhas] = await pool.execute('SELECT * FROM eventos WHERE id = ?', [999])
+const evento = linhas[0]
+```
+
+Resultado esperado: `linhas` é um array vazio (`[]`) — nenhuma linha bate com `id = 999` — e `evento` é `undefined`, porque acessar a posição `0` de um array vazio devolve `undefined`.
+
+**A2.** Complete a linha que falta para este `INSERT` inserir corretamente os três valores esperados pela query:
+
+```js
+const [resultado] = await pool.execute(
+  'INSERT INTO usuarios (firebase_uid, nome, email) VALUES (?, ?, ?)',
+  // linha que falta aqui
+)
+```
+
+Resultado esperado: `[uid, nome, email]` — um array com exatamente três valores, na mesma ordem das três `?` do SQL; a ordem importa tanto quanto a quantidade.
+
+**A3.** Em uma frase: por que `pool.execute` é preferível a `pool.query` para uma consulta que roda com muita frequência (ex.: `buscarEventoPorId`, chamada em quase todo endpoint)?
+
+Resultado esperado: porque `execute` usa prepared statements — o SQL é compilado uma vez pelo servidor MySQL e reaproveitado nas chamadas seguintes, evitando recompilar a mesma consulta repetidamente.
+
+**A4.** Ache o erro nas linhas abaixo (a conexão emprestada do pool não é devolvida em caso de erro) e diga a correção:
+
+```js
+export async function contarInscricoes(eventoId) {
+  const conexao = await pool.getConnection()
+  const [linhas] = await conexao.execute('SELECT COUNT(*) AS total FROM inscricoes WHERE evento_id = ?', [eventoId])
+  conexao.release()
+  return linhas[0].total
+}
+```
+
+Resultado esperado: se `conexao.execute` lançar uma exceção, o `conexao.release()` da linha seguinte nunca roda, e a conexão fica presa no pool para sempre. A correção é envolver o `execute` num `try/finally`, com `conexao.release()` dentro do `finally`.
+
+**A5.** Verdadeiro ou falso, com justificativa de uma linha: "`DELETE FROM eventos WHERE id = ?` com um `id` que não existe na tabela lança uma exceção no `mysql2`."
+
+Resultado esperado: falso — o `DELETE` roda normalmente e devolve `affectedRows: 0`; é responsabilidade do código verificar esse valor e decidir se isso significa "não encontrado" (como faz `removerEvento` desta aula).
+
+### Nível B — Aplicação
+
+**B1.** Repositório de usuários. Escreva `src/repositories/usuariosRepository.js` com `listarUsuarios()`, `buscarUsuarioPorId(id)` e `inserirUsuario({ nome, email })`. Use consultas parametrizadas em todas.
+
+Resultado esperado: `listarUsuarios()` devolve um array com os usuários de exemplo (Ana Souza, Bruno Lima); `buscarUsuarioPorId(1)` devolve só o registro de Ana; `inserirUsuario({ nome: 'Carla Dias', email: 'carla@exemplo.com' })` grava um novo registro, e uma consulta seguinte confirma três usuários na tabela.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -806,7 +859,9 @@ Teste com o mesmo `requests.http` da Aula 08 — nenhuma linha dele precisa muda
 Siga exatamente o padrão de `eventosRepository.js`: `pool.execute(sql, parametros)`, desestruturando `[linhas]` do retorno.
 </details>
 
-**2. Endpoint de inscrição.** Crie `POST /api/v1/eventos/:id/inscricoes` que recebe `{ "usuarioId": N }` no corpo e chama `inscreverUsuarioNoEvento` (já escrita nesta aula). Teste o caso de sucesso e o caso de vagas esgotadas (zere as vagas de um evento no banco antes de testar).
+**B2.** Endpoint de inscrição. Crie `POST /api/v1/eventos/:id/inscricoes` que recebe `{ "usuarioId": N }` no corpo e chama `inscreverUsuarioNoEvento` (já escrita nesta aula). Teste o caso de sucesso e o caso de vagas esgotadas (zere as vagas de um evento no banco antes de testar).
+
+Resultado esperado: com vagas disponíveis, a resposta é `201` com a inscrição criada; depois de zerar as vagas do evento no banco, a mesma chamada responde `422` com a mensagem "Não há vagas disponíveis para este evento".
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -814,7 +869,9 @@ Siga exatamente o padrão de `eventosRepository.js`: `pool.execute(sql, parametr
 O erro de vagas esgotadas já vem como `ErroHttp(422, ...)` de dentro da transação — seu controller só precisa dar `await` e deixar o Express capturar automaticamente.
 </details>
 
-**3. Ataque de SQL injection controlado.** Na sua máquina de desenvolvimento, temporariamente reescreva `buscarEventoPorId` para concatenar a string (sem placeholder), e tente buscar com um `id` malicioso do tipo `1 OR 1=1`. Observe o resultado. Depois reverta para a versão parametrizada e repita o teste, confirmando que o ataque não funciona mais.
+**B3.** Ataque de SQL injection controlado. Na sua máquina de desenvolvimento, temporariamente reescreva `buscarEventoPorId` para concatenar a string (sem placeholder), e tente buscar com um `id` malicioso do tipo `1 OR 1=1`. Observe o resultado. Depois reverta para a versão parametrizada e repita o teste, confirmando que o ataque não funciona mais.
+
+Resultado esperado: com a versão concatenada, a query maliciosa (`1 OR 1=1`) devolve **todos** os eventos da tabela em vez de nenhum; com a versão parametrizada, a mesma entrada é tratada como valor literal e não devolve nenhum evento (porque nenhum id se chama isso).
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -822,7 +879,9 @@ O erro de vagas esgotadas já vem como `ErroHttp(422, ...)` de dentro da transa�
 Como `id` nessa rota já passa por `Number(req.params.id)` no controller, o ataque de string não chega inteiro ao repository nesse caso específico — para realmente ver o ataque funcionar, teste diretamente no `eventosRepository`, chamando a função com uma string maliciosa manualmente, sem o `Number()` do meio do caminho. Isso mostra por que **duas camadas de proteção** (validação de tipo + parametrização) são melhores que uma só.
 </details>
 
-**4. Índice e `EXPLAIN`.** Rode `EXPLAIN SELECT * FROM eventos WHERE categoria = 'palestra'` no MySQL Workbench ou DBeaver, antes e depois de remover o índice `idx_eventos_categoria` (`DROP INDEX idx_eventos_categoria ON eventos`). Compare o campo `rows` do resultado (recrie o índice depois do teste).
+**B4.** Índice e `EXPLAIN`. Rode `EXPLAIN SELECT * FROM eventos WHERE categoria = 'palestra'` no MySQL Workbench ou DBeaver, antes e depois de remover o índice `idx_eventos_categoria` (`DROP INDEX idx_eventos_categoria ON eventos`). Compare o campo `rows` do resultado (recrie o índice depois do teste).
+
+Resultado esperado: com o índice, `EXPLAIN` mostra `type: ref` e um valor baixo em `rows`; sem o índice, `type: ALL` (varredura completa da tabela) e `rows` igual ao total de linhas da tabela `eventos`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -830,7 +889,9 @@ Como `id` nessa rota já passa por `Number(req.params.id)` no controller, o ataq
 Com o índice, o MySQL deve mostrar `type: ref` e um número baixo em `rows`. Sem o índice, `type: ALL` (varredura completa da tabela) e `rows` igual ao total de linhas da tabela.
 </details>
 
-**5. Transação com falha proposital.** No meio de `inscreverUsuarioNoEvento`, adicione temporariamente um `throw new Error('falha proposital')` logo depois do `INSERT` na tabela `inscricoes`, antes do `UPDATE` de vagas. Rode a função, confirme que a inscrição **não** aparece na tabela (porque o `rollback` desfez tudo), e remova o `throw` de teste depois.
+**B5.** Transação com falha proposital. No meio de `inscreverUsuarioNoEvento`, adicione temporariamente um `throw new Error('falha proposital')` logo depois do `INSERT` na tabela `inscricoes`, antes do `UPDATE` de vagas. Rode a função, confirme que a inscrição **não** aparece na tabela (porque o `rollback` desfez tudo), e remova o `throw` de teste depois.
+
+Resultado esperado: depois do `throw` proposital, a tabela `inscricoes` não ganha nenhuma linha nova — o `rollback` desfez o `INSERT` que já tinha rodado, confirmando que a transação é tudo-ou-nada.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -838,12 +899,77 @@ Com o índice, o MySQL deve mostrar `type: ref` e um número baixo em `rows`. Se
 Consulte a tabela `inscricoes` direto pelo Workbench/DBeaver antes e depois de rodar o teste, para confirmar visualmente que nada foi persistido.
 </details>
 
-**6. Endpoint de listagem com `JOIN`.** Crie `GET /api/v1/eventos/:id/inscricoes` que devolve a lista de inscritos de um evento, usando a consulta `JOIN` desta aula, no formato de envelope `{ "dados": [...] }`. Trate o caso de evento inexistente com `404`.
+### Nível C — Desafio em sala
+
+**C1.** Endpoint de listagem com `JOIN`. Crie `GET /api/v1/eventos/:id/inscricoes` que devolve a lista de inscritos de um evento, usando a consulta `JOIN` desta aula, no formato de envelope `{ "dados": [...] }`. Trate o caso de evento inexistente com `404`.
+
+Resultado esperado: `GET /api/v1/eventos/:id/inscricoes` devolve `{ "dados": [...] }` com nome e e-mail de cada inscrito, em ordem de inscrição; para um evento inexistente, a resposta é `404`, sem que o controller precise checar isso manualmente (o service já lança o erro).
 
 <details markdown="1">
 <summary>Dica</summary>
 
 Siga a mesma separação em camadas: uma função no repository (`listarInscricoesDoEvento`), verificação de existência do evento no service (reaproveite `obterEventoPorId`), e um controller enxuto.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ O índice que ninguém usa
+Tags: mysql, performance, investigacao, banco-de-dados
+
+Toda tabela do `schema.sql` desta aula tem pelo menos um índice — mas nem toda consulta que você vai escrever no seu projeto autoral necessariamente usa esses índices do jeito que você espera. Rode `EXPLAIN` numa consulta do seu próprio domínio e descubra se ela realmente está usando o índice que você criou, ou se está fazendo uma varredura completa da tabela sem que ninguém tenha percebido.
+
+**Critérios de pronto**
+
+- O `EXPLAIN` de pelo menos uma consulta do seu repositório autoral está colado no README, com os campos `type` e `rows` destacados.
+- Uma frase explica se o resultado é bom (usa índice) ou ruim (varredura completa) e por quê.
+- Se for ruim, uma segunda versão do `EXPLAIN`, depois de criar o índice que faltava, mostra a melhora.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `EXPLAIN SELECT ...` na frente de qualquer consulta mostra como o MySQL planeja executá-la, sem rodar de verdade.
+2. `type: ALL` sempre é suspeito numa tabela grande; `type: ref` ou `type: const` geralmente indicam uso de índice.
+3. Um índice só ajuda se a cláusula `WHERE` (ou o `JOIN`) filtrar exatamente pela coluna indexada — um índice em `titulo` não ajuda um `WHERE categoria = ?`.
+</details>
+
+### ⭐⭐ Duas inscrições, uma vaga
+Tags: mysql, banco-de-dados, bug, investigacao
+
+A transação desta aula usa `FOR UPDATE` para travar a linha do evento — mas o que acontece se você **remover** essa trava de propósito e disparar duas inscrições simultâneas para um evento com exatamente 1 vaga? Reproduza a condição de corrida (*race condition*) que o `FOR UPDATE` existe para evitar, meça o dano, e depois prove que a versão correta resolve.
+
+**Critérios de pronto**
+
+- Uma cópia temporária de `inscreverUsuarioNoEvento` sem o `FOR UPDATE` (troque por um `SELECT vagas FROM eventos WHERE id = ?` simples).
+- Um script que dispara duas chamadas quase simultâneas (`Promise.all` com duas chamadas da função) contra um evento com `vagas = 1`.
+- Uma consulta ao banco depois do teste mostrando quantas inscrições foram criadas (o bug aparece quando o número é 2, não 1).
+- A mesma bateria de testes rodada contra a versão com `FOR UPDATE`, confirmando que só 1 inscrição é criada.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Sem `FOR UPDATE`, as duas transações conseguem ler `vagas: 1` ao mesmo tempo, antes de qualquer uma delas fazer o `UPDATE` — as duas "acham" que podem inscrever.
+2. `Promise.all([inscreverUsuarioNoEvento(id, 1), inscreverUsuarioNoEvento(id, 2)])` dispara as duas chamadas de forma concorrente o suficiente para expor a corrida na maioria das vezes (não é garantido a cada execução — rode algumas vezes).
+3. `SELECT COUNT(*) FROM inscricoes WHERE evento_id = ?` depois do teste revela o número real de inscrições criadas.
+</details>
+
+### ⭐⭐⭐ Migrando sem quebrar nada
+Tags: mysql, api, refatoracao, projeto
+
+A promessa central desta aula é que migrar de memória para MySQL não deveria quebrar nenhum contrato de API. Prove isso formalmente no seu projeto autoral: grave as respostas de **todo** o `requests.http` rodando contra a versão em memória (Aula 08), migre para MySQL, rode de novo, e compare as duas rodadas (ignorando só os campos que legitimamente mudam, como datas de criação).
+
+**Critérios de pronto**
+
+- Um script (bash, Node, o que preferir) que roda cada requisição do `requests.http` duas vezes — antes e depois da migração — salvando as respostas em arquivos JSON separados (`respostas-memoria/` e `respostas-mysql/`).
+- Uma comparação (`diff`, ou script próprio) apontando quais campos mudaram entre as duas rodadas.
+- Uma lista, no README, dos campos que mudaram legitimamente (ex.: `id` pode mudar se o `AUTO_INCREMENT` começar de outro número) e uma confirmação de que o formato (as chaves do JSON, os status codes) é idêntico.
+- Se algum contrato realmente quebrou (chave que sumiu, status diferente), uma correção no service ou controller até a comparação bater.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `curl -s <url> | python3 -m json.tool` (ou `jq`) formata a resposta para comparação legível.
+2. `diff <(cat respostas-memoria/get-eventos.json) <(cat respostas-mysql/get-eventos.json)` mostra exatamente o que mudou entre os dois arquivos.
+3. Ignore `id` e qualquer campo de data/hora automática ao comparar — eles mudam legitimamente entre execuções; o que importa é a estrutura e as regras de negócio (status codes, mensagens de erro, formato do envelope).
 </details>
 
 ## 🐛 Erros comuns e como resolver

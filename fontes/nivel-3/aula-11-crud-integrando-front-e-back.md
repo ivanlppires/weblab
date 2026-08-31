@@ -66,7 +66,7 @@ Query string: `?pagina=1&limite=10&busca=semana&categoria=palestra`
       "local": "Auditório Central",
       "vagas": 80,
       "vagas_disponiveis": 62,
-      "imagem_url": "https://.../semana-computacao.jpg"
+      "imagem_url": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
     }
   ],
   "paginacao": { "pagina": 1, "limite": 10, "total": 34, "totalPaginas": 4 }
@@ -87,7 +87,7 @@ Status: `200 OK`.
   "data_hora": "2026-12-01T19:00:00",
   "local": "Auditório Central",
   "vagas": 80,
-  "imagem_url": "https://.../semana-computacao.jpg"
+  "imagem_url": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
 }
 ```
 
@@ -99,6 +99,9 @@ Resposta: o evento criado, com `id`, status `201 Created`. Erros de validação:
 
 > **💡 Dica**
 > Escreva esse contrato **antes** de codificar, mesmo sozinho. Ele vira a fonte da verdade quando front e back divergem — e em equipes reais costuma virar um arquivo OpenAPI/Swagger, que veremos na Aula 14. Por ora, uma tabela em Markdown já resolve.
+
+> **🧠 Você sabia?**
+> A sigla CRUD não nasceu na web. Ela foi popularizada por James Martin em 1983, no livro *Managing the Data-base Environment*, para descrever as quatro operações básicas sobre um registro. Quarenta anos depois, virou o mapa dos verbos HTTP — `POST`, `GET`, `PUT`/`PATCH`, `DELETE` — e o esqueleto de praticamente toda API REST, inclusive a que você está fechando hoje.
 
 ## 2. Back-end: completando controller → service → repository
 
@@ -922,7 +925,10 @@ export async function enviarImagemEvento(arquivo) {
 ```vue
 <!-- trecho a adicionar em EventoFormView.vue: campo de upload -->
 <script setup>
-// ...imports existentes
+// imports que o componente já tinha no Passo 3, mais o serviço de storage
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useEventosStore } from '@/stores/eventosStore'
 import { enviarImagemEvento } from '@/services/storageService'
 
 const enviandoImagem = ref(false)
@@ -994,6 +1000,9 @@ Sintomas típicos no console do navegador:
 - `Request header field authorization is not allowed by Access-Control-Allow-Headers` → o servidor não liberou explicitamente o cabeçalho `Authorization`.
 - Requisição aparece como `OPTIONS` seguida de falha → é o *preflight* automático do navegador para métodos como `PUT`/`DELETE` ou cabeçalhos customizados; se o servidor não responde `200`/`204` a esse `OPTIONS`, o navegador cancela a requisição real.
 
+> **🔬 Investigue**
+> Com front e API rodando, abra a aba Network, filtre por `eventos` e edite um evento. Você verá **duas** requisições para a mesma URL: um `OPTIONS` e o `PUT`. Clique no `OPTIONS`: qual foi o status e quais cabeçalhos `Access-Control-Allow-*` vieram na resposta? Agora saia da conta e recarregue a lista (um `GET` sem `Authorization`): apareceu algum `OPTIONS` antes dele? A diferença é a definição de "requisição simples" do CORS — `GET` sem cabeçalhos fora da lista segura dispensa o preflight; `PUT` com `Authorization` e `Content-Type: application/json` não.
+
 Configuração correta para o UniEventos:
 
 ```js
@@ -1019,20 +1028,191 @@ app.use(express.json())
 
 ## 🧪 Laboratório
 
-**1. Contrato documentado.** Escreva a tabela de contrato (seção 1) para uma entidade do seu projeto autoral.
-<details><summary>Dica</summary>Cinco linhas — uma por endpoint — método, caminho, autenticação. Corpo e resposta podem ir em blocos JSON abaixo da tabela.</details>
+### Nível A — Fixação
 
-**2. Back-end completo.** Implemente `controller → service → repository` da sua entidade principal com validação zod, paginação e ao menos uma regra de negócio (ex.: não aceitar valor negativo, não excluir se houver dependência).
-<details><summary>Dica</summary>Reaproveite a estrutura de `eventosService.js` — troque só os campos do `z.object`.</details>
+**A1.** Preveja o status e o corpo de cada chamada abaixo **sem rodar**, usando só o contrato da seção 1 e as rotas da seção 2.4. Depois rode as três e confira.
 
-**3. Store pessimista.** Implemente a store Pinia da entidade com `lista`, `carregando`, `erro` e as ações CRUD, todas aguardando confirmação do servidor antes de mudar o estado local.
-<details><summary>Dica</summary>Todo `try` termina em `finally { carregando.value = false }` — não esqueça, senão a tela trava em loading para sempre em caso de erro.</details>
+```bash
+# (a) sem cabeçalho Authorization
+curl -i -X DELETE http://localhost:3000/api/eventos/7
 
-**4. Telas de listagem e formulário.** Construa `ListaView` com `v-data-table-server` (busca + paginação) e `FormView` servindo criar e editar pela mesma rota parametrizada.
-<details><summary>Dica</summary>Confira o formato do campo de data — é a causa mais comum de formulário de edição aparecer "vazio" mesmo com dado no banco.</details>
+# (b) com token válido de um usuário comum (não admin)
+curl -i -X DELETE http://localhost:3000/api/eventos/7 -H "Authorization: Bearer $TOKEN"
 
-**5. Depuração guiada.** Provoque de propósito um erro 400 (mande um campo inválido) e um erro de CORS (mude temporariamente o `origin` do `cors()` para uma URL errada). Documente, com print da aba Network, o que cada um parece no navegador.
-<details><summary>Dica</summary>Depois do teste de CORS, não esqueça de voltar o `origin` correto — é fácil esquecer e passar a aula seguinte "quebrada".</details>
+# (c) com token de admin, mas o evento 7 tem 3 inscritos
+curl -i -X DELETE http://localhost:3000/api/eventos/7 -H "Authorization: Bearer $TOKEN_ADMIN"
+```
+
+**A2.** O front chama `GET /api/eventos?pagina=0&limite=500`. Que valores de `paginacao.pagina` e `paginacao.limite` voltam na resposta? Aponte a linha de `eventosService.listar` (back-end) que decide cada um.
+
+**A3.** Verdadeiro ou falso, com justificativa de uma linha: "No Express 5, o controller `criar` precisa de `try/catch` para que um `ZodError` lançado dentro de `eventosService.criar` chegue ao `tratadorErros`."
+
+**A4.** Em duas linhas: por que `EventoFormView.vue` faz `evento.data_hora?.slice(0, 16)` antes de preencher o formulário? O que aparece no campo se você remover o `.slice`?
+
+**A5.** Na store, `remover(id)` termina com `lista.value.filter((e) => e.id !== Number(id))`. Se alguém trocar por `e.id !== id` e o `id` chegar como a string `'3'` vinda de `route.params`, o que o usuário vê na tela logo depois de excluir? E depois de apertar F5? Explique a diferença.
+
+### Nível B — Aplicação
+
+**B1.** Contrato documentado. Escreva a tabela de contrato (seção 1) para uma entidade do seu projeto autoral.
+
+Resultado esperado: cinco linhas (método, caminho, autenticação) e, abaixo da tabela, um bloco JSON de corpo e um de resposta para o `POST` e para o `GET` de lista.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Cinco linhas — uma por endpoint — método, caminho, autenticação. Corpo e resposta podem ir em blocos JSON abaixo da tabela.
+</details>
+
+**B2.** Back-end completo. Implemente `controller → service → repository` da sua entidade principal com validação zod, paginação e ao menos uma regra de negócio (ex.: não aceitar valor negativo, não excluir se houver dependência).
+
+Resultado esperado: os 5 endpoints respondem no `curl` com os status do contrato; um `POST` com campo inválido devolve `400` com `detalhes` apontando o campo; `?pagina=2&limite=5` muda a fatia devolvida.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Reaproveite a estrutura de `eventosService.js` — troque só os campos do `z.object`.
+</details>
+
+**B3.** Store pessimista. Implemente a store Pinia da entidade com `lista`, `carregando`, `erro` e as ações CRUD, todas aguardando confirmação do servidor antes de mudar o estado local.
+
+Resultado esperado: cada ação só altera `lista` depois do `await`; provocar um `400` deixa `erro` preenchido e `carregando` de volta em `false`.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Todo `try` termina em `finally { carregando.value = false }` — não esqueça, senão a tela trava em loading para sempre em caso de erro.
+</details>
+
+**B4.** Telas de listagem e formulário. Construa `ListaView` com `v-data-table-server` (busca + paginação) e `FormView` servindo criar e editar pela mesma rota parametrizada.
+
+Resultado esperado: buscar, paginar, criar, editar e excluir funcionam sem F5; o formulário de edição abre preenchido, inclusive o campo de data.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Confira o formato do campo de data — é a causa mais comum de formulário de edição aparecer "vazio" mesmo com dado no banco.
+</details>
+
+**B5.** Depuração guiada. Provoque de propósito um erro 400 (mande um campo inválido) e um erro de CORS (mude temporariamente o `origin` do `cors()` para uma URL errada). Documente, com print da aba Network, o que cada um parece no navegador.
+
+Resultado esperado: dois prints (um `400` com o `detalhes` visível na aba Response; um bloqueio de CORS com a mensagem do console) e duas linhas dizendo qual lado — front ou back — causou cada um.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+Depois do teste de CORS, não esqueça de voltar o `origin` correto — é fácil esquecer e passar a aula seguinte "quebrada".
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Inscrição atômica, ponta a ponta. A função `decrementarVagaEmTransacao` do repositório (seção 2.1) abre a transação, trava a linha com `FOR UPDATE` e confere as vagas — mas ainda não insere a inscrição. Complete-a e exponha o recurso: `POST /api/eventos/:id/inscricoes` (autenticado) responde `201` com a inscrição, `404` se o evento não existe e `409` se não há vagas; no front, um botão "Inscrever-se" que some quando `vagas_disponiveis` chega a zero. Para fechar, prove a atomicidade: com um evento de 5 vagas, dispare 20 requisições simultâneas e confira no banco quantas inscrições existem.
+
+Resultado esperado: `SELECT COUNT(*) FROM inscricoes WHERE evento_id = ?` devolve exatamente 5, e as outras 15 respostas foram `409`.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+O `INSERT INTO inscricoes (evento_id, usuario_uid)` precisa acontecer **entre** o `SELECT ... FOR UPDATE` e o `commit()`, usando a mesma `conexao`. No service, converta `SEM_VAGAS` em erro com `status = 409` e `EVENTO_NAO_ENCONTRADO` em `404`. Para as 20 requisições simultâneas, um script Node com `Promise.all(Array.from({ length: 20 }, () => fetch(url, opcoes)))` basta — use tokens de usuários diferentes, ou a `UNIQUE (evento_id, usuario_uid)` vai barrar antes da regra de vagas.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ A busca que some na página 3
+Tags: vue, devtools, bug, investigacao
+
+Um colega "melhorou" a `EventosListaView.vue` e agora acontece algo estranho: navegue até a página 3 da tabela e digite "docker" na busca — a tabela mostra "Nenhum evento encontrado", mas o rodapé insiste que existem 2 resultados. O "Minicurso de Docker" está lá no banco. Este é o trecho alterado:
+
+```js
+// src/views/EventosListaView.vue — trecho com o bug plantado
+watch(termoBusca, () => {
+  clearTimeout(temporizadorBusca)
+  temporizadorBusca = setTimeout(() => {
+    carregarPagina()
+  }, 400)
+})
+```
+
+Antes de olhar o código, abra a aba Network: qual query string está indo para a API, e o que a resposta traz em `dados` e em `paginacao`? A resposta do servidor está errada — ou está certa demais?
+
+**Critérios de pronto**
+
+- Um comentário no topo do arquivo registra a URL exata da requisição que reproduz o bug e o JSON de `paginacao` devolvido.
+- Buscar a partir de qualquer página mostra os resultados corretos, e o rodapé da tabela bate com o que está na tela.
+- Limpar a busca (botão `clearable`) também volta a um estado coerente, sem requisição duplicada na aba Network.
+- Uma frase no comentário explica por que o back-end não tem culpa nenhuma.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Na aba Network, clique na requisição de `eventos` e compare os parâmetros `pagina` e `busca` com `paginacao.totalPaginas` da resposta.
+2. Compare o `watch` acima com a versão do Passo 1 do "Mão na massa" — uma linha sumiu.
+3. Se, ao restaurar a linha, a busca disparar duas requisições, investigue o `watch(() => opcoesTabela.value.page, ...)`: mudar a página também chama `carregarPagina`.
+</details>
+
+### ⭐⭐ Otimista, mas honesto
+Tags: pinia, vue, performance, refatoracao
+
+A store desta aula é pessimista de propósito (seção 5). Mas abra o DevTools, ative o throttling "Slow 3G" na aba Network e exclua um evento: o botão gira por três segundos antes de a linha sumir. Gmail e Trello removem o item na hora — e o devolvem à lista se o servidor recusar. Implemente a exclusão **otimista** em `eventosStore.remover` e responda, com medições, se ela vale a complexidade extra neste projeto.
+
+**Critérios de pronto**
+
+- A linha some da tabela imediatamente ao confirmar a exclusão, antes de a API responder.
+- Se a API responder `409` (evento com inscritos), a linha volta **na mesma posição** em que estava, sem duplicar, e um snackbar explica o motivo.
+- `carregando`, `erro` e `paginacao.total` continuam coerentes nos dois caminhos (sucesso e falha).
+- Um comentário no topo da função registra o tempo entre o clique e o sumiço da linha, com e sem otimismo, medido com throttling "Slow 3G".
+- Um parágrafo no README do projeto autoral diz para quais operações você adotaria a estratégia otimista e por quê.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Guarde o índice e uma cópia do item antes de removê-lo da lista: `const indice = lista.value.findIndex(...)` e `const copia = lista.value[indice]`.
+2. No `catch`, `lista.value.splice(indice, 0, copia)` devolve o item ao lugar original.
+3. Para forçar o `409` sem ter o endpoint de inscrições, insira uma linha direto no MySQL: `INSERT INTO inscricoes (evento_id, usuario_uid) VALUES (7, 'teste')`.
+4. Meça com `performance.now()` antes do `filter` e dentro do `finally`; o throttling fica no menu de velocidade da aba Network.
+</details>
+
+### ⭐⭐ O que o curl faz que a tela não deixa
+Tags: seguranca, express, crud, autenticacao
+
+O botão de editar só aparece para quem está logado, e o de excluir só para admin. Mas botão escondido não é permissão: qualquer pessoa com um token válido consegue montar um `PUT /api/eventos/3` no `curl` e editar o evento que outra pessoa criou, porque a seção 1 deixou essa decisão em aberto ("qualquer autenticado pode editar"). Feche a brecha: um evento passa a ter dono, e só o dono ou um admin pode editá-lo ou excluí-lo.
+
+**Critérios de pronto**
+
+- A tabela `eventos` ganha a coluna `criado_por` (uid do Firebase), preenchida no `POST` a partir do token — nunca a partir do corpo da requisição.
+- `PUT` e `DELETE` feitos por quem não é dono nem admin respondem `403` com `{ "erro": "..." }`; a regra mora no service, não na rota.
+- O contrato da seção 1 e a store são atualizados: a resposta de `GET` inclui `criado_por`, e a tela só mostra os botões para o dono ou para admin.
+- Um script `docs/teste-permissoes.sh` com quatro chamadas `curl` (dono edita, outro usuário tenta editar, admin exclui, anônimo tenta excluir) e o status esperado em comentário ao lado de cada uma.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. O middleware `autenticar` da Aula 10 já deixa `req.usuario.uid` disponível; passe esse uid do controller para o service junto com `req.body`.
+2. `ALTER TABLE eventos ADD COLUMN criado_por VARCHAR(128) NULL` e um `UPDATE` para preencher os eventos antigos com o uid do admin.
+3. No service, `atualizar(id, dados, solicitante)`: busque o evento, compare `evento.criado_por` com `solicitante.uid` e verifique se o solicitante é admin (a mesma informação que o middleware `autorizar` usa) antes de tocar no repositório.
+4. Para obter dois tokens diferentes: faça login com contas diferentes em duas janelas anônimas e rode `await getAuth().currentUser.getIdToken()` no console de cada uma.
+</details>
+
+### ⭐⭐⭐ Paginação que aguenta 100 mil eventos
+Tags: mysql, performance, api, banco-de-dados
+
+`LIMIT 10 OFFSET 99990` obriga o MySQL a ler e descartar 99.990 linhas antes de devolver 10 — a última página é sempre a mais lenta. Gere 100 mil eventos falsos, meça o tempo das primeiras e das últimas páginas e depois implemente a alternativa que Twitter e Slack usam: **paginação por cursor**, em que o cliente pede "os 10 próximos depois deste ponto" em vez de "a página N".
+
+**Critérios de pronto**
+
+- Um script `scripts/semear.js` insere 100.000 eventos em lotes (`INSERT ... VALUES (...), (...)`) em menos de um minuto.
+- Uma tabela no README compara o tempo de resposta (aba Network ou `curl -w '%{time_total}'`) de `?pagina=1`, `?pagina=5000` e `?pagina=10000`, antes e depois.
+- `GET /api/eventos?depois=<cursor>&limite=10` devolve os próximos 10 eventos em ordem de `data_hora, id` e um campo `proximoCursor` (`null` na última página).
+- O `EXPLAIN` das duas consultas está colado no README, com uma frase apontando a diferença nas colunas `rows` e `type`.
+- A tela de listagem continua funcionando no modo antigo (`pagina`) — o novo modo é adicional, e a store escolhe um deles.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Procure por "keyset pagination": a condição é `WHERE (data_hora, id) > (?, ?) ORDER BY data_hora, id LIMIT ?`, e um índice composto `(data_hora, id)` é o que faz a diferença.
+2. O cursor pode ser simplesmente `data_hora` e `id` do último item, codificados em base64 para o cliente não precisar entender o formato: `Buffer.from(JSON.stringify([data, id])).toString('base64')`.
+3. Para gerar dados, `Array.from({ length: 1000 })` por lote e datas espalhadas com `new Date(Date.now() + i * 60000)` evitam empates no cursor.
+4. `v-data-table-server` não sabe o que é cursor; para o modo novo, um botão "Carregar mais" que concatena em `lista.value` é mais honesto do que forçar a tabela.
+</details>
 
 ## 🐛 Erros comuns e como resolver
 

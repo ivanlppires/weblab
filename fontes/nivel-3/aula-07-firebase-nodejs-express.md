@@ -169,6 +169,9 @@ Na prática, isso aparece no seu código como `async`/`await` e `Promise`, que v
 > **💡 Dica**
 > Uma analogia útil: pense num garçom (a thread do Node) atendendo várias mesas (requisições) num restaurante. Um garçom **bloqueante** ficaria parado do lado de uma mesa esperando a cozinha terminar um prato antes de atender a próxima mesa. Um garçom **não bloqueante** anota o pedido, leva para a cozinha, e imediatamente vai atender a próxima mesa — voltando a cada mesa só quando o prato dela está pronto. É o mesmo garçom (uma thread), mas ele nunca fica parado esperando.
 
+> **🧠 Você sabia?**
+> O Node.js nasceu em 2009 porque seu criador, Ryan Dahl, ficou incomodado com um detalhe específico de servidores tradicionais da época: fazer upload de um arquivo grande travava a thread inteira até os bytes terminarem de chegar — mesmo que o servidor não estivesse "fazendo" nada além de esperar. Dahl queria um runtime em que esperar nunca travasse o resto do programa. É exatamente o event loop que você acabou de estudar: a ideia central do Node, desde o primeiro dia, sempre foi tratar "esperar" como uma operação barata.
+
 ### Módulos: CommonJS vs ES Modules
 
 Node.js existe desde 2009, muito antes de o JavaScript ter um sistema de módulos padronizado na própria linguagem. Por isso o Node criou o seu: **CommonJS**, baseado em `require()` e `module.exports`.
@@ -427,6 +430,9 @@ await listarTodosOsEventos()
 
 > **🔎 Por baixo do capô**
 > `getDocs` devolve um `QuerySnapshot`, não um array direto. Cada item é um `QueryDocumentSnapshot`, com `.id` (o id do documento) separado de `.data()` (o conteúdo). Por isso o padrão `{ id: d.id, ...d.data() }` aparece toda vez que você lê uma coleção — é assim que você recompõe um objeto "normal" com id incluso.
+
+> **🔬 Investigue**
+> No console do Firebase, abra a coleção `eventos` e adicione manualmente um novo documento com um campo a mais que os outros (ex.: `destaque: true`). Rode `listarTodosOsEventos()` de novo — o que aparece no console para esse documento em especial, comparado com os outros, que não têm esse campo? O Firestore reclama de algum documento estar "faltando" o campo `destaque`? Anote sua conclusão sobre o que "banco de dados sem schema fixo" realmente significa na prática, comparado com uma tabela MySQL (que você vai conhecer na Aula 09).
 
 ### As regras de segurança por trás do modo de teste
 
@@ -802,7 +808,57 @@ Abra o front no navegador. A lista de eventos deve carregar exatamente como ante
 
 ## 🧪 Laboratório
 
-**1. Rota de saudação personalizada.** Crie `GET /api/saudacao/:nome` que responde `{ "mensagem": "Olá, <nome>!" }`, capitalizando a primeira letra do nome recebido.
+### Nível A — Fixação
+
+**A1.** Preveja a ordem exata de saída no console, sem rodar:
+
+```js
+console.log('1. início')
+setTimeout(() => console.log('2. timeout'), 0)
+Promise.resolve().then(() => console.log('3. promise'))
+console.log('4. fim do código síncrono')
+```
+
+Resultado esperado: a ordem impressa é 1, 4, 3, 2 — o event loop só processa o `setTimeout` e a `Promise` depois que todo o código síncrono termina, e microtarefas (`Promise`) sempre vêm antes de macrotarefas (`setTimeout`), mesmo com atraso `0`.
+
+**A2.** Complete a linha que falta para a rota abaixo responder corretamente ao buscar um evento inexistente:
+
+```js
+app.get('/api/eventos/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const evento = eventos.find((e) => e.id === id)
+  // linha que falta aqui
+  res.json(evento)
+})
+```
+
+Resultado esperado: `if (!evento) { return res.status(404).json({ erro: 'Evento não encontrado' }) }` — sem o `return`, o código continua até `res.json(evento)` e tenta responder com `undefined`, devolvendo `200` com corpo vazio em vez de `404`.
+
+**A3.** Em uma frase: por que um arquivo com `require('express')` lança `ReferenceError: require is not defined in ES module scope` num projeto cujo `package.json` tem `"type": "module"`?
+
+Resultado esperado: porque `"type": "module"` faz o Node tratar todo `.js` do projeto como ES Module, um sistema de módulos em que `require` simplesmente não existe — a única forma de importar é `import`.
+
+**A4.** Ache o erro nas linhas abaixo (sintaxe do Express 4, incompatível com o Express 5.2.1 instalado hoje) e diga a correção de cada uma:
+
+```js
+app.get('/relatorio/:ano?', (req, res) => {
+  const ano = req.params.ano || 'atual'
+  res.json({ relatorioDoAno: ano })
+})
+app.del('/api/eventos/:id', removerEvento)
+```
+
+Resultado esperado: duas sintaxes do Express 4 aparecem — `/relatorio/:ano?` (segmento opcional com `?`) precisa virar `/relatorio{/:ano}`, e `app.del(...)` precisa virar `app.delete(...)`, porque `app.del` foi removido no Express 5.
+
+**A5.** Verdadeiro ou falso, com justificativa de uma linha: "no Firestore, `getDocs(colecaoEventos)` devolve diretamente um array de objetos, no mesmo formato que `snapshot.docs.map(...)` produz."
+
+Resultado esperado: falso — `getDocs` devolve um `QuerySnapshot`; é preciso `snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))` para obter o array de objetos "normais", com o id incluso.
+
+### Nível B — Aplicação
+
+**B1.** Rota de saudação personalizada. Crie `GET /api/saudacao/:nome` que responde `{ "mensagem": "Olá, <nome>!" }`, capitalizando a primeira letra do nome recebido.
+
+Resultado esperado: `GET /api/saudacao/joao` responde `200` com `{ "mensagem": "Olá, Joao!" }` — a primeira letra maiúscula, o resto do nome preservado.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -810,7 +866,9 @@ Abra o front no navegador. A lista de eventos deve carregar exatamente como ante
 Use `req.params.nome` e uma função para capitalizar: `nome.charAt(0).toUpperCase() + nome.slice(1)`.
 </details>
 
-**2. Filtro por categoria via query string.** Modifique `GET /api/eventos` para aceitar `?categoria=palestra` e retornar só os eventos daquela categoria. Sem o parâmetro, retorna todos.
+**B2.** Filtro por categoria via query string. Modifique `GET /api/eventos` para aceitar `?categoria=palestra` e retornar só os eventos daquela categoria. Sem o parâmetro, retorna todos.
+
+Resultado esperado: `GET /api/eventos?categoria=palestra` devolve só os eventos com essa categoria (1 evento, nos dados de exemplo); `GET /api/eventos` sem parâmetro continua devolvendo os 3.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -818,7 +876,9 @@ Use `req.params.nome` e uma função para capitalizar: `nome.charAt(0).toUpperCa
 Leia `req.query.categoria` (lembre-se: é somente leitura, não reatribua). Se estiver presente, filtre o array com `.filter()` antes de responder.
 </details>
 
-**3. Contagem total no cabeçalho.** Adicione um cabeçalho de resposta `X-Total-Count` com a quantidade de eventos retornados em `GET /api/eventos`, usando `res.set('X-Total-Count', String(eventos.length))`.
+**B3.** Contagem total no cabeçalho. Adicione um cabeçalho de resposta `X-Total-Count` com a quantidade de eventos retornados em `GET /api/eventos`, usando `res.set('X-Total-Count', String(eventos.length))`.
+
+Resultado esperado: `curl -i http://localhost:3000/api/eventos` mostra, entre os cabeçalhos da resposta, a linha `X-Total-Count: 3`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -826,7 +886,9 @@ Leia `req.query.categoria` (lembre-se: é somente leitura, não reatribua). Se e
 `res.set(nome, valor)` precisa vir antes de `res.json(...)`, porque depois que o corpo é enviado os cabeçalhos não podem mais ser alterados.
 </details>
 
-**4. Teste de erro proposital.** Escreva uma rota `GET /api/quebra` que dá `throw new Error('falha proposital')` dentro de um handler `async`. Suba o servidor, acesse a rota e observe no terminal o que acontece — sem nenhum tratamento de erro escrito por você ainda.
+**B4.** Teste de erro proposital. Escreva uma rota `GET /api/quebra` que dá `throw new Error('falha proposital')` dentro de um handler `async`. Suba o servidor, acesse a rota e observe no terminal o que acontece — sem nenhum tratamento de erro escrito por você ainda.
+
+Resultado esperado: o terminal mostra o stack trace do erro e o cliente recebe uma resposta `500` com um HTML padrão de erro, mas o processo do Node continua rodando — o servidor não cai.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -834,7 +896,9 @@ Leia `req.query.categoria` (lembre-se: é somente leitura, não reatribua). Se e
 No Express 5 isso não derruba o servidor: a resposta padrão é um HTML de erro 500. Guarde essa observação — na Aula 08 você substitui isso por um tratador de erros customizado.
 </details>
 
-**5. Front consumindo a nova rota de filtro.** No `unieventos-web`, adicione um `<v-select>` de categoria na Home e faça a requisição incluir `params: { categoria }` quando um filtro estiver selecionado (lembre do terceiro parâmetro do `axios.get`, visto na Aula 06).
+**B5.** Front consumindo a nova rota de filtro. No `unieventos-web`, adicione um `<v-select>` de categoria na Home e faça a requisição incluir `params: { categoria }` quando um filtro estiver selecionado (lembre do terceiro parâmetro do `axios.get`, visto na Aula 06).
+
+Resultado esperado: escolher uma categoria no `<v-select>` refaz a requisição incluindo `?categoria=...` na URL (visível na aba Network), e a lista na tela passa a mostrar só os eventos daquela categoria.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -842,12 +906,77 @@ No Express 5 isso não derruba o servidor: a resposta padrão é um HTML de erro
 `api.get('/eventos', { params: { categoria: valorSelecionado } })` — se `valorSelecionado` for `undefined` ou string vazia, o Axios omite o parâmetro da URL automaticamente.
 </details>
 
-**6. Explorando o Firestore com uma segunda coleção.** Crie, pelo console do Firebase ou por script, uma coleção `organizadores` com pelo menos 2 documentos (`nome`, `email`). Escreva uma função `listarOrganizadores()` que usa `getDocs` para trazer todos e imprime no console. Depois, escreva `buscarOrganizadorPorEmail(email)` usando `query` + `where('email', '==', email)`.
+### Nível C — Desafio em sala
+
+**C1.** Explorando o Firestore com uma segunda coleção. Crie, pelo console do Firebase ou por script, uma coleção `organizadores` com pelo menos 2 documentos (`nome`, `email`). Escreva uma função `listarOrganizadores()` que usa `getDocs` para trazer todos e imprime no console. Depois, escreva `buscarOrganizadorPorEmail(email)` usando `query` + `where('email', '==', email)`.
+
+Resultado esperado: `listarOrganizadores()` imprime no console um array com os 2+ documentos da coleção, cada um com `id` incluso; `buscarOrganizadorPorEmail('ana@exemplo.com')` devolve só o documento correspondente àquele e-mail, e um e-mail inexistente devolve um array vazio.
 
 <details markdown="1">
 <summary>Dica</summary>
 
 `where` sempre entra como argumento de `query(colecao, where(...), ...)` — não é um método encadeado como em outras bibliotecas. Lembre de importar `where` de `'firebase/firestore'`.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ Onde seu segredo mora
+Tags: javascript, devtools, seguranca, investigacao
+
+Abra o DevTools (F12) no seu `unieventos-web` rodando com `npm run dev`, vá na aba **Sources** e procure pelo valor de uma das variáveis `VITE_FIREBASE_*` que você configurou no `.env`. Ela aparece ali, legível, para qualquer pessoa que abrir a mesma aba. Investigue até onde vai essa exposição e explique, com evidência real do seu próprio projeto, por que uma credencial de servidor (a senha do MySQL, por exemplo) nunca poderia estar num arquivo prefixado com `VITE_`.
+
+**Critérios de pronto**
+
+- Print (ou trecho colado) do DevTools mostrando o valor de uma variável `VITE_` visível no código-fonte servido ao navegador.
+- Uma frase explicando por que o prefixo `VITE_` existe (o Vite só expõe ao bundle do navegador as variáveis que começam com ele) e o que aconteceria se você prefixasse `DB_PASSWORD` com `VITE_` por engano.
+- Uma lista com pelo menos duas informações que jamais podem ganhar o prefixo `VITE_` no seu projeto autoral (ou no UniEventos).
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Abra a aba Sources do DevTools e procure pelos arquivos `.js` gerados pelo Vite (ficam sob um caminho como `src/` ou `assets/`).
+2. Procure diretamente por `apiKey` ou pelo nome de uma das suas variáveis de ambiente no código listado.
+3. No Vite, qualquer variável **sem** o prefixo `VITE_` simplesmente não é substituída no build — ela fica `undefined` no navegador. É essa a proteção, e é por isso que ela só funciona se você a respeitar.
+</details>
+
+### ⭐⭐ A rota que existe duas vezes
+Tags: express, rotas, bug, refatoracao
+
+Um colega registrou duas rotas parecidas sem perceber a colisão: `GET /api/eventos/:id` e, mais abaixo no arquivo, `GET /api/eventos/destaque` (pensada para devolver o evento em destaque do momento). Toda chamada para `/api/eventos/destaque` cai no handler de `:id`, porque "destaque" é interpretado como se fosse um id. Corrija o problema e proteja seu projeto autoral do mesmo bug.
+
+**Critérios de pronto**
+
+- `GET /api/eventos/destaque` devolve o evento marcado como destaque (ou uma mensagem clara se nenhum evento tiver esse status), sem passar pelo handler de `:id`.
+- Um comentário no código explica, em português, por que a ordem de registro das rotas no Express importa aqui.
+- No seu projeto autoral, você identifica — ou descarta, com justificativa por escrito — uma rota fixa que corre o mesmo risco de colisão com uma rota de parâmetro dinâmico.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. O Express testa as rotas na ordem em que foram registradas — a primeira que casar "ganha", mesmo que outra rota mais abaixo fosse a intenção.
+2. Rotas fixas (sem `:parametro`) precisam ser registradas antes de rotas com parâmetro dinâmico no mesmo prefixo.
+3. Para simular "evento em destaque", adicione um campo booleano (`destaque: true`) a um dos eventos de teste em memória.
+</details>
+
+### ⭐⭐⭐ Quanto tempo o event loop aguenta
+Tags: node, performance, investigacao, terminal
+
+A seção 2 desta aula prometeu que o Node atende milhares de conexões com uma única thread — desde que o trabalho seja I/O, não cálculo. Prove isso (e o limite disso) na prática: meça quanto uma rota "pesada" de CPU (sem nenhum `await`) atrasa **todas** as outras requisições simultâneas do seu servidor, mesmo as mais simples.
+
+**Critérios de pronto**
+
+- Uma rota `GET /api/pesado` que faz um cálculo síncrono de pelo menos 2 segundos (ex.: um laço somando até alguns bilhões), sem `await` em nada.
+- Uma sequência de chamadas (dois terminais, ou um script) que dispara `/api/pesado` e, quase ao mesmo tempo, `GET /api/eventos`, medindo o tempo de resposta de cada uma com `curl -w '%{time_total}'`.
+- Uma tabela no README comparando o tempo de `/api/eventos` sozinha versus rodando ao mesmo tempo que `/api/pesado`.
+- Um parágrafo explicando, com suas palavras, por que esse atraso acontece mesmo o Node sendo "não bloqueante" — e em que isso difere do que acontece com `await pool.query(...)` ou `await getDocs(...)`.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Um `for` simples somando um contador local até um número grande, sem nenhuma chamada assíncrona no meio, bloqueia a thread principal inteira.
+2. Abra dois terminais: um dispara `/api/pesado`, o outro dispara `/api/eventos` alguns milissegundos depois — repare que a segunda chamada espera a primeira terminar.
+3. `curl -w '%{time_total}\n' -o /dev/null -s <url>` imprime só o tempo total, sem poluir a saída com o corpo da resposta.
+4. Lembre da analogia do garçom (seção 2): um cálculo síncrono é como o garçom parar tudo para cozinhar ele mesmo, em vez de delegar à cozinha e continuar atendendo outras mesas.
 </details>
 
 ## 🐛 Erros comuns e como resolver

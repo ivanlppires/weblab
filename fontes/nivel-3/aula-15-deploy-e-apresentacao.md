@@ -66,6 +66,9 @@ dist/
 > **🔎 Por baixo do capô**
 > O hash no nome do arquivo (`index-BvPPrto3.js`) muda sempre que o conteúdo muda. Isso permite configurar cache agressivo e "para sempre" nesses arquivos no servidor: o navegador só baixa de novo se o hash (e portanto o conteúdo) mudou. O `index.html`, em contrapartida, nunca deve ser cacheado agressivamente — ele é o que aponta para os hashes corretos a cada novo deploy.
 
+> **🔬 Investigue**
+> Abra a aba Network do DevTools em qualquer site grande que você usa no dia a dia (não precisa ser o UniEventos) e clique num arquivo `.js` ou `.css` com um hash estranho no nome. Olhe o cabeçalho de resposta `Cache-Control` — em serviços bem configurados, ele costuma trazer algo como `max-age=31536000, immutable` (um ano). Agora clique no documento principal da página (o HTML) e compare: o `Cache-Control` dele é bem mais curto, ou `no-cache`. Por que faz sentido cachear "para sempre" um arquivo, mas nunca o HTML que aponta para ele?
+
 `dist/` é **tudo** que o servidor de hospedagem precisa: arquivos estáticos, sem Node.js rodando por trás. É por isso que hospedar um front-end Vue construído é barato (ou gratuito) — não é um processo de servidor, é só arquivos.
 
 ### 1.2 Variáveis de ambiente do Vite
@@ -311,6 +314,9 @@ test
 docker build -t unieventos-api .
 docker run -p 3000:3000 --env-file .env unieventos-api
 ```
+
+> **🧠 Você sabia?**
+> Contêineres não são uma invenção da Docker. As primitivas do kernel Linux que tornam a isolação possível — `cgroups` (limitar quanto de CPU e memória um processo pode usar) e `namespaces` (isolar o que um processo enxerga do sistema) — existem desde 2007/2008, quase seis anos antes do lançamento da Docker em 2013. O que a Docker inventou não foi a isolação em si: foi a experiência — empacotar essas primitivas complexas atrás de um `Dockerfile` legível e de dois comandos (`docker build`, `docker run`) que qualquer pessoa consegue usar sem entender kernel Linux por dentro.
 
 ### 3.5 `docker-compose.yml` com API + MySQL
 
@@ -697,6 +703,24 @@ Cada estudante apresenta seu projeto autoral individualmente, em **8 minutos**, 
 
 A ordem de apresentação é definida por sorteio, feito em sala na aula anterior (Aula 14) ou no início desta aula, conforme a quantidade de estudantes matriculados. Com 3 blocos de 50 minutos e 8 minutos por estudante, o tempo permite aproximadamente 15 a 16 apresentações — se a turma for maior, o professor comunica com antecedência um ajuste (ex.: reduzir para 6 minutos ou dividir em dois dias, dentro do que o calendário acadêmico permitir).
 
+## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
+
+Duas decisões de arquitetura tomadas ao longo do semestre ficam evidentes só agora, no momento de publicar de verdade.
+
+**Configuração externa por variáveis de ambiente.** Desde a Aula 13, o `unieventos-api` lê `PORT`, `DB_HOST`, `CORS_ORIGEM_PERMITIDA` etc. de `process.env`, nunca de um valor fixo no código (Seção 3.1). Isso não é só "boa prática" abstrata: é o que permite o **mesmo código-fonte**, sem alterar uma linha, rodar em três ambientes diferentes — seu notebook (`.env` local), o CI (variáveis do GitHub Actions) e a nuvem (secrets da Render) — só trocando o que fica fora do código. O manifesto *The Twelve-Factor App* formalizou esse princípio (fator III, "Config") como um dos doze fatores de aplicações que escalam bem em nuvem; é o mesmo raciocínio por trás de `VITE_API_URL` no front (Seção 1.2).
+
+```js
+// PORT vem de fora — o mesmo código roda em dev, CI e produção sem mudar
+const servidor = app.listen(config.PORT, () => {
+  console.log(`API rodando na porta ${config.PORT}`)
+})
+```
+
+**Adapter — trocar o banco sem tocar no service.** Na Aula 12, MySQL virou Supabase mantendo a mesma interface de repositório (`listar`, `buscarPorId`, `criar`, `atualizar`, `remover`) — o service nunca soube qual banco estava por trás. Hoje, ao decidir onde hospedar o banco de produção (MySQL gerenciado na Render/Railway, ou Supabase), essa escolha de infraestrutura continua isolada na camada de repositório: o `Adapter` já construído é exatamente o que torna essa decisão, tomada agora no deploy, indiferente para o resto da aplicação.
+
+> **📌 Na prova**
+> Configuração externa e Adapter resolvem problemas diferentes, mas se reforçam: uma isola **onde a aplicação roda**, a outra isola **em que banco ela persiste** — juntas, permitem que o mesmo código passe de `localhost` para produção sem reescrever uma linha de lógica de negócio.
+
 ## 💻 Mão na massa — publicando o UniEventos
 
 **Passo 1 — configure as variáveis de ambiente de produção do front:**
@@ -741,7 +765,45 @@ Confira na aba **Actions** do GitHub que o workflow rodou e passou.
 
 ## 🧪 Laboratório
 
-**1. Gere o build de produção do seu projeto autoral e rode `npm run preview`** — confirme que todas as rotas funcionam, incluindo F5 em rota interna.
+### Nível A — Fixação
+
+**A1.** Verdadeiro ou falso, com justificativa de uma linha: "trocar `VITE_API_URL` no painel do serviço de hospedagem, depois que o front já está publicado, atualiza a URL usada pelo bundle sem precisar gerar um novo build."
+
+Resultado esperado: falso. `import.meta.env.VITE_*` é substituído por um valor literal **em tempo de build** — trocar a variável depois, sem rebuildar, não tem efeito nenhum no JavaScript já gerado.
+
+**A2.** Complete a linha que falta para que o rewrite de SPA funcione na Vercel (F5 numa rota interna não pode dar 404):
+
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "______________" }
+  ]
+}
+```
+
+Resultado esperado: `"/index.html"`.
+
+**A3.** Em uma frase: por que `app.listen(config.PORT, ...)` precisa ler `PORT` de `process.env` em vez de usar `3000` fixo no código?
+
+Resultado esperado: porque a maioria dos serviços de nuvem injeta a própria porta via variável de ambiente — escutar numa porta fixa quebra o deploy nesses ambientes.
+
+**A4.** Ache o erro nas linhas abaixo (a API sobe normalmente no `docker compose up`, mas todo endpoint que usa banco falha com erro de conexão):
+
+```yaml
+environment:
+  DB_HOST: localhost
+  DB_PORT: 3306
+```
+
+Resultado esperado: `DB_HOST` deveria ser o nome do serviço no `docker-compose.yml` (`mysql`), não `localhost` — dentro da rede criada pelo Compose, cada serviço enxerga os outros pelo nome do serviço, não por `localhost`.
+
+**A5.** Preveja a saída: o workflow de CI tem `on.push.branches: ['**']` e o job `deploy` com `if: github.ref == 'refs/heads/main' && github.event_name == 'push'`. Você faz `git push` numa branch `feature/relatorio`. O job `deploy` roda?
+
+Resultado esperado: não. `lint-e-testes` roda (o push bateu em alguma branch, e o padrão `'**'` cobre qualquer uma), mas `deploy` não roda, porque a condição `if` exige que a branch seja `main`.
+
+### Nível B — Aplicação
+
+**B1.** Gere o build de produção do seu projeto autoral e rode `npm run preview` — confirme que todas as rotas funcionam, incluindo F5 em rota interna.
 
 Resultado esperado: nenhum erro no console, navegação idêntica ao ambiente de desenvolvimento.
 
@@ -751,7 +813,7 @@ Resultado esperado: nenhum erro no console, navegação idêntica ao ambiente de
 Se uma rota der 404 até no `preview` local, o problema é de configuração de rota no Vue Router, não de hospedagem — resolva isso antes de publicar.
 </details>
 
-**2. Publique o front-end** em um dos serviços da Seção 2, com as variáveis `VITE_*` corretas.
+**B2.** Publique o front-end em um dos serviços da Seção 2, com as variáveis `VITE_*` corretas.
 
 Resultado esperado: URL pública funcionando, aplicação carrega sem tela em branco.
 
@@ -761,7 +823,7 @@ Resultado esperado: URL pública funcionando, aplicação carrega sem tela em br
 Se a tela ficar em branco sem erro óbvio, abra o Console do DevTools primeiro — normalmente aponta uma variável de ambiente `undefined`.
 </details>
 
-**3. Publique o back-end** em um dos serviços da Seção 3, com `/health` respondendo publicamente.
+**B3.** Publique o back-end em um dos serviços da Seção 3, com `/health` respondendo publicamente.
 
 Resultado esperado: `curl https://sua-api.onrender.com/health` retorna `{"status":"ok",...}`.
 
@@ -771,7 +833,7 @@ Resultado esperado: `curl https://sua-api.onrender.com/health` retorna `{"status
 Rode as migrations manualmente pelo shell do serviço antes de testar qualquer rota que dependa de tabela do banco.
 </details>
 
-**4. Configure CORS restritivo em produção**, apontando exatamente para a URL do front publicado.
+**B4.** Configure CORS restritivo em produção, apontando exatamente para a URL do front publicado.
 
 Resultado esperado: requisições do front publicado funcionam; uma requisição feita a partir de uma origem diferente é bloqueada.
 
@@ -781,14 +843,102 @@ Resultado esperado: requisições do front publicado funcionam; uma requisição
 Teste abrindo o Console do navegador em uma aba com origem diferente (ex.: `http://localhost:5500`) e tentando um `fetch` contra sua API publicada — deve falhar por CORS.
 </details>
 
-**5. Crie o workflow de CI** no seu repositório de back-end, rodando lint e testes a cada push.
+### Nível C — Desafio em sala
 
-Resultado esperado: aba Actions do GitHub mostra o workflow executando e passando em verde.
+**C1.** Crie o workflow de CI/CD completo no seu repositório de back-end: um job `lint-e-testes` que roda em qualquer push, e um job `deploy` que só roda depois do primeiro passar, restrito à branch `main`, disparando o deploy de verdade (deploy hook do seu serviço de hospedagem).
+
+Resultado esperado: um push numa branch de feature só dispara `lint-e-testes`; um push (ou merge) em `main` dispara os dois jobs, e a aba **Actions** do GitHub mostra ambos passando em verde, nessa ordem.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-Se você não tiver `npm run lint` configurado, o `--if-present` do comando na Seção 5 evita que o workflow falhe por esse motivo — mas vale configurar ESLint se ainda não tiver.
+Se você não tiver `npm run lint` configurado, o `--if-present` do comando na Seção 5 evita que o workflow falhe por esse motivo — mas vale configurar ESLint se ainda não tiver. Para o `deploy hook`, gere a URL no painel do seu serviço de hospedagem e guarde como *secret* do repositório — nunca em texto puro no workflow.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ Quanto custa acordar o servidor
+Tags: deploy, devtools, investigacao, performance
+
+Planos gratuitos de hospedagem "dormem" o processo depois de um tempo sem tráfego (Seção 3.2) — mas quanto tempo, exatamente, uma requisição demora para acordar um serviço adormecido, comparado com uma requisição normal? Meça e documente, em vez de só repetir o que a Seção 3.2 avisa.
+
+**Critérios de pronto**
+
+- Duas medições com `curl -w '%{time_total}\n' -o /dev/null -s https://sua-api.onrender.com/health`: uma logo depois de um período sem tráfego (cold start) e outra imediatamente em seguida (processo já acordado).
+- Uma tabela de duas linhas no README compara os dois tempos.
+- Uma frase explica por que `/health` é a rota certa para esse teste (não depende de banco nem de autenticação — Seção 3.1).
+- Uma sugestão registrada (não precisa implementar) de como reduzir esse impacto para quem for apresentar o projeto ao vivo (ex.: "acordar" o serviço minutos antes da apresentação).
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `-w '%{time_total}\n'` imprime só o tempo total da requisição, em segundos; `-o /dev/null` descarta o corpo da resposta, que não importa aqui.
+2. Espere alguns minutos sem fazer nenhuma requisição ao serviço antes da primeira medição, para garantir que ele realmente "dormiu".
+3. Compare também o que aparece na aba Network do DevTools ao abrir o front publicado logo depois do cold start — a primeira chamada à API "trava" visivelmente mais que as seguintes.
+</details>
+
+### ⭐⭐ O F5 que só quebra em produção
+Tags: deploy, spa, bug, investigacao
+
+Um colega jura que testou tudo: `npm run preview` local funciona perfeitamente, F5 em qualquer rota interna funciona. Mas depois de publicado, o mesmo F5 em `/eventos/3` devolve uma página de erro genérica do provedor de hospedagem, `404 Not Found`. "Funciona na minha máquina" de novo. Investigue a diferença entre o ambiente local (`vite preview`) e o provedor de hospedagem escolhido.
+
+**Critérios de pronto**
+
+- Um comentário identifica exatamente qual arquivo de configuração está ausente ou mal escrito no repositório publicado (`vercel.json`, `_redirects` ou `firebase.json`, conforme o serviço).
+- Depois de corrigido, um F5 em pelo menos duas rotas internas diferentes, na aplicação publicada, devolve a página certa, sem 404.
+- Uma frase explica por que `vite preview` **nunca** reproduz esse bug sozinho — ele já simula o rewrite de SPA por padrão, então o problema só aparece quando o arquivo de configuração do provedor real está ausente.
+- Um teste com `curl -I` na URL publicada de uma rota interna confirma o status `200` (não `404`) depois da correção.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Confira se o arquivo de rewrite (`vercel.json`, `_redirects` ou o trecho de `firebase.json`) está **versionado no Git** e não só criado localmente e esquecido no `.gitignore`.
+2. Para o Netlify/`_redirects`, lembre que o arquivo precisa estar dentro de `public/` para o Vite copiá-lo para `dist/` no build — fora dali, ele nunca chega à hospedagem.
+3. `curl -I https://seu-front.vercel.app/eventos/3` mostra só os cabeçalhos e o status — mais rápido que abrir o navegador para conferir o resultado repetidas vezes.
+</details>
+
+### ⭐⭐⭐ Um deploy que se testa sozinho
+Tags: ci-cd, deploy, testes, terminal
+
+Hoje, se um deploy quebrar (uma variável de ambiente errada, uma migration esquecida), você só descobre quando alguém tenta usar a aplicação e encontra um erro. Implemente um **smoke test pós-deploy**: um passo automático no workflow de CI/CD que, depois de publicar, confirma que a aplicação está realmente funcionando — e falha o workflow (avisando você) se não estiver.
+
+**Critérios de pronto**
+
+- Um script `scripts/smoke-test.sh` (ou `.js`) que roda depois do job `deploy`: chama `/health` da API publicada e confirma `200`; chama um endpoint de leitura pública (ex.: `GET /api/eventos`) e confirma que a resposta é uma lista válida; tenta uma escrita sem token e confirma que a resposta é `401` (nunca `500`).
+- Se qualquer uma dessas três checagens falhar, o script termina com código de saída diferente de zero, e o job do GitHub Actions aparece em vermelho.
+- O script está incluído como o último passo do job `deploy` no `.github/workflows/ci.yml`.
+- Um teste proposital: aponte o script para uma URL errada (ou pare o serviço) e confirme que o workflow realmente falha — não é suficiente que o script "pareça correto" sem nunca ter sido visto falhando.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Um script simples com `curl -f` (a flag `-f` faz o `curl` retornar código de erro se o status HTTP não for de sucesso) já cobre boa parte da checagem, sem precisar de biblioteca extra.
+2. Para o teste de escrita sem token, `curl -s -o /dev/null -w '%{http_code}'` imprime só o código de status, fácil de comparar num `if` do shell.
+3. Espere alguns segundos depois do deploy hook antes de rodar o smoke test — o serviço pode levar um instante para religar o processo com o novo código.
+4. Rode o script manualmente contra sua API já publicada antes de colocá-lo no workflow — mais fácil depurar localmente do que lendo logs do GitHub Actions.
+</details>
+
+### 🔥 Boss — Seu projeto autoral, no ar e à prova de F5
+Tags: deploy, ci-cd, projeto, testes
+
+Chegamos ao fim das três unidades. Este é o desafio que fecha a disciplina: seu projeto autoral publicado, de ponta a ponta, com todas as camadas construídas no semestre funcionando juntas em produção — e não só "funcionando", mas resistindo aos testes que costumam derrubar um projeto de estudante na frente do avaliador.
+
+**Critérios de pronto**
+
+- Front-end e back-end publicados com URL pública, sem depender de `localhost` em lugar nenhum — nem em texto do README, nem em variável de ambiente esquecida.
+- CRUD completo de pelo menos 2 entidades relacionadas, autenticação protegendo as rotas de escrita, e um papel diferenciado (ex.: admin) funcionando de verdade em produção — não só localmente.
+- `/api-docs` acessível publicamente, com todos os endpoints documentados e o botão "Authorize" funcionando com um token real, obtido do seu Firebase de produção.
+- Um script `scripts/smoke-test.sh` (do desafio ⭐⭐⭐, ou um novo) que roda depois do deploy, incluído como último passo do workflow de CI/CD.
+- F5 em pelo menos três rotas internas diferentes, na aplicação publicada, não produz `404` em nenhuma delas.
+- Um parágrafo no README relaciona, para cada uma das três unidades da disciplina, um padrão de projeto (da tabela consolidada da Seção 6) que sobrevive intacto na versão publicada — com o nome do arquivo e a linha onde ele aparece.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Comece pelo smoke test — ele é o que prova, de fora para dentro, que "está no ar" significa mais do que a página inicial carregar.
+2. Para testar F5 em produção sem abrir o navegador manualmente três vezes, um script com `curl -I` em cada rota (a resposta, graças ao rewrite de SPA, deve vir com `200`, nunca `404`) automatiza a checagem.
+3. O parágrafo de padrões não precisa ser longo — uma linha por unidade já cumpre o critério, desde que aponte um trecho de código real, não só o nome do padrão.
+4. Se o smoke test falhar depois de um deploy automático, registre no README como um ADR curto (Aula 14): o que quebrou e por quê — é exatamente esse tipo de decisão que um avaliador (ou você mesmo, em três meses) vai querer entender.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -847,7 +997,7 @@ Ao final desta aula, seu projeto deve ter:
 | Deploy funcionando com URL pública | 2,0 | Front e back publicados, acessíveis externamente, sem depender de `localhost` |
 | README e qualidade geral do código | 1,0 | README completo conforme estrutura da Aula 14; arquitetura em camadas aplicada; ao menos alguns testes automatizados presentes |
 
-**Formato de entrega:** via **SIGAA**, até **16/12/2026, 23h59**, contendo:
+**Formato de entrega:** via **SIGAA**, até o prazo publicado no plano de curso e no SIGAA, contendo:
 
 - Link do repositório do front-end.
 - Link do repositório do back-end (ou anotação de que o back é 100% Supabase, com link do projeto Supabase se aplicável).
@@ -857,7 +1007,7 @@ Ao final desta aula, seu projeto deve ter:
 > **⚠️ Atenção**
 > A entrega é considerada incompleta se qualquer um dos quatro links acima estiver ausente ou não funcionar no momento da correção. Teste os links em uma aba anônima do navegador antes de enviar, simulando o que o avaliador vai ver.
 
-**Política de atraso:** entregas após 16/12/2026, 23h59 têm desconto de 1,0 ponto (sobre a nota final da Avaliação 3) por dia corrido de atraso, até o limite de 3 dias — após esse prazo, a avaliação recebe nota zero, exceto em casos de justificativa formal e documentada junto à coordenação do curso, conforme o regimento da UNEMAT.
+**Política de atraso:** entregas após o prazo têm desconto de 1,0 ponto (sobre a nota final da Avaliação 3) por dia corrido de atraso, até o limite de 3 dias — após esse prazo, a avaliação recebe nota zero, exceto em casos de justificativa formal e documentada junto à coordenação do curso, conforme o regimento da UNEMAT.
 
 **Política de plágio e uso de IA:** é permitido e esperado o uso de ferramentas de IA (como assistentes de código) como apoio ao desenvolvimento — é exatamente essa prática que a indústria de software usa hoje. O que não é aceito: (1) entregar código que você não é capaz de explicar linha a linha na apresentação; (2) copiar o projeto de outro colega, com ou sem alterações cosméticas; (3) apresentar como próprio um projeto gerado quase integralmente por IA sem compreensão do que foi produzido. A apresentação de 8 minutos (Seção 8) é, entre outras coisas, o mecanismo de verificação de autoria: perguntas técnicas sobre decisões do próprio código fazem parte da avaliação.
 

@@ -51,6 +51,9 @@ O ecossistema Vue que usaremos no semestre:
 
 Vamos usar a versão **3.5.41** do Vue, instalada via **Vite 8.2.1** com o plugin **@vitejs/plugin-vue 6.0.8** — as mesmas versões testadas e listadas no início do curso.
 
+> **🧠 Você sabia?**
+> O Vue foi criado por Evan You em 2014, um ex-funcionário do Google que trabalhava com AngularJS e queria algo mais leve para prototipar interfaces rapidamente. A ideia deu tão certo que hoje o Vue é mantido por uma organização independente (a Vue.js), financiada por patrocinadores e por uma comunidade global — sem estar amarrado a nenhuma big tech, diferente do React (Meta) ou do Angular (Google). É por isso que a documentação oficial é, historicamente, uma das mais elogiadas do ecossistema JavaScript: escrever documentação clara sempre foi parte da estratégia de adoção do projeto.
+
 ### 1.1 Options API vs. Composition API
 
 O Vue 3 oferece duas formas de escrever a lógica de um componente. Elas produzem o mesmo resultado; mudam a organização do código.
@@ -670,6 +673,9 @@ Se cada `<input type="checkbox">` tiver estado próprio (marcado por quem intera
 > **⚠️ Atenção**
 > Use sempre um identificador **estável e único do dado** (`evento.id`) como `:key`, nunca o índice do `v-for`. O índice muda quando a lista é reordenada, filtrada ou tem itens removidos — e o Vue usa a `key` exatamente para saber "isso é o mesmo item de antes ou é outro?".
 
+> **🔬 Investigue**
+> Rode o exemplo do bug acima (com `:key="indice"`) no navegador. Abra a aba **Elements** do DevTools, marque o checkbox do primeiro item e clique em "Remover o primeiro". Observe qual `<input>` do DOM continua marcado — o do texto que você via na tela, ou o que ficou na mesma posição? Agora troque `:key="indice"` de volta para `:key="evento.id"`, repita o teste e compare o `<div>` que o Vue recria (ou não) na aba Elements a cada clique.
+
 ### 5.7 `v-text` e `v-html`
 
 ```vue
@@ -681,7 +687,7 @@ const descricaoComHtml = ref('<strong>Evento</strong> sobre Vue.js')
 </script>
 
 <template>
-  <!-- v-text é equivalente a {{ }}, mas substitui TODO o conteúdo do elemento -->
+  <!-- v-text é equivalente a {{ }}, mas substitui o conteúdo inteiro do elemento -->
   <p v-text="descricaoSimples"></p>
 
   <!-- interpolação normal: sempre trata o conteúdo como TEXTO puro (escapa HTML) -->
@@ -1028,7 +1034,74 @@ function vagasRestantes(evento) {
 
 ## 🧪 Laboratório
 
-**1. Contador de inscritos totais** — adicione, logo abaixo do `<h1>`, um parágrafo mostrando quantas pessoas estão inscritas somando todos os eventos, usando `reduce` (Aula 01).
+### Nível A — Fixação
+
+**A1.** No trecho abaixo, o que `console.log(contadorVagas)` (sem `.value`) imprime dentro do `<script setup>`? E o que aparece na tela, dentro do `<template>`?
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const contadorVagas = ref(40)
+console.log(contadorVagas)
+</script>
+
+<template>
+  <p>Vagas: {{ contadorVagas }}</p>
+</template>
+```
+
+Resultado esperado: no script, `console.log(contadorVagas)` imprime o objeto `ref` inteiro (algo como `RefImpl { value: 40, ... }`), não o número puro — porque fora do `<template>` o Vue não desembrulha automaticamente. Na tela aparece `Vagas: 40`, porque o compilador do template desembrulha refs de nível superior sozinho.
+
+**A2.** Complete a linha que falta para que o aviso "Últimas vagas!" apareça só quando restarem de 1 a 5 vagas (nem lotado, nem mais de 5):
+
+```vue
+<template>
+  <p v-if="vagasRestantes === 0">Evento lotado</p>
+  <!-- complete aqui -->
+  <p v-else>Vagas disponíveis</p>
+</template>
+```
+
+Resultado esperado: `<p v-else-if="vagasRestantes <= 5">Últimas vagas!</p>`.
+
+**A3.** Em uma frase: por que `v-show` é mais indicado que `v-if` para um painel de filtros avançados que o usuário abre e fecha várias vezes na mesma visita à página?
+
+Resultado esperado: porque `v-show` só alterna `display: none` via CSS (barato de alternar repetidamente), enquanto `v-if` recria o elemento inteiro no DOM a cada troca — mais caro quando a alternância é frequente.
+
+**A4.** Ache o erro nas linhas abaixo — depois de chamar `recarregar()`, o `<template>` não mostra a nova lista de eventos:
+
+```js
+import { reactive } from 'vue'
+
+const eventos = reactive([])
+
+async function recarregar() {
+  eventos = [{ id: 9, titulo: 'Novo evento' }]
+}
+```
+
+Resultado esperado: `reactive()` torna o **conteúdo** do array reativo, mas reatribuir a **variável inteira** (`eventos = [...]`) quebra a conexão — o template continua olhando para o array antigo. A correção troca `reactive([])` por `ref([])` e usa `eventos.value = [...]`, ou mantém `reactive` e faz `eventos.splice(0, eventos.length, ...novaLista)` para trocar o conteúdo sem trocar a referência.
+
+**A5.** Preveja o que aparece na tela para cada linha abaixo, usando o que a Seção 5.7 explica sobre `v-html`:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+const texto = ref('<em>promoção</em> hoje')
+</script>
+
+<template>
+  <p>{{ texto }}</p>
+  <p v-html="texto"></p>
+</template>
+```
+
+Resultado esperado: a primeira linha mostra o texto literal `<em>promoção</em> hoje` (a interpolação `{{ }}` sempre escapa HTML); a segunda mostra a palavra "promoção" em itálico, porque `v-html` interpreta as tags como HTML de verdade.
+
+### Nível B — Aplicação
+
+**B1.** Contador de inscritos totais. Adicione, logo abaixo do `<h1>`, um parágrafo mostrando quantas pessoas estão inscritas somando todos os eventos, usando `reduce` (Aula 01).
 
 Resultado esperado: um número que aumenta a cada clique em "Inscrever-se".
 
@@ -1038,7 +1111,7 @@ Resultado esperado: um número que aumenta a cada clique em "Inscrever-se".
 `eventos.value.reduce((total, evento) => total + evento.inscritos, 0)` dentro de uma função chamada no template, ou direto em uma expressão de interpolação.
 </details>
 
-**2. Botão de limpar filtros** — adicione um botão que zera `busca` e `categoriaFiltro` de uma vez.
+**B2.** Botão de limpar filtros. Adicione um botão que zera `busca` e `categoriaFiltro` de uma vez.
 
 Resultado esperado: clicar no botão limpa o campo de texto e volta o select para "Todas as categorias".
 
@@ -1053,7 +1126,7 @@ function limparFiltros() {
 ```
 </details>
 
-**3. Destacar evento quase lotado com `v-show`** — mostre um aviso `"Últimas vagas!"` com `v-show` (não `v-if`) quando `vagasRestantes(evento) <= 5 && vagasRestantes(evento) > 0`.
+**B3.** Destacar evento quase lotado com `v-show`. Mostre um aviso `"Últimas vagas!"` com `v-show` (não `v-if`) quando `vagasRestantes(evento) <= 5 && vagasRestantes(evento) > 0`.
 
 Resultado esperado: o aviso aparece/some conforme inscrições, sem recriar o elemento no DOM (confira no DevTools, aba Elements).
 
@@ -1063,7 +1136,7 @@ Resultado esperado: o aviso aparece/some conforme inscrições, sem recriar o el
 `<span v-show="vagasRestantes(evento) <= 5 && vagasRestantes(evento) > 0">Últimas vagas!</span>`
 </details>
 
-**4. Modificador `.once` em uma mensagem de boas-vindas** — adicione um botão "Ver dica" que mostra um alerta apenas na primeira vez que for clicado, usando `@click.once`.
+**B4.** Modificador `.once` em uma mensagem de boas-vindas. Adicione um botão "Ver dica" que mostra um alerta apenas na primeira vez que for clicado, usando `@click.once`.
 
 Resultado esperado: cliques seguintes não fazem nada.
 
@@ -1073,14 +1146,82 @@ Resultado esperado: cliques seguintes não fazem nada.
 `<button @click.once="alert('Dica: use os filtros para encontrar eventos mais rápido!')">Ver dica</button>`
 </details>
 
-**5. Corrigir uma `:key` proposital** — troque temporariamente `:key="evento.id"` por `:key="indiceDoLoop"` (usando a forma `v-for="(evento, indiceDoLoop) in ..."`), adicione um `<input type="checkbox">` dentro de cada card, marque alguns, filtre por categoria e observe o comportamento estranho dos checkboxes. Depois desfaça a mudança.
+### Nível C — Desafio em sala
 
-Resultado esperado: você reproduz em sala o bug descrito na Seção 5.6 antes de corrigi-lo.
+**C1.** Corrigir uma `:key` proposital. Troque temporariamente `:key="evento.id"` por `:key="indiceDoLoop"` (usando a forma `v-for="(evento, indiceDoLoop) in ..."`), adicione um `<input type="checkbox">` dentro de cada card, marque alguns, filtre por categoria e observe o comportamento estranho dos checkboxes. Depois desfaça a mudança e prove, na aba Elements do DevTools, que o elemento correto agora é reaproveitado pelo `id`, não pela posição.
+
+Resultado esperado: você reproduz em sala o bug descrito na Seção 5.6, documenta em uma frase por que ele acontece, e confirma que voltar para `:key="evento.id"` resolve — inclusive filtrando a lista com um checkbox marcado.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-O bug aparece quando a lista filtrada muda de tamanho/ordem — os checkboxes "grudam" na posição, não no evento.
+O bug aparece quando a lista filtrada muda de tamanho/ordem — os checkboxes "grudam" na posição do DOM, não no evento. Na aba Elements, observe qual `<div>` o Vue recria (ou não) a cada filtro, com cada uma das duas versões da `:key`.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ Vagas restantes: NaN
+
+Tags: vue, bug, investigacao
+
+O formulário de criação de evento do UniEventos usa `<input v-model.number="vagas" type="text">` para o campo de vagas. Um colega testou digitando "quarenta" em vez de `40` — e o card passou a mostrar **"NaN vaga(s) restante(s)"** em vez de recusar a entrada. Descubra por que isso acontece e feche a brecha.
+
+**Critérios de pronto**
+
+- Reproduzido: digitar um texto não numérico no campo de vagas e confirmar, no Console, que o valor vira `NaN`.
+- O formulário passa a rejeitar (ou impedir) uma entrada não numérica **antes** de criar o evento, com uma mensagem clara para quem está digitando.
+- Um comentário de 2 linhas no código explica por que `v-model.number` sozinho, em um `<input type="text">`, permite isso.
+- Testado que uma entrada numérica válida (ex.: `40`) continua criando o evento normalmente.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `v-model.number` tenta converter o texto digitado para `Number` — e `Number('quarenta')` não é um erro, é `NaN`, que passa despercebido por muitas condições (`if (vagas)` não pega `NaN` como você esperaria).
+2. Compare `<input type="number">` com `<input type="text">` quanto ao que o próprio navegador já bloqueia de digitar.
+3. `Number.isNaN(valor)` é o jeito certo de checar — nunca `valor === NaN` (essa comparação é sempre `false`, mesmo quando `valor` é `NaN`).
+</details>
+
+### ⭐⭐ O UniEventos funciona sem mouse?
+
+Tags: acessibilidade, vue, devtools
+
+Guarde o mouse. Navegue pela tela de eventos construída hoje usando só `Tab`, `Shift+Tab`, `Enter` e as setas. Encontre pelo menos três barreiras de acessibilidade por teclado — foco que desaparece visualmente, campo sem rótulo associado, ordem de tabulação que não segue a leitura da tela — e corrija cada uma.
+
+**Critérios de pronto**
+
+- Uma lista com pelo menos três barreiras encontradas, cada uma citando o elemento afetado (ex.: "select de categoria — sem `<label for>` associado").
+- Todo campo de formulário (`input`, `select`) tem um `<label>` associado, via `for`/`id` ou envolvendo o campo.
+- Um indicador visual de foco continua visível em todos os elementos interativos — se algum CSS tinha `outline: none`, ele ganhou um substituto (`:focus-visible` com contorno ou sombra) em vez de simplesmente remover o indicador.
+- A ordem de tabulação (`Tab` repetido a partir do topo) segue a ordem visual e lógica da página, sem saltos estranhos.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. No navegador, clique em qualquer lugar vazio da página e pressione `Tab` repetidamente a partir do topo — anote a ordem em que o foco se move.
+2. Um `<label>` sem `for` correspondente ao `id` do campo (ou sem envolver o `<input>`) não é associado a ele — clicar no texto do rótulo não foca o campo, e leitores de tela não anunciam o rótulo certo.
+3. A aba **Lighthouse** do DevTools tem uma categoria de acessibilidade que já aponta boa parte desses problemas automaticamente — rode antes de procurar na mão, para conferir depois se a correção resolveu.
+</details>
+
+### ⭐⭐⭐ A primeira tela navegável do seu projeto autoral
+
+Tags: vue, projeto, javascript
+
+Aplique tudo desta aula — `ref`/`reactive`, `v-bind`/`v-on`/`v-model`, `v-if`/`v-show`, `v-for` com `:key` estável e um hook de ciclo de vida real — na entidade principal do seu projeto autoral, com a mesma profundidade da Seção "Mão na massa" de hoje.
+
+**Critérios de pronto**
+
+- `App.vue` do seu projeto lista pelo menos 5 itens reais do seu domínio, com um campo de busca (`v-model`) e pelo menos um filtro (`v-model` em `<select>`).
+- `v-for` usa `:key` estável (o `id` do dado), nunca o índice do laço.
+- Um hook `onMounted` dispara algo real (ex.: um `setInterval` que atualiza um "atualizado há N segundos", ou um log de auditoria) e `onUnmounted` limpa esse recurso — comprovado no Console, sem erros nem timers acumulando.
+- Pelo menos uma ação de interação (`@click`) muda um estado reativo (reservar, favoritar, adicionar — o verbo do seu domínio) refletido imediatamente na tela.
+- Prints em sequência (ou um vídeo curto) mostrando: app carregado, busca funcionando, filtro funcionando, a ação de interação, e o Console com os logs do ciclo de vida.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Reaproveite a estrutura do `App.vue` da Seção "Mão na massa" — troque `eventos` pelas entidades do seu domínio, campo por campo.
+2. Para provar a limpeza do `onUnmounted`, o hot module replacement do Vite já desmonta/remonta o componente a cada edição salva — abra o Console, edite um espaço em branco no arquivo e observe os logs de `onMounted`/`onUnmounted` se alternando.
+3. Não esqueça a `:key` com o `id` real do seu dado, nunca o índice do `v-for` — é o erro mais comum desta aula, e o item C1 do Laboratório mostra exatamente o que dá errado.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1125,4 +1266,4 @@ No repositório do seu projeto autoral:
 
 ---
 
-**Próxima aula (03, 26/08/2026):** aprofundamos `v-for`, resolvemos o antipadrão `v-for` + `v-if` juntos, introduzimos `computed()` (com cache de verdade) e usamos `onMounted()` para carregar dados de uma fonte assíncrona, com estados de carregando/erro/vazio.
+**Próxima aula (03):** aprofundamos `v-for`, resolvemos o antipadrão `v-for` + `v-if` juntos, introduzimos `computed()` (com cache de verdade) e usamos `onMounted()` para carregar dados de uma fonte assíncrona, com estados de carregando/erro/vazio.

@@ -206,6 +206,9 @@ const eventosService = criarServicoDeEventos({ eventosRepository })
 > **💡 Dica**
 > Injeção de dependência não exige framework nenhum em JavaScript — não precisamos de `@Injectable()` nem de container de DI. Uma função que recebe parâmetros já é injeção de dependência. O nome bonito não deve intimidar: é passar objetos como argumento, em vez de importar dentro do arquivo.
 
+> **🧠 Você sabia?**
+> O nome "injeção de dependência" foi cunhado por Martin Fowler em 2004, no artigo *Inversion of Control Containers and the Dependency Injection pattern*, justamente para separar a técnica (receber dependências de fora) dos containers pesados que a implementavam em Java na época. Vinte anos depois, o exemplo mais simples do artigo continua igual ao que você acabou de escrever: uma função que recebe o que precisa por parâmetro.
+
 ## 3. Configuração centralizada com zod
 
 Espalhar `process.env.ALGUMA_COISA` pelo código inteiro é frágil: se a variável não existir, o erro só aparece no meio de uma requisição, em produção, na pior hora. A solução é validar **todo** o ambiente uma única vez, na inicialização, e falhar rápido se algo estiver faltando.
@@ -335,7 +338,7 @@ async function inscrever({ eventoId, usuarioUid }) {
   if (jaInscrito) {
     throw new ErroDeConflito('Você já está inscrito neste evento')
   }
-  // ...
+  return inscricoesRepository.criar({ eventoId, usuarioUid })
 }
 
 async function cancelarInscricao({ inscricaoId, usuarioUidSolicitante }) {
@@ -343,7 +346,7 @@ async function cancelarInscricao({ inscricaoId, usuarioUidSolicitante }) {
   if (inscricao.usuario_uid !== usuarioUidSolicitante) {
     throw new ErroDeAutorizacao('Só é possível cancelar a própria inscrição')
   }
-  // ...
+  return inscricoesRepository.remover(inscricaoId)
 }
 ```
 
@@ -492,7 +495,7 @@ export function criarApp({ eventosRepository } = {}) {
   app.use(express.json({ limit: '10kb' }))
   app.use(express.urlencoded({ extended: true, limit: '10kb' }))
 
-  // ... rotas registradas depois daqui (Seção "Mão na massa")
+  // As rotas de negócio e o tratador de erros entram aqui — Passo 13 do "Mão na massa"
 
   return app
 }
@@ -500,6 +503,9 @@ export function criarApp({ eventosRepository } = {}) {
 
 > **⚠️ Atenção**
 > `express.json({ limit: '10kb' })` rejeita automaticamente corpos maiores com `413 Payload Too Large`. Ajuste o limite ao seu domínio — 10kb é generoso para um formulário de evento, mas seria pouco se você aceitasse upload de imagem em base64 no corpo (nesse caso, prefira Storage, como no Supabase da Aula 12).
+
+> **🔬 Investigue**
+> Com a API rodando, execute `curl -i http://localhost:3000/health` e conte os cabeçalhos da resposta. Comente a linha `app.use(cabecalhosDeSeguranca)`, reinicie e rode de novo: quantos sumiram? Procure `X-Powered-By: Express` (o helmet o remove — é uma pista de graça para quem ataca), `X-Content-Type-Options: nosniff` e `Content-Security-Policy`. Depois descomente e teste o limitador: `for i in $(seq 1 101); do curl -s -o /dev/null -w "%{http_code} " http://localhost:3000/health; done` — o último número deve ser `429`, e um `curl -i` na sequência mostra `RateLimit-Remaining: 0`.
 
 ### 5.1 Checklist OWASP Top 10 aplicado a esta disciplina
 
@@ -1258,7 +1264,30 @@ Confira que os 7 testes das Seções 6.3 e 6.4 passam.
 
 ## 🧪 Laboratório
 
-**1. Refatore seu projeto autoral para a arquitetura em camadas** — crie as pastas `config/`, `db/`, `errors/`, `middlewares/`, `repositories/`, `services/`, `controllers/`, `routes/`, mova o código existente para os lugares certos.
+### Nível A — Fixação
+
+**A1.** Preveja a resposta (status e corpo) de `POST /api/eventos` com o corpo `{ "titulo": "Ab", "categoria": "show", "vagas": "10" }`, passando pelo `validar(eventoSchema)` do Passo 5. Quais campos aparecem em `detalhes`? Por que `vagas` **não** aparece, mesmo tendo chegado como string?
+
+**A2.** Complete a lacuna e diga o status HTTP e o nível de log (`warn` ou `error`) que o `tratadorDeErros` vai produzir:
+
+```js
+const jaInscrito = await inscricoesRepository.existeInscricao(eventoId, usuarioUid)
+if (jaInscrito) {
+  throw new ________('Você já está inscrito neste evento')
+}
+```
+
+**A3.** Verdadeiro ou falso, com justificativa: "Em produção (`NODE_ENV=production`), o `tratadorDeErros` nunca devolve `erro.message` ao cliente."
+
+**A4.** Em duas linhas: por que `test/eventos.rota.test.js` sobe a aplicação Express inteira e ainda assim não precisa de MySQL rodando? Aponte o parâmetro que torna isso possível.
+
+**A5.** Classifique cada trecho na camada certa (`routes`, `controllers`, `services`, `repositories`, `middlewares`) e justifique em uma linha: (a) `if (inscritos > 0) throw new ErroDeConflito(...)`; (b) `res.status(204).end()`; (c) `LIMIT ? OFFSET ?`; (d) `req.body = resultado.data`; (e) `router.put('/:id', verificarToken, ...)`.
+
+**A6.** Você rodou `npm run migrar` e as três migrations foram aplicadas. Depois editou `0002_criar_tabela_inscricoes.sql` para acrescentar uma coluna e rodou `npm run migrar` de novo. O que o script imprime, e o que acontece com a coluna? Qual é o jeito certo de fazer essa mudança?
+
+### Nível B — Aplicação
+
+**B1.** Refatore seu projeto autoral para a arquitetura em camadas — crie as pastas `config/`, `db/`, `errors/`, `middlewares/`, `repositories/`, `services/`, `controllers/`, `routes/`, mova o código existente para os lugares certos.
 
 Resultado esperado: `npm run dev` continua funcionando, e nenhuma rota importa o pool do banco diretamente.
 
@@ -1268,7 +1297,7 @@ Resultado esperado: `npm run dev` continua funcionando, e nenhuma rota importa o
 Comece de dentro para fora: primeiro extraia o repositório (funções que tocam o banco), depois o service (regra de negócio), depois o controller (o que sobrar do handler antigo).
 </details>
 
-**2. Centralize a configuração com zod** — crie `src/config/index.js` validando pelo menos 4 variáveis do seu `.env`.
+**B2.** Centralize a configuração com zod — crie `src/config/index.js` validando pelo menos 4 variáveis do seu `.env`.
 
 Resultado esperado: remover uma variável obrigatória do `.env` faz o processo falhar ao iniciar, com mensagem clara.
 
@@ -1278,7 +1307,7 @@ Resultado esperado: remover uma variável obrigatória do `.env` faz o processo 
 Use `safeParse`, não `parse` — assim você controla a mensagem de erro antes de chamar `process.exit(1)`.
 </details>
 
-**3. Implemente a hierarquia de erros e o tratador central** no seu projeto, substituindo `throw new Error(...)` genérico por `ErroDeValidacao`, `ErroNaoEncontrado` etc.
+**B3.** Implemente a hierarquia de erros e o tratador central no seu projeto, substituindo `throw new Error(...)` genérico por `ErroDeValidacao`, `ErroNaoEncontrado` etc.
 
 Resultado esperado: uma requisição a um recurso inexistente devolve `404` com `{ mensagem: "..." }`, sem stack trace em produção.
 
@@ -1288,7 +1317,7 @@ Resultado esperado: uma requisição a um recurso inexistente devolve `404` com 
 Simule produção localmente com `NODE_ENV=production npm start` e confira que a resposta de erro não tem o campo `stack`.
 </details>
 
-**4. Escreva 3 testes automatizados** — pelo menos um de rota (supertest) e um de service (unitário, repositório falso).
+**B4.** Escreva 3 testes automatizados — pelo menos um de rota (supertest) e um de service (unitário, repositório falso).
 
 Resultado esperado: `npm test` mostra os 3 testes passando.
 
@@ -1298,7 +1327,7 @@ Resultado esperado: `npm test` mostra os 3 testes passando.
 Copie a estrutura dos testes das Seções 6.3/6.4 e troque `eventos` pela entidade do seu domínio.
 </details>
 
-**5. Adicione `helmet`, `express-rate-limit` e CORS restritivo** ao seu `app.js`.
+**B5.** Adicione `helmet`, `express-rate-limit` e CORS restritivo ao seu `app.js`.
 
 Resultado esperado: uma requisição de origem diferente da configurada em `CORS_ORIGEM_PERMITIDA` é bloqueada pelo navegador (verifique no console do DevTools).
 
@@ -1306,6 +1335,129 @@ Resultado esperado: uma requisição de origem diferente da configurada em `CORS
 <summary>Dica</summary>
 
 Teste abrindo o front em uma porta e fazendo uma requisição para a API configurada com outra origem em `CORS_ORIGEM_PERMITIDA` — o erro de CORS aparece no console do navegador, não no Postman (Postman ignora CORS).
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Service de inscrições com injeção de dependência e testes sem banco. Escreva `criarServicoDeInscricoes({ inscricoesRepository, eventosRepository })` com quatro regras: evento inexistente (`ErroNaoEncontrado`), evento lotado (`ErroDeConflito`), já inscrito (`ErroDeConflito`) e cancelamento por quem não é dono (`ErroDeAutorizacao`). Cubra cada regra com um teste unitário usando repositórios falsos e escreva um teste de rota para `POST /api/inscricoes` — que hoje é impossível sem Firebase, porque `verificarToken` é importado direto dentro de `criarRotasDeInscricoes`. Resolva isso sem tocar no Firebase.
+
+Resultado esperado: `npm test` mostra 5 testes novos passando (4 unitários + 1 de rota) com MySQL e Firebase desligados; o teste de rota confirma `201` com token "válido" e `401` sem token.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+A mesma técnica do repositório vale para o middleware: `criarRotasDeInscricoes({ inscricoesController, verificarToken = verificarTokenReal })`. No teste, injete `(req, res, next) => { req.usuario = { uid: 'uid-teste' }; next() }` para o caso `201`, e um que responde `res.status(401).json({ mensagem: 'Token ausente' })` para o outro. `criarApp` precisa repassar esse parâmetro até as rotas.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ A ordem que quebra tudo
+Tags: express, middleware, bug, testes
+
+Um colega reorganizou o `app.js` "para ficar mais legível" e agora os testes de rota falham de um jeito curioso: `POST /api/eventos` válido devolve `400` dizendo que **todos** os campos são obrigatórios, e `GET /api/eventos/999` devolve uma página HTML em vez de `{ "mensagem": "..." }`. Este é o arquivo:
+
+```js
+// src/app.js — versão com os bugs plantados
+export function criarApp({ eventosRepository = obterRepositorioDeEventos() } = {}) {
+  const app = express()
+
+  app.use(cabecalhosDeSeguranca)
+  app.use(corsConfigurado)
+  app.use(tratadorDeErros)
+
+  const eventosService = criarServicoDeEventos({ eventosRepository })
+  const eventosController = criarControllerDeEventos({ eventosService })
+
+  app.use('/api/eventos', criarRotasDeEventos({ eventosController }))
+
+  app.use(limitadorDeTaxa)
+  app.use(express.json({ limit: '10kb' }))
+
+  return app
+}
+```
+
+Rode `npm test` antes de mexer em qualquer coisa: os testes já contam a história inteira.
+
+**Critérios de pronto**
+
+- Os 7 testes da aula voltam a passar sem alterar nenhum teste.
+- Um comentário acima de cada `app.use` explica **por que** ele está naquela posição (o que ele precisa que já tenha acontecido, e quem depende dele).
+- Você descobre e anota o valor de `req.body` que chegava ao `validar()` na versão bugada — e por que o Express 5 se comporta assim.
+- Uma frase liga o problema ao padrão Chain of Responsibility da seção "Padrão de projeto em uso".
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. No Express 5, `req.body` é `undefined` enquanto nenhum parser rodou — e `safeParse(undefined)` reclama de tudo.
+2. Um middleware de erro só captura erros de quem foi registrado **antes** dele na cadeia.
+3. O `limitadorDeTaxa` depois das rotas nunca é alcançado por uma requisição que já foi respondida — confira com `curl -i` que o cabeçalho `RateLimit-Limit` sumiu.
+</details>
+
+### ⭐⭐ Rate limit que não pune a turma inteira
+Tags: express, middleware, seguranca, testes
+
+No laboratório da faculdade todo mundo sai para a internet pelo mesmo IP. Com `limit: 100` por IP a cada 15 minutos, bastam quatro colegas testando a mesma API publicada para o quinto receber `429` sem ter feito nada. Meça o problema e depois redesenhe o limitador para punir quem abusa — não quem compartilha a rede.
+
+**Critérios de pronto**
+
+- Um script `scripts/estressar.sh` faz 101 requisições a `GET /health` em sequência e mostra, com `curl -i`, os cabeçalhos `RateLimit-Limit`/`RateLimit-Remaining` caindo até o `429`.
+- Leituras públicas (`GET`) têm um limite folgado; escritas (`POST`/`PUT`/`DELETE`) têm um limite apertado e separado.
+- Em rotas autenticadas, a chave do limitador é o `uid` do usuário, não o IP — dois usuários no mesmo IP têm cotas independentes.
+- Um teste com `supertest` prova que a 21ª escrita seguida do mesmo usuário recebe `429` com `{ mensagem }` em JSON, e o limitador é injetável (o resto da suíte não pode passar a falhar por causa dele).
+- O README explica o que muda quando a API está atrás de um proxy (Render, Nginx) e o que `app.set('trust proxy', ...)` tem a ver com isso.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `express-rate-limit` aceita várias instâncias com configurações diferentes; aplique cada uma com `router.use` ou por método, não só com `app.use` global.
+2. A opção `keyGenerator: (req) => req.usuario?.uid ?? req.ip` resolve a chave — mas só funciona se o limitador rodar **depois** de `verificarToken`.
+3. Para os testes, deixe `criarApp` aceitar `{ limitadores }` e injete instâncias com `limit` baixo (e `windowMs` curto) só no teste que verifica o `429`.
+4. Atrás de um proxy, `req.ip` é o IP do proxy até você configurar `trust proxy`; a documentação do `express-rate-limit` tem uma seção inteira sobre isso.
+</details>
+
+### ⭐⭐ Supabase como repositório — do lado certo da chave
+Tags: supabase, padroes-de-projeto, node, refatoracao
+
+Na Aula 12 a `service_role` era proibida porque o código rodava no navegador. Aqui é diferente: o back-end é um ambiente de servidor, e a chave pode ficar no `.env`. Implemente `criarRepositorioDeEventosSupabase()` com a **mesma interface** dos repositórios MySQL e memória, e escolha entre os três por configuração — sem que service, controller ou testes percebam a troca. Depois responda: se o RLS não se aplica à `service_role`, quem passa a garantir "só o dono edita"?
+
+**Critérios de pronto**
+
+- `config/index.js` valida `DB_PROVIDER` (`mysql` ou `supabase`) e, quando for `supabase`, exige `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`.
+- `repositories/index.js` (Strategy) devolve a implementação certa; os 7 testes da aula continuam passando sem alteração.
+- `listar` com filtros (`categoria`, `busca`, paginação) funciona nos dois provedores e devolve objetos com o **mesmo formato** (`dataHora`, `imagemUrl` — o mapeamento de nomes de coluna é responsabilidade do repositório).
+- Um ADR curto registra a decisão: regra de negócio no service (Express) versus policies no banco (Supabase), e por que a chave `service_role` no servidor não repete o erro da Aula 12.
+- `.env.example` atualizado, e a chave nunca aparece em log nem em resposta de erro.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `createClient(url, serviceRoleKey, { auth: { persistSession: false } })` — no servidor não há sessão de usuário para persistir.
+2. A busca de texto vira `.ilike('titulo', '%' + termo + '%')`; a paginação, `.range(inicio, fim)`; o total vem com `{ count: 'exact' }`.
+3. Trate `{ data, error }` dentro do repositório e lance os erros de domínio da seção 4.1 — o service não pode saber que existe Supabase por trás.
+4. Os testes já injetam o repositório em memória, então não dependem de `DB_PROVIDER`; se algum passou a falhar, algo vazou de `config` para o service.
+</details>
+
+### ⭐⭐⭐ Cobertura que aponta o que falta
+Tags: testes, express, seguranca, refatoracao
+
+Sete testes dão confiança — mas confiança em quê, exatamente? Meça: instale `@vitest/coverage-v8`, rode `npx vitest run --coverage` e olhe o relatório linha a linha. Você vai descobrir que `remover`, `atualizar`, o `413` do limite de payload, o `403` e o `409` nunca foram exercitados. Leve `services/` e `controllers/` a pelo menos 90% de cobertura — e faça isso sem transformar a suíte em algo que precisa de MySQL, Firebase ou de um relógio de 15 minutos.
+
+**Critérios de pronto**
+
+- `npm run test:cobertura` gera o relatório e falha se `services/` ou `controllers/` ficarem abaixo de 90% de linhas.
+- Testes novos cobrem: `PUT`/`DELETE` felizes e com `404`; `409` de inscrição duplicada; `403` de cancelamento alheio; `413` para corpo maior que `10kb`; `400` para JSON malformado.
+- Rotas autenticadas são testadas com um `verificarToken` injetado (Nível C do laboratório), nunca com token real do Firebase.
+- A suíte inteira roda em menos de 5 segundos e não depende de variável de ambiente além de `NODE_ENV=test`.
+- Um trecho no README explica, em três frases, por que 90% não significa "sem bugs" — com um exemplo real de linha coberta que ainda poderia estar errada.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `coverage.thresholds` no `vitest.config.js` (procure "coverage thresholds" na documentação do Vitest) faz o comando falhar abaixo da meta.
+2. Para o `413`, `request(app).post('/api/eventos').set('Content-Type', 'application/json').send('x'.repeat(11 * 1024))` basta — o Express responde antes de chegar ao controller.
+3. JSON malformado é `.send('{ "titulo": ')` com o mesmo `Content-Type`; observe qual status e qual `mensagem` o seu `tratadorDeErros` devolve hoje (o erro do parser não é "operacional") e decida se é o certo.
+4. O `limitadorDeTaxa` em memória compartilha estado entre testes do mesmo processo — injete um limitador com `limit` alto (ou desative em `NODE_ENV=test`) para que a cobertura não passe a falhar por `429`.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1323,7 +1475,7 @@ Teste abrindo o front em uma porta e fazendo uma requisição para a API configu
 
 1. No projeto autoral, garanta que **os 5 endpoints principais** (listar, buscar por id, criar, atualizar, remover) passam pela arquitetura em camadas completa.
 2. Escreva testes cobrindo **pelo menos 40% dos métodos do service principal** (liste no README quais foram testados e por quê).
-3. Aplique o checklist de segurança da Seção 5: `helmet`, rate limit, CORS restritivo, limite de payload — cole no README um trecho de log ou print mostrando o `X-RateLimit-Limit` no cabeçalho de resposta.
+3. Aplique o checklist de segurança da Seção 5: `helmet`, rate limit, CORS restritivo, limite de payload — cole no README um trecho de log ou print mostrando o `RateLimit-Limit` no cabeçalho de resposta.
 4. Rode `npm test` e cole a saída completa no README, em uma seção "Testes".
 
 **Critério de pronto:** `npm test` passa localmente, README atualizado com a seção de testes e o checklist de segurança marcado.
@@ -1352,4 +1504,4 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 
 ---
 
-**Próxima aula (14, 09/12/2026):** documentamos a API inteira com OpenAPI 3 e Swagger UI — cada endpoint que construímos até aqui ganha um contrato formal, testável direto do navegador. Traga o `unieventos-api` (ou seu projeto autoral) já na arquitetura em camadas desta aula.
+**Próxima aula (14):** documentamos a API inteira com OpenAPI 3 e Swagger UI — cada endpoint que construímos até aqui ganha um contrato formal, testável direto do navegador. Traga o `unieventos-api` (ou seu projeto autoral) já na arquitetura em camadas desta aula.

@@ -25,7 +25,7 @@ Ao final desta aula você será capaz de:
 - [ ] Projeto autoral com API própria (`<seu-projeto>-api`) criada na atividade assíncrona da Aula 07.
 
 > **⚠️ Atenção**
-> Esta é a aula da **Avaliação 2**. Leia a seção "📝 Avaliação 2 — instruções de entrega" logo no início do período de aula, para planejar seu tempo — o prazo de entrega é hoje, 07/10/2026, às 23h59.
+> Esta é a aula da **Avaliação 2**. Leia a seção "📝 Avaliação 2 — instruções de entrega" logo no início do período de aula, para planejar seu tempo — o prazo de entrega é hoje, às 23h59.
 
 ## 🗺️ Roteiro
 
@@ -80,6 +80,9 @@ POST /api/eventos/3/inscricoes    (inscrever alguém no evento 3)
 
 > **📌 Na prova**
 > Se a pergunta pedir para classificar um verbo HTTP como idempotente ou não, lembre: `GET`, `PUT`, `DELETE` são idempotentes; `POST` não é. `PATCH` depende de como é implementado, mas normalmente também não é.
+
+> **🧠 Você sabia?**
+> O termo REST foi cunhado em 2000, na tese de doutorado de Roy Fielding — um dos autores da própria especificação do protocolo HTTP. Ele não descrevia uma tecnologia nova, mas um estilo arquitetural que já explicava por que a web funcionava tão bem em escala: cada recurso com endereço próprio, operações padronizadas (os verbos HTTP) e respostas que já dizem por si mesmas o que aconteceu (os status codes). Praticamente toda API que você consome hoje — de rede social, de banco, de pagamento — segue essas convenções, ainda que quase nenhuma implemente a especificação de Fielding à risca.
 
 ### Status codes por operação
 
@@ -485,6 +488,9 @@ requisição
 
 Se `middlewareNaoEncontrado` estivesse depois de `tratadorDeErros`, ele nunca seria alcançado no caminho de erro — e se estivesse antes das rotas, capturaria toda requisição como "não encontrada", mesmo as que tinham rota válida. A ordem — rotas, depois 404, depois tratador de erros — não é estilo, é a única ordem que faz os três cumprirem seu papel corretamente.
 
+> **🔬 Investigue**
+> Adicione um `console.log('middleware X rodou')` no início de cada middleware registrado em `servidor.js` (`cors`, `express.json`, `logger`, `medidorDeTempo`) e reinicie o servidor. Faça uma única requisição `GET /api/v1/eventos` pelo navegador e observe, no terminal, a ordem exata em que as mensagens aparecem. Depois, mova `app.use(logger)` para depois de `app.use('/api/v1/eventos', eventosRoutes)` e repita a requisição — o que muda na ordem impressa, e por quê?
+
 ### Escrevendo os middlewares do zero
 
 ```js
@@ -666,7 +672,47 @@ import { schemaEvento, schemaEventoParcial } from '../schemas/evento.schema.js'
 
 const router = Router()
 
-// ...rotas GET permanecem como antes...
+// GET /api/v1/eventos — lista com filtro, ordenação e paginação (sem alteração desde a seção 2)
+router.get('/', (req, res) => {
+  let resultado = [...eventos]
+
+  // filtro por categoria
+  if (req.query.categoria) {
+    resultado = resultado.filter((e) => e.categoria === req.query.categoria)
+  }
+
+  // ordenação
+  const ordenarPor = req.query.ordenarPor || 'id'
+  const direcao = req.query.direcao === 'desc' ? -1 : 1
+  resultado.sort((a, b) => {
+    if (a[ordenarPor] < b[ordenarPor]) return -1 * direcao
+    if (a[ordenarPor] > b[ordenarPor]) return 1 * direcao
+    return 0
+  })
+
+  // paginação
+  const pagina = Number(req.query.pagina) || 1
+  const limite = Number(req.query.limite) || 10
+  const inicio = (pagina - 1) * limite
+  const pagina_de_resultados = resultado.slice(inicio, inicio + limite)
+
+  res.json({
+    dados: pagina_de_resultados,
+    meta: { pagina, limite, total: resultado.length },
+  })
+})
+
+// GET /api/v1/eventos/:id — busca um evento específico (sem alteração desde a seção 2)
+router.get('/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const evento = eventos.find((e) => e.id === id)
+
+  if (!evento) {
+    throw erroNaoEncontrado('Evento não encontrado')
+  }
+
+  res.json({ dados: evento })
+})
 
 router.post('/', validar(schemaEvento), (req, res) => {
   // req.body já chega validado e com os tipos corretos (vagas já é number, por exemplo)
@@ -770,7 +816,54 @@ GET {{baseUrl}}/qualquer-coisa
 
 ## 🧪 Laboratório
 
-**1. Endpoint de contagem por categoria.** Crie `GET /api/v1/eventos/estatisticas/por-categoria` que devolve `{ "dados": { "palestra": 2, "minicurso": 1, "workshop": 1 } }`, contando quantos eventos existem em cada categoria.
+### Nível A — Fixação
+
+**A1.** Preveja, sem rodar, usando só a tabela de status codes da seção 1 e o CRUD com Zod desta aula, qual status cada chamada abaixo devolve:
+
+```bash
+curl -i -X DELETE http://localhost:3000/api/v1/eventos/999
+curl -i -X POST http://localhost:3000/api/v1/eventos -H "Content-Type: application/json" -d '{"titulo":"AB","categoria":"show"}'
+curl -i -X PATCH http://localhost:3000/api/v1/eventos/1 -H "Content-Type: application/json" -d '{"vagas": 40}'
+```
+
+Resultado esperado: (a) `404` — o evento `999` não existe; (b) `422` — `"titulo":"AB"` tem menos de 3 caracteres e `"categoria":"show"` não está no `enum`, ambos rejeitados pelo Zod; (c) `200` com o evento atualizado — `vagas: 40` é um inteiro positivo válido no schema parcial.
+
+**A2.** Complete a linha que falta para a rota de estatísticas (Laboratório B1, a seguir) não ser capturada pelo handler de `:id`:
+
+```js
+const router = Router()
+
+// linha que falta aqui
+router.get('/:id', eventosController.buscarPorId)
+```
+
+Resultado esperado: `router.get('/estatisticas/por-categoria', eventosController.estatisticasPorCategoria)` — registrada **antes** de `router.get('/:id', ...)`, senão o Express interpreta `estatisticas` como o valor do parâmetro `:id`.
+
+**A3.** Em uma frase: por que um middleware de erro precisa ter exatamente quatro parâmetros — `(err, req, res, next)` — mesmo quando `next` não é usado dentro dele?
+
+Resultado esperado: porque o Express identifica um middleware de erro pela contagem de parâmetros da função (a aridade); com menos de quatro, ele é tratado como middleware normal e nunca é chamado no caminho de erro.
+
+**A4.** Ache o erro nas linhas abaixo (a ordem de registro quebra o tratamento de erros) e diga a correção:
+
+```js
+app.use(tratadorDeErros)
+app.use(cors())
+app.use(express.json())
+app.use('/api/v1/eventos', eventosRoutes)
+app.use(middlewareNaoEncontrado)
+```
+
+Resultado esperado: `tratadorDeErros` está registrado **antes** das rotas — ele nunca vai capturar erro nenhum. A ordem correta é `cors()`, `express.json()`, as rotas, `middlewareNaoEncontrado` e, só por último, `tratadorDeErros`.
+
+**A5.** Verdadeiro ou falso, com justificativa de uma linha: "`PATCH` é sempre idempotente, assim como `PUT` e `DELETE`."
+
+Resultado esperado: falso — `PATCH` costuma **não** ser idempotente (ex.: um corpo que decrementa `vagas` em 1 produz um resultado diferente a cada chamada); `PUT` é idempotente porque substitui o recurso inteiro pelo mesmo valor em todas as chamadas.
+
+### Nível B — Aplicação
+
+**B1.** Endpoint de contagem por categoria. Crie `GET /api/v1/eventos/estatisticas/por-categoria` que devolve `{ "dados": { "palestra": 2, "minicurso": 1, "workshop": 1 } }`, contando quantos eventos existem em cada categoria.
+
+Resultado esperado: a contagem bate exatamente com os três eventos de exemplo desta aula, e a rota responde corretamente mesmo com `estatisticas` no caminho, sem cair no handler de `:id`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -778,7 +871,9 @@ GET {{baseUrl}}/qualquer-coisa
 Cuidado com a ordem: registre essa rota **antes** de `router.get('/:id', ...)`, senão o Express interpreta `estatisticas` como um valor de `:id`.
 </details>
 
-**2. Middleware de log condicional.** Modifique o `logger` para só imprimir requisições cujo método seja `POST`, `PUT`, `PATCH` ou `DELETE` (as que alteram dados) — omita `GET`.
+**B2.** Middleware de log condicional. Modifique o `logger` para só imprimir requisições cujo método seja `POST`, `PUT`, `PATCH` ou `DELETE` (as que alteram dados) — omita `GET`.
+
+Resultado esperado: no terminal, uma requisição `GET /api/v1/eventos` não gera nenhuma linha de log; uma `POST /api/v1/eventos` gera uma linha, no mesmo formato de antes.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -786,7 +881,9 @@ Cuidado com a ordem: registre essa rota **antes** de `router.get('/:id', ...)`, 
 Um `if (req.method !== 'GET') { ... }` dentro do middleware, antes de chamar `next()`.
 </details>
 
-**3. Erro de validação com múltiplos campos.** Envie, pelo `requests.http`, um `POST /api/v1/eventos` com `titulo` vazio **e** `categoria` inválida ao mesmo tempo. Confirme que a resposta `422` lista as duas mensagens de erro no array `detalhes`.
+**B3.** Erro de validação com múltiplos campos. Envie, pelo `requests.http`, um `POST /api/v1/eventos` com `titulo` vazio **e** `categoria` inválida ao mesmo tempo. Confirme que a resposta `422` lista as duas mensagens de erro no array `detalhes`.
+
+Resultado esperado: a resposta `422` traz `detalhes` com pelo menos duas mensagens, uma sobre o `titulo` e outra sobre a `categoria`, na mesma requisição.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -794,7 +891,9 @@ Um `if (req.method !== 'GET') { ... }` dentro do middleware, antes de chamar `ne
 O Zod, por padrão, coleta **todos** os problemas antes de falhar — não para no primeiro. `resultado.error.issues` é um array com um item por campo problemático.
 </details>
 
-**4. Rate limit em ação.** Reduza temporariamente o `max` do `express-rate-limit` para `5` e a `windowMs` para `60000` (1 minuto). Dispare mais de 5 requisições seguidas com `curl` num loop e observe a resposta `429 Too Many Requests`. Depois volte os valores originais.
+**B4.** Rate limit em ação. Reduza temporariamente o `max` do `express-rate-limit` para `5` e a `windowMs` para `60000` (1 minuto). Dispare mais de 5 requisições seguidas com `curl` num loop e observe a resposta `429 Too Many Requests`. Depois volte os valores originais.
+
+Resultado esperado: as primeiras 5 chamadas respondem `200`; a partir da sexta, a resposta muda para `429`, até a janela de 1 minuto expirar.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -804,7 +903,9 @@ for i in 1 2 3 4 5 6 7; do curl -s -o /dev/null -w "%{http_code}\n" http://local
 ```
 </details>
 
-**5. PATCH que tenta mudar o id.** Envie `PATCH /api/v1/eventos/1` com corpo `{ "id": 999 }`. Verifique o que acontece com o registro em memória. Corrija o handler para ignorar qualquer `id` enviado no corpo (o id da URL é sempre a fonte da verdade).
+**B5.** PATCH que tenta mudar o id. Envie `PATCH /api/v1/eventos/1` com corpo `{ "id": 999 }`. Verifique o que acontece com o registro em memória. Corrija o handler para ignorar qualquer `id` enviado no corpo (o id da URL é sempre a fonte da verdade).
+
+Resultado esperado: antes da correção, o registro em memória passa a ter `id: 999` (inconsistente com a URL usada para acessá-lo); depois da correção, o id da URL sempre prevalece, mesmo enviando outro id no corpo.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -812,12 +913,77 @@ for i in 1 2 3 4 5 6 7; do curl -s -o /dev/null -w "%{http_code}\n" http://local
 Depois do merge (`{ ...eventos[indice], ...req.body }`), force `eventos[indice].id = id` (o id da URL, já convertido para número) por cima, sobrescrevendo qualquer valor vindo do corpo.
 </details>
 
-**6. Middleware de erro específico para JSON malformado.** Envie, via `curl`, um `POST /api/v1/eventos` com corpo JSON propositalmente quebrado (ex.: `{"titulo": "teste",}` com vírgula sobrando). Observe qual status volta. `express.json()` lança um erro de parsing antes mesmo de sua rota rodar — confirme que esse erro também é capturado pelo seu `tratadorDeErros`, e ajuste a mensagem para ficar amigável ("corpo da requisição não é um JSON válido") quando o erro vier do parser.
+### Nível C — Desafio em sala
+
+**C1.** Middleware de erro específico para JSON malformado. Envie, via `curl`, um `POST /api/v1/eventos` com corpo JSON propositalmente quebrado (ex.: `{"titulo": "teste",}` com vírgula sobrando). Observe qual status volta. `express.json()` lança um erro de parsing antes mesmo de sua rota rodar — confirme que esse erro também é capturado pelo seu `tratadorDeErros`, e ajuste a mensagem para ficar amigável ("corpo da requisição não é um JSON válido") quando o erro vier do parser.
+
+Resultado esperado: sem a correção, o erro de parsing cai no `tratadorDeErros` genérico e devolve `500` com "Erro interno do servidor"; depois de adicionar a verificação de `err.type === 'entity.parse.failed'`, a mesma requisição passa a devolver `400` com `{ "erro": { "mensagem": "JSON inválido no corpo da requisição", "codigo": "JSON_INVALIDO" } }`.
 
 <details markdown="1">
 <summary>Dica</summary>
 
 O erro lançado pelo `express.json()` tem `err.type === 'entity.parse.failed'`. No `tratadorDeErros`, adicione uma verificação extra antes da checagem de `ErroHttp`: `if (err.type === 'entity.parse.failed') { return res.status(400).json({ erro: { mensagem: 'JSON inválido no corpo da requisição', codigo: 'JSON_INVALIDO' } }) }`.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ O 404 que na verdade é um 200
+Tags: express, http, bug, investigacao
+
+Teste no seu `unieventos-api`: `GET /api/v1/eventos/abc` (um id que não é número). O que a rota devolve? Compare com o que a tabela de status codes desta aula promete para "recurso inexistente". Investigue por que `Number('abc')` não gera o erro que você esperava, e corrija a rota para tratar esse caso de forma explícita.
+
+**Critérios de pronto**
+
+- `GET /api/v1/eventos/abc` responde `400` (requisição malformada) em vez de tratar `"abc"` como um id válido.
+- Um comentário no código explica o que `Number('abc')` retorna e por que isso passava despercebido antes.
+- O mesmo tratamento é aplicado a toda rota que recebe `:id` como parâmetro numérico.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `Number('abc')` não lança erro — ele devolve `NaN`, um valor "não é um número" que ainda passa por comparações sem quebrar o programa.
+2. `Number.isNaN(id)` detecta o caso; combine com um `throw` de erro `400` antes de continuar a lógica normal do handler.
+3. Considere um pequeno middleware de validação de parâmetro reutilizável, para não repetir a checagem em cada rota com `:id`.
+</details>
+
+### ⭐⭐ Um middleware, duas versões
+Tags: middleware, performance, refatoracao, node
+
+O `medidorDeTempo` desta aula usa `process.hrtime.bigint()` e o evento `'finish'` do objeto `res`. Implemente uma segunda versão que, além de logar o tempo no console, guarda em um array em memória as últimas 100 durações de resposta e exponha isso em `GET /api/v1/metricas` (tempo médio, mínimo e máximo). Meça se registrar essas métricas atrasa perceptivelmente as respostas.
+
+**Critérios de pronto**
+
+- `GET /api/v1/metricas` devolve `{ "dados": { "media": N, "minimo": N, "maximo": N, "amostras": N } }`, calculado a partir das últimas 100 requisições reais.
+- O array de amostras nunca cresce além de 100 itens (as mais antigas são descartadas).
+- Uma medição no README compara o tempo de resposta de `GET /api/v1/eventos` com e sem o middleware de métricas ativado (usando `curl -w '%{time_total}'`).
+- Uma frase conclui se a diferença medida é ou não perceptível para este projeto.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Um array declarado fora de qualquer função guarda o estado entre requisições — cuidado, isso não escalaria para múltiplas instâncias do servidor (mesma limitação do array em memória das Aulas 07 e 08).
+2. `array.push(duracao); if (array.length > 100) array.shift()` mantém o tamanho fixo.
+3. Para média, mínimo e máximo, um `reduce` simples resolve; não precisa de biblioteca externa.
+</details>
+
+### ⭐⭐⭐ Envelope de erro, ponta a ponta
+Tags: api, express, refatoracao, projeto
+
+O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto ao usuário final — alguém no front precisa transformá-lo em algo visível. Implemente, no front-end do seu projeto autoral, um interceptor de resposta do Axios que trate todos os códigos de erro conhecidos (`VALIDACAO`, `NAO_ENCONTRADO`, `ROTA_NAO_ENCONTRADA`, `RATE_LIMIT`, `ERRO_INTERNO`, `JSON_INVALIDO`) com uma mensagem amigável específica, e prove com prints que cada código produz uma notificação diferente na tela.
+
+**Critérios de pronto**
+
+- Uma função `traduzirErro(codigo)` no front-end mapeia cada código conhecido para uma frase em português voltada ao usuário final (não a mensagem técnica crua).
+- Um snackbar ou notificação visível aparece para pelo menos 4 códigos de erro diferentes, provocados de propósito (evento inexistente, campo inválido, rota errada, limite de requisições).
+- Um código não mapeado (ex.: um código que você inventa de propósito, só para o teste) cai num texto padrão ("Algo deu errado, tente novamente"), sem quebrar a interface.
+- Prints (ou um vídeo curto) mostrando as quatro notificações diferentes na tela.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. O interceptor de resposta do Axios (Aula 06) recebe o erro em `error.response.data.erro.codigo` — é esse valor que entra no mapeamento de tradução.
+2. Um objeto `{ VALIDACAO: '...', NAO_ENCONTRADO: '...' }` com um valor padrão (`objeto[codigo] ?? 'Algo deu errado...'`) cobre o caso "código desconhecido" sem precisar de uma cadeia longa de `if/else`.
+3. Para provocar o `RATE_LIMIT` de propósito, reduza temporariamente o `max` do rate limiter (Laboratório B4) e dispare várias requisições seguidas pelo front.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -866,7 +1032,7 @@ Total: **10,0 pontos**.
 
 **Formato de entrega.** Link do repositório Git (GitHub, GitLab ou similar), **público ou com acesso liberado para o professor**, enviado via **SIGAA**, no campo de entrega da Avaliação 2. O `README.md` do repositório deve conter: nome do projeto autoral, instruções de instalação (`npm install`, `npm run dev`) e uma breve descrição do domínio escolhido.
 
-**Prazo.** Até **07/10/2026, 23h59**, horário de Brasília. O SIGAA registra o horário da submissão — entregas após o prazo entram na política de atraso abaixo.
+**Prazo.** Até **o prazo do cronograma da trilha, 23h59** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), horário de Brasília. O SIGAA registra o horário da submissão — entregas após o prazo entram na política de atraso abaixo.
 
 **Política de atraso.** Cada 24h de atraso desconta 1,0 ponto da nota final da avaliação, até o limite de 5 dias corridos; após esse prazo, a atividade recebe nota zero, salvo justificativa formal (atestado médico ou similar) protocolada junto à coordenação.
 

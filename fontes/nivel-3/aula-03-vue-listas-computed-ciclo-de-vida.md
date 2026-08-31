@@ -258,6 +258,9 @@ const totalDeVagas = computed(() => {
 > **🔎 Por baixo do capô**
 > Um `computed` sabe exatamente quais variáveis reativas ele lê durante sua execução (aqui, `eventos`) — o mesmo mecanismo de rastreamento de dependências do padrão Observer que vimos na Aula 02. Enquanto nenhuma dessas dependências mudar, o Vue devolve o valor guardado em cache, sem executar a função de novo. Isso é diferente de um método, que roda de novo a cada chamada, sempre, sem cache algum.
 
+> **🔬 Investigue**
+> Rode o segundo exemplo (com `computed`) no navegador e abra o Console. Some mais um `<p>{{ totalDeVagas }}</p>` ao template, salve, e conte quantas vezes a mensagem "calculando total de vagas (computed)..." aparece no Console ao carregar a página — deveria continuar sendo **uma vez só**, mesmo com três usos no template. Agora clique em algo que altere `eventos` (ou rode `eventos.value.push({ id: 3, titulo: 'Teste', vagas: 10, inscritos: 0 })` direto no Console) e veja o log aparecer de novo — só quando a dependência realmente muda.
+
 ### 3.2 `computed` com getter e setter
 
 Por padrão, um `computed` é somente leitura. Mas é possível criar um que também aceita escrita, definindo `get` e `set`:
@@ -588,6 +591,9 @@ const valorFormatado = new Intl.NumberFormat('pt-BR', {
 
 > **💡 Dica**
 > Em vez de instanciar `Intl.DateTimeFormat`/`Intl.NumberFormat` de novo a cada uso, crie uma função utilitária reaproveitável (`src/utils/formatadores.js`) — é o que faremos na seção de "Mão na massa" a seguir.
+
+> **🧠 Você sabia?**
+> Antes do `Intl` ser amplamente suportado pelos navegadores (ele existe desde 2012, mas só ganhou adoção maciça depois), praticamente todo projeto JavaScript trazia uma biblioteca externa — a mais famosa era o **Moment.js** — só para formatar datas e números. O `Moment.js` foi oficialmente descontinuado em 2020, e a própria documentação recomenda migrar para as APIs nativas (`Intl`, `Temporal` no futuro) exatamente pelo que você acabou de fazer: nenhuma dependência, nenhum KB extra no bundle, formatação em português correta por padrão.
 
 ### 6.2 `:class` — objeto e array
 
@@ -994,7 +1000,81 @@ function limparFiltros() {
 
 ## 🧪 Laboratório
 
-**1. Refatorar método em computed** — pegue esta função e transforme-a em `computed`:
+### Nível A — Fixação
+
+**A1.** Preveja o que aparece no Console assim que a página carrega — **antes** de qualquer interação — usando o trecho abaixo da Seção 4.1:
+
+```js
+const categoriaFiltro = ref('')
+watch(
+  categoriaFiltro,
+  (valor) => {
+    console.log('categoria selecionada:', valor || '(nenhuma)')
+  },
+  { immediate: true },
+)
+```
+
+Resultado esperado: `categoria selecionada: (nenhuma)` — porque `{ immediate: true }` executa o callback uma vez assim que o `watch` é criado, mesmo sem `categoriaFiltro` ainda ter mudado.
+
+**A2.** Complete a linha que falta para resolver o antipadrão da Seção 2 — o `<template>` abaixo já foi corrigido para iterar sobre `eventosComVaga`, mas falta declarar essa `computed`:
+
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+
+const eventos = ref([
+  { id: 1, titulo: 'Semana da Computação', vagas: 40, inscritos: 40 },
+  { id: 2, titulo: 'Oficina de Vue.js', vagas: 25, inscritos: 10 },
+])
+
+// complete aqui: computed que filtra os eventos com vaga disponível
+</script>
+
+<template>
+  <li v-for="evento in eventosComVaga" :key="evento.id">{{ evento.titulo }}</li>
+</template>
+```
+
+Resultado esperado: `const eventosComVaga = computed(() => eventos.value.filter((evento) => evento.inscritos < evento.vagas))`.
+
+**A3.** Em uma frase: por que `watchEffect(() => { console.log(busca.value) })` não precisa declarar explicitamente qual variável está observando, enquanto `watch(busca, callback)` precisa apontar `busca`?
+
+Resultado esperado: porque `watchEffect` executa a função imediatamente e registra sozinho, durante essa execução, quais variáveis reativas foram lidas — descobrindo as dependências automaticamente; `watch` exige a fonte explícita porque só reage a mudanças naquilo que você apontou.
+
+**A4.** Ache o erro nas linhas abaixo — o valor mostrado na tela nunca muda, mesmo depois de chamar `inscrever()` várias vezes:
+
+```js
+let totalInscritos = 0
+
+const resumo = computed(() => `Total de inscritos: ${totalInscritos}`)
+
+function inscrever() {
+  totalInscritos++
+}
+```
+
+Resultado esperado: `totalInscritos` é uma variável comum (`let`), não reativa — o `computed` não tem como perceber que ela mudou, porque não é um `ref`/`reactive`. A correção troca `let totalInscritos = 0` por `const totalInscritos = ref(0)` e usa `totalInscritos.value++` dentro de `inscrever`.
+
+**A5.** Preveja o valor de `percentualOcupado` e a cor do texto no trecho abaixo, para `vagas = 40` e `inscritos = 34`:
+
+```js
+const vagas = ref(40)
+const inscritos = ref(34)
+const percentualOcupado = computed(() => Math.round((inscritos.value / vagas.value) * 100))
+```
+
+```vue
+<p :style="[{ fontWeight: 'bold' }, { color: percentualOcupado > 80 ? 'red' : 'black' }]">
+  {{ percentualOcupado }}% ocupado
+</p>
+```
+
+Resultado esperado: `85% ocupado`, com o texto em vermelho (`85 > 80`).
+
+### Nível B — Aplicação
+
+**B1.** Refatorar método em computed. Pegue esta função e transforme-a em `computed`:
 
 ```js
 function eventosPalestrasComVaga() {
@@ -1010,7 +1090,7 @@ Resultado esperado: uma constante `eventosPalestrasComVaga` criada com `computed
 `const eventosPalestrasComVaga = computed(() => eventos.value.filter((e) => e.categoria === 'palestra' && e.inscritos < e.vagas))`
 </details>
 
-**2. Corrigir uma lista sem `:key`** — dado este trecho com um bug proposital, corrija-o:
+**B2.** Corrigir uma lista sem `:key`. Dado este trecho com um bug proposital, corrija-o:
 
 ```vue
 <li v-for="evento in eventosOrdenados">{{ evento.titulo }}</li>
@@ -1024,7 +1104,7 @@ Resultado esperado: `:key="evento.id"` adicionado, e o console do navegador sem 
 Abra o DevTools (Console) — o Vue avisa explicitamente quando falta `:key` em um `v-for`.
 </details>
 
-**3. `watch` para persistir o filtro** — use `watch` sobre `categoriaFiltro` para gravar a categoria escolhida em `localStorage.setItem('ultimaCategoria', valor)`, e leia esse valor com `localStorage.getItem` para definir o valor inicial de `categoriaFiltro`.
+**B3.** `watch` para persistir o filtro. Use `watch` sobre `categoriaFiltro` para gravar a categoria escolhida em `localStorage.setItem('ultimaCategoria', valor)`, e leia esse valor com `localStorage.getItem` para definir o valor inicial de `categoriaFiltro`.
 
 Resultado esperado: recarregar a página mantém a última categoria filtrada.
 
@@ -1037,9 +1117,21 @@ watch(categoriaFiltro, (valor) => localStorage.setItem('ultimaCategoria', valor)
 ```
 </details>
 
-**4. Computed com getter e setter** — crie uma computed `buscaEmMaiusculas` que exiba `busca` sempre em maiúsculas ao ler, mas ao escrever converta para minúsculas antes de gravar em `busca`.
+**B4.** Estado de erro proposital. Troque a URL do `fetch` em `carregarEventos` para `/eventos-inexistente.json`, confirme que a tela de erro aparece com o botão "Tentar novamente", depois desfaça a mudança.
 
-Resultado esperado: digitar "VUE" em um campo ligado a `buscaEmMaiusculas` faz `busca.value` valer `"vue"`.
+Resultado esperado: você reproduz e depois corrige o estado de erro descrito na Seção 5.
+
+<details markdown="1">
+<summary>Dica</summary>
+
+O `catch` do `try/catch` precisa capturar tanto falha de rede quanto `resposta.ok === false`.
+</details>
+
+### Nível C — Desafio em sala
+
+**C1.** Computed com getter e setter. Crie uma computed `buscaEmMaiusculas` que exiba `busca` sempre em maiúsculas ao ler, mas ao escrever converta para minúsculas antes de gravar em `busca`. Ligue essa computed a um segundo `<input>` (além do campo de busca normal) e prove que os dois campos ficam sincronizados nos dois sentidos.
+
+Resultado esperado: digitar "VUE" no campo ligado a `buscaEmMaiusculas` faz `busca.value` valer `"vue"`; e alterar o campo de busca original (em minúsculas) atualiza o outro campo para a versão em maiúsculas, sem nenhum `watch` envolvido.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1050,16 +1142,74 @@ const buscaEmMaiusculas = computed({
   set: (valor) => { busca.value = valor.toLowerCase() },
 })
 ```
+
+Ligue os dois campos com `v-model="busca"` e `v-model="buscaEmMaiusculas"` — a sincronia acontece porque os dois computeds/refs leem e escrevem a mesma fonte de verdade (`busca`).
 </details>
 
-**5. Estado de erro proposital** — troque a URL do `fetch` em `carregarEventos` para `/eventos-inexistente.json`, confirme que a tela de erro aparece com o botão "Tentar novamente", depois desfaça a mudança.
+## 🏆 Desafios
 
-Resultado esperado: você reproduz e depois corrige o estado de erro descrito na Seção 5.
+### ⭐ O `watch` que finge que está funcionando
+
+Tags: vue, bug, investigacao
+
+A store de filtros do seu colega usa um objeto `reactive` com `busca`, `categoria` e `apenasComVaga`, observado por um único `watch(filtros, callback)` (sem a opção da Seção 4.2). Ele jura que testou e "funcionava" — mas agora, ao mudar só a categoria no `<select>`, o callback simplesmente não dispara, e a preferência do usuário nunca é salva. Ache a causa e corrija.
+
+**Critérios de pronto**
+
+- Reproduzido: alterar `filtros.categoria` (uma propriedade interna do objeto) sem que o callback do `watch` rode — comprovado com um `console.log` que nunca aparece.
+- Corrigido: alterar qualquer propriedade de `filtros` agora dispara o callback.
+- Um comentário de 2 linhas no código explica por que um `watch` sobre um `reactive` não pega mudanças internas por padrão.
+- Testado um caso extra: substituir o objeto inteiro (`Object.assign(filtros, { busca: 'x' })` vs. recriar a referência) e uma frase documentando se o comportamento muda.
 
 <details markdown="1">
-<summary>Dica</summary>
+<summary>Pistas</summary>
 
-O `catch` do `try/catch` precisa capturar tanto falha de rede quanto `resposta.ok === false`.
+1. Releia a Seção 4.2 — por padrão, `watch` em um objeto `reactive` só reage a uma troca de **referência**, não a uma mudança de propriedade interna.
+2. A opção que falta é uma só, e o nome já sugere o que ela faz: "olhar fundo" no objeto.
+3. Existe um custo em observar objetos grandes dessa forma — o Vue precisa varrer recursivamente todas as propriedades a cada checagem. Documente esse trade-off em uma frase.
+</details>
+
+### ⭐⭐ Quanto o `computed` realmente economiza?
+
+Tags: performance, vue, refatoracao
+
+A Seção 3 provou, com um `console.log`, que um `computed` roda uma vez só, mesmo usado três vezes no template. Mas quanto tempo isso realmente economiza quando a lista é grande? Meça com 5.000 eventos e descubra a partir de que escala a diferença passa a importar de verdade.
+
+**Critérios de pronto**
+
+- Um array `eventosGrandes` com 5.000 itens gerados por código (reaproveite o padrão de geração da Aula 01).
+- Duas versões lado a lado do mesmo filtro combinado (texto + categoria + vaga): uma como **método comum**, chamado três vezes no template (resumo, contador, lista); outra como **computed**, usada nos mesmos três lugares.
+- Tempo medido com `performance.now()` (ou a aba **Performance** do DevTools) de um ciclo de re-renderização completo em cada versão, com os números documentados em um comentário ou no README.
+- Uma frase concluindo, com os números medidos, se a diferença é perceptível ao usuário nesta escala — e uma estimativa de a partir de quantos itens ela passaria a importar.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Para forçar uma re-renderização sem recarregar a página, altere qualquer `ref` usada no template (ex.: `busca.value += ' '` e depois volte) e meça o tempo entre a mudança e o próximo `console.log` dentro da função/computed.
+2. `console.count('recalculando')` dentro da função ajuda a confirmar quantas vezes cada versão realmente roda por interação.
+3. A aba **Performance** do DevTools grava um perfil de execução real — grave uma interação (digitar no campo de busca) nas duas versões e compare o tempo total de "Scripting".
+</details>
+
+### ⭐⭐⭐ Estados de carregamento no seu projeto autoral
+
+Tags: vue, projeto, async
+
+Leve todo o padrão desta aula — computed encadeadas, `watch` persistindo uma preferência, e os três estados de tela (carregando/erro/vazio) — para o domínio do seu projeto autoral.
+
+**Critérios de pronto**
+
+- O `App.vue` do seu projeto carrega dados via `fetch` dentro de `onMounted`, a partir de um JSON simulado em `public/`, implementando os três estados: carregando, erro (com botão de repetir) e vazio.
+- Pelo menos duas `computed` encadeadas: uma filtra a lista, a outra deriva um total/resumo a partir da primeira (como `eventosFiltrados` → `totalVagasLivres` na Seção "Mão na massa").
+- Um `watch` que persiste alguma preferência do usuário (o último filtro escolhido, o critério de ordenação) em `localStorage`, recuperada ao recarregar a página.
+- Um destaque visual condicional (`:class` ou `:style`) usando `Intl` para formatar pelo menos um valor exibido.
+- Prints em sequência (ou vídeo curto) demonstrando: carregamento normal, o erro forçado (URL errada) com o botão de repetir funcionando, e a preferência sobrevivendo a um `F5`.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Reaproveite a estrutura do Passo 3 da Seção "Mão na massa" — troque `eventos` pela entidade do seu domínio, campo por campo.
+2. Para forçar o erro de propósito, troque a URL do `fetch` por um caminho inexistente, teste a tela de erro, depois desfaça.
+3. `localStorage.getItem` retorna a string salva ou `null` — trate o caso "nunca salvo antes" com um valor padrão ao inicializar o `ref`.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1097,9 +1247,8 @@ No repositório do seu projeto autoral:
 
 Na próxima aula você vai reestruturar seu projeto com **Vuetify** e **Vue Router** — os filtros e listas que você já tem hoje continuam valendo, só ganham um visual pronto e navegação entre telas.
 
-## 📝 Aviso — Avaliação 1 se aproxima
-
-A **Avaliação 1** (implementação introdutória de Vue 3 com CLI: estrutura, componentes, diretivas) tem entrega até **02/09/2026, 23h59**, e as instruções completas — escopo, rubrica e formato de entrega — serão publicadas na **Aula 04** (02/09/2026), junto com Vuetify e Vue Router. Use esta semana assíncrona também para revisar: estrutura do projeto Vite, diretivas da Aula 02 e `computed`/`onMounted` de hoje são a base de tudo que será cobrado.
+> **⚠️ Atenção**
+> A **Avaliação 1** vence no prazo do cronograma da trilha (confira em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), e as instruções completas — escopo, rubrica e formato de entrega — estão na **Aula 04**.
 
 ## 📚 Para aprofundar
 
@@ -1113,4 +1262,4 @@ A **Avaliação 1** (implementação introdutória de Vue 3 com CLI: estrutura, 
 
 ---
 
-**Próxima aula (04, 02/09/2026):** introdução a **Vuetify** e **Vue Router**, transformando o UniEventos em uma SPA navegável com componentes visuais prontos — e publicação das instruções completas da **Avaliação 1**.
+**Próxima aula (04):** introdução a **Vuetify** e **Vue Router**, transformando o UniEventos em uma SPA navegável com componentes visuais prontos — e publicação das instruções completas da **Avaliação 1**.

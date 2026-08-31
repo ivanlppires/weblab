@@ -315,6 +315,9 @@ Essa é a promessa central de um framework front-end reativo como o Vue — e é
 
 Esta é a espinha dorsal da aula de hoje. O Vue é, por baixo, "só" JavaScript — cada recurso que revisamos aqui reaparece dentro de um `<script setup>` já na próxima aula.
 
+> **🧠 Você sabia?**
+> O JavaScript foi criado por Brendan Eich em **10 dias**, em maio de 1995, para a Netscape — daí virem tantas decisões de design "estranhas" que a linguagem carrega até hoje, como o `==` fazer coerção de tipo. O nome "JavaScript" foi uma decisão de marketing da Netscape para surfar na popularidade do Java, sem relação técnica real entre as duas linguagens; a especificação oficial se chama **ECMAScript**, e é por isso que falamos em "ES2015", "ES2020" — cada ano, uma revisão da especificação.
+
 ### 3.1 `let`, `const` e escopo de bloco
 
 ```js
@@ -610,6 +613,9 @@ console.log(eventosPorData.map((e) => e.titulo))
 console.log(eventos.map((e) => e.titulo))
 // ainda na ordem original — porque ordenamos a CÓPIA, não `eventos`
 ```
+
+> **🔬 Investigue**
+> Abra o Console do navegador (`F12`) e cole o array `eventos` da Seção 3.8 acima. Rode `console.table(eventos)` para ver a ordem atual, depois rode `eventos.sort((a, b) => a.vagas - b.vagas)` e `console.table(eventos)` de novo — a ordem mudou. Agora rode só `eventos` mais uma vez: ele continua alterado, porque `.sort()` muta o array original em vez de devolver uma cópia. É exatamente o bug que o item **A4** do Laboratório desta aula pede para você achar.
 
 **Encadeando métodos** — o padrão mais comum no dia a dia:
 
@@ -1024,7 +1030,67 @@ buscarPostsDeExemplo()
 
 Use o array `eventos` do Passo 3 acima para os exercícios. Crie um arquivo `lab.js`, importe o que precisar de `eventos.js` e teste cada exercício no console.
 
-**1. Filtrar por categoria** — escreva uma função `apenasWorkshops(lista)` que retorne só os eventos de categoria `'workshop'`, usando `filter`.
+### Nível A — Fixação
+
+**A1.** Preveja a saída do trecho abaixo **sem rodar**, usando o que a Seção 3.3 explica sobre arrow functions e `this`:
+
+```js
+const contador = {
+  vagas: 5,
+  reduzir: function () {
+    setTimeout(function () {
+      console.log('a', this?.vagas)
+    }, 0)
+    setTimeout(() => {
+      console.log('b', this.vagas)
+    }, 0)
+  },
+}
+contador.reduzir()
+```
+
+Resultado esperado: a linha `a` imprime `undefined` (a `function` tradicional perde o `this` de `contador` dentro do `setTimeout`); a linha `b` imprime `5` (a arrow function herda o `this` de `reduzir`).
+
+**A2.** Complete a linha que falta para que `resumo` traga só os **títulos** dos eventos de categoria `'palestra'` que ainda têm vaga (`inscritos < vagas`), na mesma ordem em que aparecem no array `eventos`:
+
+```js
+const resumo = eventos
+  .filter((evento) => evento.categoria === 'palestra')
+  // complete aqui
+  .map((evento) => evento.titulo)
+```
+
+Resultado esperado: a linha que falta é `.filter((evento) => evento.inscritos < evento.vagas)`, resultando em `['Semana da Computação', 'Introdução a IA']`.
+
+**A3.** Em uma frase: por que `vagasInformadas || 10` é um bug quando `vagasInformadas` vale `0`, mas `vagasInformadas ?? 10` não é?
+
+Resultado esperado: porque `||` cai no valor padrão para qualquer valor "falsy" — incluindo `0`, que é um número de vagas válido — enquanto `??` só usa o padrão quando o valor é `null` ou `undefined`.
+
+**A4.** Ache o erro nas linhas abaixo. A função deveria devolver os eventos ordenados por vagas restantes **sem alterar** o array `eventos` original, mas, depois de chamá-la, um `console.log(eventos[0].titulo)` seguinte mostra uma ordem diferente da original:
+
+```js
+function ordenarPorVagasRestantes(lista) {
+  return lista.sort(
+    (a, b) => (b.vagas - b.inscritos) - (a.vagas - a.inscritos),
+  )
+}
+```
+
+Resultado esperado: falta copiar o array antes de ordenar — `lista.sort(...)` muta `lista`, que é a mesma referência de `eventos`. A correção é `return [...lista].sort(...)`.
+
+**A5.** Preveja a saída do trecho abaixo usando o que a Seção 3.7 explica sobre optional chaining e nullish coalescing:
+
+```js
+const evento = { titulo: 'Hackathon FACET', local: { predio: 'Bloco B' } }
+console.log(evento.local?.sala ?? 'a definir')
+console.log(evento.organizador?.contato?.email ?? 'sem contato')
+```
+
+Resultado esperado: `a definir` (a propriedade `sala` não existe dentro de `local`, mas `?.` evita o erro) e `sem contato` (nem `organizador` existe, e a cadeia inteira encurta sem quebrar).
+
+### Nível B — Aplicação
+
+**B1.** Filtrar por categoria. Escreva uma função `apenasWorkshops(lista)` que retorne só os eventos de categoria `'workshop'`, usando `filter`.
 
 Resultado esperado: array com 1 item (`Hackathon FACET`).
 
@@ -1034,7 +1100,7 @@ Resultado esperado: array com 1 item (`Hackathon FACET`).
 `lista.filter((evento) => evento.categoria === 'workshop')`
 </details>
 
-**2. Ordenar por vagas restantes** — escreva `ordenarPorVagasRestantes(lista)` que devolva uma cópia do array ordenada da maior para a menor quantidade de vagas restantes (`vagas - inscritos`), sem mutar o array original.
+**B2.** Ordenar por vagas restantes. Escreva `ordenarPorVagasRestantes(lista)` que devolva uma cópia do array ordenada da maior para a menor quantidade de vagas restantes (`vagas - inscritos`), sem mutar o array original.
 
 Resultado esperado: o array original (`eventos`) mantém a mesma ordem depois de chamar a função.
 
@@ -1044,7 +1110,7 @@ Resultado esperado: o array original (`eventos`) mantém a mesma ordem depois de
 Copie primeiro com `[...lista]`, depois use `.sort((a, b) => (b.vagas - b.inscritos) - (a.vagas - a.inscritos))`.
 </details>
 
-**3. Calcular vagas totais com `reduce`** — escreva `vagasRestantesTotais(lista)` que retorne a soma de `vagas - inscritos` de todos os eventos.
+**B3.** Calcular vagas totais com `reduce`. Escreva `vagasRestantesTotais(lista)` que retorne a soma de `vagas - inscritos` de todos os eventos.
 
 Resultado esperado: `55` (para o array de exemplo: 28 + 0 + 42 + 25).
 
@@ -1054,7 +1120,7 @@ Resultado esperado: `55` (para o array de exemplo: 28 + 0 + 42 + 25).
 `lista.reduce((total, evento) => total + (evento.vagas - evento.inscritos), 0)`
 </details>
 
-**4. Formatar datas em pt-BR** — usando `Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' })`, formate a `dataHora` de cada evento e monte um array de strings como `"10 de setembro de 2026"`.
+**B4.** Formatar datas em pt-BR. Usando `Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' })`, formate a `dataHora` de cada evento e monte um array de strings como `"10 de setembro de 2026"`.
 
 Resultado esperado: 4 strings de data em português.
 
@@ -1067,14 +1133,84 @@ eventos.map((evento) => formatador.format(new Date(evento.dataHora)))
 ```
 </details>
 
-**5. Buscar dados de uma API pública e renderizar** — usando `fetch` e `async/await`, busque `https://jsonplaceholder.typicode.com/users` (sem parâmetro de limite), pegue apenas os 3 primeiros com `.slice(0, 3)`, e renderize o `name` de cada um em uma lista `<ul>` no HTML.
+### Nível C — Desafio em sala
 
-Resultado esperado: 3 nomes de usuários aparecendo na página.
+**C1.** Buscar dados de uma API pública e renderizar. Usando `fetch` e `async/await`, busque `https://jsonplaceholder.typicode.com/users` (sem parâmetro de limite), pegue apenas os 3 primeiros com `.slice(0, 3)`, e renderize o `name` de cada um em uma lista `<ul>` no HTML. Se a rede falhar (desligue o Wi-Fi um instante e tente de novo), a página não pode travar nem ficar em branco — mostre uma mensagem de erro no lugar da lista.
+
+Resultado esperado: 3 nomes de usuários aparecendo na página; com a rede desligada, uma mensagem de erro visível em vez de tela em branco, e nenhum erro não tratado no Console.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-`const usuarios = await (await fetch(url)).json()`, depois `usuarios.slice(0, 3).forEach(...)` criando `<li>` como no Passo 4.
+`const usuarios = await (await fetch(url)).json()`, depois `usuarios.slice(0, 3).forEach(...)` criando `<li>` como no Passo 4. Para o tratamento de erro, envolva a busca e a renderização em `try/catch` e, no `catch`, escreva a mensagem de erro no mesmo elemento `<ul>` com `innerHTML`.
+</details>
+
+## 🏆 Desafios
+
+### ⭐ O evento com zero vagas que "ganha" 10
+
+Tags: javascript, bug, investigacao
+
+Um colega escreveu `vagasParaExibir(evento)` para mostrar o número de vagas no card do evento, usando o padrão que a Seção 3.7 alertou ser perigoso: `evento.vagasDisponiveis || 10`. Um evento com exatamente **zero** vagas está aparecendo na tela como "10 vagas disponíveis" — e alunos estão tentando se inscrever em um evento lotado. Ache a causa raiz e corrija sem quebrar o caso em que o campo realmente não foi informado.
+
+**Critérios de pronto**
+
+- `vagasParaExibir({ vagasDisponiveis: 0 })` retorna `0` (evento esgotado, sem valor padrão).
+- `vagasParaExibir({})` (campo ausente) retorna `10` (o valor padrão continua funcionando quando faz sentido).
+- `vagasParaExibir({ vagasDisponiveis: 25 })` retorna `25`.
+- Um comentário de 2 linhas acima da função explica, em português, por que `||` escondia esse bug e por que `??` resolve.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Releia a Seção 3.7 — a diferença entre `||` e `??` está exatamente nos valores "falsy" que não são `null`/`undefined`.
+2. Teste os três casos no Console antes de mexer no código: `0 || 10`, `undefined || 10`, `0 ?? 10`, `undefined ?? 10`.
+3. A troca é de um único operador — mas escreva o teste dos três casos antes de trocar, para provar que a correção não quebrou o caso do valor ausente.
+</details>
+
+### ⭐⭐ Quanto custa recriar a lista inteira a cada tecla?
+
+Tags: performance, dom, javascript, devtools
+
+O código da Seção 2.1 (DOM manual) apaga `listaEl.innerHTML` e reconstrói tudo a cada tecla digitada na busca — funciona bem com 4 eventos, mas e com mil? Gere uma lista grande, meça o custo real de `renderizar()` a cada tecla e decida, com números, se vale a pena adicionar um `debounce` (atraso antes de reagir) antes de otimizar de verdade.
+
+**Critérios de pronto**
+
+- Um array `eventosGrandes` com 1.000 itens gerados por código (`Array.from({ length: 1000 }, (_, i) => ({ ... }))`), reaproveitando os campos de `eventos.js`.
+- `renderizar()` adaptada para `eventosGrandes`, com `performance.now()` antes e depois da reconstrução do DOM, logando o tempo de cada chamada no Console.
+- Uma tabela (fora do código, no comentário ou no README) com o tempo de 5 renderizações digitando rápido, sem debounce.
+- A mesma medição depois de adicionar um `debounce` de 300 ms no `input` (só chama `renderizar()` 300 ms depois da última tecla), com uma frase concluindo se, neste caso, o ganho compensou a complexidade extra.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `performance.now()` retorna milissegundos; chame uma vez antes e uma vez depois de `renderizar()` e subtraia.
+2. Para gerar 1.000 eventos variados, alterne `categoria` entre `'palestra'`, `'minicurso'` e `'workshop'` usando o resto da divisão (`i % 3`).
+3. O padrão de debounce é o mesmo `setTimeout` + `clearTimeout` que reaparece na aula sobre CRUD (Aula 11) — pesquise "debounce javascript" se quiser ver outras implementações antes de escrever a sua.
+4. Ligue a aba **Performance** do DevTools durante uma digitação rápida sem debounce — o gráfico de "Scripting" mostra visualmente o custo que você já mediu com números.
+</details>
+
+### ⭐⭐⭐ O módulo de dados do seu projeto autoral
+
+Tags: javascript, projeto, api, async
+
+Toda a Seção 3 revisou ferramentas de JavaScript moderno usando eventos como exemplo — mas o seu projeto autoral (Seção 1.6) tem outro domínio. Construa o `dominio.js` real do seu projeto, aplicando classes, módulos, os métodos de array e uma busca assíncrona a dados reais (ou simulados) do seu tema.
+
+**Critérios de pronto**
+
+- Um arquivo `dominio.js` define ao menos **duas classes relacionadas** por composição ou herança (ex.: `Quadra` e `Reserva`, `Planta` e `Floracao`), cada uma com pelo menos um `get` calculado (equivalente a `vagasRestantes` da Seção 3.11).
+- Três funções exportadas (`export function`) que usam `filter`, `map`, `reduce` ou `sort` sobre uma lista de pelo menos 8 itens de exemplo do seu domínio, **sem mutar** o array recebido.
+- Uma função `async` que busca dados de uma API pública (do seu tema, ou `jsonplaceholder.typicode.com` como placeholder) com `try/catch`, sem deixar a página quebrada se a busca falhar.
+- Um `main.js` que importa tudo de `dominio.js` e renderiza pelo menos 5 itens na tela, em HTML puro (sem framework — isso só começa na Aula 02).
+- Um `README.md` de 5 a 10 linhas explicando as entidades escolhidas e o que cada função exportada faz.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Reveja a Seção 3.10 (módulos) e 3.11 (classes) — a estrutura é a mesma do `eventos.js`/`GerenciadorDeEventos` do Passo 3 do "Mão na massa", só que com as entidades do seu tema.
+2. Comece pelas classes e pelos dados de exemplo (um array com 8 objetos criados na mão) antes de pensar na API — é mais fácil testar `filter`/`map`/`reduce` sobre dados que você já conhece.
+3. Se seu tema não tiver uma API pública específica, use o JSONPlaceholder mesmo (`/posts`, `/users`, `/comments`) só para provar que o `fetch` com `try/catch` funciona — a ligação semântica com o tema pode vir depois, na Unidade 3.
+4. Teste o `catch` de propósito: chame a função com uma URL errada (ex.: troque `.com` por `.com.br/inexistente`) e confira que a página continua funcionando, só sem os dados da API.
 </details>
 
 ## 🐛 Erros comuns e como resolver

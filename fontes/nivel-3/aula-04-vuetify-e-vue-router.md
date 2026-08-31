@@ -55,6 +55,9 @@ O Vuetify 4 implementa o **Material Design 3 (MD3)**, o design system do Google 
 
 > **⚠️ Atenção:** o Vuetify 4 migrou a tipografia de MD2 para MD3. As classes antigas `text-h1` … `text-h6` continuam existindo, mas mudaram de tamanho e semântica. Os equivalentes MD3 são nomes como `text-display-large`, `text-headline-medium`, `text-title-large`, `text-body-medium`, `text-label-large`. Nesta disciplina, prefira citar explicitamente a classe MD3 ou definir sua própria tipografia — não assuma que `text-h4` de um tutorial antigo vai parecer do jeito que você viu em vídeo.
 
+> **🧠 Você sabia?**
+> O Material Design nasceu em 2014, no Google I/O, com uma metáfora central: a interface é feita de "papel digital" que pode se sobrepor, projetar sombra e se mover fisicamente — daí a importância da elevação nesse design system. A versão 3 (2021), a que o Vuetify 4 implementa, ganhou o apelido "Material You": a partir do Android 12, o sistema gera a paleta de cores do aplicativo inteiro extraindo tons do papel de parede do usuário. O Vuetify não faz essa extração automática, mas herda a mesma filosofia de "cores como papéis" (`primary`, `secondary`, `surface`...) que você configurou na seção 5 desta aula.
+
 ## 2. Instalando o Vuetify 4
 
 Vamos instalar o Vuetify no projeto UniEventos que você já tem. Os comandos abaixo são os mesmos testados no ambiente da disciplina — siga exatamente esta ordem.
@@ -542,12 +545,15 @@ O padrão `/:pathMatch(.*)*` é a sintaxe do Vue Router para "qualquer caminho, 
 Além de `<RouterLink>`, você pode navegar via código — por exemplo, depois de confirmar uma inscrição:
 
 ```js
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const inscricaoConfirmada = ref(false)
 
 function confirmarInscricao() {
-  // ... lógica de inscrição
+  inscricaoConfirmada.value = true
+  console.log('Inscrição registrada localmente — na Unidade 3 isso vira uma chamada real à API.')
   router.push({ name: 'home' })
 }
 ```
@@ -559,6 +565,9 @@ function confirmarInscricao() {
 Repare que, no exemplo de `/eventos/:id` acima, o componente foi importado como `() => import('../views/EventoDetalheView.vue')` em vez de um `import` estático no topo do arquivo. Essa é a técnica de **lazy loading** (carregamento tardio): o Vite gera um arquivo JavaScript separado para essa view, que só é baixado pelo navegador quando o usuário navega até ela.
 
 Em uma aplicação pequena isso não faz diferença perceptível, mas é o padrão recomendado desde já — conforme o UniEventos cresce (área administrativa, formulários, tabelas), o bundle inicial permanece pequeno porque cada view só é carregada quando necessária.
+
+> **🔬 Investigue**
+> Com `npm run dev` rodando, abra o DevTools, aba **Network**, marque "Preserve log" e filtre por **Doc**. Clique em duas ou três `<RouterLink>` diferentes: nenhuma requisição de documento aparece — é a SPA trocando de tela só com JavaScript, sem recarregar a página. Agora, na barra de endereço do navegador, digite `/eventos/3` diretamente e aperte Enter: dessa vez aparece uma requisição **Doc**. Por que essa diferença acontece? E o que quebraria se você fizesse esse mesmo teste em produção, atrás de um servidor que não sabe redirecionar toda URL desconhecida para o `index.html`?
 
 ```js
 // src/router/index.js — versão completa recomendada, com lazy loading em tudo
@@ -774,7 +783,7 @@ const linksMenu = [
     </v-main>
 
     <v-footer color="primary" class="d-flex justify-center pa-4">
-      <span class="text-white">UNEMAT · FACET · FACET-SNP-310 · 2026.2</span>
+      <span class="text-white">UNEMAT · FACET · FACET-SNP-310</span>
     </v-footer>
   </v-app>
 </template>
@@ -979,7 +988,7 @@ Note o uso de `Number(rota.params.id)` — como discutido na §7, o parâmetro d
         </p>
         <p>
           Projeto desenvolvido na disciplina FACET-SNP-310 — Frameworks Modernos
-          para Desenvolvimento de Sistemas, UNEMAT/Sinop, 2026.2.
+          para Desenvolvimento de Sistemas, UNEMAT/Sinop.
         </p>
       </v-card-text>
     </v-card>
@@ -1015,8 +1024,45 @@ Confira: a home lista os eventos com filtro funcionando; clicar em um card naveg
 
 ## 🧪 Laboratório
 
-**1. Chip de vagas esgotadas**
-No `HomeView.vue`, altere o chip de vagas para mostrar `"Esgotado"` em vermelho (`color="error"`) quando `evento.vagas === 0`. Adicione um evento de teste com `vagas: 0` no array de dados.
+### Nível A — Fixação
+
+**A1.** Sem `vuetify({ autoImport: true })` no `vite.config.js`, você escreve `<v-btn color="primary">Testar</v-btn>` em um template e recarrega a página. O que aparece na tela?
+
+Resultado esperado: nenhum botão estilizado — a tag `<v-btn>` fica sem CSS nenhum (ou nem chega a ser reconhecida como componente), porque é o autoimport quem registra os componentes do Vuetify.
+
+**A2.** Complete a linha que falta para que o card abaixo ocupe a tela inteira no celular, metade em tablets e um terço a partir de telas médias:
+
+```vue
+<v-col cols="12" ____ md="4">
+```
+
+Resultado esperado: `sm="6"` — 12/12 colunas até 599px, 6/12 a partir de 600px (`sm`), 4/12 a partir de 840px (`md`).
+
+**A3.** Em uma frase: por que esta aula declara `theme: { defaultTheme: 'light' }` explicitamente em vez de deixar o Vuetify 4 no comportamento padrão?
+
+Resultado esperado: porque o padrão do Vuetify 4 mudou para `'system'`, e sem declarar um tema fixo cada estudante veria uma cor diferente (clara ou escura) dependendo do sistema operacional, sem que ninguém tivesse clicado em nada.
+
+**A4.** Ache o erro nas linhas abaixo — a rota `nao-encontrado` nunca aparece, mesmo acessando uma URL claramente inválida como `/oi`:
+
+```js
+routes: [
+  { path: '/:pathMatch(.*)*', name: 'nao-encontrado', component: NaoEncontradoView },
+  { path: '/', name: 'home', component: HomeView },
+  { path: '/sobre', name: 'sobre', component: SobreView },
+]
+```
+
+Resultado esperado: a rota catch-all está na **primeira** posição — o Vue Router testa rotas na ordem declarada, então ela intercepta qualquer URL antes de `home` e `sobre` serem avaliadas. A correção é mover `{ path: '/:pathMatch(.*)*', ... }` para o final do array.
+
+**A5.** Preveja a saída: em `EventoDetalheView.vue`, a URL acessada é `/eventos/3`, e o código roda `console.log(typeof rota.params.id)` antes de qualquer conversão.
+
+Resultado esperado: `"string"` — parâmetros de rota do Vue Router sempre chegam como texto, mesmo quando representam um número; por isso a seção 7 usa `Number(rota.params.id)` antes de comparar ou buscar no array.
+
+### Nível B — Aplicação
+
+**B1.** Chip de vagas esgotadas. No `HomeView.vue`, altere o chip de vagas para mostrar `"Esgotado"` em vermelho (`color="error"`) quando `evento.vagas === 0`. Adicione um evento de teste com `vagas: 0` no array de dados.
+
+Resultado esperado: o card do evento com `vagas: 0` mostra um chip vermelho com o texto "Esgotado"; os demais eventos continuam mostrando o número de vagas normalmente.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1024,8 +1070,9 @@ No `HomeView.vue`, altere o chip de vagas para mostrar `"Esgotado"` em vermelho 
 Use um `v-if`/`v-else` dentro do `v-card-actions`, ou um `computed` que retorna a cor e o texto do chip com base em `evento.vagas`.
 </details>
 
-**2. Rota `/eventos` (lista) separada da rota `/eventos/:id` (detalhe)**
-Hoje a home (`/`) já mostra a lista. Crie também uma rota nomeada `eventos-lista` no caminho `/eventos` que renderiza o mesmo componente que a home usa para a listagem. Use `<RouterLink :to="{ name: 'eventos-lista' }">` em algum lugar do menu.
+**B2.** Rota `/eventos` (lista) separada da rota `/eventos/:id` (detalhe). Hoje a home (`/`) já mostra a lista. Crie também uma rota nomeada `eventos-lista` no caminho `/eventos` que renderiza o mesmo componente que a home usa para a listagem. Use `<RouterLink :to="{ name: 'eventos-lista' }">` em algum lugar do menu.
+
+Resultado esperado: acessar `/eventos` diretamente pela barra de endereço mostra a mesma listagem que `/`; o link do menu leva até lá sem recarregar a página.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1033,8 +1080,9 @@ Hoje a home (`/`) já mostra a lista. Crie também uma rota nomeada `eventos-lis
 Você pode apontar duas entradas de `routes` para o mesmo `component`, com `path` e `name` diferentes.
 </details>
 
-**3. Contador de eventos no app-bar**
-No `App.vue`, mostre no `v-app-bar` (ao lado do título) um `v-chip` com o total de eventos cadastrados. Você vai precisar importar o array `eventos` também no `App.vue`.
+**B3.** Contador de eventos no app-bar. No `App.vue`, mostre no `v-app-bar` (ao lado do título) um `v-chip` com o total de eventos cadastrados. Você vai precisar importar o array `eventos` também no `App.vue`.
+
+Resultado esperado: o `v-chip` no topo mostra "8" (ou o total atual do array); adicionando um evento pelo console do navegador e recarregando a página, o número muda.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1042,8 +1090,9 @@ No `App.vue`, mostre no `v-app-bar` (ao lado do título) um `v-chip` com o total
 `import { eventos } from './data/eventos'` e depois `{{ eventos.length }}` dentro de um `v-chip`.
 </details>
 
-**4. Tema alternativo com terceira paleta**
-Adicione um terceiro tema chamado `contraste`, com cores de alto contraste (preto/amarelo), e um botão que cicla entre `light` → `dark` → `contraste` → `light`.
+**B4.** Tema alternativo com terceira paleta. Adicione um terceiro tema chamado `contraste`, com cores de alto contraste (preto/amarelo), e um botão que cicla entre `light` → `dark` → `contraste` → `light`.
+
+Resultado esperado: clicar repetidamente no botão de tema percorre os três temas nessa ordem e volta ao início; o tema `contraste` é visivelmente diferente dos outros dois, com fundo escuro e texto/ações em amarelo vibrante.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1051,13 +1100,102 @@ Adicione um terceiro tema chamado `contraste`, com cores de alto contraste (pret
 `themes: { light: {...}, dark: {...}, contraste: {...} }` no `createVuetify`, e uma função que usa um array `['light', 'dark', 'contraste']` com `indexOf` para descobrir o próximo tema.
 </details>
 
-**5. Rota protegida por parâmetro inválido**
-No `EventoDetalheView.vue`, se `rota.params.id` não for um número válido (ex.: `/eventos/abc`), redirecione automaticamente para a rota `nao-encontrado` usando `router.push`.
+### Nível C — Desafio em sala
+
+**C1.** Rota protegida por parâmetro inválido. No `EventoDetalheView.vue`, se `rota.params.id` não for um número válido (ex.: `/eventos/abc`), redirecione automaticamente para a rota `nao-encontrado` usando `router.push`. Não confunda esse caso com o de um ID numericamente válido, mas inexistente no array (ex.: `/eventos/999`) — esse continua mostrando o alerta "Evento não encontrado" que já existe.
+
+Resultado esperado: `/eventos/abc` redireciona para a tela 404 sem erro no console; `/eventos/999` continua mostrando o alerta local "Evento não encontrado", sem redirecionar.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-`Number.isNaN(Number(rota.params.id))` dentro de um `onMounted` ou de um `watch` sobre `rota.params.id`.
+`Number.isNaN(Number(rota.params.id))` dentro de um `onMounted` (ou de um `watch` sobre `rota.params.id`, caso o usuário troque de evento sem sair do componente).
+</details>
+
+## 🏆 Desafios
+
+### ⭐ O tema que esquece toda vez
+Tags: vuetify, vue, javascript
+
+O botão de sol/lua da seção 5 troca o tema na hora — mas dê um F5: a aplicação volta para `'light'`, mesmo que você tenha deixado no escuro há dois segundos. Ninguém espera reconfigurar a aparência do site toda vez que recarrega a página. Resolva isso lendo e escrevendo a preferência de tema em `localStorage`, sem usar Pinia (isso vem na Aula 06).
+
+**Critérios de pronto**
+
+- Ao carregar a aplicação, o tema aplicado é o que estava salvo na última visita (ou `'light'`, na primeira vez).
+- Trocar o tema pelo botão atualiza o `localStorage` imediatamente, não só na próxima navegação.
+- Abrir a aplicação em uma aba anônima nova (sem `localStorage` prévio) não gera erro no console — o valor padrão é usado normalmente.
+- Um comentário de uma linha no componente do alternador explica qual chave do `localStorage` guarda a preferência.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `localStorage.getItem('uniEventosTema')` na inicialização do componente, usado para definir `tema.global.name.value` antes mesmo de o usuário clicar em qualquer botão.
+2. `localStorage.setItem('uniEventosTema', novoValor)` dentro da própria função `alternarTema`.
+3. `localStorage.getItem` retorna `null` quando a chave nunca foi salva — trate esse caso com `?? 'light'` antes de atribuir a `tema.global.name.value`.
+</details>
+
+### ⭐⭐ Menu que só existe para quem usa mouse
+Tags: acessibilidade, vuetify, devtools
+
+Desconecte o mouse (ou apenas prometa a si mesmo não tocar nele) e tente abrir o menu lateral do UniEventos só com o teclado: `Tab` até o ícone de hambúrguer, `Enter` para abrir, `Tab` pelos itens, `Esc` para fechar. Em quantos passos você trava? O ícone de tema tem algum texto que um leitor de tela consiga anunciar, ou é só um ícone mudo?
+
+**Critérios de pronto**
+
+- O ícone de abrir/fechar o menu (`v-app-bar-nav-icon`) e o botão de alternar tema recebem foco visível com `Tab`, na ordem em que aparecem na tela.
+- Os dois ganham um `aria-label` descritivo (ex.: "Abrir menu de navegação", "Alternar para tema escuro"/"Alternar para tema claro", trocando conforme o estado atual).
+- O menu lateral fecha com `Esc` e devolve o foco ao ícone que o abriu.
+- Uma extensão de auditoria (Lighthouse, no próprio Chrome DevTools, ou axe DevTools) roda na tela inicial, e o print do resultado da categoria "Acessibilidade" vai para o README do projeto autoral, junto de pelo menos um problema real corrigido a partir do relatório.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `v-app-bar-nav-icon` e `v-btn` aceitam qualquer atributo HTML padrão via fallthrough — `aria-label="Abrir menu"` funciona direto no template.
+2. Para o `aria-label` do botão de tema mudar dinamicamente, use um `computed` que retorna a string certa com base em `ehEscuro`.
+3. O retorno de foco ao fechar com `Esc` geralmente exige guardar uma referência ao elemento que tinha foco antes de abrir o menu, e chamar `.focus()` nele ao fechar.
+4. O Lighthouse já vem embutido no Chrome DevTools, aba "Lighthouse" — rode com a categoria "Accessibility" marcada.
+</details>
+
+### ⭐⭐⭐ Quanto custa carregar tudo de uma vez
+Tags: performance, vue, router
+
+A seção 7 recomenda lazy loading (`() => import(...)`) para toda view, "porque o padrão é esse". Mas quanto isso realmente economiza no UniEventos, hoje, com só quatro views? Meça de verdade antes de confiar na recomendação.
+
+**Critérios de pronto**
+
+- Uma versão do `router/index.js` com todos os `component` trocados para `import` estático no topo do arquivo (eager loading), rodando `npm run build` e anotando o tamanho e a quantidade de arquivos `.js` gerados em `dist/assets`.
+- A versão original com lazy loading, com o mesmo `npm run build`, anotando os mesmos números.
+- Uma tabela no README do projeto autoral comparando as duas: número de arquivos JS gerados, tamanho do maior chunk, e o tempo de carregamento da rota inicial reportado pela aba **Network** do DevTools (com throttling "Fast 3G" ativado, para exagerar a diferença).
+- Um parágrafo concluindo se a diferença justifica a complexidade extra **neste projeto específico**, e a partir de quantas views (na sua opinião, justificada) ela passaria a valer a pena.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. `npm run build` gera a pasta `dist/`; abra `dist/assets` e compare os nomes e tamanhos dos arquivos `.js` entre as duas versões.
+2. Para forçar o throttling, DevTools → Network → menu de velocidade (geralmente "No throttling" por padrão) → escolha "Fast 3G".
+3. Com poucas views pequenas, a diferença tende a ser mínima — é exatamente esse resultado, medido, que responde à pergunta. Meça antes de concluir.
+</details>
+
+### 🔥 Boss — Painel de favoritos do UniEventos
+Tags: vue, vuetify, router, projeto
+
+A Unidade 1 terminou: você tem uma SPA com Vuetify, rotas, tema e grid responsivo. Antes de a Unidade 2 trazer componentização séria e a Unidade 3 trazer um back-end de verdade, prove que consegue montar uma funcionalidade nova do zero usando só o que aprendeu até aqui — sem Pinia, sem Axios, sem API: tudo em memória, com `ref`/`computed` e o array local de dados.
+
+**Critérios de pronto**
+
+- Um ícone de "favoritar" (`mdi-star`/`mdi-star-outline`) aparece em cada `v-card` de evento, tanto na home quanto na tela de detalhe, e alterna visualmente ao clicar.
+- Uma nova rota `/favoritos` (nomeada `favoritos`), acessível pelo menu lateral, lista **só** os eventos marcados como favoritos.
+- A tela de favoritos mostra um estado vazio claro (`v-alert` ou similar) quando nenhum evento foi favoritado ainda — nunca uma tela em branco.
+- O app-bar mostra, em um `v-chip`, quantos eventos estão favoritados no momento (atualiza reativamente ao favoritar/desfavoritar).
+- O grid de favoritos é responsivo (mesmos breakpoints `cols`/`sm`/`md` usados no restante da aplicação) e cada card mantém a navegação para o detalhe (`:to`).
+- Favoritar um evento na home e depois abrir `/favoritos` mostra o evento imediatamente — sem F5.
+
+<details markdown="1">
+<summary>Pistas</summary>
+
+1. Guarde os favoritos como um `ref([])` de IDs (não de objetos completos) em um arquivo compartilhado, ex. `src/data/favoritos.js`, exportando o `ref` para que qualquer componente que o importe compartilhe a mesma instância — isso é o "estado compartilhado manual" que o Pinia vai formalizar na Aula 06.
+2. Um `computed` na tela de favoritos filtra o array `eventos` completo, mantendo só os que têm `id` presente no array de IDs favoritados.
+3. O ícone alterna comparando `favoritos.value.includes(evento.id)` e usando `push`/`splice` (ou `filter`) para adicionar/remover.
+4. Lembre de adicionar a rota `favoritos` **antes** da rota catch-all `/:pathMatch(.*)*` no array `routes`.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1121,7 +1259,7 @@ O projeto deve:
 
 ### Formato e prazo de entrega
 
-Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Avaliação 1", até **02/09/2026, 23h59**. Cole o link diretamente no campo de texto da atividade — não anexe `.zip`.
+Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Avaliação 1", até **o prazo do cronograma da trilha, 23h59** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)). Cole o link diretamente no campo de texto da atividade — não anexe `.zip`.
 
 ### Rubrica (10,0 pontos)
 
@@ -1135,7 +1273,7 @@ Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Ava
 
 ### Política de atraso
 
-Entregas após 02/09/2026 23h59 perdem **1,0 ponto por dia corrido** de atraso, até o limite de 5 dias. Após esse prazo, a atividade recebe nota zero, salvo justificativa formal protocolada junto à coordenação do curso.
+Entregas após o prazo perdem **1,0 ponto por dia corrido** de atraso, até o limite de 5 dias. Após esse prazo, a atividade recebe nota zero, salvo justificativa formal protocolada junto à coordenação do curso.
 
 ### Política de plágio e uso de IA
 
