@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 06 você conectou o UniEventos a uma API falsa com `json-server`, encapsulou as chamadas numa instância dedicada do Axios e organizou o estado global com Pinia. O front-end ficou pronto para conversar com um back-end de verdade. A partir de hoje ele existe — e você é quem vai escrevê-lo.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - apontar o front-end UniEventos para uma API Express real, no lugar do `json-server`.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 06 você conectou o UniEventos a uma API falsa com `json-server`, encapsulou as chamadas numa instância dedicada do Axios e organizou o estado global com Pinia. O front-end ficou pronto para conversar com um back-end de verdade. A partir de hoje ele existe — e você é quem vai escrevê-lo.
 
 - [ ] Front-end `unieventos-web` da Aula 06 rodando localmente com `npm run dev`, consumindo `json-server` via instância Axios dedicada.
 - [ ] Store Pinia de eventos funcionando (estado, `carregando`, `erro`).
@@ -34,6 +35,7 @@ Ao final desta aula você será capaz de:
 Retomando rapidamente onde a Aula 06 parou: você tem hoje um front-end Vue com Vuetify, Router e Pinia, consumindo dados de um `json-server` através de uma instância Axios dedicada, com interceptors e uma camada `src/services/`. Essa arquitetura de consumo não muda — o que muda, a partir de agora, é o que está do outro lado da rede.
 
 Duas frentes novas se abrem hoje, e vamos alternar entre elas: primeiro o Node.js e o Firebase (uma introdução rápida a um back-end pronto), depois o Express (o back-end que você mesmo escreve, e que vai crescer pelo resto do semestre).
+
 ## 🗺️ Roteiro
 
 | Bloco | Tempo | Atividade |
@@ -270,12 +272,6 @@ O `package-lock.json`, gerado automaticamente, trava a versão exata (inclusive 
 > **⚠️ Atenção**
 > `node_modules/` nunca é commitado — é sempre reconstruído com `npm install` a partir do `package.json` e do `package-lock.json`. Ele já está no `.gitignore` do projeto.
 
-## 🧩 Padrão de projeto em uso
-
-> ### 🧩 Padrão de projeto em uso — Chain of Responsibility
->
-> Um servidor Express processa toda requisição através de uma sequência de funções chamadas **middlewares**: `express.json()`, `cors()`, sua rota, e (aula 08) validadores e tratadores de erro. Cada função na cadeia decide se trata a requisição, a repassa adiante com `next()`, ou interrompe o fluxo respondendo diretamente. Isso é o padrão comportamental **Chain of Responsibility**: uma corrente de handlers, cada um com a chance de agir e passar adiante. Você já viu a ideia em ação nos interceptors do Axios (Aula 06) — lá era uma cadeia de duas etapas (requisição/resposta); aqui é uma cadeia configurável de N etapas. Vamos aprofundar isso na Aula 08, quando você escrever seus próprios middlewares.
-
 ## 3. BaaS vs API própria: o que é o Firebase
 
 Nem todo back-end precisa ser escrito do zero. Um **BaaS** (*Backend as a Service*) é um serviço de terceiros que já entrega pedaços prontos de back-end — banco de dados, autenticação, upload de arquivos, hospedagem — através de um SDK que você chama direto do seu front-end, sem escrever seu próprio servidor para essas partes.
@@ -443,7 +439,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 10, 12);
+      allow read, write: if request.time < timestamp.date(<data gerada pelo console>);
     }
   }
 }
@@ -518,7 +514,7 @@ unieventos-api/
 
 Vamos crescer essa estrutura nas próximas duas aulas (`routes/`, `middlewares/`, `repositories/`, `services/`, `controllers/`). Por enquanto, um único arquivo é suficiente.
 
-## ⚠️ Express 5 não é Express 4
+## 5. Express 5 não é Express 4
 
 Quando você instala Express hoje (`npm install express`), recebe a versão 5.2.1 — mas a maioria dos tutoriais, cursos gravados e respostas de fórum na internet ainda ensina Express 4, que tem sintaxe diferente em pontos que quebram silenciosamente ou lançam erro. A tabela a seguir foi **testada no ambiente real** desta disciplina — não é teoria, é o que de fato acontece rodando o código.
 
@@ -603,6 +599,10 @@ res.sendFile(caminhoDoArquivo)
 > **📌 Na prova**
 > Se aparecer um trecho de código com `app.del(...)`, `res.json(obj, 201)` ou `req.param('id')`, é Express 4 — identifique a sintaxe errada e corrija para a equivalente do Express 5.
 
+## 🧩 Padrão de projeto em uso — Chain of Responsibility
+
+Um servidor Express processa toda requisição através de uma sequência de funções chamadas **middlewares**: `express.json()`, `cors()`, sua rota, e (aula 08) validadores e tratadores de erro. Cada função na cadeia decide se trata a requisição, a repassa adiante com `next()`, ou interrompe o fluxo respondendo diretamente. Isso é o padrão comportamental **Chain of Responsibility**: uma corrente de handlers, cada um com a chance de agir e passar adiante. Você já viu a ideia em ação nos interceptors do Axios (Aula 06) — lá era uma cadeia de duas etapas (requisição/resposta); aqui é uma cadeia configurável de N etapas. Vamos aprofundar isso na Aula 08, quando você escrever seus próprios middlewares.
+
 ## 💻 Mão na massa — criando a `unieventos-api` e conectando o front
 
 ### Passo 1 — criar o repositório e o projeto Node
@@ -652,6 +652,8 @@ PORTA=3000
 
 ### Passo 2 — dados de eventos em memória
 
+Semeie a API com os **mesmos oito eventos** que estavam no `db.json` da Aula 06 — assim, ao trocar o `json-server` pela `unieventos-api` no Passo 5, a tela do front continua idêntica e qualquer diferença que apareça é bug, não mudança de dados. Abaixo estão os três primeiros; copie os cinco restantes do seu `db.json`, convertendo as chaves para a sintaxe de objeto JavaScript (sem aspas nas chaves).
+
 ```js
 // src/dados/eventos.js
 // dados em memória — nesta aula ainda não temos banco de dados (chega na Aula 09)
@@ -659,33 +661,34 @@ export const eventos = [
   {
     id: 1,
     titulo: 'Semana Acadêmica de Computação',
-    descricao: 'Palestras e minicursos sobre o mercado de tecnologia.',
+    descricao: 'Palestras e minicursos sobre tendências em tecnologia.',
     categoria: 'palestra',
-    dataHora: '2026-10-15T19:00:00',
-    local: 'Auditório FACET',
-    vagas: 80,
-    imagemUrl: 'https://picsum.photos/seed/semana-computacao/400/240',
+    dataHora: '2026-09-29T19:00:00',
+    local: 'Auditório Central',
+    vagas: 40,
+    imagemUrl: 'https://picsum.photos/seed/evento1/600/300',
   },
   {
     id: 2,
-    titulo: 'Minicurso de Vue 3',
-    descricao: 'Introdução prática ao framework Vue com Composition API.',
+    titulo: 'Minicurso de Vue.js Avançado',
+    descricao: 'Componentização, roteamento e gerenciamento de estado.',
     categoria: 'minicurso',
-    dataHora: '2026-10-20T14:00:00',
+    dataHora: '2026-09-15T18:30:00',
     local: 'Laboratório 3',
-    vagas: 30,
-    imagemUrl: 'https://picsum.photos/seed/minicurso-vue/400/240',
+    vagas: 25,
+    imagemUrl: 'https://picsum.photos/seed/evento2/600/300',
   },
   {
     id: 3,
-    titulo: 'Workshop de Firebase e Express',
-    descricao: 'Construindo uma API real do zero.',
+    titulo: 'Workshop de Prototipação em Figma',
+    descricao: 'Fundamentos de design de interfaces para desenvolvedores.',
     categoria: 'workshop',
-    dataHora: '2026-10-28T19:30:00',
-    local: 'Laboratório 1',
-    vagas: 25,
-    imagemUrl: 'https://picsum.photos/seed/workshop-firebase/400/240',
+    dataHora: '2026-09-20T14:00:00',
+    local: 'Sala 12',
+    vagas: 30,
+    imagemUrl: 'https://picsum.photos/seed/evento3/600/300',
   },
+  // … eventos 4 a 8, copiados do db.json da Aula 06
 ]
 ```
 
@@ -778,21 +781,48 @@ GET http://localhost:3000/api/eventos/999
 
 ### Passo 5 — apontar o front-end da Aula 06 para a API real
 
-No `unieventos-web`, você já tem uma instância dedicada do Axios (Aula 06). Troque só a `baseURL`:
+No `unieventos-web`, você já tem uma instância dedicada do Axios em `src/services/http.js` (Aula 06). **Não crie arquivo novo e não apague os interceptors** — muda um valor, uma linha:
 
 ```js
-// src/services/api.js — em unieventos-web
+// src/services/http.js — em unieventos-web (o MESMO arquivo da Aula 06)
 import axios from 'axios'
 
-const api = axios.create({
-  // antes: baseURL: 'http://localhost:3001' (json-server)
+const http = axios.create({
+  // antes: baseURL: 'http://localhost:3000' (json-server, sem prefixo /api)
+  // agora: a unieventos-api sobe na mesma porta 3000, mas as rotas vivem sob /api
   baseURL: 'http://localhost:3000/api',
+  timeout: 8000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
-export default api
+// os dois interceptors da Aula 06 continuam exatamente como estavam
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem('uniEventosToken')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('uniEventosToken')
+    }
+    return Promise.reject(error)
+  }
+)
+
+export default http
 ```
 
-Nada mais no front-end precisa mudar — nem a store Pinia, nem os componentes. O service continua chamando `api.get('/eventos')` e `api.get(`/eventos/${id}`)`; quem muda é só o destino das requisições. Esse desacoplamento é exatamente o motivo pelo qual a Aula 06 insistiu em centralizar o `baseURL` numa instância única, em vez de espalhar URLs pelo código.
+Nada mais no front-end precisa mudar — nem o `eventosService.js`, nem a store Pinia, nem os componentes. O service continua chamando `http.get('/eventos')` e `http.get(`/eventos/${id}`)`; quem muda é só o destino das requisições. Esse desacoplamento é exatamente o motivo pelo qual a Aula 06 insistiu em centralizar o `baseURL` numa instância única, em vez de espalhar URLs pelo código.
+
+> **⚠️ Atenção**
+> Como o `json-server` também rodava em `localhost:3000`, **pare o terminal do `json-server` antes de subir a `unieventos-api`** — senão a porta está ocupada e o Express morre com `EADDRINUSE`. A partir de hoje o `json-server` não é mais usado no UniEventos.
 
 ```bash
 # em dois terminais separados:
@@ -804,7 +834,29 @@ npm run dev
 npm run dev
 ```
 
-Abra o front no navegador. A lista de eventos deve carregar exatamente como antes — só que agora vem de um servidor Express que você escreveu, não de um `json-server`.
+### Como testar
+
+```bash
+# em dois terminais separados:
+
+# terminal 1 — dentro de unieventos-api
+npm run dev
+
+# terminal 2 — dentro de unieventos-web
+npm run dev
+```
+
+Primeiro a API sozinha, pelo terminal:
+
+```bash
+curl -s http://localhost:3000/api/eventos | jq 'length'
+curl -i http://localhost:3000/api/eventos/1
+curl -i http://localhost:3000/api/eventos/999
+```
+
+Resultado esperado: `8` na primeira linha; `200` com o objeto do evento 1 na segunda; `404` na terceira.
+
+Depois o front no navegador (`http://localhost:5173`): a lista de eventos carrega **exatamente como antes**, com os mesmos oito cards — só que agora vindos de um servidor Express que você escreveu, não do `json-server`. Confirme na aba **Network** que a requisição sai para `http://localhost:3000/api/eventos` e volta `200`. Se o console mostrar erro de CORS, revise o `app.use(cors())` do `servidor.js`; se voltar `404`, confira se o `baseURL` do `http.js` terminou em `/api`.
 
 ## 🧪 Laboratório
 
@@ -921,6 +973,7 @@ Resultado esperado: `listarOrganizadores()` imprime no console um array com os 2
 ## 🏆 Desafios
 
 ### ⭐ Onde seu segredo mora
+
 Tags: javascript, devtools, seguranca, investigacao
 
 Abra o DevTools (F12) no seu `unieventos-web` rodando com `npm run dev`, vá na aba **Sources** e procure pelo valor de uma das variáveis `VITE_FIREBASE_*` que você configurou no `.env`. Ela aparece ali, legível, para qualquer pessoa que abrir a mesma aba. Investigue até onde vai essa exposição e explique, com evidência real do seu próprio projeto, por que uma credencial de servidor (a senha do MySQL, por exemplo) nunca poderia estar num arquivo prefixado com `VITE_`.
@@ -940,6 +993,7 @@ Abra o DevTools (F12) no seu `unieventos-web` rodando com `npm run dev`, vá na 
 </details>
 
 ### ⭐⭐ A rota que existe duas vezes
+
 Tags: express, rotas, bug, refatoracao
 
 Um colega registrou duas rotas parecidas sem perceber a colisão: `GET /api/eventos/:id` e, mais abaixo no arquivo, `GET /api/eventos/destaque` (pensada para devolver o evento em destaque do momento). Toda chamada para `/api/eventos/destaque` cai no handler de `:id`, porque "destaque" é interpretado como se fosse um id. Corrija o problema e proteja seu projeto autoral do mesmo bug.
@@ -959,6 +1013,7 @@ Um colega registrou duas rotas parecidas sem perceber a colisão: `GET /api/even
 </details>
 
 ### ⭐⭐⭐ Quanto tempo o event loop aguenta
+
 Tags: node, performance, investigacao, terminal
 
 A seção 2 desta aula prometeu que o Node atende milhares de conexões com uma única thread — desde que o trabalho seja I/O, não cálculo. Prove isso (e o limite disso) na prática: meça quanto uma rota "pesada" de CPU (sem nenhum `await`) atrasa **todas** as outras requisições simultâneas do seu servidor, mesmo as mais simples.

@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 11 fechamos o CRUD de eventos ponta a ponta: Vue chamando `services/`, Express validando e persistindo no MySQL, Firebase autenticando. Hoje mudamos de fornecedor: o mesmo recurso `evento`, agora falando direto com o **Supabase** — sem API própria no meio. É a mesma pergunta de arquitetura de sempre ("onde mora a lógica?"), respondida de um jeito diferente.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -19,6 +18,8 @@ Ao final desta aula você será capaz de:
 - Assinar mudanças em tempo real com Realtime e implementar o padrão Adapter trocando o back-end via variável de ambiente.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 11 fechamos o CRUD de eventos ponta a ponta: Vue chamando `services/`, Express validando e persistindo no MySQL, Firebase autenticando. Hoje mudamos de fornecedor: o mesmo recurso `evento`, agora falando direto com o **Supabase** — sem API própria no meio. É a mesma pergunta de arquitetura de sempre ("onde mora a lógica?"), respondida de um jeito diferente.
 
 Checklist antes de começar:
 
@@ -119,7 +120,7 @@ Rode o SQL (botão **Run** ou `Ctrl+Enter`). Confirme no **Table Editor** que as
 
 ## 4. Row Level Security: a armadilha nº1
 
-Por padrão, o Supabase cria toda tabela **sem RLS habilitado** — o que na prática significa "qualquer um com a chave `anon` lê e escreve tudo", porque o Postgres do Supabase é acessado via API REST autogerada por cima do banco. Isso é perigoso, então o primeiro passo depois de criar uma tabela de verdade é:
+Toda tabela criada pelo **SQL Editor** (o caminho que usamos na §3) nasce **sem RLS habilitado** — o que na prática significa "qualquer um com a chave `anon` lê e escreve tudo", porque o Postgres do Supabase é acessado via API REST autogerada por cima do banco. Isso é perigoso, então o primeiro passo depois de criar uma tabela de verdade é:
 
 ```sql
 alter table eventos enable row level security;
@@ -203,7 +204,7 @@ Em um `UPDATE`, as duas coexistem e respondem perguntas diferentes: `USING` deci
 > **📌 Na prova**
 > `USING` = filtro sobre a linha que já existe (quem pode ver/mexer). `WITH CHECK` = validação sobre o dado que está sendo escrito (o resultado é permitido?). `INSERT` só tem `WITH CHECK` (não existe linha "antes"). `SELECT`/`DELETE` só têm `USING`. `UPDATE` tem os dois.
 
-## 🧩 Padrão de projeto em uso: Adapter
+## 🧩 Padrão de projeto em uso — Adapter
 
 O padrão **Adapter** (estrutural) permite que duas interfaces incompatíveis trabalhem juntas, criando uma camada intermediária que traduz uma para a outra. É exatamente o que vamos construir na seção 8: duas implementações de `eventosRepo` — uma fala com a API Express (Aula 11), outra fala direto com o Supabase — mas **as duas expõem a mesma interface** (`listar()`, `buscarPorId()`, `criar()`, `atualizar()`, `remover()`). O resto do front (store, telas) não sabe, e não precisa saber, qual das duas está em uso. Trocar de fornecedor de dados vira uma linha de variável de ambiente, não uma reescrita de tela.
 
@@ -407,7 +408,9 @@ export function observarAutenticacao(callback) {
   const { data: assinatura } = supabase.auth.onAuthStateChange((_evento, sessao) => {
     callback(sessao)
   })
-  return assinatura.subscription.unsubscribe // função de cancelamento
+  // devolvemos uma função que chama o método NO objeto — passar
+  // `assinatura.subscription.unsubscribe` solto perderia o `this`
+  return () => assinatura.subscription.unsubscribe()
 }
 ```
 
@@ -503,6 +506,8 @@ export async function enviarImagemEvento(arquivo) {
 
 ### Realtime: a lista se atualizando sozinha
 
+**Antes do código, um passo no painel:** o Realtime só emite eventos de tabelas incluídas na publicação de replicação lógica, e nenhuma tabela entra nela por padrão. Vá em **Database → Replication**, abra a publicação `supabase_realtime` e marque a tabela `eventos`. Sem isso, o `subscribe()` conecta, não dá erro nenhum, e simplesmente nada acontece — é o motivo nº 1 de "meu Realtime não funciona".
+
 ```js
 // trecho de EventosListaView.vue (variante Supabase)
 import { onMounted, onUnmounted } from 'vue'
@@ -565,14 +570,14 @@ export const useEventosStore = defineStore('eventos', () => {
   const itemAtual = ref(null)
   const carregando = ref(false)
   const erro = ref(null)
-  const paginacao = ref({ pagina: 1, limite: 10, total: 0, totalPaginas: 0 })
+  const paginacao = ref({ pagina: 1, porPagina: 10, total: 0, totalPaginas: 0 })
 
-  async function carregar({ pagina = 1, limite = 10 } = {}) {
+  async function carregar({ pagina = 1, porPagina = 10 } = {}) {
     carregando.value = true
     erro.value = null
 
-    const inicio = (pagina - 1) * limite
-    const fim = inicio + limite - 1
+    const inicio = (pagina - 1) * porPagina
+    const fim = inicio + porPagina - 1
 
     const { data, error, count } = await supabase
       .from('eventos')
@@ -584,7 +589,7 @@ export const useEventosStore = defineStore('eventos', () => {
       erro.value = error.message
     } else {
       lista.value = data
-      paginacao.value = { pagina, limite, total: count, totalPaginas: Math.ceil(count / limite) }
+      paginacao.value = { pagina, porPagina, total: count, totalPaginas: Math.ceil(count / porPagina) }
     }
 
     carregando.value = false
@@ -715,35 +720,37 @@ function formatarData(isoString) {
 
 Com o CRUD direto funcionando, damos o passo seguinte: extrair uma interface comum que permita alternar entre a API Express (Aula 11) e o Supabase sem tocar em store nem em tela.
 
+Repare numa diferença que a tela do Passo 2 deixou passar de propósito: falando **direto** com o Supabase, o front recebe as colunas cruas do Postgres (`evento.data_hora`, `evento.imagem_url`) e o template se adaptou a elas. Do lado da API Express, o mesmo evento chega em camelCase (`dataHora`, `imagemUrl`), porque o repositório do back-end traduz. Duas implementações da "mesma" interface devolvendo nomes de campo diferentes não é um Adapter — é um vazamento. No Passo 4, a conversão passa a ser responsabilidade explícita do adaptador Supabase, e a tela volta a falar um vocabulário só.
+
 ### Passo 3 — Interface comum e implementação para a API Express
 
 ```js
 // src/repositories/eventosRepoExpress.js
-import api from '@/services/api'
+import http from '@/services/http'
 
 export const eventosRepoExpress = {
-  async listar({ pagina = 1, limite = 10 } = {}) {
-    const resposta = await api.get('/eventos', { params: { pagina, limite } })
+  async listar({ pagina = 1, porPagina = 10 } = {}) {
+    const resposta = await http.get('/eventos', { params: { pagina, porPagina } })
     return resposta.data // { dados, paginacao }
   },
 
   async buscarPorId(id) {
-    const resposta = await api.get(`/eventos/${id}`)
+    const resposta = await http.get(`/eventos/${id}`)
     return resposta.data
   },
 
   async criar(evento) {
-    const resposta = await api.post('/eventos', evento)
+    const resposta = await http.post('/eventos', evento)
     return resposta.data
   },
 
   async atualizar(id, evento) {
-    const resposta = await api.put(`/eventos/${id}`, evento)
+    const resposta = await http.put(`/eventos/${id}`, evento)
     return resposta.data
   },
 
   async remover(id) {
-    await api.delete(`/eventos/${id}`)
+    await http.delete(`/eventos/${id}`)
   },
 }
 ```
@@ -754,10 +761,39 @@ export const eventosRepoExpress = {
 // src/repositories/eventosRepoSupabase.js
 import { supabase } from '@/services/supabase'
 
+// mesma tradução snake_case → camelCase que o repositório MySQL faz na Aula 11
+function linhaParaEvento(linha) {
+  if (!linha) return null
+  return {
+    id: linha.id,
+    titulo: linha.titulo,
+    descricao: linha.descricao,
+    categoria: linha.categoria,
+    dataHora: linha.data_hora,
+    local: linha.local,
+    vagas: linha.vagas,
+    imagemUrl: linha.imagem_url,
+    usuarioId: linha.usuario_id,
+  }
+}
+
+// e o caminho inverso, para insert/update
+function eventoParaLinha(evento) {
+  return {
+    titulo: evento.titulo,
+    descricao: evento.descricao,
+    categoria: evento.categoria,
+    data_hora: evento.dataHora,
+    local: evento.local,
+    vagas: evento.vagas,
+    imagem_url: evento.imagemUrl || null,
+  }
+}
+
 export const eventosRepoSupabase = {
-  async listar({ pagina = 1, limite = 10 } = {}) {
-    const inicio = (pagina - 1) * limite
-    const fim = inicio + limite - 1
+  async listar({ pagina = 1, porPagina = 10 } = {}) {
+    const inicio = (pagina - 1) * porPagina
+    const fim = inicio + porPagina - 1
 
     const { data, error, count } = await supabase
       .from('eventos')
@@ -769,38 +805,42 @@ export const eventosRepoSupabase = {
 
     // Formato devolvido igual ao da API Express — é isso que faz o
     // Adapter funcionar: a FORMA da resposta precisa ser a mesma.
+    // Inclusive o NOME DOS CAMPOS: as colunas do Postgres são snake_case
+    // (data_hora, imagem_url), mas o contrato do front é camelCase desde a
+    // Aula 06. Do lado Express quem traduz é o repositório do back-end; aqui,
+    // como não existe back-end nosso no meio, a tradução é obrigação do Adapter.
     return {
-      dados: data,
-      paginacao: { pagina, limite, total: count, totalPaginas: Math.ceil(count / limite) },
+      dados: data.map(linhaParaEvento),
+      paginacao: { pagina, porPagina, total: count, totalPaginas: Math.ceil(count / porPagina) },
     }
   },
 
   async buscarPorId(id) {
     const { data, error } = await supabase.from('eventos').select('*').eq('id', id).single()
     if (error) throw new Error(error.message)
-    return data
+    return linhaParaEvento(data)
   },
 
   async criar(evento) {
     const { data: sessao } = await supabase.auth.getUser()
     const { data, error } = await supabase
       .from('eventos')
-      .insert({ ...evento, usuario_id: sessao.user.id })
+      .insert({ ...eventoParaLinha(evento), usuario_id: sessao.user.id })
       .select()
       .single()
     if (error) throw new Error(error.message)
-    return data
+    return linhaParaEvento(data)
   },
 
   async atualizar(id, evento) {
     const { data, error } = await supabase
       .from('eventos')
-      .update(evento)
+      .update(eventoParaLinha(evento))
       .eq('id', id)
       .select()
       .single()
     if (error) throw new Error(error.message)
-    return data
+    return linhaParaEvento(data)
   },
 
   async remover(id) {
@@ -858,11 +898,27 @@ Nenhuma linha da store (`eventosStore.js`) ou das telas (`EventosListaView.vue`,
 > **📌 Na prova**
 > Facade (Aula 11) simplifica uma interface complexa. Adapter (esta aula) traduz uma interface para outra, permitindo trocar a implementação sem o cliente perceber. A camada `services/` do UniEventos usa os dois: é Facade em relação às telas (esconde detalhes de HTTP/Supabase) e se apoia num Adapter (`eventosRepo`) para trocar de fornecedor por baixo.
 
+### Como testar
+
+O teste do Adapter é o mesmo roteiro executado **duas vezes**, com uma linha de `.env` de diferença. Faça assim:
+
+1. Com `VITE_BACKEND=express` no `.env` (e a `unieventos-api` + MySQL rodando), abra o UniEventos: liste, crie, edite e exclua um evento. Anote o que aparece na aba Network: requisições para `http://localhost:3000/api/eventos`.
+2. Pare o `npm run dev`, troque para `VITE_BACKEND=supabase`, suba de novo e **repita exatamente os mesmos quatro passos**. Agora as requisições saem para `https://<seu-projeto>.supabase.co/rest/v1/eventos`.
+
+Resultado esperado: as duas rodadas se comportam igual na tela — mesma lista, mesmo formulário preenchido na edição, mesma data formatada (sinal de que a tradução `data_hora` → `dataHora` do Passo 4 está funcionando), mesmo comportamento do botão de excluir. Nenhum arquivo dentro de `stores/` ou `views/` foi tocado entre uma rodada e outra: confirme com `git status`.
+
+Dois testes negativos fecham a verificação:
+
+3. **RLS de verdade** — deslogado, tente criar um evento pelo console do navegador: `await supabase.from('eventos').insert({ titulo: 'teste' })`. Resultado esperado: `error` de violação de policy, `data: null` — a tela nem precisa impedir, o banco impede.
+4. **Realtime** — com a replicação habilitada, abra o UniEventos em duas abas e crie um evento numa delas. Resultado esperado: a lista da outra aba se atualiza sozinha, sem F5.
+
 ## 🧪 Laboratório
 
 ### Nível A — Fixação
 
 **A1.** A tabela `eventos` está com RLS habilitado e tem **só** a policy `eventos_leitura_publica`. Um usuário autenticado roda `supabase.from('eventos').insert({ ... }).select()`. Preveja o que vem em `{ data, error }` — e compare com o que vem num `select` quando não existe policy nenhuma. Por que os dois casos se comportam de forma diferente?
+
+Resultado esperado: o `insert` devolve `data: null` e um `error` de violação de policy (código `42501`), porque não existe policy de `insert`; o `select` sem policy nenhuma devolve `data: []` e `error: null` — silêncio, não erro. RLS nega por padrão, e negar uma leitura é simplesmente não devolver linhas.
 
 **A2.** Complete as lacunas da policy que permite a um usuário alterar **apenas as próprias** inscrições, sem poder transferi-las para outra pessoa. Depois diga qual das duas cláusulas impede o "roubo" de uma inscrição.
 
@@ -874,13 +930,23 @@ using (________________)
 with check (________________);
 ```
 
+Resultado esperado: `using (auth.uid() = usuario_id)` e `with check (auth.uid() = usuario_id)`. É o `with check` que impede o roubo: ele valida a linha **depois** da alteração, barrando um `update` que tente trocar o `usuario_id` para outra pessoa.
+
 **A3.** Verdadeiro ou falso, com justificativa: "Um `try/catch` ao redor de `await supabase.from('eventos').delete().eq('id', id)` captura a violação de policy quando o usuário tenta apagar um evento alheio."
 
-**A4.** Uma tabela tem 15 eventos. Preveja `data.length` e `count` para `.select('*', { count: 'exact' }).range(10, 19)`. E para `.range(0, 4)`? Que combinação de `pagina`/`limite` da store produz cada chamada?
+Resultado esperado: falso — o `supabase-js` não lança exceção nesses casos; ele resolve a Promise com `{ data, error }`. Um `delete` que não casa com a policy nem chega a ser erro: afeta zero linhas e volta `error: null`. Só olhando o retorno (e o `count`) é que você descobre o que aconteceu.
+
+**A4.** Uma tabela tem 15 eventos. Preveja `data.length` e `count` para `.select('*', { count: 'exact' }).range(10, 19)`. E para `.range(0, 4)`? Que combinação de `pagina`/`porPagina` da store produz cada chamada?
+
+Resultado esperado: `.range(10, 19)` devolve `data.length === 5` (só existem 15 linhas) e `count === 15` — `count` é sempre o total da consulta, não o da fatia; corresponde a `pagina: 2, porPagina: 10`. `.range(0, 4)` devolve `data.length === 5` e `count === 15`, correspondendo a `pagina: 1, porPagina: 5`.
 
 **A5.** Em duas linhas: a chave `anon` vai para o bundle público do front e isso é seguro por design; a `service_role` não pode ir. O que exatamente cada uma "respeita" ou "ignora" dentro do Postgres?
 
+Resultado esperado: a `anon` entra como o papel `anon`/`authenticated` e **respeita** todas as policies de RLS — por isso pode ser pública. A `service_role` **ignora** o RLS por completo (é `BYPASSRLS`): com ela, qualquer pessoa lê e escreve qualquer linha de qualquer tabela. Ela só existe para código de servidor.
+
 **A6.** `carregarUm(id)` da store usa `.maybeSingle()`; `buscarPorId` do `eventosRepoSupabase` usa `.single()`. Para um `id` inexistente, preveja o `{ data, error }` de cada um e diga qual dos dois comportamentos o `eventosRepoExpress` (que devolve `404`) espelha melhor.
+
+Resultado esperado: `.maybeSingle()` devolve `data: null, error: null`; `.single()` devolve `data: null` e um `error` (`PGRST116` — 0 linhas onde se esperava exatamente 1). O `.single()` espelha melhor o Express, porque também transforma "não encontrei" em erro, que é o que a store precisa para exibir "Evento não encontrado".
 
 ### Nível B — Aplicação
 
@@ -926,7 +992,7 @@ Confirme que o Realtime está habilitado para a tabela em Database → Replicati
 
 ### Nível C — Desafio em sala
 
-**C1.** Adapter comparativo. Implemente as duas versões do repositório (`Repo...Express` e `Repo...Supabase`) para sua entidade principal, com a mesma interface, e alterne entre elas por variável de ambiente. Atenção ao detalhe que costuma quebrar: os `id` são `INT` no MySQL e `uuid` no Supabase — a store e as rotas precisam funcionar com os dois.
+**C1.** Adapter comparativo. Implemente as duas versões do repositório (`Repo...Express` e `Repo...Supabase`) para sua entidade principal, com a mesma interface, e alterne entre elas por variável de ambiente. Atenção a dois detalhes que costumam quebrar. (1) Os `id` são `INT` no MySQL e `uuid` no Supabase — a store e as rotas precisam funcionar com os dois. (2) A tabela do Supabase tem uma coluna de **dono** (`usuario_id`, exigida pelas policies de RLS) que a tabela MySQL das Aulas 09/11 não tem: decida se o Adapter devolve esse campo só num dos lados (e a tela lida com `undefined`) ou se você acrescenta `criado_por` também no MySQL — e escreva a decisão em uma linha no README.
 
 Resultado esperado: trocar `VITE_BACKEND` no `.env` e reiniciar o `npm run dev` mantém a tela funcionando sem tocar em nenhuma linha de `store` ou `view`, inclusive o formulário de edição.
 

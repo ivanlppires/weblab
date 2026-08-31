@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 01 revisamos JavaScript moderno e comparamos DOM manual com o estilo declarativo. Hoje esse estilo declarativo ganha nome: **Vue 3**.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,10 @@ Ao final desta aula você será capaz de:
 - Construir a primeira versão navegável do UniEventos: lista, busca, filtro e inscrição.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 01 revisamos o JavaScript moderno que o Vue exige o tempo todo — `const`/`let`, arrow functions, desestruturação, spread, `map`/`filter`/`reduce`, módulos ES e `async`/`await`. Também montamos, à mão, uma pequena lista de eventos manipulando o DOM com `document.createElement` e `innerHTML`, e comparamos esse estilo imperativo com o estilo declarativo, em que você descreve **o que** a tela deve mostrar e o framework cuida do **como**.
+
+Hoje esse estilo declarativo ganha nome, ferramenta e projeto: **Vue 3**, criado com Vite, com a primeira versão navegável do UniEventos no fim da aula. Tudo o que você escreveu na Aula 01 continua valendo — o Vue não substitui o JavaScript, ele organiza o JavaScript que você já sabe.
 
 - Ambiente instalado na Aula 01: Node 22 LTS, VS Code com Vue - Official/ESLint/Prettier, Git.
 - Conforto com `let`/`const`, arrow functions, desestruturação, `map`/`filter`, `import`/`export` (Aula 01, Seção 3).
@@ -49,7 +52,7 @@ O ecossistema Vue que usaremos no semestre:
 | **Vuetify** | Biblioteca de componentes visuais prontos (Material Design) | Aula 04 |
 | **Axios** | Cliente HTTP para consumir APIs | Aula 06 |
 
-Vamos usar a versão **3.5.41** do Vue, instalada via **Vite 8.2.1** com o plugin **@vitejs/plugin-vue 6.0.8** — as mesmas versões testadas e listadas no início do curso.
+Vamos usar a versão **3.5.41** do Vue, instalada via **Vite 8.2.1** com o plugin **@vitejs/plugin-vue 6.0.8** — as versões fixadas para esta disciplina, as mesmas em que todos os exemplos deste material foram testados.
 
 > **🧠 Você sabia?**
 > O Vue foi criado por Evan You em 2014, um ex-funcionário do Google que trabalhava com AngularJS e queria algo mais leve para prototipar interfaces rapidamente. A ideia deu tão certo que hoje o Vue é mantido por uma organização independente (a Vue.js), financiada por patrocinadores e por uma comunidade global — sem estar amarrado a nenhuma big tech, diferente do React (Meta) ou do Angular (Google). É por isso que a documentação oficial é, historicamente, uma das mais elogiadas do ecossistema JavaScript: escrever documentação clara sempre foi parte da estratégia de adoção do projeto.
@@ -323,7 +326,7 @@ h1 {
 
 Um `.vue` tem até três blocos:
 
-- **`<script setup>`** — lógica do componente em Composition API. Tudo declarado aqui (variáveis, funções) fica automaticamente disponível no `<template>`, sem `return` explícito — é isso que o `setup: '<script setup>'` do compilador do Vite faz por você.
+- **`<script setup>`** — lógica do componente em Composition API. Tudo declarado aqui (variáveis, funções) fica automaticamente disponível no `<template>`, sem `return` explícito — é o compilador de SFC do Vue, via `@vitejs/plugin-vue`, que escreve esse `return` implícito por você na hora do build.
 - **`<template>`** — o HTML do componente, com as diretivas do Vue.
 - **`<style scoped>`** — CSS que se aplica **somente** a este componente (o Vue adiciona um atributo único a cada elemento na hora do build, isolando o CSS). Sem `scoped`, o estilo vaza para a aplicação inteira.
 
@@ -520,6 +523,7 @@ const aceitaTermos = ref(false)
 const categoriasEscolhidas = ref([])
 const categoriaSelecionada = ref('palestra')
 const email = ref('')
+const vagas = ref(0)
 </script>
 
 <template>
@@ -556,8 +560,9 @@ const email = ref('')
   <!-- .trim: remove espaços das pontas automaticamente -->
   <input v-model.trim="email" type="email" placeholder="seu@email.com" />
 
-  <!-- .number: converte o valor digitado para Number -->
-  <input v-model.number="categoriaSelecionada" type="number" />
+  <!-- .number: converte o valor digitado para Number — repare no ref próprio, numérico -->
+  <input v-model.number="vagas" type="number" />
+  <p>Vagas (tipo): {{ typeof vagas }}</p>
 
   <!-- .lazy: sincroniza no evento "change" (ao sair do campo), não a cada tecla -->
   <input v-model.lazy="busca" type="text" />
@@ -821,40 +826,38 @@ export default {
 > **📌 Na prova**
 > `onMounted` é, de longe, o hook mais usado na prática — é onde disparamos requisições `fetch` (Aula 03) porque é o primeiro momento em que temos garantia de que o DOM existe. `onUnmounted` é onde limpamos qualquer recurso externo (`setInterval`, `addEventListener` em `window`, conexões abertas) para não vazar memória quando o componente sai de cena.
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Observer (comportamental)
 
-> ### 🧩 Padrão de projeto em uso — Observer (comportamental)
->
-> O padrão **Observer** define uma relação um-para-muitos entre um objeto (o *subject*, que muda de estado) e vários *observers*, que são notificados automaticamente sempre que o subject muda — sem que o subject precise conhecer os observers individualmente.
->
-> Um Observer "na mão", em JavaScript puro:
->
-> ```js
-> // Um EventTarget simplificado — a base do Observer em JS puro
-> class ContadorObservavel {
->   constructor() {
->     this.valor = 0
->     this.observadores = []
->   }
->
->   observar(funcaoCallback) {
->     this.observadores.push(funcaoCallback)
->   }
->
->   incrementar() {
->     this.valor++
->     // notifica TODOS os observadores registrados
->     this.observadores.forEach((callback) => callback(this.valor))
->   }
-> }
->
-> const contador = new ContadorObservavel()
-> contador.observar((valor) => console.log('UI A atualizada:', valor))
-> contador.observar((valor) => console.log('UI B atualizada:', valor))
-> contador.incrementar() // dispara os dois observadores
-> ```
->
-> **É exatamente isso que o sistema de reatividade do Vue faz por baixo dos panos.** Quando você escreve `{{ contador }}` no template, o Vue registra esse trecho do DOM como um "observador" da variável `contador`. Quando você escreve `contador.value++`, o Vue percorre a lista de observadores daquela variável (os pedaços de template que a usam) e re-renderiza só eles — sem você escrever `observar()` ou `notificar()` manualmente. `ref` e `reactive` são, na essência, subjects observáveis; cada trecho do template que os lê vira, automaticamente, um observer. Vamos abrir esse mecanismo com mais detalhe na Aula 03, quando falarmos do padrão **Proxy**.
+O padrão **Observer** define uma relação um-para-muitos entre um objeto (o *subject*, que muda de estado) e vários *observers*, que são notificados automaticamente sempre que o subject muda — sem que o subject precise conhecer os observers individualmente.
+
+Um Observer "na mão", em JavaScript puro:
+
+```js
+// Um EventTarget simplificado — a base do Observer em JS puro
+class ContadorObservavel {
+  constructor() {
+    this.valor = 0
+    this.observadores = []
+  }
+
+  observar(funcaoCallback) {
+    this.observadores.push(funcaoCallback)
+  }
+
+  incrementar() {
+    this.valor++
+    // notifica TODOS os observadores registrados
+    this.observadores.forEach((callback) => callback(this.valor))
+  }
+}
+
+const contador = new ContadorObservavel()
+contador.observar((valor) => console.log('UI A atualizada:', valor))
+contador.observar((valor) => console.log('UI B atualizada:', valor))
+contador.incrementar() // dispara os dois observadores
+```
+
+**É exatamente isso que o sistema de reatividade do Vue faz por baixo dos panos.** Quando você escreve `{{ contador }}` no template, o Vue registra esse trecho do DOM como um "observador" da variável `contador`. Quando você escreve `contador.value++`, o Vue percorre a lista de observadores daquela variável (os pedaços de template que a usam) e re-renderiza só eles — sem você escrever `observar()` ou `notificar()` manualmente. `ref` e `reactive` são, na essência, subjects observáveis; cada trecho do template que os lê vira, automaticamente, um observer. Vamos abrir esse mecanismo com mais detalhe na Aula 03, quando falarmos do padrão **Proxy**.
 
 ## 💻 Mão na massa — primeira versão do UniEventos
 
@@ -1032,6 +1035,22 @@ function vagasRestantes(evento) {
 > **⚠️ Atenção**
 > Repare que `obterEventosFiltrados()` é chamada **três vezes** no template (na `v-for`, e de novo para checar se está vazio). Cada chamada refaz o `filter` duas vezes do zero — funciona, mas é desperdício de processamento e, pior, dificulta manter os resultados sincronizados. Vamos resolver isso com `computed()` já na próxima aula.
 
+### Como testar
+
+```bash
+npm run dev
+```
+
+Abra `http://localhost:5173` e confira os cinco comportamentos:
+
+1. Os quatro eventos aparecem na tela, cada card com título, categoria e vagas restantes.
+2. Digitar "vue" no campo de busca reduz a lista enquanto você digita, sem apertar nada.
+3. Trocar o filtro de categoria combina com a busca (os dois critérios valem ao mesmo tempo).
+4. Clicar em "Inscrever-se" aumenta `inscritos` em 1 e as vagas restantes caem na hora; quando chegam a zero, o card mostra "Evento lotado" e o botão fica desabilitado.
+5. Uma busca sem resultado mostra a mensagem de lista vazia, e não uma área em branco.
+
+Resultado esperado: os cinco funcionam **sem uma única linha de `document.querySelector`** — é o ponto da aula. Se a tela não reagir a um clique, o suspeito nº 1 é um `.value` esquecido dentro do `<script setup>` (no template ele é automático; no script, não).
+
 ## 🧪 Laboratório
 
 ### Nível A — Fixação
@@ -1074,14 +1093,14 @@ Resultado esperado: porque `v-show` só alterna `display: none` via CSS (barato 
 ```js
 import { reactive } from 'vue'
 
-const eventos = reactive([])
+let eventos = reactive([])
 
 async function recarregar() {
   eventos = [{ id: 9, titulo: 'Novo evento' }]
 }
 ```
 
-Resultado esperado: `reactive()` torna o **conteúdo** do array reativo, mas reatribuir a **variável inteira** (`eventos = [...]`) quebra a conexão — o template continua olhando para o array antigo. A correção troca `reactive([])` por `ref([])` e usa `eventos.value = [...]`, ou mantém `reactive` e faz `eventos.splice(0, eventos.length, ...novaLista)` para trocar o conteúdo sem trocar a referência.
+Resultado esperado: `reactive()` torna o **conteúdo** do array reativo, mas reatribuir a **variável inteira** (`eventos = [...]`) quebra a conexão — o template continua olhando para o array antigo, agora sem ninguém apontando para ele. (Se você escrever `const eventos = reactive([])`, como é o mais comum, o sintoma nem chega a ser esse: a própria reatribuição estoura `TypeError: Assignment to constant variable`. O `let` acima existe para o bug aparecer em silêncio, que é o caso difícil de achar.) A correção troca `reactive([])` por `ref([])` e usa `eventos.value = [...]`, ou mantém `reactive` e faz `eventos.splice(0, eventos.length, ...novaLista)` para trocar o conteúdo sem trocar a referência.
 
 **A5.** Preveja o que aparece na tela para cada linha abaixo, usando o que a Seção 5.7 explica sobre `v-html`:
 
@@ -1143,7 +1162,19 @@ Resultado esperado: cliques seguintes não fazem nada.
 <details markdown="1">
 <summary>Dica</summary>
 
-`<button @click.once="alert('Dica: use os filtros para encontrar eventos mais rápido!')">Ver dica</button>`
+O template só enxerga o que está declarado no `<script setup>` — globais do navegador como `alert` **não** estão nessa lista, e `@click.once="alert('...')"` compila para `_ctx.alert(...)`, quebrando com `alert is not a function`. Declare a função no script e passe o nome dela:
+
+```vue
+<script setup>
+function mostrarDica() {
+  alert('Dica: use os filtros para encontrar eventos mais rápido!')
+}
+</script>
+
+<template>
+  <button @click.once="mostrarDica">Ver dica</button>
+</template>
+```
 </details>
 
 ### Nível C — Desafio em sala

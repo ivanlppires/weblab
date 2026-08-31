@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 02 criamos a primeira versão do UniEventos: lista, busca, filtro e inscrição, tudo com diretivas básicas e uma função de filtro chamada manualmente três vezes no template. Hoje resolvemos exatamente esse desperdício com `computed()`, aprofundamos `v-for` e passamos a carregar os eventos de forma assíncrona dentro de `onMounted()`.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - Entregar uma versão do UniEventos com filtros combinados resolvidos por computed, carregamento assíncrono e destaque visual condicional.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 02 criamos a primeira versão do UniEventos: lista, busca, filtro e inscrição, tudo com diretivas básicas e uma função de filtro chamada manualmente três vezes no template. Hoje resolvemos exatamente esse desperdício com `computed()`, aprofundamos `v-for` e passamos a carregar os eventos de forma assíncrona dentro de `onMounted()`.
 
 - Projeto `unieventos-web` funcionando, com a listagem, busca e filtro da Aula 02.
 - Domínio de `ref()`, `v-model`, `v-for`+`:key`, `v-if`/`v-show` e dos hooks `onMounted`/`onUnmounted` (Aula 02).
@@ -113,14 +114,14 @@ import { ref } from 'vue'
 
 const programacao = ref([
   {
-    dia: '10/09/2026',
+    dia: 'Dia 1',
     sessoes: [
       { horario: '19h', titulo: 'Abertura' },
       { horario: '20h', titulo: 'Palestra magna' },
     ],
   },
   {
-    dia: '11/09/2026',
+    dia: 'Dia 2',
     sessoes: [
       { horario: '14h', titulo: 'Oficina de Vue.js' },
       { horario: '16h', titulo: 'Mesa redonda' },
@@ -672,34 +673,32 @@ const percentualOcupado = computed(() => Math.round((inscritos.value / vagas.val
 </style>
 ```
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Proxy (estrutural)
 
-> ### 🧩 Padrão de projeto em uso — Proxy (estrutural)
->
-> O padrão **Proxy** cria um objeto substituto que controla o acesso a outro objeto — interceptando leituras, escritas ou chamadas, e adicionando comportamento extra sem que quem usa o objeto perceba a diferença.
->
-> Um Proxy simplificado, em JavaScript puro, para logar todo acesso a um objeto:
->
-> ```js
-> const evento = { titulo: 'Semana da Computação', vagas: 40 }
->
-> const eventoComLog = new Proxy(evento, {
->   get(alvo, propriedade) {
->     console.log(`[leitura] alguém acessou "${propriedade}"`)
->     return alvo[propriedade]
->   },
->   set(alvo, propriedade, novoValor) {
->     console.log(`[escrita] "${propriedade}" mudou de "${alvo[propriedade]}" para "${novoValor}"`)
->     alvo[propriedade] = novoValor
->     return true
->   },
-> })
->
-> console.log(eventoComLog.titulo) // dispara o "get" -> loga e retorna o valor
-> eventoComLog.vagas = 39          // dispara o "set" -> loga e altera o valor real
-> ```
->
-> **É exatamente este mecanismo que `reactive()` usa por dentro.** Quando você chama `reactive(objeto)`, o Vue devolve um `Proxy` que envolve o objeto original. Toda leitura de propriedade (`evento.titulo`) passa pelo `get` do Proxy, que registra "este trecho de template/computed depende de `titulo`" (o rastreamento de dependências que sustenta o padrão Observer da Aula 02). Toda escrita (`evento.vagas = 39`) passa pelo `set`, que dispara a notificação para quem depende daquele valor, disparando a re-renderização. `ref()` usa uma técnica um pouco diferente por baixo (um objeto com getter/setter na propriedade `.value`, sem precisar de um `Proxy` completo, já que só precisa interceptar uma única propriedade), mas o princípio — interceptar acesso para adicionar comportamento reativo — é o mesmo padrão **Proxy**.
+O padrão **Proxy** cria um objeto substituto que controla o acesso a outro objeto — interceptando leituras, escritas ou chamadas, e adicionando comportamento extra sem que quem usa o objeto perceba a diferença.
+
+Um Proxy simplificado, em JavaScript puro, para logar todo acesso a um objeto:
+
+```js
+const evento = { titulo: 'Semana da Computação', vagas: 40 }
+
+const eventoComLog = new Proxy(evento, {
+  get(alvo, propriedade) {
+    console.log(`[leitura] alguém acessou "${propriedade}"`)
+    return alvo[propriedade]
+  },
+  set(alvo, propriedade, novoValor) {
+    console.log(`[escrita] "${propriedade}" mudou de "${alvo[propriedade]}" para "${novoValor}"`)
+    alvo[propriedade] = novoValor
+    return true
+  },
+})
+
+console.log(eventoComLog.titulo) // dispara o "get" -> loga e retorna o valor
+eventoComLog.vagas = 39          // dispara o "set" -> loga e altera o valor real
+```
+
+**É exatamente este mecanismo que `reactive()` usa por dentro.** Quando você chama `reactive(objeto)`, o Vue devolve um `Proxy` que envolve o objeto original. Toda leitura de propriedade (`evento.titulo`) passa pelo `get` do Proxy, que registra "este trecho de template/computed depende de `titulo`" (o rastreamento de dependências que sustenta o padrão Observer da Aula 02). Toda escrita (`evento.vagas = 39`) passa pelo `set`, que dispara a notificação para quem depende daquele valor, disparando a re-renderização. `ref()` usa uma técnica um pouco diferente por baixo (um objeto com getter/setter na propriedade `.value`, sem precisar de um `Proxy` completo, já que só precisa interceptar uma única propriedade), mas o princípio — interceptar acesso para adicionar comportamento reativo — é o mesmo padrão **Proxy**.
 
 ## 💻 Mão na massa — UniEventos com filtros combinados
 
@@ -890,10 +889,7 @@ function limparFiltros() {
             Acontece em breve!
           </p>
 
-          <div
-            class="barra-progresso-fundo"
-            :style="{ '--percentual': percentualOcupacao(evento) + '%' }"
-          >
+          <div class="barra-progresso-fundo">
             <div
               class="barra-progresso"
               :style="{
@@ -997,6 +993,20 @@ function limparFiltros() {
 
 > **📌 Na prova**
 > Observe que `eventosFiltrados` e `eventosOrdenados` são duas computed **encadeadas**, e `totalFiltrado`/`totalVagasLivres` dependem de `eventosFiltrados`. Se você mudar `busca`, o Vue recalcula `eventosFiltrados` (porque ela lê `busca`), o que por sua vez invalida o cache de `eventosOrdenados`, `totalFiltrado` e `totalVagasLivres` — tudo automático, seguindo a cadeia de dependências. Você não escreve nenhuma chamada manual de "atualizar".
+
+### Como testar
+
+```bash
+npm run dev
+```
+
+1. **Carregamento** — ao abrir a página, a mensagem de "carregando" aparece por um instante antes da lista: é o `onMounted` com o carregamento assíncrono simulado.
+2. **Filtro e ordenação** — digitar na busca e trocar o critério de ordenação mudam a lista imediatamente, e os contadores (`totalFiltrado`, `totalVagasLivres`) acompanham.
+3. **Cache da computed** — acrescente temporariamente um `console.log('recalculou')` na primeira linha de `eventosFiltrados` e recarregue: a mensagem aparece **uma vez por mudança de dependência**, não uma vez por leitura no template. Comparar com a Aula 02, em que a função era chamada três vezes por render, é o ponto da aula. Apague o `console.log` depois.
+4. **Selo "em breve"** — só os eventos dentro dos próximos 7 dias mostram o selo, e a barra de ocupação fica vermelha quando não há mais vagas.
+5. **Lista vazia** — uma busca sem resultado mostra a mensagem de vazio, não uma área em branco.
+
+Resultado esperado: os cinco passam. Se a lista não reagir a uma mudança de `busca`, o suspeito é uma `computed` que esqueceu de **ler** a ref reativa dentro do corpo (uma dependência não lida nunca é rastreada).
 
 ## 🧪 Laboratório
 

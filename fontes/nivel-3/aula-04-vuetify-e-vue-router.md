@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Nas Aulas 02 e 03 você construiu o UniEventos em Vue puro: listagem com `v-for`, filtros com `computed()`, carregamento assíncrono em `onMounted()` e HTML/CSS escritos à mão. Hoje ele ganha interface profissional com **Vuetify** e navegação real com **Vue Router**, virando uma SPA de verdade — e você recebe as instruções completas da Avaliação 1.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - Transformar o UniEventos de página única em uma SPA navegável com múltiplas views.
 
 ## 📋 Pré-requisitos desta aula
+
+Nas Aulas 02 e 03 você construiu o UniEventos em Vue puro: listagem com `v-for`, filtros com `computed()`, carregamento assíncrono em `onMounted()` e HTML/CSS escritos à mão. Hoje ele ganha interface profissional com **Vuetify** e navegação real com **Vue Router**, virando uma SPA de verdade — e você recebe as instruções completas da Avaliação 1.
 
 Antes de começar, confirme que você tem:
 
@@ -53,7 +54,7 @@ O Vuetify 4 implementa o **Material Design 3 (MD3)**, o design system do Google 
 - **Tipografia em escala** — títulos, corpo e rótulos seguem uma escala tipográfica nomeada (`display`, `headline`, `title`, `body`, `label`), cada uma em tamanhos `large`/`medium`/`small`.
 - **Forma e espaçamento** — cantos arredondados e um sistema de espaçamento em múltiplos de 4px, aplicado por classes utilitárias.
 
-> **⚠️ Atenção:** o Vuetify 4 migrou a tipografia de MD2 para MD3. As classes antigas `text-h1` … `text-h6` continuam existindo, mas mudaram de tamanho e semântica. Os equivalentes MD3 são nomes como `text-display-large`, `text-headline-medium`, `text-title-large`, `text-body-medium`, `text-label-large`. Nesta disciplina, prefira citar explicitamente a classe MD3 ou definir sua própria tipografia — não assuma que `text-h4` de um tutorial antigo vai parecer do jeito que você viu em vídeo.
+> **⚠️ Atenção:** o Vuetify 4 migrou a tipografia de MD2 para MD3. As classes antigas `text-h1` … `text-h6` continuam existindo, mas mudaram de tamanho e semântica. Os equivalentes MD3 são nomes como `text-display-large`, `text-headline-medium`, `text-title-large`, `text-body-medium`, `text-label-large`. As `text-h*` continuam sendo classes válidas e suportadas no Vuetify 4 — é o que usamos no código desta aula, por serem mais curtas e já conhecidas —, mas o tamanho que elas produzem mudou em relação ao Vuetify 3. Não assuma que o `text-h4` de um tutorial antigo vai parecer do jeito que você viu em vídeo: confira na tela, e prefira as classes MD3 (`text-headline-medium`, `text-title-large`…) quando quiser amarrar o texto à escala tipográfica do design system.
 
 > **🧠 Você sabia?**
 > O Material Design nasceu em 2014, no Google I/O, com uma metáfora central: a interface é feita de "papel digital" que pode se sobrepor, projetar sombra e se mover fisicamente — daí a importância da elevação nesse design system. A versão 3 (2021), a que o Vuetify 4 implementa, ganhou o apelido "Material You": a partir do Android 12, o sistema gera a paleta de cores do aplicativo inteiro extraindo tons do papel de parede do usuário. O Vuetify não faz essa extração automática, mas herda a mesma filosofia de "cores como papéis" (`primary`, `secondary`, `surface`...) que você configurou na seção 5 desta aula.
@@ -168,7 +169,7 @@ Dentro de `v-app`, os blocos estruturais mais comuns são:
     </v-main>
 
     <v-footer app color="primary">
-      <span>UNEMAT · FACET · 2026</span>
+      <span>UNEMAT · FACET · FACET-SNP-310</span>
     </v-footer>
   </v-app>
 </template>
@@ -228,7 +229,7 @@ O cartão é a unidade básica de conteúdo agrupado — um evento, um resultado
 <v-card>
   <v-img src="/img/evento.jpg" height="180" cover />
   <v-card-title>Semana Acadêmica de Computação</v-card-title>
-  <v-card-subtitle>29/09/2026 · Auditório Central</v-card-subtitle>
+  <v-card-subtitle>Auditório Central · 19h</v-card-subtitle>
   <v-card-text>
     Palestras, minicursos e apresentação de projetos dos estudantes.
   </v-card-text>
@@ -453,7 +454,7 @@ Essas classes evitam CSS customizado para casos simples de espaçamento e alinha
 
 Até agora o UniEventos era uma única página com tudo dentro de `App.vue`. Uma aplicação real precisa de **navegação**: uma URL para a lista de eventos, outra para o detalhe de um evento específico, outra para "sobre". Isso é o papel do **Vue Router**.
 
-O UniEventos, se você criou o projeto com `--router` (como recomenda a §4 da especificação), já vem com Vue Router 5.2.0 instalado e configurado. Vamos entender e expandir essa configuração.
+O UniEventos, se você criou o projeto com `--router` (como fizemos na Aula 02, no `npm create vue@latest`), já vem com Vue Router 5.2.0 instalado e configurado. Vamos entender e expandir essa configuração.
 
 ### Estrutura básica
 
@@ -586,13 +587,11 @@ const router = createRouter({
 export default router
 ```
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Composite (estrutural)
 
-> ### 🧩 Padrão de projeto em uso — Composite (estrutural)
->
-> A árvore de componentes do Vue é um exemplo direto do padrão **Composite**: um componente pode conter outros componentes, que por sua vez podem conter outros, formando uma hierarquia onde o "todo" e a "parte" são tratados de forma uniforme. `v-app` contém `v-app-bar`, `v-main` e `v-navigation-drawer`; `v-main` contém `RouterView`; `RouterView` renderiza uma view, que contém `v-container` > `v-row` > `v-col` > `v-card`. Em cada nível, você trabalha com a mesma interface (props, slots, eventos) sem precisar saber o que está por dentro.
->
-> O Vue Router aplica a mesma lógica na dimensão de **navegação**: rotas podem ter rotas-filhas (`children`), formando uma árvore de rotas que espelha uma árvore de `RouterView`s aninhados. Vamos explorar isso a fundo na Aula 05, quando construirmos a área administrativa com rotas aninhadas.
+A árvore de componentes do Vue é um exemplo direto do padrão **Composite**: um componente pode conter outros componentes, que por sua vez podem conter outros, formando uma hierarquia onde o "todo" e a "parte" são tratados de forma uniforme. `v-app` contém `v-app-bar`, `v-main` e `v-navigation-drawer`; `v-main` contém `RouterView`; `RouterView` renderiza uma view, que contém `v-container` > `v-row` > `v-col` > `v-card`. Em cada nível, você trabalha com a mesma interface (props, slots, eventos) sem precisar saber o que está por dentro.
+
+O Vue Router aplica a mesma lógica na dimensão de **navegação**: rotas podem ter rotas-filhas (`children`), formando uma árvore de rotas que espelha uma árvore de `RouterView`s aninhados. Vamos explorar isso a fundo na Aula 05, quando construirmos a área administrativa com rotas aninhadas.
 
 ## 💻 Mão na massa — migrando o UniEventos para uma SPA de verdade
 
@@ -693,6 +692,9 @@ app.mount('#app')
 
 ### Passo 5 — criar o modelo de dados de eventos
 
+> **⚠️ Atenção — o modelo de dados muda aqui, e é de propósito**
+> Nas Aulas 02 e 03 cada evento tinha dois campos de lotação: `vagas` (capacidade total) e `inscritos` (quantos já se inscreveram), e a tela calculava `vagasRestantes` com uma função. A partir de agora o array local guarda **apenas `vagas`, já no sentido de "vagas ainda disponíveis"** — o campo `inscritos` sai de cena. O motivo é honesto: contagem de inscritos é informação que só um servidor consegue manter correta (dois navegadores inscrevendo ao mesmo tempo no mesmo evento), e manter um contador falso num array local só ensina um hábito ruim. Na Unidade 3, quando os eventos vierem da API (Aulas 09 e 11), `vagas` volta a ser a capacidade total e a contagem de inscritos passa a ser **derivada** da tabela `inscricoes`, no banco. Até lá, trate este arquivo como uma maquete de dados.
+
 ```js
 // src/data/eventos.js
 export const eventos = [
@@ -707,7 +709,7 @@ export const eventos = [
 ]
 ```
 
-Estes são os mesmos oito eventos-base que continuam evoluindo a partir de agora até a Unidade 3, quando virão de uma API de verdade.
+Estes oito eventos passam a ser a base do UniEventos daqui em diante, até a Unidade 3, quando virão de uma API de verdade.
 
 ### Passo 6 — atualizar `src/router/index.js`
 
@@ -1012,15 +1014,23 @@ import { RouterLink } from 'vue-router'
 </template>
 ```
 
-Repare que usamos `class="d-flex flex-column align-center justify-center"` em vez de `fill-height` — exatamente o alerta da §6 sobre a mudança de comportamento no Vuetify 4.
+Repare que usamos `class="d-flex flex-column align-center justify-center"` em vez de `fill-height` — exatamente o alerta da §3 sobre a mudança de comportamento do `fill-height` no Vuetify 4.
 
-### Passo 11 — testar a navegação
+### Como testar
 
 ```bash
 npm run dev
 ```
 
-Confira: a home lista os eventos com filtro funcionando; clicar em um card navega para o detalhe com a URL `/eventos/3`; o menu lateral abre com o ícone de hambúrguer; o botão de sol/lua alterna o tema; acessar uma URL inexistente (`/qualquer-coisa`) mostra a tela 404.
+Percorra os cinco pontos, na ordem:
+
+1. A home lista os oito eventos em cards Vuetify, e o campo de busca filtra a lista enquanto você digita.
+2. Clicar em um card navega para o detalhe, e a URL vira `/eventos/3` — sem recarregar a página (é uma SPA).
+3. O ícone de hambúrguer abre e fecha o `v-navigation-drawer`.
+4. O botão de sol/lua alterna entre os temas claro e escuro, e as cores institucionais mudam junto.
+5. Acessar uma URL inexistente (`/qualquer-coisa`) mostra a tela 404 com o botão "Voltar para o início" funcionando.
+
+Resultado esperado: os cinco passam sem nenhum erro no console. Um `Failed to resolve component` aponta um import faltando; uma tela em branco no detalhe costuma ser `props: true` esquecido na rota.
 
 ## 🧪 Laboratório
 
@@ -1115,6 +1125,7 @@ Resultado esperado: `/eventos/abc` redireciona para a tela 404 sem erro no conso
 ## 🏆 Desafios
 
 ### ⭐ O tema que esquece toda vez
+
 Tags: vuetify, vue, javascript
 
 O botão de sol/lua da seção 5 troca o tema na hora — mas dê um F5: a aplicação volta para `'light'`, mesmo que você tenha deixado no escuro há dois segundos. Ninguém espera reconfigurar a aparência do site toda vez que recarrega a página. Resolva isso lendo e escrevendo a preferência de tema em `localStorage`, sem usar Pinia (isso vem na Aula 06).
@@ -1135,6 +1146,7 @@ O botão de sol/lua da seção 5 troca o tema na hora — mas dê um F5: a aplic
 </details>
 
 ### ⭐⭐ Menu que só existe para quem usa mouse
+
 Tags: acessibilidade, vuetify, devtools
 
 Desconecte o mouse (ou apenas prometa a si mesmo não tocar nele) e tente abrir o menu lateral do UniEventos só com o teclado: `Tab` até o ícone de hambúrguer, `Enter` para abrir, `Tab` pelos itens, `Esc` para fechar. Em quantos passos você trava? O ícone de tema tem algum texto que um leitor de tela consiga anunciar, ou é só um ícone mudo?
@@ -1156,6 +1168,7 @@ Desconecte o mouse (ou apenas prometa a si mesmo não tocar nele) e tente abrir 
 </details>
 
 ### ⭐⭐⭐ Quanto custa carregar tudo de uma vez
+
 Tags: performance, vue, router
 
 A seção 7 recomenda lazy loading (`() => import(...)`) para toda view, "porque o padrão é esse". Mas quanto isso realmente economiza no UniEventos, hoje, com só quatro views? Meça de verdade antes de confiar na recomendação.
@@ -1176,6 +1189,7 @@ A seção 7 recomenda lazy loading (`() => import(...)`) para toda view, "porque
 </details>
 
 ### 🔥 Boss — Painel de favoritos do UniEventos
+
 Tags: vue, vuetify, router, projeto
 
 A Unidade 1 terminou: você tem uma SPA com Vuetify, rotas, tema e grid responsivo. Antes de a Unidade 2 trazer componentização séria e a Unidade 3 trazer um back-end de verdade, prove que consegue montar uma funcionalidade nova do zero usando só o que aprendeu até aqui — sem Pinia, sem Axios, sem API: tudo em memória, com `ref`/`computed` e o array local de dados.

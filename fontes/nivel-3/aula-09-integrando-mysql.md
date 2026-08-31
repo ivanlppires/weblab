@@ -2,10 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 08 você entregou a Avaliação 2 com um CRUD completo, middlewares próprios e validação com Zod — tudo isso guardando dados num array em memória. Hoje esse array desaparece. Toda a `unieventos-api` passa a persistir em um banco de dados relacional de verdade: **MySQL**.
-
-Vale reforçar o que muda e o que não muda hoje. O que muda: de onde os dados vêm e para onde vão — de um array na RAM para tabelas em disco, com todas as garantias que isso traz. O que **não** muda: o formato de cada requisição, o formato de cada resposta, os status codes, as rotas, os middlewares de validação e de erro. Esse é o teste que valida se você fez a migração corretamente — se o `requests.http` da Aula 08 continuar passando sem editar uma linha sequer, a API está correta.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -21,6 +18,12 @@ Ao final desta aula você será capaz de:
 - organizar o back-end em camadas — repositório, serviço, controlador — migrando o CRUD da Aula 08 sem quebrar contrato nenhum com o front-end.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 08 você entregou a Avaliação 2 com um CRUD completo, middlewares próprios e validação com Zod — tudo isso guardando dados num array em memória. Hoje esse array desaparece. Toda a `unieventos-api` passa a persistir em um banco de dados relacional de verdade: **MySQL**.
+
+Vale reforçar o que muda e o que não muda hoje. O que muda: de onde os dados vêm e para onde vão — de um array na RAM para tabelas em disco, com todas as garantias que isso traz. O que **não** muda: o formato de cada requisição, o formato de cada resposta, os status codes, as rotas, os middlewares de validação e de erro. Esse é o teste que valida se você fez a migração corretamente — se o `requests.http` da Aula 08 continuar passando sem editar uma linha sequer, a API está correta.
+
+Guarde desde já uma decisão que vai valer para toda a Unidade 3: **as colunas do banco são `snake_case` (`data_hora`, `imagem_url`), mas o JSON que a API troca com o front continua `camelCase` (`dataHora`, `imagemUrl`)**, como desde a Aula 06. Quem faz a tradução entre os dois vocabulários é o repositório, e só ele — nem o service, nem o controller, nem o Vue precisam saber que existe um `data_hora` do outro lado.
 
 - [ ] `unieventos-api` da Aula 08, com CRUD completo em memória, middlewares e validação Zod funcionando.
 - [ ] `requests.http` cobrindo todos os endpoints (Aula 08).
@@ -56,7 +59,7 @@ O array `eventos` das Aulas 07 e 08 vive na memória RAM do processo Node. Isso 
 
 O UniEventos tem entidades com relações claras entre si: um evento tem várias inscrições; uma inscrição pertence a um evento e a um usuário. Esse tipo de relação — um-para-muitos, muitos-para-muitos — é exatamente o que um **banco de dados relacional** (SGBD — Sistema Gerenciador de Banco de Dados) modela bem, com chaves estrangeiras garantindo a integridade dessas relações no próprio banco, não só no código da aplicação.
 
-**MySQL** é um dos SGBDs relacionais mais usados no mercado, de código aberto, com décadas de maturidade. A disciplina usa a versão 8, com o driver `mysql2` (Node) na versão 3.23, sempre pelo submódulo `mysql2/promise` — a variante que devolve `Promise`s em vez de exigir callbacks, compatível com `async`/`await`, no mesmo estilo que você já usa desde a Aula 01.
+**MySQL** é um dos SGBDs relacionais mais usados no mercado, de código aberto, com décadas de maturidade. A disciplina usa a versão 8, com o driver `mysql2` (Node) na versão 3.x, sempre pelo submódulo `mysql2/promise` — a variante que devolve `Promise`s em vez de exigir callbacks, compatível com `async`/`await`, no mesmo estilo que você já usa desde a Aula 01.
 
 > **🔎 Por baixo do capô**
 > Você já viu o Firestore (Aula 07) como alternativa de persistência. A diferença central: o Firestore é um banco **NoSQL orientado a documentos** — cada documento é um JSON flexível, sem schema fixo entre documentos da mesma coleção, e relações entre coleções são geridas manualmente pela aplicação. Um SGBD relacional como o MySQL exige schema definido antes de inserir dados (as tabelas do script abaixo), mas em troca oferece integridade referencial garantida pelo próprio banco (`FOREIGN KEY`), consultas relacionais poderosas (`JOIN`) e transações ACID robustas. Nenhum dos dois é "melhor" em absoluto — a escolha depende do formato dos dados e das garantias que a aplicação precisa. O UniEventos usa MySQL a partir de hoje porque suas entidades são fortemente relacionadas (evento ↔ inscrição ↔ usuário), o caso de uso clássico para modelagem relacional.
@@ -204,7 +207,7 @@ Baixe o **MySQL Installer** em [dev.mysql.com/downloads/installer](https://dev.m
 Se você já tem Docker instalado, essa é a forma mais rápida de ter um MySQL isolado, sem instalar nada permanentemente no sistema:
 
 ```bash
-docker run --name mysql-fds \
+docker run --name mysql-unieventos \
   -e MYSQL_ROOT_PASSWORD=senhaDeDesenvolvimento123 \
   -e MYSQL_DATABASE=unieventos \
   -p 3306:3306 \
@@ -214,8 +217,8 @@ docker run --name mysql-fds \
 Isso sobe um contêiner MySQL 8, já criando o banco `unieventos`, expondo a porta padrão `3306` na sua máquina. Para parar e voltar a usar depois:
 
 ```bash
-docker stop mysql-fds     # para o contêiner
-docker start mysql-fds    # volta a rodar, com os dados preservados
+docker stop mysql-unieventos     # para o contêiner
+docker start mysql-unieventos    # volta a rodar, com os dados preservados
 ```
 
 > **⚠️ Atenção**
@@ -241,14 +244,6 @@ mysql -u root -p < sql/schema.sql
 ```
 
 Depois de rodar o script, use a ferramenta escolhida para navegar visualmente pelas tabelas criadas, conferir os `INSERT`s de exemplo e, se quiser, gerar um diagrama entidade-relacionamento a partir do schema existente — a maioria dessas ferramentas faz engenharia reversa do banco para um diagrama automaticamente, útil para conferir se as relações ficaram como o desenhado na §2.
-
-## 🧩 Padrão de projeto em uso
-
-> ### 🧩 Padrão de projeto em uso — Factory / Object Pool e Repository
->
-> `mysql2.createPool(...)` é uma aplicação combinada de dois padrões criacionais. **Factory Method**: você não instancia uma conexão diretamente com `new Conexao()` — chama uma função de fábrica (`createPool`) que encapsula a lógica de criação e devolve o objeto pronto para uso, escondendo os detalhes de configuração interna. **Object Pool**: em vez de criar uma conexão nova para cada requisição (caro: negociar protocolo, autenticar, alocar recursos no servidor de banco), o pool mantém um conjunto de conexões já abertas, prontas, emprestando uma a cada consulta e devolvendo-a ao pool quando termina — reduzindo drasticamente o custo de abrir/fechar conexão repetidamente.
->
-> A camada de **Repository**, que construímos a seguir, é um padrão estrutural de organização: isola todo o SQL da aplicação dentro de funções com nomes de domínio (`buscarEventoPorId`, `inserirEvento`), para que o resto do código nunca precise saber que existe SQL por trás — só chama métodos. Trocar de MySQL para outro banco (Aula 12, com Supabase) significa reescrever o repositório, sem tocar em serviço, controlador ou rotas.
 
 ## 4. `mysql2/promise` na prática
 
@@ -370,7 +365,7 @@ Considere a operação "inscrever um usuário num evento": ela precisa (1) verif
 ```js
 // src/repositories/inscricoesRepository.js
 import { pool } from '../bancoDeDados.js'
-import { ErroHttp } from '../erros/ErroHttp.js'
+import { erroNaoEncontrado, erroValidacao } from '../erros/ErroHttp.js'
 
 export async function inscreverUsuarioNoEvento(eventoId, usuarioId) {
   // pool.getConnection() empresta UMA conexão específica do pool, exclusiva para esta transação
@@ -387,11 +382,11 @@ export async function inscreverUsuarioNoEvento(eventoId, usuarioId) {
     )
 
     if (eventos.length === 0) {
-      throw new ErroHttp(404, 'Evento não encontrado')
+      throw erroNaoEncontrado('Evento não encontrado')
     }
 
     if (eventos[0].vagas <= 0) {
-      throw new ErroHttp(422, 'Não há vagas disponíveis para este evento')
+      throw erroValidacao('Não há vagas disponíveis para este evento')
     }
 
     await conexao.execute(
@@ -431,7 +426,7 @@ O caminho de sucesso e o caminho de falha, lado a lado:
   SELECT ... FOR UPDATE  (lê e trava a linha do evento)
         │
         ▼
-  vagas > 0? ──── não ────► throw erroValidacao(422)
+  vagas > 0? ──── não ────► throw erroValidacao()  → 422
         │ sim                      │
         ▼                          ▼
   INSERT em inscricoes        catch: rollback()
@@ -480,6 +475,12 @@ node --watch --env-file=.env src/servidor.js
 
 Cada ambiente (sua máquina, a de um colega, um servidor de produção futuro) tem seu próprio `.env`, com valores possivelmente diferentes — mas o mesmo código-fonte funciona em todos, porque nada de configuração está fixado (*hardcoded*) no JavaScript.
 
+## 🧩 Padrão de projeto em uso — Factory / Object Pool e Repository
+
+`mysql2.createPool(...)` é uma aplicação combinada de dois padrões criacionais. **Factory Method**: você não instancia uma conexão diretamente com `new Conexao()` — chama uma função de fábrica (`createPool`) que encapsula a lógica de criação e devolve o objeto pronto para uso, escondendo os detalhes de configuração interna. **Object Pool**: em vez de criar uma conexão nova para cada requisição (caro: negociar protocolo, autenticar, alocar recursos no servidor de banco), o pool mantém um conjunto de conexões já abertas, prontas, emprestando uma a cada consulta e devolvendo-a ao pool quando termina — reduzindo drasticamente o custo de abrir/fechar conexão repetidamente.
+
+A camada de **Repository**, que construímos a seguir, é um padrão estrutural de organização: isola todo o SQL da aplicação dentro de funções com nomes de domínio (`buscarEventoPorId`, `inserirEvento`), para que o resto do código nunca precise saber que existe SQL por trás — só chama métodos. Trocar de MySQL para outro banco (Aula 12, com Supabase) significa reescrever o repositório, sem tocar em serviço, controlador ou rotas.
+
 ## 💻 Mão na massa — camadas repositório, serviço e controlador
 
 A partir de agora a `unieventos-api` ganha três camadas com responsabilidades separadas:
@@ -508,7 +509,23 @@ O **controller** não sabe que existe SQL — ele lida só com `req`/`res` e del
 // src/repositories/eventosRepository.js
 import { pool } from '../bancoDeDados.js'
 
-export async function listarEventos({ categoria, ordenarPor, direcao, limite, offset }) {
+// As colunas do MySQL são snake_case (data_hora, imagem_url); o contrato HTTP da
+// unieventos-api é camelCase desde a Aula 06 (dataHora, imagemUrl). O repositório é
+// o único lugar da aplicação que conhece os dois vocabulários — é ele que traduz.
+function linhaParaEvento(linha) {
+  return {
+    id: linha.id,
+    titulo: linha.titulo,
+    descricao: linha.descricao,
+    categoria: linha.categoria,
+    dataHora: linha.data_hora,
+    local: linha.local,
+    vagas: linha.vagas,
+    imagemUrl: linha.imagem_url,
+  }
+}
+
+export async function listarEventos({ categoria, ordenarPor, direcao, porPagina, offset }) {
   const colunasPermitidas = ['id', 'titulo', 'data_hora', 'vagas']
   const coluna = colunasPermitidas.includes(ordenarPor) ? ordenarPor : 'id'
   const sentidoOrdenacao = direcao === 'desc' ? 'DESC' : 'ASC'
@@ -524,10 +541,14 @@ export async function listarEventos({ categoria, ordenarPor, direcao, limite, of
   }
 
   sql += ` ORDER BY ${coluna} ${sentidoOrdenacao} LIMIT ? OFFSET ?`
-  parametros.push(limite, offset)
+  parametros.push(porPagina, offset)
 
-  const [linhas] = await pool.execute(sql, parametros)
-  return linhas
+  // ATENÇÃO: aqui é pool.query, não pool.execute. O mysql2 envia os parâmetros de um
+  // statement preparado como string, e o MySQL recusa `LIMIT '10'` com
+  // "Incorrect arguments to mysqld_stmt_execute". Como porPagina e offset já foram
+  // validados como inteiros no service, pool.query resolve sem abrir brecha de injeção.
+  const [linhas] = await pool.query(sql, parametros)
+  return linhas.map(linhaParaEvento)
 }
 
 export async function contarEventos(categoria) {
@@ -545,7 +566,7 @@ export async function contarEventos(categoria) {
 
 export async function buscarEventoPorId(id) {
   const [linhas] = await pool.execute('SELECT * FROM eventos WHERE id = ?', [id])
-  return linhas[0] || null
+  return linhas[0] ? linhaParaEvento(linhas[0]) : null
 }
 
 export async function inserirEvento(evento) {
@@ -633,19 +654,19 @@ export async function removerEvento(id) {
 import * as eventosRepository from '../repositories/eventosRepository.js'
 import { erroNaoEncontrado, erroValidacao } from '../erros/ErroHttp.js'
 
-export async function obterListaDeEventos({ categoria, ordenarPor, direcao, pagina, limite }) {
+export async function obterListaDeEventos({ categoria, ordenarPor, direcao, pagina, porPagina }) {
   const paginaSegura = Math.max(1, Number(pagina) || 1)
-  const limiteSeguro = Math.min(100, Math.max(1, Number(limite) || 10))
-  const offset = (paginaSegura - 1) * limiteSeguro
+  const porPaginaSegura = Math.min(100, Math.max(1, Number(porPagina) || 10))
+  const offset = (paginaSegura - 1) * porPaginaSegura
 
   const [eventos, total] = await Promise.all([
-    eventosRepository.listarEventos({ categoria, ordenarPor, direcao, limite: limiteSeguro, offset }),
+    eventosRepository.listarEventos({ categoria, ordenarPor, direcao, porPagina: porPaginaSegura, offset }),
     eventosRepository.contarEventos(categoria),
   ])
 
   return {
     eventos,
-    meta: { pagina: paginaSegura, limite: limiteSeguro, total },
+    paginacao: { pagina: paginaSegura, porPagina: porPaginaSegura, total },
   }
 }
 
@@ -697,15 +718,15 @@ O service centraliza regras que o repository não deveria conhecer (como "vagas 
 import * as eventosService from '../services/eventosService.js'
 
 export async function listar(req, res) {
-  const { categoria, ordenarPor, direcao, pagina, limite } = req.query
-  const { eventos, meta } = await eventosService.obterListaDeEventos({
+  const { categoria, ordenarPor, direcao, pagina, porPagina } = req.query
+  const { eventos, paginacao } = await eventosService.obterListaDeEventos({
     categoria,
     ordenarPor,
     direcao,
     pagina,
-    limite,
+    porPagina,
   })
-  res.json({ dados: eventos, meta })
+  res.json({ dados: eventos, paginacao })
 }
 
 export async function buscarPorId(req, res) {
@@ -715,7 +736,7 @@ export async function buscarPorId(req, res) {
 
 export async function criar(req, res) {
   const novoEvento = await eventosService.criarEvento(req.body)
-  res.status(201).location(`/api/v1/eventos/${novoEvento.id}`).json({ dados: novoEvento })
+  res.status(201).location(`/api/eventos/${novoEvento.id}`).json({ dados: novoEvento })
 }
 
 export async function substituir(req, res) {
@@ -785,10 +806,10 @@ app.use(morgan('dev'))
 app.use(logger)
 app.use(medidorDeTempo)
 
-const limitador = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 })
+const limitador = rateLimit({ windowMs: 15 * 60 * 1000, limit: 100 })
 app.use('/api/', limitador)
 
-app.use('/api/v1/eventos', eventosRoutes)
+app.use('/api/eventos', eventosRoutes)
 
 app.use(middlewareNaoEncontrado)
 app.use(tratadorDeErros)
@@ -800,7 +821,26 @@ app.listen(porta, () => {
 })
 ```
 
-Teste com o mesmo `requests.http` da Aula 08 — nenhuma linha dele precisa mudar. Se algum teste que passava antes agora falha, o problema está na camada MySQL nova, não no contrato da API.
+### Como testar
+
+Com o MySQL rodando e o `schema.sql` aplicado, suba a API (`node --watch --env-file=.env src/servidor.js`) e reabra o **mesmo** `requests.http` da Aula 08 — nenhuma linha dele precisa mudar.
+
+```bash
+curl -s http://localhost:3000/api/eventos?pagina=1&porPagina=2 | jq
+```
+
+Resultado esperado:
+
+```json
+{
+  "dados": [
+    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2026-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120, "imagemUrl": null }
+  ],
+  "paginacao": { "pagina": 1, "porPagina": 2, "total": 3 }
+}
+```
+
+Confira, item por item: (1) as chaves do objeto vêm em **camelCase** (`dataHora`, `imagemUrl`), e não com o nome das colunas (`data_hora`, `imagem_url`) — é o `linhaParaEvento` do repositório fazendo a tradução; (2) o envelope continua `{ dados, paginacao }`; (3) `POST` inválido devolve `422` com o mesmo `{ erro: { mensagem, codigo } }` de antes; (4) `GET /api/eventos/999` devolve `404`. Se algum teste que passava na Aula 08 agora falha, o problema está na camada MySQL nova, não no contrato da API — que permaneceu idêntico.
 
 ## 🧪 Laboratório
 
@@ -859,14 +899,14 @@ Resultado esperado: `listarUsuarios()` devolve um array com os usuários de exem
 Siga exatamente o padrão de `eventosRepository.js`: `pool.execute(sql, parametros)`, desestruturando `[linhas]` do retorno.
 </details>
 
-**B2.** Endpoint de inscrição. Crie `POST /api/v1/eventos/:id/inscricoes` que recebe `{ "usuarioId": N }` no corpo e chama `inscreverUsuarioNoEvento` (já escrita nesta aula). Teste o caso de sucesso e o caso de vagas esgotadas (zere as vagas de um evento no banco antes de testar).
+**B2.** Endpoint de inscrição. Crie `POST /api/eventos/:id/inscricoes` que recebe `{ "usuarioId": N }` no corpo e chama `inscreverUsuarioNoEvento` (já escrita nesta aula). Teste o caso de sucesso e o caso de vagas esgotadas (zere as vagas de um evento no banco antes de testar).
 
 Resultado esperado: com vagas disponíveis, a resposta é `201` com a inscrição criada; depois de zerar as vagas do evento no banco, a mesma chamada responde `422` com a mensagem "Não há vagas disponíveis para este evento".
 
 <details markdown="1">
 <summary>Dica</summary>
 
-O erro de vagas esgotadas já vem como `ErroHttp(422, ...)` de dentro da transação — seu controller só precisa dar `await` e deixar o Express capturar automaticamente.
+O erro de vagas esgotadas já vem como `erroValidacao(...)` (um `ErroHttp` de status 422 e código `VALIDACAO`) de dentro da transação — seu controller só precisa dar `await` e deixar o Express capturar automaticamente.
 </details>
 
 **B3.** Ataque de SQL injection controlado. Na sua máquina de desenvolvimento, temporariamente reescreva `buscarEventoPorId` para concatenar a string (sem placeholder), e tente buscar com um `id` malicioso do tipo `1 OR 1=1`. Observe o resultado. Depois reverta para a versão parametrizada e repita o teste, confirmando que o ataque não funciona mais.
@@ -901,9 +941,9 @@ Consulte a tabela `inscricoes` direto pelo Workbench/DBeaver antes e depois de r
 
 ### Nível C — Desafio em sala
 
-**C1.** Endpoint de listagem com `JOIN`. Crie `GET /api/v1/eventos/:id/inscricoes` que devolve a lista de inscritos de um evento, usando a consulta `JOIN` desta aula, no formato de envelope `{ "dados": [...] }`. Trate o caso de evento inexistente com `404`.
+**C1.** Endpoint de listagem com `JOIN`. Crie `GET /api/eventos/:id/inscricoes` que devolve a lista de inscritos de um evento, usando a consulta `JOIN` desta aula, no formato de envelope `{ "dados": [...] }`. Trate o caso de evento inexistente com `404`.
 
-Resultado esperado: `GET /api/v1/eventos/:id/inscricoes` devolve `{ "dados": [...] }` com nome e e-mail de cada inscrito, em ordem de inscrição; para um evento inexistente, a resposta é `404`, sem que o controller precise checar isso manualmente (o service já lança o erro).
+Resultado esperado: `GET /api/eventos/:id/inscricoes` devolve `{ "dados": [...] }` com nome e e-mail de cada inscrito, em ordem de inscrição; para um evento inexistente, a resposta é `404`, sem que o controller precise checar isso manualmente (o service já lança o erro).
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -987,6 +1027,7 @@ A promessa central desta aula é que migrar de memória para MySQL não deveria 
 | `req.body` chega vazio no `POST` de inscrição | testou direto no banco sem passar pela API, ou esqueceu `Content-Type: application/json` no `requests.http` | confirme o cabeçalho e o corpo no arquivo `.http` |
 | `resultado.insertId` vem `0` ou `undefined` | a tabela não tem coluna `AUTO_INCREMENT`, ou a query não era um `INSERT` | confira o `CREATE TABLE`; `insertId` só é preenchido em `INSERT` sobre coluna `AUTO_INCREMENT` |
 | Erro de sintaxe SQL só em produção, funcionava local | diferença de versão do MySQL entre ambientes, ou script `schema.sql` não aplicado no novo ambiente | garanta que `schema.sql` seja executado em todo ambiente novo antes de subir a API |
+| `Incorrect arguments to mysqld_stmt_execute` na listagem paginada | `pool.execute` envia os parâmetros de `LIMIT ? OFFSET ?` como string, e o MySQL só aceita inteiro ali | troque por `pool.query` nessa consulta (com `porPagina`/`offset` já validados como inteiro no service), como no repositório desta aula |
 | `PROTOCOL_CONNECTION_LOST` durante uso prolongado | conexão do pool expirou por inatividade (timeout do servidor MySQL) | normal em pools ociosos; o `mysql2` reabre conexões automaticamente na próxima consulta — se persistir, revise `connectionLimit` e tempo de vida da conexão |
 
 ## 🏠 Atividade assíncrona (1 h)

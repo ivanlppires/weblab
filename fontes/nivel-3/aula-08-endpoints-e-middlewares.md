@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em memória, CORS habilitado, e conectou o front-end real a ela. Hoje essa API vira um CRUD completo, ganha middlewares próprios e validação de entrada — e você recebe as instruções da **Avaliação 2**, com entrega até hoje às 23h59.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - organizar testes manuais num arquivo `requests.http` cobrindo todos os endpoints.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em memória, CORS habilitado, e conectou o front-end real a ela. Hoje essa API vira um CRUD completo, ganha middlewares próprios e validação de entrada — e você recebe as instruções da **Avaliação 2**, com entrega até hoje às 23h59.
 
 - [ ] `unieventos-api` da Aula 07 rodando, com `GET /api/eventos` e `GET /api/eventos/:id` funcionando em memória.
 - [ ] Front-end `unieventos-web` apontando para essa API via `baseURL` do Axios.
@@ -41,7 +42,7 @@ Você já usa APIs "estilo REST" desde a Aula 06, mas hoje é você quem projeta
 
 O nome vem de *Representational State Transfer* — a ideia central é que cada recurso do seu domínio (um evento, um usuário, uma inscrição) tem uma **representação** (o JSON que a API devolve) e um **endereço próprio** (a URL). O cliente manipula o estado do sistema transferindo representações desse recurso para lá e para cá, usando os verbos HTTP para expressar a intenção. Você não precisa decorar a definição formal — o que importa na prática são as convenções que seguem daqui.
 
-Por que seguir convenção importa: quando toda API do mercado usa `GET` para ler e `POST` para criar, qualquer desenvolvedor que chega no seu projeto já sabe, sem ler documentação nenhuma, que `POST /api/v1/eventos` cria um evento. Quebrar essa expectativa (por exemplo, usando `GET /api/deletarEvento?id=3` para apagar algo) obriga quem consome sua API a ler cada linha de código para entender o que uma rota faz — e, pior, faz com que caches e proxies HTTP, que assumem que `GET` nunca tem efeito colateral, possam repetir a chamada e apagar coisas sem querer.
+Por que seguir convenção importa: quando toda API do mercado usa `GET` para ler e `POST` para criar, qualquer desenvolvedor que chega no seu projeto já sabe, sem ler documentação nenhuma, que `POST /api/eventos` cria um evento. Quebrar essa expectativa (por exemplo, usando `GET /api/deletarEvento?id=3` para apagar algo) obriga quem consome sua API a ler cada linha de código para entender o que uma rota faz — e, pior, faz com que caches e proxies HTTP, que assumem que `GET` nunca tem efeito colateral, possam repetir a chamada e apagar coisas sem querer.
 
 ### Recursos: substantivos no plural, sempre
 
@@ -105,13 +106,22 @@ res.status(201).location(`/api/eventos/${novoEvento.id}`).json(novoEvento)
 
 ### Versionamento
 
-Prefixar rotas com `/api/v1` sinaliza desde o início que a API pode evoluir sem quebrar clientes existentes — quando uma mudança incompatível for necessária, ela nasce em `/api/v2`, e `/v1` continua funcionando para quem ainda depende dele.
+APIs públicas costumam prefixar as rotas com um número de versão — `/api/v1/eventos` — para poder evoluir sem quebrar quem já consome a versão antiga: quando uma mudança incompatível é necessária, ela nasce em `/api/v2` e o `/v1` continua no ar até que todos os clientes migrem.
 
 ```js
-app.use('/api/v1/eventos', eventosRoutes)
+// exemplo de API versionada — NÃO é o que usamos aqui
+app.use('/api/v1/eventos', eventosRoutesV1)
+app.use('/api/v2/eventos', eventosRoutesV2)
 ```
 
-Esta disciplina usa `/api` sem versão explícita nos exemplos anteriores para simplificar, mas a partir de hoje adotamos `/api/v1` na `unieventos-api` — é o padrão que se espera num projeto profissional, e é exigido na Avaliação 2.
+> **🧠 Você sabia?**
+> Versionar por caminho (`/api/v1`) é a forma mais comum, mas não a única: há APIs que versionam por cabeçalho (`Accept: application/vnd.unieventos.v2+json`) ou por parâmetro de query (`?versao=2`). O trade-off é sempre o mesmo — caminho é explícito e fácil de testar no navegador; cabeçalho mantém a URL do recurso estável, que é o argumento "REST puro". **Nesta disciplina usamos `/api` sem versão**, porque o `unieventos-api` tem um único cliente (o nosso front) e nenhuma versão antiga para preservar; carregar um `v1` que nunca vira `v2` só adiciona ruído. Quando você publicar uma API com clientes de terceiros, aí sim escolha e documente uma estratégia de versionamento.
+
+O prefixo da `unieventos-api`, portanto, continua sendo o mesmo da Aula 07:
+
+```js
+app.use('/api/eventos', eventosRoutes)
+```
 
 ### Formato de resposta consistente
 
@@ -120,7 +130,7 @@ Uma API previsível responde sempre no mesmo formato — envelope de sucesso e e
 ```json
 {
   "dados": { "id": 1, "titulo": "Semana Acadêmica de Computação" },
-  "meta": { "pagina": 1, "limite": 10, "total": 42 }
+  "paginacao": { "pagina": 1, "porPagina": 10, "total": 42 }
 }
 ```
 
@@ -133,16 +143,16 @@ Uma API previsível responde sempre no mesmo formato — envelope de sucesso e e
 }
 ```
 
-`dados` carrega o conteúdo (objeto único ou array); `meta` carrega metadados de paginação quando aplicável; `erro` só aparece em respostas de falha, nunca junto com `dados`. Vamos implementar exatamente esse envelope no CRUD desta aula.
+`dados` carrega o conteúdo (objeto único ou array); `paginacao` carrega os metadados de paginação quando aplicável; `erro` só aparece em respostas de falha, nunca junto com `dados`. Vamos implementar exatamente esse envelope no CRUD desta aula.
 
 O ganho prático aparece no front-end: um interceptor de resposta do Axios (Aula 06) pode, por exemplo, sempre extrair `response.data.dados` automaticamente, ou sempre reconhecer `response.data.erro` para disparar uma notificação padronizada — porque a forma nunca muda, só o conteúdo. Sem esse envelope, cada endpoint devolveria uma "forma" diferente (às vezes um array solto, às vezes um objeto solto, às vezes um objeto com `results`), obrigando o front a tratar cada chamada como um caso especial.
 
 ### Paginação, filtros e ordenação por query string
 
 ```text
-GET /api/v1/eventos?pagina=2&limite=10
-GET /api/v1/eventos?categoria=palestra
-GET /api/v1/eventos?ordenarPor=dataHora&direcao=asc
+GET /api/eventos?pagina=2&porPagina=10
+GET /api/eventos?categoria=palestra
+GET /api/eventos?ordenarPor=dataHora&direcao=asc
 ```
 
 Paginação evita devolver milhares de registros de uma vez — o cliente pede uma "página" por vez. Filtros restringem o conjunto por algum critério. Ordenação decide a sequência dos resultados. As três são independentes e combináveis na mesma URL. Vamos implementar isso no CRUD abaixo.
@@ -224,10 +234,10 @@ export function erroValidacao(mensagem = 'Dados inválidos') {
 
 Até a Aula 07, as rotas viviam direto em `src/servidor.js`, registradas com `app.get(...)`. Isso funciona para duas rotas; não escala para uma API com vários recursos, cada um com seu CRUD completo. `express.Router()` cria um "mini aplicativo Express" — um objeto que aceita `.get()`, `.post()`, `.put()`, `.patch()`, `.delete()` exatamente como `app`, mas que fica isolado num arquivo próprio, sem saber em qual prefixo vai ser montado.
 
-Repare que dentro do arquivo de rotas os caminhos são **relativos**: `router.get('/')` e `router.get('/:id')`, sem repetir `/api/v1/eventos`. É só na hora de montar, em `servidor.js`, que o prefixo é definido:
+Repare que dentro do arquivo de rotas os caminhos são **relativos**: `router.get('/')` e `router.get('/:id')`, sem repetir `/api/eventos`. É só na hora de montar, em `servidor.js`, que o prefixo é definido:
 
 ```js
-app.use('/api/v1/eventos', eventosRoutes)
+app.use('/api/eventos', eventosRoutes)
 ```
 
 Isso significa que, se amanhã você decidir que a API deve responder em `/api/v2/eventos` também, basta montar o mesmo `eventosRoutes` num segundo prefixo — nenhuma rota interna precisa mudar.
@@ -245,7 +255,7 @@ function indiceDoEvento(id) {
   return eventos.findIndex((e) => e.id === id)
 }
 
-// GET /api/v1/eventos — lista com filtro, ordenação e paginação
+// GET /api/eventos — lista com filtro, ordenação e paginação
 router.get('/', (req, res) => {
   let resultado = [...eventos]
 
@@ -265,17 +275,17 @@ router.get('/', (req, res) => {
 
   // paginação
   const pagina = Number(req.query.pagina) || 1
-  const limite = Number(req.query.limite) || 10
-  const inicio = (pagina - 1) * limite
-  const pagina_de_resultados = resultado.slice(inicio, inicio + limite)
+  const porPagina = Number(req.query.porPagina) || 10
+  const inicio = (pagina - 1) * porPagina
+  const paginaDeResultados = resultado.slice(inicio, inicio + porPagina)
 
   res.json({
-    dados: pagina_de_resultados,
-    meta: { pagina, limite, total: resultado.length },
+    dados: paginaDeResultados,
+    paginacao: { pagina, porPagina, total: resultado.length },
   })
 })
 
-// GET /api/v1/eventos/:id — busca um evento específico
+// GET /api/eventos/:id — busca um evento específico
 router.get('/:id', (req, res) => {
   const id = Number(req.params.id)
   const evento = eventos.find((e) => e.id === id)
@@ -287,7 +297,7 @@ router.get('/:id', (req, res) => {
   res.json({ dados: evento })
 })
 
-// POST /api/v1/eventos — cria um evento novo
+// POST /api/eventos — cria um evento novo
 router.post('/', (req, res) => {
   const corpo = req.body
 
@@ -310,11 +320,11 @@ router.post('/', (req, res) => {
 
   res
     .status(201)
-    .location(`/api/v1/eventos/${novoEvento.id}`)
+    .location(`/api/eventos/${novoEvento.id}`)
     .json({ dados: novoEvento })
 })
 
-// PUT /api/v1/eventos/:id — substitui o evento inteiro
+// PUT /api/eventos/:id — substitui o evento inteiro
 router.put('/:id', (req, res) => {
   const id = Number(req.params.id)
   const indice = indiceDoEvento(id)
@@ -342,7 +352,7 @@ router.put('/:id', (req, res) => {
   res.json({ dados: eventos[indice] })
 })
 
-// PATCH /api/v1/eventos/:id — atualiza campos específicos
+// PATCH /api/eventos/:id — atualiza campos específicos
 router.patch('/:id', (req, res) => {
   const id = Number(req.params.id)
   const indice = indiceDoEvento(id)
@@ -357,7 +367,7 @@ router.patch('/:id', (req, res) => {
   res.json({ dados: eventos[indice] })
 })
 
-// DELETE /api/v1/eventos/:id — remove o evento
+// DELETE /api/eventos/:id — remove o evento
 router.delete('/:id', (req, res) => {
   const id = Number(req.params.id)
   const indice = indiceDoEvento(id)
@@ -395,8 +405,8 @@ app.use(express.json())
 app.use(logger)
 app.use(medidorDeTempo)
 
-// monta o router em /api/v1/eventos — dentro do router, as rotas usam caminhos relativos
-app.use('/api/v1/eventos', eventosRoutes)
+// monta o router em /api/eventos — dentro do router, as rotas usam caminhos relativos
+app.use('/api/eventos', eventosRoutes)
 
 // a partir daqui, nenhuma rota casou: 404
 app.use(middlewareNaoEncontrado)
@@ -412,14 +422,6 @@ app.listen(porta, () => {
 ```
 
 Modularizar com `express.Router()` separa a definição das rotas de eventos do arquivo principal do servidor. Isso escala: cada recurso (`eventos`, e futuramente `inscricoes`, `usuarios`) ganha seu próprio arquivo de rotas, e `servidor.js` só monta cada um em seu prefixo.
-
-## 🧩 Padrão de projeto em uso
-
-> ### 🧩 Padrão de projeto em uso — Chain of Responsibility e Strategy
->
-> A cadeia `cors → express.json → logger → medidorDeTempo → eventosRoutes → middlewareNaoEncontrado → tratadorDeErros` é o **Chain of Responsibility** completo: cada middleware decide se processa a requisição e a passa adiante com `next()`, ou se responde e encerra a cadeia ali. A ordem importa — é o próprio desenho do padrão: cada elo só recebe a requisição se o anterior decidiu repassá-la.
->
-> Já os validadores de corpo que vamos construir com `zod` ilustram o **Strategy** (comportamental): a função `validar(schema)` é genérica — ela não sabe nada sobre "evento" —, e recebe de fora, como parâmetro, a estratégia de validação específica (o schema Zod do evento, do usuário, do que for). Trocar a validação de uma rota é só trocar o schema passado, sem tocar no middleware `validar`. Isso é Strategy: o algoritmo (validação) é injetado, intercambiável, sem alterar quem o usa.
 
 ## 3. Middlewares a fundo
 
@@ -441,7 +443,7 @@ app.use(cors())           // 1º: libera CORS
 app.use(express.json())   // 2º: faz o parse do corpo
 app.use(logger)           // 3º: registra a requisição no console
 app.use(medidorDeTempo)   // 4º: começa a medir o tempo de resposta
-app.use('/api/v1/eventos', eventosRoutes)  // 5º: tenta casar com alguma rota de evento
+app.use('/api/eventos', eventosRoutes)  // 5º: tenta casar com alguma rota de evento
 app.use(middlewareNaoEncontrado)  // 6º: só roda se nada casou acima
 app.use(tratadorDeErros)          // 7º: só roda se algo lançou erro em qualquer ponto anterior
 ```
@@ -453,7 +455,7 @@ app.use(tratadorDeErros)          // 7º: só roda se algo lançou erro em qualq
 **Middleware de rota** roda só para requisições que casam com um caminho e método específicos, registrado como argumento extra antes do handler final:
 
 ```js
-// middleware de rota: só roda para POST /api/v1/eventos
+// middleware de rota: só roda para POST /api/eventos
 router.post('/', validar(schemaEvento), (req, res) => {
   // aqui req.body já passou pela validação
 })
@@ -489,7 +491,7 @@ requisição
 Se `middlewareNaoEncontrado` estivesse depois de `tratadorDeErros`, ele nunca seria alcançado no caminho de erro — e se estivesse antes das rotas, capturaria toda requisição como "não encontrada", mesmo as que tinham rota válida. A ordem — rotas, depois 404, depois tratador de erros — não é estilo, é a única ordem que faz os três cumprirem seu papel corretamente.
 
 > **🔬 Investigue**
-> Adicione um `console.log('middleware X rodou')` no início de cada middleware registrado em `servidor.js` (`cors`, `express.json`, `logger`, `medidorDeTempo`) e reinicie o servidor. Faça uma única requisição `GET /api/v1/eventos` pelo navegador e observe, no terminal, a ordem exata em que as mensagens aparecem. Depois, mova `app.use(logger)` para depois de `app.use('/api/v1/eventos', eventosRoutes)` e repita a requisição — o que muda na ordem impressa, e por quê?
+> Adicione um `console.log('middleware X rodou')` no início de cada middleware registrado em `servidor.js` (`cors`, `express.json`, `logger`, `medidorDeTempo`) e reinicie o servidor. Faça uma única requisição `GET /api/eventos` pelo navegador e observe, no terminal, a ordem exata em que as mensagens aparecem. Depois, mova `app.use(logger)` para depois de `app.use('/api/eventos', eventosRoutes)` e repita a requisição — o que muda na ordem impressa, e por quê?
 
 ### Escrevendo os middlewares do zero
 
@@ -585,7 +587,7 @@ app.use(morgan('dev'))       // log de requisições formatado — mais completo
 
 const limitador = rateLimit({
   windowMs: 15 * 60 * 1000,  // janela de 15 minutos
-  max: 100,                   // no máximo 100 requisições por IP nessa janela
+  limit: 100,                 // no máximo 100 requisições por IP nessa janela (era `max` até a v6)
   message: { erro: { mensagem: 'Muitas requisições, tente novamente mais tarde', codigo: 'RATE_LIMIT' } },
 })
 app.use('/api/', limitador)  // aplica o limite só nas rotas de API
@@ -632,6 +634,12 @@ No Express 5, esse pacote é desnecessário. Se você encontrar em um projeto ou
 > **📌 Na prova**
 > Se perguntarem por que `express-async-handler` não é mais necessário no Express 5, a resposta é: o próprio framework agora captura automaticamente qualquer exceção lançada (ou Promise rejeitada) dentro de um handler `async`, encaminhando para o middleware de erro — antes isso exigia embrulhar manualmente.
 
+## 🧩 Padrão de projeto em uso — Chain of Responsibility e Strategy
+
+A cadeia `cors → express.json → logger → medidorDeTempo → eventosRoutes → middlewareNaoEncontrado → tratadorDeErros` é o **Chain of Responsibility** completo: cada middleware decide se processa a requisição e a passa adiante com `next()`, ou se responde e encerra a cadeia ali. A ordem importa — é o próprio desenho do padrão: cada elo só recebe a requisição se o anterior decidiu repassá-la.
+
+Já os validadores de corpo que vamos construir com `zod` ilustram o **Strategy** (comportamental): a função `validar(schema)` é genérica — ela não sabe nada sobre "evento" —, e recebe de fora, como parâmetro, a estratégia de validação específica (o schema Zod do evento, do usuário, do que for). Trocar a validação de uma rota é só trocar o schema passado, sem tocar no middleware `validar`. Isso é Strategy: o algoritmo (validação) é injetado, intercambiável, sem alterar quem o usa.
+
 ## 💻 Mão na massa — validação com Zod e testes organizados
 
 ### Passo 1 — instalar e escrever o schema
@@ -672,7 +680,7 @@ import { schemaEvento, schemaEventoParcial } from '../schemas/evento.schema.js'
 
 const router = Router()
 
-// GET /api/v1/eventos — lista com filtro, ordenação e paginação (sem alteração desde a seção 2)
+// GET /api/eventos — lista com filtro, ordenação e paginação (sem alteração desde a seção 2)
 router.get('/', (req, res) => {
   let resultado = [...eventos]
 
@@ -692,17 +700,17 @@ router.get('/', (req, res) => {
 
   // paginação
   const pagina = Number(req.query.pagina) || 1
-  const limite = Number(req.query.limite) || 10
-  const inicio = (pagina - 1) * limite
-  const pagina_de_resultados = resultado.slice(inicio, inicio + limite)
+  const porPagina = Number(req.query.porPagina) || 10
+  const inicio = (pagina - 1) * porPagina
+  const paginaDeResultados = resultado.slice(inicio, inicio + porPagina)
 
   res.json({
-    dados: pagina_de_resultados,
-    meta: { pagina, limite, total: resultado.length },
+    dados: paginaDeResultados,
+    paginacao: { pagina, porPagina, total: resultado.length },
   })
 })
 
-// GET /api/v1/eventos/:id — busca um evento específico (sem alteração desde a seção 2)
+// GET /api/eventos/:id — busca um evento específico (sem alteração desde a seção 2)
 router.get('/:id', (req, res) => {
   const id = Number(req.params.id)
   const evento = eventos.find((e) => e.id === id)
@@ -718,7 +726,7 @@ router.post('/', validar(schemaEvento), (req, res) => {
   // req.body já chega validado e com os tipos corretos (vagas já é number, por exemplo)
   const novoEvento = { id: proximoId(), ...req.body }
   eventos.push(novoEvento)
-  res.status(201).location(`/api/v1/eventos/${novoEvento.id}`).json({ dados: novoEvento })
+  res.status(201).location(`/api/eventos/${novoEvento.id}`).json({ dados: novoEvento })
 })
 
 router.put('/:id', validar(schemaEvento), (req, res) => {
@@ -749,10 +757,10 @@ Com `validar(schemaEvento)` na frente do handler, o corpo malformado nunca chega
 ```http
 ### requests.http — todos os endpoints da unieventos-api
 
-@baseUrl = http://localhost:3000/api/v1
+@baseUrl = http://localhost:3000/api
 
 ### listar eventos (com paginação, filtro e ordenação)
-GET {{baseUrl}}/eventos?pagina=1&limite=10&categoria=palestra&ordenarPor=dataHora&direcao=asc
+GET {{baseUrl}}/eventos?pagina=1&porPagina=10&categoria=palestra&ordenarPor=dataHora&direcao=asc
 
 ### buscar evento por id
 GET {{baseUrl}}/eventos/1
@@ -812,7 +820,111 @@ GET {{baseUrl}}/qualquer-coisa
 ```
 
 > **💡 Dica**
-> A variável `@baseUrl` no topo do arquivo evita repetir `http://localhost:3000/api/v1` em toda linha — troque só ali quando mudar de ambiente (local, homologação, produção).
+> A variável `@baseUrl` no topo do arquivo evita repetir `http://localhost:3000/api` em toda linha — troque só ali quando mudar de ambiente (local, homologação, produção).
+
+### Passo 4 — adaptar o front ao envelope de resposta
+
+A API mudou de contrato: onde antes ela devolvia um array solto (`[{...}, {...}]`), agora devolve `{ dados, paginacao }`. O `unieventos-web` da Aula 06 não sabe disso — o `eventosService.listar()` faz `return resposta.data`, e a `HomeView` chama `.filter()` no resultado. Se você subir os dois lado a lado agora, o console mostra `eventos.value.filter is not a function`. **Toda mudança de contrato na API cobra um passo do lado do cliente** — e este é o passo.
+
+Há dois lugares possíveis para desembrulhar o envelope. O primeiro é o próprio `eventosService`, explícito, endpoint a endpoint:
+
+```js
+// src/services/eventosService.js (unieventos-web) — versão adaptada ao envelope
+import http from './http'
+
+export default {
+  async listar(filtros = {}) {
+    const resposta = await http.get('/eventos', { params: filtros })
+    // a API devolve { dados, paginacao }; quem chama continua recebendo só o array
+    return resposta.data.dados
+  },
+
+  // a mesma ideia vale para listagens paginadas, quando a tela precisa do total
+  async listarComPaginacao(filtros = {}) {
+    const resposta = await http.get('/eventos', { params: filtros })
+    return { eventos: resposta.data.dados, paginacao: resposta.data.paginacao }
+  },
+
+  async buscarPorId(id) {
+    const resposta = await http.get(`/eventos/${id}`)
+    return resposta.data.dados
+  },
+
+  async criar(evento) {
+    const resposta = await http.post('/eventos', evento)
+    return resposta.data.dados
+  },
+
+  async atualizar(id, evento) {
+    const resposta = await http.put(`/eventos/${id}`, evento)
+    return resposta.data.dados
+  },
+
+  async remover(id) {
+    await http.delete(`/eventos/${id}`)
+  },
+}
+```
+
+O segundo é o interceptor de resposta do `http.js` (Aula 06), que resolve de uma vez para **todos** os services — inclusive os que você ainda vai escrever:
+
+```js
+// src/services/http.js (trecho — dentro do interceptor de response já existente)
+http.interceptors.response.use(
+  (response) => {
+    // desembrulha o envelope: quem chamou recebe direto o conteúdo de `dados`
+    if (response.data && typeof response.data === 'object' && 'dados' in response.data) {
+      response.paginacao = response.data.paginacao   // preserva a paginação para quem precisar
+      response.data = response.data.dados
+    }
+    return response
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('uniEventosToken')
+    }
+    // o envelope de erro também é único: { erro: { mensagem, codigo } }
+    error.mensagemAmigavel = error.response?.data?.erro?.mensagem ?? 'Falha de comunicação com o servidor'
+    return Promise.reject(error)
+  }
+)
+```
+
+> **⚠️ Atenção**
+> Escolha **um** dos dois — se você desembrulhar no interceptor *e* no service, `resposta.data.dados` vira `undefined` e a lista some sem erro nenhum no console. Neste material seguimos com a versão do interceptor, porque o envelope é uma decisão da API inteira, não de um endpoint. Registre a escolha em uma linha no `README` do front.
+
+### Como testar
+
+Suba os dois projetos ao mesmo tempo — `unieventos-api` em `http://localhost:3000` e `unieventos-web` com `npm run dev` — e percorra este roteiro de ponta a ponta:
+
+```bash
+# 1) a API sozinha, pelo terminal
+curl -s "http://localhost:3000/api/eventos?pagina=1&porPagina=2" | jq
+```
+
+Resultado esperado:
+
+```json
+{
+  "dados": [
+    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2026-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120 }
+  ],
+  "paginacao": { "pagina": 1, "porPagina": 2, "total": 3 }
+}
+```
+
+```bash
+# 2) o envelope de erro, com um POST inválido
+curl -s -X POST http://localhost:3000/api/eventos \
+  -H "Content-Type: application/json" -d '{"titulo":"AB"}' | jq
+```
+
+Resultado esperado: status `422` e corpo `{ "erro": { "mensagem": "...", "codigo": "VALIDACAO", "detalhes": [...] } }`.
+
+3. No navegador, abra o `unieventos-web`: a lista da `HomeView` carrega normalmente, o formulário administrativo cria um evento e a exclusão remove da tabela. Na aba **Network**, a resposta de `GET /api/eventos` mostra o objeto `{ dados, paginacao }`; no **Console**, nenhum `filter is not a function`.
+4. Pare a API (`Ctrl+C`) e recarregue o front: a mensagem de erro que aparece na tela vem de `error.mensagemAmigavel`, não de um `undefined`.
+
+Se os quatro passos passam, o contrato novo está fechado dos dois lados — e é exatamente esse o critério da Avaliação 2.
 
 ## 🧪 Laboratório
 
@@ -821,9 +933,9 @@ GET {{baseUrl}}/qualquer-coisa
 **A1.** Preveja, sem rodar, usando só a tabela de status codes da seção 1 e o CRUD com Zod desta aula, qual status cada chamada abaixo devolve:
 
 ```bash
-curl -i -X DELETE http://localhost:3000/api/v1/eventos/999
-curl -i -X POST http://localhost:3000/api/v1/eventos -H "Content-Type: application/json" -d '{"titulo":"AB","categoria":"show"}'
-curl -i -X PATCH http://localhost:3000/api/v1/eventos/1 -H "Content-Type: application/json" -d '{"vagas": 40}'
+curl -i -X DELETE http://localhost:3000/api/eventos/999
+curl -i -X POST http://localhost:3000/api/eventos -H "Content-Type: application/json" -d '{"titulo":"AB","categoria":"show"}'
+curl -i -X PATCH http://localhost:3000/api/eventos/1 -H "Content-Type: application/json" -d '{"vagas": 40}'
 ```
 
 Resultado esperado: (a) `404` — o evento `999` não existe; (b) `422` — `"titulo":"AB"` tem menos de 3 caracteres e `"categoria":"show"` não está no `enum`, ambos rejeitados pelo Zod; (c) `200` com o evento atualizado — `vagas: 40` é um inteiro positivo válido no schema parcial.
@@ -834,10 +946,10 @@ Resultado esperado: (a) `404` — o evento `999` não existe; (b) `422` — `"ti
 const router = Router()
 
 // linha que falta aqui
-router.get('/:id', eventosController.buscarPorId)
+router.get('/:id', (req, res) => { /* busca o evento pelo id */ })
 ```
 
-Resultado esperado: `router.get('/estatisticas/por-categoria', eventosController.estatisticasPorCategoria)` — registrada **antes** de `router.get('/:id', ...)`, senão o Express interpreta `estatisticas` como o valor do parâmetro `:id`.
+Resultado esperado: `router.get('/estatisticas/por-categoria', (req, res) => { ... })` — registrada **antes** de `router.get('/:id', ...)`, senão o Express interpreta `estatisticas` como o valor do parâmetro `:id`.
 
 **A3.** Em uma frase: por que um middleware de erro precisa ter exatamente quatro parâmetros — `(err, req, res, next)` — mesmo quando `next` não é usado dentro dele?
 
@@ -849,7 +961,7 @@ Resultado esperado: porque o Express identifica um middleware de erro pela conta
 app.use(tratadorDeErros)
 app.use(cors())
 app.use(express.json())
-app.use('/api/v1/eventos', eventosRoutes)
+app.use('/api/eventos', eventosRoutes)
 app.use(middlewareNaoEncontrado)
 ```
 
@@ -861,7 +973,7 @@ Resultado esperado: falso — `PATCH` costuma **não** ser idempotente (ex.: um 
 
 ### Nível B — Aplicação
 
-**B1.** Endpoint de contagem por categoria. Crie `GET /api/v1/eventos/estatisticas/por-categoria` que devolve `{ "dados": { "palestra": 2, "minicurso": 1, "workshop": 1 } }`, contando quantos eventos existem em cada categoria.
+**B1.** Endpoint de contagem por categoria. Crie `GET /api/eventos/estatisticas/por-categoria` que devolve `{ "dados": { "palestra": 1, "minicurso": 1, "workshop": 1 } }`, contando quantos eventos existem em cada categoria.
 
 Resultado esperado: a contagem bate exatamente com os três eventos de exemplo desta aula, e a rota responde corretamente mesmo com `estatisticas` no caminho, sem cair no handler de `:id`.
 
@@ -873,7 +985,7 @@ Cuidado com a ordem: registre essa rota **antes** de `router.get('/:id', ...)`, 
 
 **B2.** Middleware de log condicional. Modifique o `logger` para só imprimir requisições cujo método seja `POST`, `PUT`, `PATCH` ou `DELETE` (as que alteram dados) — omita `GET`.
 
-Resultado esperado: no terminal, uma requisição `GET /api/v1/eventos` não gera nenhuma linha de log; uma `POST /api/v1/eventos` gera uma linha, no mesmo formato de antes.
+Resultado esperado: no terminal, uma requisição `GET /api/eventos` não gera nenhuma linha de log; uma `POST /api/eventos` gera uma linha, no mesmo formato de antes.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -881,7 +993,7 @@ Resultado esperado: no terminal, uma requisição `GET /api/v1/eventos` não ger
 Um `if (req.method !== 'GET') { ... }` dentro do middleware, antes de chamar `next()`.
 </details>
 
-**B3.** Erro de validação com múltiplos campos. Envie, pelo `requests.http`, um `POST /api/v1/eventos` com `titulo` vazio **e** `categoria` inválida ao mesmo tempo. Confirme que a resposta `422` lista as duas mensagens de erro no array `detalhes`.
+**B3.** Erro de validação com múltiplos campos. Envie, pelo `requests.http`, um `POST /api/eventos` com `titulo` vazio **e** `categoria` inválida ao mesmo tempo. Confirme que a resposta `422` lista as duas mensagens de erro no array `detalhes`.
 
 Resultado esperado: a resposta `422` traz `detalhes` com pelo menos duas mensagens, uma sobre o `titulo` e outra sobre a `categoria`, na mesma requisição.
 
@@ -891,7 +1003,7 @@ Resultado esperado: a resposta `422` traz `detalhes` com pelo menos duas mensage
 O Zod, por padrão, coleta **todos** os problemas antes de falhar — não para no primeiro. `resultado.error.issues` é um array com um item por campo problemático.
 </details>
 
-**B4.** Rate limit em ação. Reduza temporariamente o `max` do `express-rate-limit` para `5` e a `windowMs` para `60000` (1 minuto). Dispare mais de 5 requisições seguidas com `curl` num loop e observe a resposta `429 Too Many Requests`. Depois volte os valores originais.
+**B4.** Rate limit em ação. Reduza temporariamente o `limit` do `express-rate-limit` para `5` e a `windowMs` para `60000` (1 minuto). Dispare mais de 5 requisições seguidas com `curl` num loop e observe a resposta `429 Too Many Requests`. Depois volte os valores originais.
 
 Resultado esperado: as primeiras 5 chamadas respondem `200`; a partir da sexta, a resposta muda para `429`, até a janela de 1 minuto expirar.
 
@@ -899,11 +1011,11 @@ Resultado esperado: as primeiras 5 chamadas respondem `200`; a partir da sexta, 
 <summary>Dica</summary>
 
 ```bash
-for i in 1 2 3 4 5 6 7; do curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/api/v1/eventos; done
+for i in 1 2 3 4 5 6 7; do curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/api/eventos; done
 ```
 </details>
 
-**B5.** PATCH que tenta mudar o id. Envie `PATCH /api/v1/eventos/1` com corpo `{ "id": 999 }`. Verifique o que acontece com o registro em memória. Corrija o handler para ignorar qualquer `id` enviado no corpo (o id da URL é sempre a fonte da verdade).
+**B5.** PATCH que tenta mudar o id. Envie `PATCH /api/eventos/1` com corpo `{ "id": 999 }`. Verifique o que acontece com o registro em memória. Corrija o handler para ignorar qualquer `id` enviado no corpo (o id da URL é sempre a fonte da verdade).
 
 Resultado esperado: antes da correção, o registro em memória passa a ter `id: 999` (inconsistente com a URL usada para acessá-lo); depois da correção, o id da URL sempre prevalece, mesmo enviando outro id no corpo.
 
@@ -915,7 +1027,7 @@ Depois do merge (`{ ...eventos[indice], ...req.body }`), force `eventos[indice].
 
 ### Nível C — Desafio em sala
 
-**C1.** Middleware de erro específico para JSON malformado. Envie, via `curl`, um `POST /api/v1/eventos` com corpo JSON propositalmente quebrado (ex.: `{"titulo": "teste",}` com vírgula sobrando). Observe qual status volta. `express.json()` lança um erro de parsing antes mesmo de sua rota rodar — confirme que esse erro também é capturado pelo seu `tratadorDeErros`, e ajuste a mensagem para ficar amigável ("corpo da requisição não é um JSON válido") quando o erro vier do parser.
+**C1.** Middleware de erro específico para JSON malformado. Envie, via `curl`, um `POST /api/eventos` com corpo JSON propositalmente quebrado (ex.: `{"titulo": "teste",}` com vírgula sobrando). Observe qual status volta. `express.json()` lança um erro de parsing antes mesmo de sua rota rodar — confirme que esse erro também é capturado pelo seu `tratadorDeErros`, e ajuste a mensagem para ficar amigável ("corpo da requisição não é um JSON válido") quando o erro vier do parser.
 
 Resultado esperado: sem a correção, o erro de parsing cai no `tratadorDeErros` genérico e devolve `500` com "Erro interno do servidor"; depois de adicionar a verificação de `err.type === 'entity.parse.failed'`, a mesma requisição passa a devolver `400` com `{ "erro": { "mensagem": "JSON inválido no corpo da requisição", "codigo": "JSON_INVALIDO" } }`.
 
@@ -928,13 +1040,14 @@ O erro lançado pelo `express.json()` tem `err.type === 'entity.parse.failed'`. 
 ## 🏆 Desafios
 
 ### ⭐ O 404 que na verdade é um 200
+
 Tags: express, http, bug, investigacao
 
-Teste no seu `unieventos-api`: `GET /api/v1/eventos/abc` (um id que não é número). O que a rota devolve? Compare com o que a tabela de status codes desta aula promete para "recurso inexistente". Investigue por que `Number('abc')` não gera o erro que você esperava, e corrija a rota para tratar esse caso de forma explícita.
+Teste no seu `unieventos-api`: `GET /api/eventos/abc` (um id que não é número). O que a rota devolve? Compare com o que a tabela de status codes desta aula promete para "recurso inexistente". Investigue por que `Number('abc')` não gera o erro que você esperava, e corrija a rota para tratar esse caso de forma explícita.
 
 **Critérios de pronto**
 
-- `GET /api/v1/eventos/abc` responde `400` (requisição malformada) em vez de tratar `"abc"` como um id válido.
+- `GET /api/eventos/abc` responde `400` (requisição malformada) em vez de tratar `"abc"` como um id válido.
 - Um comentário no código explica o que `Number('abc')` retorna e por que isso passava despercebido antes.
 - O mesmo tratamento é aplicado a toda rota que recebe `:id` como parâmetro numérico.
 
@@ -947,15 +1060,16 @@ Teste no seu `unieventos-api`: `GET /api/v1/eventos/abc` (um id que não é núm
 </details>
 
 ### ⭐⭐ Um middleware, duas versões
+
 Tags: middleware, performance, refatoracao, node
 
-O `medidorDeTempo` desta aula usa `process.hrtime.bigint()` e o evento `'finish'` do objeto `res`. Implemente uma segunda versão que, além de logar o tempo no console, guarda em um array em memória as últimas 100 durações de resposta e exponha isso em `GET /api/v1/metricas` (tempo médio, mínimo e máximo). Meça se registrar essas métricas atrasa perceptivelmente as respostas.
+O `medidorDeTempo` desta aula usa `process.hrtime.bigint()` e o evento `'finish'` do objeto `res`. Implemente uma segunda versão que, além de logar o tempo no console, guarda em um array em memória as últimas 100 durações de resposta e exponha isso em `GET /api/metricas` (tempo médio, mínimo e máximo). Meça se registrar essas métricas atrasa perceptivelmente as respostas.
 
 **Critérios de pronto**
 
-- `GET /api/v1/metricas` devolve `{ "dados": { "media": N, "minimo": N, "maximo": N, "amostras": N } }`, calculado a partir das últimas 100 requisições reais.
+- `GET /api/metricas` devolve `{ "dados": { "media": N, "minimo": N, "maximo": N, "amostras": N } }`, calculado a partir das últimas 100 requisições reais.
 - O array de amostras nunca cresce além de 100 itens (as mais antigas são descartadas).
-- Uma medição no README compara o tempo de resposta de `GET /api/v1/eventos` com e sem o middleware de métricas ativado (usando `curl -w '%{time_total}'`).
+- Uma medição no README compara o tempo de resposta de `GET /api/eventos` com e sem o middleware de métricas ativado (usando `curl -w '%{time_total}'`).
 - Uma frase conclui se a diferença medida é ou não perceptível para este projeto.
 
 <details markdown="1">
@@ -967,6 +1081,7 @@ O `medidorDeTempo` desta aula usa `process.hrtime.bigint()` e o evento `'finish'
 </details>
 
 ### ⭐⭐⭐ Envelope de erro, ponta a ponta
+
 Tags: api, express, refatoracao, projeto
 
 O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto ao usuário final — alguém no front precisa transformá-lo em algo visível. Implemente, no front-end do seu projeto autoral, um interceptor de resposta do Axios que trate todos os códigos de erro conhecidos (`VALIDACAO`, `NAO_ENCONTRADO`, `ROTA_NAO_ENCONTRADA`, `RATE_LIMIT`, `ERRO_INTERNO`, `JSON_INVALIDO`) com uma mensagem amigável específica, e prove com prints que cada código produz uma notificação diferente na tela.
@@ -983,7 +1098,7 @@ O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto a
 
 1. O interceptor de resposta do Axios (Aula 06) recebe o erro em `error.response.data.erro.codigo` — é esse valor que entra no mapeamento de tradução.
 2. Um objeto `{ VALIDACAO: '...', NAO_ENCONTRADO: '...' }` com um valor padrão (`objeto[codigo] ?? 'Algo deu errado...'`) cobre o caso "código desconhecido" sem precisar de uma cadeia longa de `if/else`.
-3. Para provocar o `RATE_LIMIT` de propósito, reduza temporariamente o `max` do rate limiter (Laboratório B4) e dispare várias requisições seguidas pelo front.
+3. Para provocar o `RATE_LIMIT` de propósito, reduza temporariamente o `limit` do rate limiter (Laboratório B4) e dispare várias requisições seguidas pelo front.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -1000,6 +1115,26 @@ O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto a
 | `DELETE` retorna `204` mas o corpo aparece vazio "errado" no REST Client | comportamento esperado — `204 No Content` nunca deve ter corpo | confirme com `res.status(204).send()` sem argumento; não chame `.json()` depois de `204` |
 | Duas rotas parecem casar com a mesma URL, só a primeira responde | ordem de registro determina qual middleware/rota atende primeiro | reordene: rotas mais específicas antes das mais genéricas |
 | Front-end para de funcionar depois de adicionar `helmet()` | `helmet` por padrão bloqueia carregamento de alguns recursos cross-origin | ajuste as políticas de `helmet` conforme a necessidade, ou mantenha o padrão em desenvolvimento e ajuste caso a caso |
+
+## 🏠 Atividade assíncrona (1 h)
+
+Além de finalizar e entregar a Avaliação 2, use esta hora para:
+
+1. Adicionar ao seu `requests.http` autoral os casos de erro esperados (`404`, `422`) — não só o caminho feliz.
+2. Rodar o laboratório de rate limit (exercício 4) no seu próprio projeto, confirmando que o `429` aparece.
+3. Revisar seu tratador de erros: force um erro inesperado (ex.: acesse uma propriedade de `undefined` de propósito dentro de uma rota) e confirme que a resposta chega como `500` com o envelope `{ "erro": { ... } }`, sem vazar o stack trace para o cliente.
+
+**Critério de pronto:** sua API autoral tem CRUD completo, middlewares próprios funcionando na ordem correta, validação com Zod retornando `422` com mensagens claras, e a Avaliação 2 já submetida no SIGAA.
+
+## ✅ Checkpoint do projeto autoral
+
+- [ ] CRUD completo (`GET` lista, `GET` por id, `POST`, `PUT`, `PATCH`, `DELETE`) funcionando na sua API autoral.
+- [ ] Rotas modularizadas com `express.Router()`, montadas com prefixo `/api/<recurso>`.
+- [ ] Middlewares próprios (`logger`, `medidorDeTempo`, `middlewareNaoEncontrado`, `tratadorDeErros`) escritos e na ordem correta.
+- [ ] Validação de entrada com `zod`, retornando `422` com mensagens em português.
+- [ ] `requests.http` cobrindo todos os endpoints, inclusive casos de erro.
+- [ ] Front-end autoral consumindo o CRUD completo, com tratamento de carregando/erro/vazio.
+- [ ] Avaliação 2 entregue via SIGAA.
 
 ## 📝 Avaliação 2 — instruções de entrega
 
@@ -1037,26 +1172,6 @@ Total: **10,0 pontos**.
 **Política de atraso.** Cada 24h de atraso desconta 1,0 ponto da nota final da avaliação, até o limite de 5 dias corridos; após esse prazo, a atividade recebe nota zero, salvo justificativa formal (atestado médico ou similar) protocolada junto à coordenação.
 
 **Política de plágio e uso de IA.** É permitido usar ferramentas de IA como apoio (explicar um erro, sugerir uma correção pontual, revisar um trecho) — é o mesmo tipo de apoio que se espera de qualquer ferramenta de desenvolvimento moderna. **Não é permitido** entregar um projeto majoritariamente gerado por IA sem compreensão do próprio código: na correção, o professor pode fazer perguntas orais sobre qualquer trecho entregue, e a incapacidade de explicar decisões básicas do próprio código (por que essa rota, por que essa store, o que faz esse `computed`) resulta em revisão da nota. Cópia entre colegas — código idêntico ou com alterações cosméticas — resulta em nota zero para todos os envolvidos, sem exceção.
-
-## 🏠 Atividade assíncrona (1 h)
-
-Além de finalizar e entregar a Avaliação 2, use esta hora para:
-
-1. Adicionar ao seu `requests.http` autoral os casos de erro esperados (`404`, `422`) — não só o caminho feliz.
-2. Rodar o laboratório de rate limit (exercício 4) no seu próprio projeto, confirmando que o `429` aparece.
-3. Revisar seu tratador de erros: force um erro inesperado (ex.: acesse uma propriedade de `undefined` de propósito dentro de uma rota) e confirme que a resposta chega como `500` com o envelope `{ "erro": { ... } }`, sem vazar o stack trace para o cliente.
-
-**Critério de pronto:** sua API autoral tem CRUD completo, middlewares próprios funcionando na ordem correta, validação com Zod retornando `422` com mensagens claras, e a Avaliação 2 já submetida no SIGAA.
-
-## ✅ Checkpoint do projeto autoral
-
-- [ ] CRUD completo (`GET` lista, `GET` por id, `POST`, `PUT`, `PATCH`, `DELETE`) funcionando na sua API autoral.
-- [ ] Rotas modularizadas com `express.Router()`, montadas com prefixo `/api/v1/<recurso>`.
-- [ ] Middlewares próprios (`logger`, `medidorDeTempo`, `middlewareNaoEncontrado`, `tratadorDeErros`) escritos e na ordem correta.
-- [ ] Validação de entrada com `zod`, retornando `422` com mensagens em português.
-- [ ] `requests.http` cobrindo todos os endpoints, inclusive casos de erro.
-- [ ] Front-end autoral consumindo o CRUD completo, com tratamento de carregando/erro/vazio.
-- [ ] Avaliação 2 entregue via SIGAA.
 
 ## 📚 Para aprofundar
 

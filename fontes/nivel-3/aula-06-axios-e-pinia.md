@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 2: Vue.js avançado: Vuetify, Axios, Router e Pinia
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -17,11 +18,15 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
+Na Aula 05 você quebrou o UniEventos em componentes com contrato próprio (`EventoCard`, `EventoLista`, `FiltroEventos`, `DialogoConfirmacao`), extraiu a lógica de dados para o composable `useEventos` e montou a área administrativa com rotas aninhadas, guards e formulário validado.
+
+Duas limitações ficaram evidentes lá. A primeira: os dados ainda saem de um array estático importado de `src/data/eventos.js`, que só existe dentro do navegador de quem abriu a página. A segunda: cada componente que chama `useEventos()` recebe uma cópia própria do estado — o que a área administrativa altera não é necessariamente o que a home enxerga.
+
+Hoje resolvemos as duas. O array vira uma **API de verdade**, consumida por uma instância dedicada do Axios com interceptors, e o estado sai das `ref`s locais para uma **store Pinia**, compartilhada por toda a aplicação.
+
 - [ ] UniEventos da Aula 05 com componentes extraídos, composable `useEventos`, rotas aninhadas e formulário validado funcionando.
 - [ ] Node.js 22.22.2 e npm 10.9.7 instalados (`node -v`, `npm -v`).
 - [ ] Terminal disponível para rodar dois processos simultâneos (API falsa + app Vue).
-
-> Na Aula 05 você quebrou o UniEventos em componentes e extraiu a lógica de dados para o composable `useEventos`. Esse composable ainda trabalha com um array estático importado de `src/data/eventos.js`. Hoje esse array vira uma **API de verdade**, e o estado que hoje vive em `ref`s locais migra para **stores Pinia** — compartilhadas por toda a aplicação.
 
 ## 🗺️ Roteiro
 
@@ -287,8 +292,9 @@ Antes de existir um back-end real (isso vem na Unidade 3, com Express), usamos o
 
 ### Criando o `db.json` do UniEventos
 
+Crie o arquivo `db.json` na raiz do projeto, com este conteúdo (JSON **não** aceita comentários — não copie nenhuma linha de `//` para dentro dele):
+
 ```json
-// db.json
 {
   "eventos": [
     { "id": 1, "titulo": "Semana Acadêmica de Computação", "descricao": "Palestras e minicursos sobre tendências em tecnologia.", "categoria": "palestra", "dataHora": "2026-09-29T19:00:00", "local": "Auditório Central", "vagas": 40, "imagemUrl": "https://picsum.photos/seed/evento1/600/300" },
@@ -307,8 +313,11 @@ Antes de existir um back-end real (isso vem na Unidade 3, com Express), usamos o
 ### Rodando o servidor
 
 ```bash
-npx json-server --watch db.json --port 3000
+npx json-server@0.17 --watch db.json --port 3000
 ```
+
+> **⚠️ Atenção**
+> A versão está fixada de propósito. O `json-server` 1.x (o que `npx json-server` baixa hoje, sem a versão) **removeu a flag `--watch`** e aborta com "unknown argument". Usamos a linha 0.17 porque é a que casa com as rotas de filtro (`?titulo_like=`) usadas nesta aula. Se preferir a versão nova, a sintaxe passa a ser `npx json-server db.json --port 3000` — e alguns filtros mudam de nome.
 
 Isso sobe uma API completa em `http://localhost:3000`, com:
 
@@ -337,7 +346,7 @@ Para estado que precisa ser **verdadeiramente compartilhado** — a lista de eve
 
 ### Pinia: `createPinia`
 
-O Pinia já vem instalado e registrado se você criou o projeto com a flag `--pinia` (como recomenda a §4 da especificação):
+O Pinia já vem instalado e registrado se você criou o projeto com a flag `--pinia` (como fizemos na Aula 02, no `npm create vue@latest`):
 
 ```js
 // src/main.js (trecho, já presente no scaffold)
@@ -627,13 +636,11 @@ Ambas as abordagens são válidas; a primeira (persistir dentro da própria aç�
 
 Instale a extensão **Vue DevTools** no navegador (ou use `vite-plugin-vue-devtools`, incluído por padrão em muitos scaffolds do `create-vue`). Na aba **Pinia**, você vê, em tempo real: todas as stores ativas, o state atual de cada uma, e um histórico de mutações — útil para depurar por que `eventosFiltrados` não está retornando o que você espera, sem precisar espalhar `console.log` pelo código.
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Singleton e Decorator
 
-> ### 🧩 Padrão de projeto em uso — Singleton e Decorator
->
-> **Singleton (criacional):** uma store Pinia é, por construção, uma instância única compartilhada. Não importa quantas vezes `useEventosStore()` seja chamado, em quantos componentes diferentes — todos recebem **a mesma instância** de store, gerenciada internamente pelo Pinia (identificada pelo primeiro argumento de `defineStore`, `'eventos'`). Isso é exatamente o padrão Singleton: garantir que existe no máximo uma instância de um objeto, e fornecer um ponto de acesso global a ela. É a diferença estrutural entre uma store e um composable comum — o composable cria estado novo a cada chamada; a store sempre devolve a mesma instância.
->
-> **Decorator (estrutural):** os interceptors do Axios são um exemplo direto de Decorator. Cada interceptor "envolve" a requisição (ou resposta) original, adicionando comportamento sem alterar o código que originou a chamada — o interceptor de request adiciona o header `Authorization`; o interceptor de response adiciona tratamento de `401`. O componente que chama `http.get('/eventos')` não sabe (nem precisa saber) que essas camadas extras existem — elas são "decoradas" por fora, de forma transparente.
+**Singleton (criacional):** uma store Pinia é, por construção, uma instância única compartilhada. Não importa quantas vezes `useEventosStore()` seja chamado, em quantos componentes diferentes — todos recebem **a mesma instância** de store, gerenciada internamente pelo Pinia (identificada pelo primeiro argumento de `defineStore`, `'eventos'`). Isso é exatamente o padrão Singleton: garantir que existe no máximo uma instância de um objeto, e fornecer um ponto de acesso global a ela. É a diferença estrutural entre uma store e um composable comum — o composable cria estado novo a cada chamada; a store sempre devolve a mesma instância.
+
+**Decorator (estrutural):** os interceptors do Axios são um exemplo direto de Decorator. Cada interceptor "envolve" a requisição (ou resposta) original, adicionando comportamento sem alterar o código que originou a chamada — o interceptor de request adiciona o header `Authorization`; o interceptor de response adiciona tratamento de `401`. O componente que chama `http.get('/eventos')` não sabe (nem precisa saber) que essas camadas extras existem — elas são "decoradas" por fora, de forma transparente.
 
 ## 💻 Mão na massa — UniEventos consumindo API real
 
@@ -646,7 +653,7 @@ npm install axios
 Crie `db.json` na raiz do projeto (conteúdo completo na §4 acima), e rode em um terminal separado:
 
 ```bash
-npx json-server --watch db.json --port 3000
+npx json-server@0.17 --watch db.json --port 3000
 ```
 
 Deixe esse terminal aberto durante toda a aula — é a "API" que o front vai consumir.
@@ -751,7 +758,7 @@ export const useEventosStore = defineStore('eventos', () => {
     erro.value = null
     try {
       eventos.value = await eventosService.listar()
-    } catch (e) {
+    } catch {
       erro.value = 'Não foi possível carregar os eventos. Verifique se o json-server está rodando.'
     } finally {
       carregando.value = false
@@ -1128,6 +1135,10 @@ const categoria = ref('palestra')
 const local = ref('')
 const vagas = ref(null)
 
+// campos do evento que o formulário não edita, guardados para não se perderem no PUT
+const dataHoraOriginal = ref(null)
+const imagemUrlOriginal = ref(null)
+
 const categorias = ['palestra', 'minicurso', 'workshop']
 
 const regrasTitulo = [
@@ -1149,6 +1160,9 @@ onMounted(() => {
       categoria.value = evento.categoria
       local.value = evento.local
       vagas.value = evento.vagas
+      // campos que o formulário não edita, mas que precisam voltar intactos no PUT
+      dataHoraOriginal.value = evento.dataHora
+      imagemUrlOriginal.value = evento.imagemUrl
     }
   }
 })
@@ -1174,12 +1188,16 @@ async function salvar() {
       categoria: categoria.value,
       local: local.value,
       vagas: vagas.value,
-      dataHora: new Date().toISOString(),
-      imagemUrl: `https://picsum.photos/seed/evento${Date.now()}/600/300`,
+      // na edição, preserve os campos que o formulário não edita — gerar de novo
+      // apagaria a data original e trocaria a imagem do evento a cada "Salvar"
+      dataHora: modoEdicao.value ? dataHoraOriginal.value : new Date().toISOString(),
+      imagemUrl: modoEdicao.value
+        ? imagemUrlOriginal.value
+        : `https://picsum.photos/seed/evento${Date.now()}/600/300`,
     })
     formularioAlterado.value = false
     router.push({ name: 'admin-eventos' })
-  } catch (e) {
+  } catch {
     erroSalvar.value = 'Não foi possível salvar o evento. Tente novamente.'
   } finally {
     salvando.value = false
@@ -1206,18 +1224,28 @@ async function salvar() {
 </template>
 ```
 
-### Passo 9 — testar de ponta a ponta
+### Como testar
 
-Com o `json-server` rodando em um terminal e `npm run dev` em outro: a home carrega eventos da API (confira na aba Rede do navegador que a requisição `GET http://localhost:3000/eventos` acontece); inscrever-se em um evento persiste em `localStorage` (recarregue a página — a inscrição continua marcada); editar um evento na área administrativa reflete na home; derrubar o `json-server` (Ctrl+C) e recarregar a home deve mostrar o alerta de erro, não uma tela quebrada.
+Com o `json-server` rodando em um terminal e `npm run dev` em outro:
+
+1. A home carrega os eventos da API — confira na aba **Network** que a requisição `GET http://localhost:3000/eventos` acontece de verdade e volta `200`.
+2. Inscrever-se em um evento persiste em `localStorage`: recarregue a página e a inscrição continua marcada.
+3. Editar um evento na área administrativa reflete na home imediatamente (a store é única, compartilhada).
+4. Editar um evento **não** muda a data nem a imagem dele — só os campos do formulário.
+5. Derrube o `json-server` (`Ctrl+C`) e recarregue a home.
+
+Resultado esperado: nos quatro primeiros, tudo funciona sem F5 manual; no quinto, aparece o alerta de erro tratado pela store (`erro.value`), não uma tela quebrada nem um erro solto no console.
 
 ## 🧪 Laboratório
 
 ### Nível A — Fixação
 
-**A1.** Preveja: com `fetch('/eventos/999')` (endpoint inexistente, responde `404`), o código abaixo roda até o fim, sem lançar exceção:
+**A1.** Preveja: com `fetch('http://localhost:3000/eventos/999')` (id inexistente, responde `404`), o código abaixo roda até o fim, sem lançar exceção:
 
 ```js
-const resposta = await fetch('/eventos/999')
+// URL absoluta de propósito: uma URL relativa ('/eventos/999') seria servida
+// pelo dev server do Vite, que devolve o index.html com status 200 — não o 404 da API
+const resposta = await fetch('http://localhost:3000/eventos/999')
 console.log('Cheguei aqui:', resposta.status)
 ```
 
@@ -1318,6 +1346,7 @@ Guarde a instância de `AbortController` em uma variável de módulo dentro do p
 ## 🏆 Desafios
 
 ### ⭐ Token fantasma
+
 Tags: axios, javascript, bug
 
 Um colega "simplificou" o interceptor de request removendo a checagem, para deixar o código mais enxuto:
@@ -1349,6 +1378,7 @@ Agora, mesmo sem nenhum usuário logado, toda requisição sai com o cabeçalho 
 </details>
 
 ### ⭐⭐ Persistência sem repetir código
+
 Tags: pinia, refatoracao, padroes-de-projeto
 
 `inscricoesStore` (e, se você fez o Laboratório B4, `preferenciasStore` também) implementam persistência em `localStorage` cada uma com sua própria lógica de leitura/escrita repetida. Extraia isso para uma função reutilizável — no mesmo espírito estrutural dos interceptors do Axios, vistos no box de padrões desta aula.
@@ -1369,6 +1399,7 @@ Tags: pinia, refatoracao, padroes-de-projeto
 </details>
 
 ### ⭐⭐⭐ Cache de 30 segundos para não repetir a mesma pergunta
+
 Tags: performance, axios, javascript
 
 Toda vez que o usuário volta para a Home vindo do detalhe de um evento, `carregarEventos()` dispara um novo `GET /eventos` — mesmo que a lista não tenha mudado nos últimos segundos. Em uma API de verdade (não o `json-server` local), cada requisição desnecessária custa tempo de rede e carga no servidor. Implemente um cache simples: se os mesmos parâmetros de busca já foram pedidos há menos de 30 segundos, devolva o resultado guardado, sem nova requisição.
@@ -1390,6 +1421,7 @@ Toda vez que o usuário volta para a Home vindo do detalhe de um evento, `carreg
 </details>
 
 ### 🔥 Boss — Painel de inscrições com filtros persistentes na URL
+
 Tags: vue, pinia, axios, projeto
 
 A Unidade 2 terminou. Você sabe componentizar de verdade, sincronizar filtros com a URL (Aula 05), e agora consumir uma API real com Axios e Pinia (hoje). Prove que tudo isso funciona junto, numa única funcionalidade nova: um painel administrativo que mostra quem se inscreveu em cada evento, com filtros que sobrevivem a um F5.
@@ -1458,3 +1490,5 @@ No seu **projeto autoral**:
 - Referências básicas do plano de curso: capítulos sobre consumo de API e gerenciamento de estado.
 
 Isso encerra a Unidade 2. A **Avaliação 2** vence no **prazo do cronograma da trilha** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), com as instruções completas de entrega na Aula 08 — mas o escopo, resumido em 5 linhas: seu projeto autoral deve consumir dados de uma API (própria ou `json-server`) através de uma camada de serviços com Axios; ter estado gerenciado por pelo menos uma store Pinia com `carregando`/`erro`; refletir esses estados visualmente na interface; persistir algum dado em `localStorage`; e manter tudo isso rodando em cima da estrutura de rotas e componentes que você já construiu nas Aulas 04 e 05. Comece a organizar seu `db.json` e sua camada de serviços desde já — não deixe para a última semana.
+
+**Na próxima aula** o `json-server` sai de cena: você escreve a `unieventos-api` de verdade, com Node.js e Express 5, conhece o Firebase (autenticação e Firestore) e aponta o `baseURL` do `http.js` desta aula para o seu próprio back-end. É a virada da Unidade 3 — do front que consome uma API falsa para o desenvolvedor full-stack que escreve as duas pontas.

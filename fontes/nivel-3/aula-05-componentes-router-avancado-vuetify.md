@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 2: Vue.js avançado: Vuetify, Axios, Router e Pinia
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -21,7 +22,11 @@ Ao final desta aula você será capaz de:
 - [ ] Avaliação 1 entregue (ou em fase final de entrega).
 - [ ] Domínio confortável de `<script setup>`, `defineProps`/`defineEmits` básicos (vistos rapidamente na Aula 02), `computed`, `onMounted`.
 
-> Na Aula 04 você transformou o UniEventos em uma SPA navegável. Hoje ele fica **modular**: em vez de views monolíticas com tudo dentro, cada pedaço de interface vira um componente com contrato próprio — e a área administrativa ganha rotas aninhadas e formulários validados.
+Na Aula 04 você transformou o UniEventos em uma SPA navegável: Vuetify instalado com tema institucional, `v-app-bar`/`v-navigation-drawer`/`v-main` no lugar, quatro rotas registradas e as views migradas para componentes Vuetify. O que ficou pendente é a organização interna: cada view ainda concentra marcação, dados e lógica no mesmo arquivo.
+
+Hoje o UniEventos fica **modular**. Em vez de views monolíticas com tudo dentro, cada pedaço de interface vira um componente com contrato próprio — props de entrada, eventos de saída, slots para o que varia —, e a lógica reativa repetida sai das views para composables.
+
+Na segunda metade da aula a área administrativa entra em cena, com rotas aninhadas, navigation guards, formulários validados com `v-form` e uma `v-data-table` de eventos. É o esqueleto que a Aula 06 vai conectar a uma API de verdade.
 
 ## 🗺️ Roteiro
 
@@ -575,7 +580,7 @@ async function salvar() {
 </template>
 ```
 
-Nesta seção o objetivo é validação — o envio real (para uma API ou para uma store) aparece completo nas seções 4 e 5 desta aula, e de novo, com Axios, na Aula 06.
+Nesta seção o objetivo é validação — o envio real (para uma API ou para uma store) aparece completo no Mão na massa desta aula, e de novo, com Axios, na Aula 06.
 
 `rules` é um array de funções que recebem o valor atual do campo e retornam `true` (válido) ou uma string (mensagem de erro exibida abaixo do campo). Chamar `formRef.value.validate()` executa todas as regras de todos os campos do formulário de uma vez e retorna `{ valid, errors }`.
 
@@ -687,13 +692,11 @@ O slot `#activator` do `v-menu` é outro exemplo de slot com escopo: ele entrega
 <v-pagination v-model="paginaAtual" :length="totalPaginas" />
 ```
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Composite e Template Method
 
-> ### 🧩 Padrão de projeto em uso — Composite e Template Method
->
-> **Composite** aparece de novo hoje, agora na composição de componentes de layout: `CartaoBase` não sabe o que vai dentro dele — apenas define a "moldura" (`v-card` com título, corpo e ações), e quem usa o componente decide o conteúdo via slots. Isso é o mesmo princípio da árvore de componentes da Aula 04, aplicado deliberadamente ao design de um componente reutilizável.
->
-> **Template Method** é um padrão comportamental em que uma classe (ou, aqui, um componente) define o **esqueleto** de um algoritmo ou de uma estrutura, deixando etapas específicas para serem preenchidas por quem o usa. Um slot com escopo — como o `#item` de `EventoLista` — é exatamente isso: o componente controla o "algoritmo" (iterar sobre a lista, aplicar filtro), mas delega ao chamador a etapa de "como desenhar cada item". A estrutura geral é fixa; o passo variável é injetado de fora.
+**Composite** aparece de novo hoje, agora na composição de componentes de layout: `CartaoBase` não sabe o que vai dentro dele — apenas define a "moldura" (`v-card` com título, corpo e ações), e quem usa o componente decide o conteúdo via slots. Isso é o mesmo princípio da árvore de componentes da Aula 04, aplicado deliberadamente ao design de um componente reutilizável.
+
+**Template Method** é um padrão comportamental em que uma classe (ou, aqui, um componente) define o **esqueleto** de um algoritmo ou de uma estrutura, deixando etapas específicas para serem preenchidas por quem o usa. Um slot com escopo — como o `#item` de `EventoLista` — é exatamente isso: o componente controla o "algoritmo" (iterar sobre a lista, aplicar filtro), mas delega ao chamador a etapa de "como desenhar cada item". A estrutura geral é fixa; o passo variável é injetado de fora.
 
 ## 💻 Mão na massa — refatorando o UniEventos em componentes
 
@@ -739,33 +742,11 @@ function formatarData(dataIso) {
 
 ### Passo 2 — criar `EventoLista.vue`
 
+> **⚠️ Atenção**
+> O `vite-plugin-vuetify` faz auto-import **só dos componentes do Vuetify** (`v-card`, `v-row`…). Os seus componentes, mesmo no mesmo diretório, **não** são registrados automaticamente pelo `create-vue`: usar `<EventoCard />` sem importar produz o aviso `Failed to resolve component: EventoCard` no console e um espaço em branco na tela. Todo componente autoral que você usar em um `<template>` precisa de um `import` no `<script setup>` do arquivo que o usa.
+
 ```vue
 <!-- src/components/EventoLista.vue -->
-<script setup>
-defineProps({
-  eventos: { type: Array, required: true },
-})
-</script>
-
-<template>
-  <v-row>
-    <v-col
-      v-for="evento in eventos"
-      :key="evento.id"
-      cols="12"
-      sm="6"
-      md="4"
-    >
-      <EventoCard :evento="evento" />
-    </v-col>
-  </v-row>
-</template>
-```
-
-Graças ao `autoImport` do Vuetify e ao registro automático de componentes de mesmo diretório do Vite/Vue no scaffold, `EventoCard` é usado aqui sem `import` explícito — mas em projetos com muitos componentes é comum importar explicitamente por clareza. Vamos manter import explícito nas próximas telas para deixar as dependências óbvias.
-
-```vue
-<!-- src/components/EventoLista.vue — versão com import explícito -->
 <script setup>
 import EventoCard from './EventoCard.vue'
 
@@ -1000,7 +981,24 @@ const { carregando, categoriaFiltro, busca, eventosFiltrados } = useEventos()
 
 Compare este arquivo com o `HomeView.vue` da Aula 04: a lógica de busca/filtro/carregamento saiu para o composable `useEventos`, o grid de cards virou `EventoLista`, e os campos de filtro viraram `FiltroEventos`. A view agora só orquestra — é um bom exemplo de componente "inteligente" fino, delegando apresentação aos filhos.
 
-### Passo 8 — criar rotas administrativas aninhadas
+### Passo 8 — tornar `src/data/eventos.js` reativo
+
+A área administrativa que começa aqui **altera** a lista de eventos: exclui, cria e edita. O arquivo criado na Aula 04 exporta um array JavaScript comum — e o Vue não observa arrays comuns. Se a área administrativa mexer nele como está, o dado até muda na memória, mas a `v-data-table`, o contador do `AdminHomeView` e o chip do `v-app-bar` continuam mostrando o valor antigo: o CRUD "não funciona" sem nenhum erro no console. Envolva o array em `reactive()` antes de seguir:
+
+```js
+// src/data/eventos.js — agora reativo
+import { reactive } from 'vue'
+
+export const eventos = reactive([
+  { id: 1, titulo: 'Semana Acadêmica de Computação', descricao: 'Palestras e minicursos sobre tendências em tecnologia.', categoria: 'palestra', dataHora: '2026-09-29T19:00:00', local: 'Auditório Central', vagas: 40, imagemUrl: 'https://picsum.photos/seed/evento1/600/300' },
+  // … os outros sete eventos, sem alteração
+])
+```
+
+> **⚠️ Atenção**
+> Continue mutando o array **no lugar** (`push`, `splice`, `Object.assign`), nunca reatribuindo (`eventos = [...]`) — `reactive()` protege o conteúdo, não a variável, e a reatribuição quebraria a ligação com todas as telas de uma vez (é exatamente o bug do item A4 da Aula 02). Este arquivo é uma "store caseira": funciona bem para uma maquete, e na Aula 06 ele dá lugar a uma store Pinia de verdade.
+
+### Passo 9 — criar rotas administrativas aninhadas
 
 ```js
 // src/router/index.js
@@ -1047,7 +1045,7 @@ router.beforeEach((to) => {
 export default router
 ```
 
-### Passo 9 — criar `AdminLayoutView.vue`
+### Passo 10 — criar `AdminLayoutView.vue`
 
 ```vue
 <!-- src/views/admin/AdminLayoutView.vue -->
@@ -1070,7 +1068,7 @@ const abaAtiva = ref('admin-eventos')
 </template>
 ```
 
-### Passo 10 — criar `AdminHomeView.vue` e `AdminEventosView.vue`
+### Passo 11 — criar `AdminHomeView.vue` e `AdminEventosView.vue`
 
 ```vue
 <!-- src/views/admin/AdminHomeView.vue -->
@@ -1166,7 +1164,7 @@ function confirmarExclusao() {
 </template>
 ```
 
-### Passo 11 — criar `AdminEventoFormView.vue` com validação
+### Passo 12 — criar `AdminEventoFormView.vue` com validação
 
 ```vue
 <!-- src/views/admin/AdminEventoFormView.vue -->
@@ -1270,6 +1268,17 @@ async function salvar() {
 </template>
 ```
 
+### Como testar
+
+Com `npm run dev` rodando, percorra os dois lados da aplicação:
+
+1. **Público** — a `HomeView` mostra os oito cards vindos de `EventoLista`/`EventoCard`; digitar no `FiltroEventos` reduz a lista e a query string da URL acompanha (`?busca=vue`); recarregar a página com a query string preservada devolve a mesma lista filtrada.
+2. **Administrativo** — acesse `/admin`: a `v-data-table` lista os mesmos oito eventos. Clique em "Novo evento", salve um evento válido e confira que ele **aparece na tabela imediatamente**, que o contador do `AdminHomeView` sobe de 8 para 9 e que o evento novo também aparece na Home pública.
+3. **Exclusão** — exclua esse evento pelo diálogo de confirmação: a linha some da tabela na hora e o contador volta a 8.
+4. **Guard de saída** — comece a editar um evento, altere um campo e clique em "Cancelar": o `onBeforeRouteLeave` pergunta se você quer mesmo sair.
+
+Resultado esperado: os quatro itens acima passam sem recarregar a página. Se a tabela e o contador **não** mudarem depois de criar ou excluir, o `reactive()` do Passo 8 não foi aplicado — é o sintoma exato descrito lá.
+
 ## 🧪 Laboratório
 
 ### Nível A — Fixação
@@ -1368,9 +1377,10 @@ Resultado esperado: `/admin/eventos?pagina=2` abre direto na página 2 do `v-pag
 ## 🏆 Desafios
 
 ### ⭐ O emit que ninguém escuta
+
 Tags: vue, bug, investigacao
 
-Um colega criou `DialogoConfirmacao.vue` reaproveitando o da Aula 05, mas trocou um detalhe sem perceber. Ao clicar em "Excluir" no diálogo, nada acontece — o evento aparentemente nunca chega ao componente pai. Este é o trecho relevante:
+Um colega criou `DialogoConfirmacao.vue` reaproveitando o desta aula, mas trocou um detalhe sem perceber. Ao clicar em "Excluir" no diálogo, nada acontece — o evento aparentemente nunca chega ao componente pai. Este é o trecho relevante:
 
 ```vue
 <!-- src/components/DialogoConfirmacao.vue — trecho com o bug plantado -->
@@ -1400,6 +1410,7 @@ Abra o Vue DevTools (aba **Components**), selecione o `DialogoConfirmacao` e obs
 </details>
 
 ### ⭐⭐ Menu de contexto sem mouse
+
 Tags: acessibilidade, vuetify, vue
 
 O `v-menu` de ações rápidas do Laboratório B4 funciona perfeitamente no mouse. Agora teste só com teclado: `Tab` até o botão de três pontinhos, `Enter` para abrir, `Tab`/setas para navegar pelas opções, `Enter` para escolher, `Esc` para fechar sem escolher nada. Em qual desses passos a experiência quebra?
@@ -1420,6 +1431,7 @@ O `v-menu` de ações rápidas do Laboratório B4 funciona perfeitamente no mous
 </details>
 
 ### ⭐⭐⭐ Prop drilling até o neto
+
 Tags: vue, refatoracao, padroes-de-projeto
 
 O código abaixo passa o usuário logado por três componentes até chegar a quem realmente precisa dele — clássico **prop drilling**. `PainelAdmin` e `CabecalhoSecao` não usam `usuarioLogado` para nada além de repassar adiante:

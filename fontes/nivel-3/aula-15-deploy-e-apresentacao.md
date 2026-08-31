@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +19,8 @@ Ao final desta aula você será capaz de:
 - Entregar a Avaliação 3 seguindo integralmente os requisitos e o prazo estabelecidos.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 14 documentamos a API inteira com OpenAPI e Swagger UI — qualquer pessoa consegue entender e testar o UniEventos sem ler uma linha de código. Falta uma última etapa: tirar o projeto do `localhost` e colocá-lo no ar, com URL pública, para qualquer pessoa acessar. Hoje fechamos esse ciclo — e fechamos o semestre.
 
 - `unieventos-api` (ou projeto autoral) com arquitetura em camadas (Aula 13) e documentação Swagger (Aula 14) completas.
 - Front-end (`unieventos-web` ou equivalente) com build funcionando localmente (`npm run build` sem erro).
@@ -37,10 +40,6 @@ Checklist antes de começar:
 | 1 | 50 min | Build de produção, deploy do front e do back, Docker, CORS em produção |
 | 2 | 50 min | CI/CD com GitHub Actions, retrospectiva de padrões de projeto, guia de estudo do exame final |
 | 3 | 50 min | Instruções da Avaliação 3, formato do seminário, encerramento da disciplina |
-
-## Retomando a Aula 14
-
-Na Aula 14 documentamos a API inteira com OpenAPI e Swagger UI — qualquer pessoa consegue entender e testar o UniEventos sem ler uma linha de código. Falta uma última etapa: tirar o projeto do `localhost` e colocá-lo no ar, com URL pública, para qualquer pessoa acessar. Hoje fechamos esse ciclo — e fechamos o semestre.
 
 ## 1. Build de produção do front-end
 
@@ -77,7 +76,7 @@ O Vite só expõe ao código do navegador variáveis de ambiente prefixadas com 
 
 ```bash
 # .env.production — lido automaticamente quando NODE_ENV=production (no build)
-VITE_API_URL=https://unieventos-api.onrender.com
+VITE_API_URL=https://unieventos-api.onrender.com/api
 VITE_FIREBASE_API_KEY=AIzaSy...
 VITE_FIREBASE_AUTH_DOMAIN=unieventos.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=unieventos
@@ -85,20 +84,25 @@ VITE_FIREBASE_PROJECT_ID=unieventos
 
 ```bash
 # .env.development — lido em npm run dev
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3000/api
 VITE_FIREBASE_API_KEY=AIzaSy...
 VITE_FIREBASE_AUTH_DOMAIN=unieventos.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=unieventos
 ```
 
 ```js
-// src/services/apiClient.js — uso da variável, como já fazemos desde a Aula 06
+// src/services/http.js — o cliente da Aula 06, agora lendo a variável de ambiente
 import axios from 'axios'
 
-export const apiClient = axios.create({
+const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL, // troca sozinho entre dev e produção
 })
+
+export default http
 ```
+
+> **⚠️ Atenção**
+> `VITE_API_URL` inclui o sufixo `/api` — é o prefixo em que a `unieventos-api` monta suas rotas desde a Aula 07. Os services chamam `http.get('/eventos')`, e a URL final vira `.../api/eventos`. Esquecer o `/api` aqui é o erro pós-deploy mais comum da turma: tudo compila, tudo publica, e toda requisição volta `404` porque foi para `.../eventos`.
 
 > **⚠️ Atenção**
 > `import.meta.env.VITE_*` só existe em tempo de **build** — o Vite substitui essas referências por valores literais no JavaScript final. Trocar a variável depois do build (por exemplo, direto no painel do serviço de hospedagem, sem rebuildar) **não tem efeito nenhum**: você precisa gerar um novo build para que um novo valor de `VITE_API_URL` entre no bundle. Serviços como Vercel fazem isso automaticamente a cada push, rodando `npm run build` de novo.
@@ -334,7 +338,7 @@ services:
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: senha_local
-      DB_NAME: uni_eventos
+      DB_NAME: unieventos
       FIREBASE_PROJECT_ID: unieventos
       CORS_ORIGEM_PERMITIDA: http://localhost:5173
     depends_on:
@@ -345,7 +349,7 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: senha_local
-      MYSQL_DATABASE: uni_eventos
+      MYSQL_DATABASE: unieventos
     ports:
       - '3306:3306'
     volumes:
@@ -659,7 +663,7 @@ O exame final é **teórico, presencial e individual**, cobrindo as três unidad
 <details markdown="1">
 <summary>Gabarito comentado</summary>
 
-**Resposta: B.** A motivação central de DI aqui é testabilidade: o service passa a depender apenas da interface do repositório, não da implementação concreta — em teste, injeta-se uma implementação em memória; em produção, a implementação real. Ver Aula 13, Seção 3.
+**Resposta: B.** A motivação central de DI aqui é testabilidade: o service passa a depender apenas da interface do repositório, não da implementação concreta — em teste, injeta-se uma implementação em memória; em produção, a implementação real. Ver Aula 13, Seção 2.
 </details>
 
 **8.** No Vuetify 4, o comportamento padrão da propriedade `theme.defaultTheme`, se não for explicitamente definida, é:
@@ -702,6 +706,28 @@ Cada estudante apresenta seu projeto autoral individualmente, em **8 minutos**, 
 ### 8.3 Ordem e cronograma
 
 A ordem de apresentação é definida por sorteio, feito em sala na aula anterior (Aula 14) ou no início desta aula, conforme a quantidade de estudantes matriculados. Com 3 blocos de 50 minutos e 8 minutos por estudante, o tempo permite aproximadamente 15 a 16 apresentações — se a turma for maior, o professor comunica com antecedência um ajuste (ex.: reduzir para 6 minutos ou dividir em dois dias, dentro do que o calendário acadêmico permitir).
+
+## 9. Encerramento: caminhos depois da disciplina
+
+O que foi construído neste semestre é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
+
+- **Nuxt** — framework full stack sobre o Vue, com SSR (Server-Side Rendering) e SSG (Static Site Generation) nativos, útil quando SEO ou performance de primeira carga importam mais do que em uma SPA pura.
+- **TypeScript** — adicionar tipagem estática ao que hoje é JavaScript puro; o Vue 3 e o Vuetify 4 têm suporte de primeira classe a TS, e o ganho em projetos maiores (detecção de erro em tempo de escrita, autocomplete mais forte) é significativo.
+- **Testes E2E** — Cypress ou Playwright, testando a aplicação inteira pela interface, como um usuário real faria — o topo da pirâmide de testes que só citamos na Aula 13.
+- **Vue 3.6** — acompanhar o roadmap oficial do Vue (Vapor Mode e otimizações de compilador são a fronteira de pesquisa ativa do framework no momento).
+- **Mobile com Capacitor/Ionic** — reaproveitar o conhecimento de Vue para publicar o mesmo código (ou uma variação) como app nativo Android/iOS.
+- **Back-end com NestJS** — um framework Node.js opinativo, construído sobre Express (ou Fastify), que formaliza com decorators e módulos exatamente a arquitetura em camadas que construímos manualmente na Aula 13.
+
+### 9.1 Como montar um portfólio a partir deste semestre
+
+- Deixe o projeto autoral **publicado e funcionando** — um link ao vivo vale mais, para quem recruta, do que um repositório que só roda localmente.
+- Escreva um README que conte a história do projeto: problema, decisões técnicas, dificuldades reais (os ADRs da Aula 14 são ótimo material bruto para isso).
+- Grave um vídeo curto de demonstração e fixe no topo do repositório (ou no README, como GIF).
+- Continue commitando — um projeto "morto" no GitHub (sem commit há meses) comunica menos do que um projeto pequeno e ativo.
+
+### 9.2 Convite para iniciação científica e extensão
+
+Muitos dos temas tocados de leve neste semestre — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do prazo de uma avaliação, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
 
 ## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
 
@@ -762,6 +788,26 @@ git push
 ```
 
 Confira na aba **Actions** do GitHub que o workflow rodou e passou.
+
+### Como testar
+
+O teste do deploy é feito **de fora**, numa aba anônima — exatamente como o avaliador vai ver. Nada de "funciona na minha máquina".
+
+```bash
+# 1) a API publicada responde
+curl -i https://<sua-api>.onrender.com/health
+curl -s https://<sua-api>.onrender.com/api/eventos | jq '.paginacao'
+```
+
+Resultado esperado: `200 {"status":"ok"}` no health check e o objeto `paginacao` do envelope de listagem. Se a segunda chamada devolver `404`, o `/api` foi esquecido em algum lugar.
+
+2. **Front publicado** — abra a URL da Vercel numa **janela anônima**. A lista de eventos carrega (dado real, vindo da API publicada). Resultado esperado: nenhum erro de CORS no console, e nenhuma requisição para `localhost`.
+3. **Rota interna com F5** — navegue até `/eventos/1` e recarregue a página. Resultado esperado: a página carrega normalmente; um `404` aqui significa que falta o rewrite de SPA (Seção 1.4).
+4. **Login e escrita** — faça login pelo Firebase e crie um evento. Resultado esperado: `201`, o evento aparece na lista, e outra pessoa abrindo a URL num outro computador vê o mesmo evento.
+5. **Variáveis** — confira no painel da Vercel que `VITE_API_URL` termina em `/api`, e no painel da Render que `CORS_ORIGEM_PERMITIDA` é exatamente a URL do front (sem barra no fim).
+6. **CI** — faça um commit qualquer e confirme na aba **Actions** que lint e testes rodaram no push.
+
+Só depois que os seis passam é que a Avaliação 3 tem os links que ela pede.
 
 ## 🧪 Laboratório
 
@@ -1007,31 +1053,9 @@ Ao final desta aula, seu projeto deve ter:
 > **⚠️ Atenção**
 > A entrega é considerada incompleta se qualquer um dos quatro links acima estiver ausente ou não funcionar no momento da correção. Teste os links em uma aba anônima do navegador antes de enviar, simulando o que o avaliador vai ver.
 
-**Política de atraso:** entregas após o prazo têm desconto de 1,0 ponto (sobre a nota final da Avaliação 3) por dia corrido de atraso, até o limite de 3 dias — após esse prazo, a avaliação recebe nota zero, exceto em casos de justificativa formal e documentada junto à coordenação do curso, conforme o regimento da UNEMAT.
+**Política de atraso:** entregas após o prazo têm desconto de 1,0 ponto (sobre a nota final da Avaliação 3) por dia corrido de atraso, até o limite de 5 dias corridos — após esse prazo, a avaliação recebe nota zero, exceto em casos de justificativa formal e documentada junto à coordenação do curso, conforme o regimento da UNEMAT.
 
 **Política de plágio e uso de IA:** é permitido e esperado o uso de ferramentas de IA (como assistentes de código) como apoio ao desenvolvimento — é exatamente essa prática que a indústria de software usa hoje. O que não é aceito: (1) entregar código que você não é capaz de explicar linha a linha na apresentação; (2) copiar o projeto de outro colega, com ou sem alterações cosméticas; (3) apresentar como próprio um projeto gerado quase integralmente por IA sem compreensão do que foi produzido. A apresentação de 8 minutos (Seção 8) é, entre outras coisas, o mecanismo de verificação de autoria: perguntas técnicas sobre decisões do próprio código fazem parte da avaliação.
-
-## 9. Encerramento: caminhos depois da disciplina
-
-O que foi construído neste semestre é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
-
-- **Nuxt** — framework full stack sobre o Vue, com SSR (Server-Side Rendering) e SSG (Static Site Generation) nativos, útil quando SEO ou performance de primeira carga importam mais do que em uma SPA pura.
-- **TypeScript** — adicionar tipagem estática ao que hoje é JavaScript puro; o Vue 3 e o Vuetify 4 têm suporte de primeira classe a TS, e o ganho em projetos maiores (detecção de erro em tempo de escrita, autocomplete mais forte) é significativo.
-- **Testes E2E** — Cypress ou Playwright, testando a aplicação inteira pela interface, como um usuário real faria — o topo da pirâmide de testes que só citamos na Aula 13.
-- **Vue 3.6** — acompanhar o roadmap oficial do Vue (Vapor Mode e otimizações de compilador são a fronteira de pesquisa ativa do framework no momento).
-- **Mobile com Capacitor/Ionic** — reaproveitar o conhecimento de Vue para publicar o mesmo código (ou uma variação) como app nativo Android/iOS.
-- **Back-end com NestJS** — um framework Node.js opinativo, construído sobre Express (ou Fastify), que formaliza com decorators e módulos exatamente a arquitetura em camadas que construímos manualmente na Aula 13.
-
-### 9.1 Como montar um portfólio a partir deste semestre
-
-- Deixe o projeto autoral **publicado e funcionando** — um link ao vivo vale mais, para quem recruta, do que um repositório que só roda localmente.
-- Escreva um README que conte a história do projeto: problema, decisões técnicas, dificuldades reais (os ADRs da Aula 14 são ótimo material bruto para isso).
-- Grave um vídeo curto de demonstração e fixe no topo do repositório (ou no README, como GIF).
-- Continue commitando — um projeto "morto" no GitHub (sem commit há meses) comunica menos do que um projeto pequeno e ativo.
-
-### 9.2 Convite para iniciação científica e extensão
-
-Muitos dos temas tocados de leve neste semestre — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do prazo de uma avaliação, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
 
 ## 📚 Para aprofundar
 
@@ -1045,6 +1069,7 @@ Muitos dos temas tocados de leve neste semestre — arquitetura de software, seg
 - [Vue Router — histórico HTML5 e configuração de servidor](https://router.vuejs.org/guide/essentials/history-mode.html)
 - [Nuxt — site oficial](https://nuxt.com)
 - [NestJS — site oficial](https://nestjs.com)
+- Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre implantação, integração contínua e ciclo de vida de aplicações web.
 
 ---
 

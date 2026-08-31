@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -52,7 +53,7 @@ Isso significa duas coisas na prática: (1) você vai aprender a construir aplic
 | Unidade | Conteúdo | Aulas |
 |---|---|---|
 | U1 | Fundamentos de front-end com Vue.js | 01–04 |
-| U2 | Vue.js avançado: Vuetify, Axios, Vue Router, Pinia | 04–06 |
+| U2 | Vue.js avançado: Vuetify, Axios, Vue Router, Pinia | 05–06 |
 | U3 | Integração front-end/back-end: Firebase, Supabase, Express, autenticação, banco de dados, deploy | 07–15 |
 
 ### 1.3 Cronograma completo
@@ -608,7 +609,7 @@ const eventosPorData = [...eventos].sort(
   (a, b) => new Date(a.dataHora) - new Date(b.dataHora),
 )
 console.log(eventosPorData.map((e) => e.titulo))
-// ['Oficina de Vue.js', 'Introdução a IA', 'Semana da Computação', 'Hackathon FACET']
+// ['Introdução a IA', 'Oficina de Vue.js', 'Semana da Computação', 'Hackathon FACET']
 
 console.log(eventos.map((e) => e.titulo))
 // ainda na ordem original — porque ordenamos a CÓPIA, não `eventos`
@@ -699,8 +700,10 @@ import { CATEGORIAS, filtrarPorCategoria } from './eventos.js'
 // import default: sem chaves, você escolhe o nome
 import GerenciadorDeEventos from './eventos.js'
 
-// import combinando os dois
-import GerenciadorDeEventos2, { calcularVagasRestantes } from './eventos.js'
+// import combinando os dois na MESMA linha (é assim que se escreve na prática —
+// não repita o import default do mesmo módulo, como fizemos acima só para separar os casos)
+// import GerenciadorDeEventos, { calcularVagasRestantes } from './eventos.js'
+import { calcularVagasRestantes } from './eventos.js'
 
 console.log(CATEGORIAS) // ['palestra', 'minicurso', 'workshop']
 
@@ -886,39 +889,37 @@ carregarDadosDaHome()
 > **⚠️ Atenção**
 > `Promise.all` falha rápido: se uma das promises rejeitar, todas as outras são "abandonadas" do ponto de vista do `.catch`/`try-catch`, mesmo que já estivessem resolvidas. Quando precisar do resultado de todas independentemente de falha, use `Promise.allSettled` (não obrigatório nesta disciplina, mas bom saber que existe).
 
-## 🧩 Padrão de projeto em uso
+## 🧩 Padrão de projeto em uso — Module / Revealing Module
 
-> ### 🧩 Padrão de projeto em uso — Module / Revealing Module
->
-> O padrão **Module** organiza código relacionado (estado + comportamento) dentro de um único bloco, escondendo detalhes internos e expondo apenas uma interface pública. Antes dos módulos ES nativos, isso era feito com uma IIFE (função invocada imediatamente) que retornava um objeto com as partes públicas — o **Revealing Module Pattern**:
->
-> ```js
-> // Revealing Module Pattern — jeito pré-ES2015 de encapsular
-> const GerenciadorDeEventos = (function () {
->   // "privado": só existe dentro deste escopo de função
->   let eventos = []
->
->   function adicionar(evento) {
->     eventos.push(evento)
->   }
->
->   function contarVagas() {
->     return eventos.reduce((total, e) => total + e.vagas, 0)
->   }
->
->   // "revela" (expõe) só o que deve ser público
->   return {
->     adicionar,
->     contarVagas,
->   }
-> })()
->
-> GerenciadorDeEventos.adicionar({ titulo: 'Semana da Computação', vagas: 40 })
-> console.log(GerenciadorDeEventos.contarVagas()) // 40
-> // GerenciadorDeEventos.eventos não existe aqui fora — está encapsulado
-> ```
->
-> Os **módulos ES** (`import`/`export`, Seção 3.10) resolvem o mesmo problema de forma nativa e sem a necessidade da IIFE: tudo que não é exportado com `export` é automaticamente privado ao arquivo. É o mesmo padrão de projeto, com sintaxe de linguagem em vez de truque de engenharia. Todo componente `.vue` que você vai escrever a partir da Aula 02 é, conceitualmente, um Module: estado interno + funções, expondo ao `<template>` só o que for necessário.
+O padrão **Module** organiza código relacionado (estado + comportamento) dentro de um único bloco, escondendo detalhes internos e expondo apenas uma interface pública. Antes dos módulos ES nativos, isso era feito com uma IIFE (função invocada imediatamente) que retornava um objeto com as partes públicas — o **Revealing Module Pattern**:
+
+```js
+// Revealing Module Pattern — jeito pré-ES2015 de encapsular
+const GerenciadorDeEventos = (function () {
+  // "privado": só existe dentro deste escopo de função
+  let eventos = []
+
+  function adicionar(evento) {
+    eventos.push(evento)
+  }
+
+  function contarVagas() {
+    return eventos.reduce((total, e) => total + e.vagas, 0)
+  }
+
+  // "revela" (expõe) só o que deve ser público
+  return {
+    adicionar,
+    contarVagas,
+  }
+})()
+
+GerenciadorDeEventos.adicionar({ titulo: 'Semana da Computação', vagas: 40 })
+console.log(GerenciadorDeEventos.contarVagas()) // 40
+// GerenciadorDeEventos.eventos não existe aqui fora — está encapsulado
+```
+
+Os **módulos ES** (`import`/`export`, Seção 3.10) resolvem o mesmo problema de forma nativa e sem a necessidade da IIFE: tudo que não é exportado com `export` é automaticamente privado ao arquivo. É o mesmo padrão de projeto, com sintaxe de linguagem em vez de truque de engenharia. Todo componente `.vue` que você vai escrever a partir da Aula 02 é, conceitualmente, um Module: estado interno + funções, expondo ao `<template>` só o que for necessário.
 
 ## 💻 Mão na massa — configurando o primeiro arquivo de revisão
 
@@ -927,7 +928,7 @@ Vamos consolidar tudo em um único exercício guiado, rodado no navegador.
 **Passo 1 — crie a pasta e os arquivos.**
 
 ```bash
-mkdir -p ~/fds-aula01 && cd ~/fds-aula01
+mkdir -p ~/unieventos-aula01 && cd ~/unieventos-aula01
 touch index.html eventos.js main.js
 ```
 
@@ -1024,7 +1025,21 @@ async function buscarPostsDeExemplo() {
 buscarPostsDeExemplo()
 ```
 
-**Passo 5 — abra `index.html`** com a extensão **Live Server** do VS Code (ou qualquer servidor local — módulos ES não funcionam abrindo o arquivo direto com `file://` por causa de CORS). Abra o DevTools (`F12`) e confira o Console.
+**Passo 5 — abra `index.html`** com a extensão **Live Server** do VS Code (ou qualquer servidor local — módulos ES não funcionam abrindo o arquivo direto com `file://` por causa de CORS).
+
+### Como testar
+
+Com a página aberta pelo Live Server, abra o DevTools (`F12`) e vá ao **Console**.
+
+Resultado esperado, nesta ordem:
+
+```text
+total de palestras: 2
+total de vagas em todos os eventos: 205
+posts de exemplo recebidos da API: (3) [{…}, {…}, {…}]
+```
+
+E, na página, a lista de eventos renderizada em ordem de data, do mais próximo ao mais distante. Confira também os dois sinais de que os módulos ES estão funcionando: (1) o `<script type="module">` não reclama de `import`; (2) abrir o mesmo arquivo com duplo clique (`file://`) **quebra** com erro de CORS — é exatamente o motivo de usar um servidor local. A linha dos posts chegar **por último**, depois das duas primeiras, é a prova visual de que `fetch` é assíncrono: o `console.log` de baixo do `buscarPostsDeExemplo()` não espera a resposta da rede.
 
 ## 🧪 Laboratório
 
@@ -1112,7 +1127,7 @@ Copie primeiro com `[...lista]`, depois use `.sort((a, b) => (b.vagas - b.inscri
 
 **B3.** Calcular vagas totais com `reduce`. Escreva `vagasRestantesTotais(lista)` que retorne a soma de `vagas - inscritos` de todos os eventos.
 
-Resultado esperado: `55` (para o array de exemplo: 28 + 0 + 42 + 25).
+Resultado esperado: `95` (para o array de exemplo: 28 + 0 + 42 + 25).
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1255,4 +1270,4 @@ Ao final desta aula, seu repositório deve ter:
 
 ---
 
-**Próxima aula (02, 19/08/2026):** começamos o Vue de verdade — `createApp`, instância, `data`/`methods` (Options API) e Composition API com `<script setup>`, além das diretivas básicas (`v-bind`, `v-on`, `v-model`, `v-if`, `v-for`). Traga o ambiente instalado e o repositório do projeto autoral criado.
+**Na próxima aula** começamos o Vue de verdade — `createApp`, instância, `data`/`methods` (Options API) e Composition API com `<script setup>`, além das diretivas básicas (`v-bind`, `v-on`, `v-model`, `v-if`, `v-for`). Traga o ambiente instalado e o repositório do projeto autoral criado.

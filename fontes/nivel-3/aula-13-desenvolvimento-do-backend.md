@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -17,8 +18,10 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
+Na Aula 12 trocamos o MySQL por Supabase sem alterar uma linha do front-end, porque a camada `services/` já escondia a origem dos dados atrás de uma interface única — o padrão **Adapter** em ação. Isso só foi possível porque o back-end já tinha, mesmo que informalmente, uma separação entre "o que a rota expõe" e "de onde o dado vem". Hoje formalizamos essa separação: paramos de escrever back-end que "funciona" e passamos a escrever back-end que **se sustenta** — testável, seguro, com erros previsíveis e configuração validada.
+
 - API `unieventos-api` funcionando com Express 5, persistência em MySQL (Aula 09) e autenticação Firebase (Aula 10), com CRUD completo (Aula 11).
-- Estrutura mínima de pastas `src/routes`, `src/controllers` já existente (mesmo que ainda sem separação completa em services/repositories).
+- Estrutura de pastas `src/routes`, `src/controllers`, `src/services`, `src/repositories` já existente desde a Aula 09 — hoje ela é formalizada e completada, não criada do zero.
 - Node.js 22 LTS e MySQL rodando localmente (ou acessível via `DATABASE_URL`).
 
 Checklist antes de começar:
@@ -35,13 +38,9 @@ Checklist antes de começar:
 | 2 | 50 min | Hierarquia de erros, segurança prática (helmet, rate limit, CORS), OWASP Top 10 |
 | 3 | 50 min | Testes com vitest + supertest, migrations com scripts numerados |
 
-## Retomando a Aula 12
-
-Na Aula 12 trocamos o MySQL por Supabase sem alterar uma linha do front-end, porque a camada `services/` já escondia a origem dos dados atrás de uma interface única — o padrão **Adapter** em ação. Isso só foi possível porque o back-end já tinha, mesmo que informalmente, uma separação entre "o que a rota expõe" e "de onde o dado vem". Hoje formalizamos essa separação: paramos de escrever back-end que "funciona" e passamos a escrever back-end que **se sustenta** — testável, seguro, com erros previsíveis e configuração validada.
-
 ## 1. Arquitetura em camadas revisitada
 
-Até aqui, o `unieventos-api` cresceu organicamente: rota chama controller, controller consulta o banco direto, às vezes até valida direto na rota. Isso funciona para um protótipo, mas não escala — cada mudança no banco obriga a mexer em código que deveria só cuidar de HTTP, e não dá para testar regra de negócio sem subir um banco de verdade.
+As Aulas 09 e 11 já entregaram o esqueleto certo: rota → controller → service → repository, com validação por middleware Zod e um tratador de erros central. O que falta não é a divisão em camadas — é **formalizar e completar** o que começamos. Hoje as dependências deixam de ser importadas e passam a ser injetadas (o que torna o service testável sem banco), a configuração passa por uma porta única e validada, os erros ganham uma hierarquia de domínio em cima do `ErroHttp` da Aula 08, e o schema do banco deixa de ser um `schema.sql` manual para virar migrations versionadas.
 
 A solução é formalizar cinco responsabilidades separadas:
 
@@ -78,7 +77,7 @@ Cliente HTTP (front-end / Postman)
 └─────────┬────────────┘
           ▼
 ┌─────────────────────┐
-│ middlewares de rota  │  autenticação (verificarToken), validação (validar(schema))
+│ middlewares de rota  │  autenticação (autenticar), validação (validar(schema))
 └─────────┬────────────┘
           ▼
 ┌──────────────────────────┐
@@ -154,12 +153,31 @@ export async function criarEvento(dados) {
 // src/services/eventosService.js
 // O service NÃO SABE se o repositório fala com MySQL, Supabase ou memória.
 // Ele só conhece a INTERFACE: listar(), buscarPorId(), criar(), atualizar(), remover().
-import { ErroDeValidacao, ErroNaoEncontrado } from '../errors/index.js'
+import { ErroDeValidacao, ErroNaoEncontrado } from '../erros/index.js'
 
 export function criarServicoDeEventos({ eventosRepository }) {
   return {
-    async listarEventos(filtros) {
-      return eventosRepository.listar(filtros)
+    async listarEventos({ categoria, busca, pagina = 1, porPagina = 20 } = {}) {
+      const paginaSegura = Math.max(1, Number(pagina) || 1)
+      const porPaginaSegura = Math.min(50, Math.max(1, Number(porPagina) || 20))
+
+      const [dados, total] = await Promise.all([
+        eventosRepository.listar({ categoria, busca, pagina: paginaSegura, porPagina: porPaginaSegura }),
+        eventosRepository.contar({ categoria, busca }),
+      ])
+
+      // o MESMO envelope das Aulas 08–11: { dados, paginacao }.
+      // Devolver o array puro aqui quebraria o v-data-table-server do front,
+      // que lê `paginacao.total` para saber quantas páginas existem.
+      return {
+        dados,
+        paginacao: {
+          pagina: paginaSegura,
+          porPagina: porPaginaSegura,
+          total,
+          totalPaginas: Math.ceil(total / porPaginaSegura),
+        },
+      }
     },
 
     async buscarEventoPorId(id) {
@@ -258,7 +276,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=troque-esta-senha
-DB_NAME=uni_eventos
+DB_NAME=unieventos
 
 FIREBASE_PROJECT_ID=uni-eventos-12345
 
@@ -269,14 +287,19 @@ A partir de agora, **nenhum outro arquivo** lê `process.env` diretamente — to
 
 ```js
 // src/db/pool.js — uso de config em vez de process.env espalhado
+import mysql from 'mysql2/promise'
 import { config } from '../config/index.js'
 
-export const configuracaoDoPool = {
+// a configuração vive no MESMO arquivo do pool — um arquivo só, sem
+// `configuracaoDoPool.js` separado para importar de dois lugares
+const configuracaoDoPool = {
   host: config.DB_HOST,
   port: config.DB_PORT,
   user: config.DB_USER,
   password: config.DB_PASSWORD,
   database: config.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
 }
 ```
 
@@ -287,51 +310,59 @@ export const configuracaoDoPool = {
 
 ### 4.1 Hierarquia de erros de domínio
 
+A classe base já existe desde a Aula 08: `ErroHttp`, em `src/erros/ErroHttp.js`, com `status`, `message` e `codigo`. Não vamos criar uma segunda família de erros — vamos **estender** essa, dando nome de domínio a cada caso e acrescentando a marca `operacional`, que separa "erro esperado" de "bug".
+
 ```js
-// src/errors/index.js
-// Erros de DOMÍNIO carregam significado de negócio, não de protocolo HTTP.
-// Quem decide o status HTTP é o tratador central (Seção 4.2), não o service.
-export class ErroDeAplicacao extends Error {
-  constructor(mensagem, status = 500) {
-    super(mensagem)
+// src/erros/index.js — reexporta o ErroHttp da Aula 08 e acrescenta os erros de domínio
+import { ErroHttp } from './ErroHttp.js'
+
+export { ErroHttp }
+
+// Erro de domínio = ErroHttp + a marca `operacional`, que o tratador usa
+// para decidir entre logar um aviso (esperado) ou um erro com stack (bug).
+export class ErroDeAplicacao extends ErroHttp {
+  constructor(mensagem, status = 500, codigo = 'ERRO_INTERNO') {
+    super(status, mensagem, codigo)
     this.name = this.constructor.name
-    this.status = status
-    // Marca erros esperados/tratáveis, para diferenciar de bugs inesperados no log.
     this.operacional = true
   }
 }
 
 export class ErroDeValidacao extends ErroDeAplicacao {
   constructor(mensagem, detalhes = []) {
-    super(mensagem, 400)
+    // 422, o mesmo status de validação fixado na Aula 08 — não 400
+    super(mensagem, 422, 'VALIDACAO')
     this.detalhes = detalhes
   }
 }
 
 export class ErroNaoEncontrado extends ErroDeAplicacao {
   constructor(mensagem = 'Recurso não encontrado') {
-    super(mensagem, 404)
+    super(mensagem, 404, 'NAO_ENCONTRADO')
   }
 }
 
 export class ErroDeAutorizacao extends ErroDeAplicacao {
   constructor(mensagem = 'Você não tem permissão para executar esta ação') {
-    super(mensagem, 403)
+    super(mensagem, 403, 'NAO_AUTORIZADO')
   }
 }
 
 export class ErroDeConflito extends ErroDeAplicacao {
   constructor(mensagem = 'Conflito com o estado atual do recurso') {
-    super(mensagem, 409)
+    super(mensagem, 409, 'CONFLITO')
   }
 }
 ```
+
+> **⚠️ Atenção**
+> `erroNaoEncontrado()` e `erroValidacao()` (os atalhos da Aula 08) continuam valendo — `new ErroNaoEncontrado(...)` é a mesma coisa com nome de classe. O que **não** muda em hipótese alguma é o envelope que sai na resposta: `{ erro: { mensagem, codigo } }`, com `detalhes` quando for validação. A store da Aula 11 lê exatamente `erro.mensagem`; inventar um formato novo aqui quebraria o front sem aviso.
 
 Usar essa hierarquia no service fica direto:
 
 ```js
 // trecho de src/services/inscricoesService.js
-import { ErroDeConflito, ErroDeAutorizacao } from '../errors/index.js'
+import { ErroDeConflito, ErroDeAutorizacao } from '../erros/index.js'
 
 async function inscrever({ eventoId, usuarioUid }) {
   const jaInscrito = await inscricoesRepository.existeInscricao(eventoId, usuarioUid)
@@ -395,18 +426,22 @@ export function tratadorDeErros(erro, req, res, next) {
     logger.error({ status, err: erro, path: req.path }, 'erro inesperado')
   }
 
+  // Envelope ÚNICO da trilha, fixado na Aula 08 e lido pela store da Aula 11.
   const corpoDaResposta = {
-    mensagem: ehErroOperacional ? erro.message : 'Erro interno do servidor',
+    erro: {
+      mensagem: ehErroOperacional ? erro.message : 'Erro interno do servidor',
+      codigo: erro.codigo ?? 'ERRO_INTERNO',
+    },
   }
 
   if (erro.detalhes) {
-    corpoDaResposta.detalhes = erro.detalhes
+    corpoDaResposta.erro.detalhes = erro.detalhes
   }
 
   // NUNCA vazar stack trace em produção — é informação valiosa para um atacante
   // (caminhos de arquivo, versão de bibliotecas, estrutura interna).
   if (config.NODE_ENV !== 'production') {
-    corpoDaResposta.stack = erro.stack
+    corpoDaResposta.erro.stack = erro.stack
   }
 
   res.status(status).json(corpoDaResposta)
@@ -466,7 +501,7 @@ export const limitadorDeTaxa = rateLimit({
   limit: 100,                // 100 requisições por IP nessa janela
   standardHeaders: true,
   legacyHeaders: false,
-  message: { mensagem: 'Muitas requisições. Tente novamente mais tarde.' },
+  message: { erro: { mensagem: 'Muitas requisições. Tente novamente mais tarde.', codigo: 'RATE_LIMIT' } },
 })
 
 // CORS restritivo: só o domínio do front tem permissão — nunca use origin: '*'
@@ -511,7 +546,7 @@ export function criarApp({ eventosRepository } = {}) {
 
 | Categoria OWASP | O que fazemos no UniEventos |
 |---|---|
-| A01 — Quebra de controle de acesso | Middleware `autenticacao.js` (Aula 10) + verificação de dono do recurso nos services (ex.: `ErroDeAutorizacao` ao cancelar inscrição alheia) |
+| A01 — Quebra de controle de acesso | Middlewares `autenticar`/`autorizar` (Aula 10) + verificação de dono do recurso nos services (ex.: `ErroDeAutorizacao` ao cancelar inscrição alheia) |
 | A02 — Falhas criptográficas | Senha nunca é gerenciada por nós — delegada ao Firebase Auth; `.env` fora do controle de versão; HTTPS obrigatório em produção (Aula 15) |
 | A03 — Injeção | Queries sempre parametrizadas com `?` no `mysql2` (nunca concatenação de string); validação de entrada com `zod` antes de tocar no banco |
 | A04 — Design inseguro | Arquitetura em camadas desta aula; regra de negócio centralizada no service, não espalhada em cada rota |
@@ -521,39 +556,6 @@ export function criarApp({ eventosRepository } = {}) {
 
 > **🔎 Por baixo do capô**
 > Note que "sanitizar entrada" aqui não significa escapar HTML manualmente — significa **validar contra um schema** (zod) antes de qualquer processamento, e **nunca montar SQL por concatenação**. Essas duas práticas já eliminam a maior parte da superfície de ataque de injeção em uma API JSON.
-
-## 🧩 Padrão de projeto em uso
-
-> ### 🧩 Padrões de projeto em uso — Builder, Dependency Injection, Singleton, Facade, Repository, Strategy
->
-> Esta aula é a mais densa em padrões GoF do semestre, porque a arquitetura em camadas é literalmente a aplicação simultânea de vários deles.
->
-> **Dependency Injection** — Seção 3: `criarServicoDeEventos({ eventosRepository })` recebe a dependência em vez de importá-la. O service não conhece a implementação concreta, só a interface (`listar`, `buscarPorId`, `criar`...).
->
-> **Singleton** — o pool de conexões do MySQL (criado na Aula 09 com `mysql2.createPool`) é instanciado **uma única vez** por processo e reutilizado por todos os repositórios:
-> ```js
-> // src/db/pool.js
-> import mysql from 'mysql2/promise'
-> import { configuracaoDoPool } from './configuracaoDoPool.js'
->
-> let instanciaDoPool // módulo ES: só existe uma vez por processo Node — Singleton natural
->
-> export function obterPool() {
->   if (!instanciaDoPool) {
->     instanciaDoPool = mysql.createPool(configuracaoDoPool)
->   }
->   return instanciaDoPool
-> }
-> ```
-> Qualquer repositório que chame `obterPool()` recebe a **mesma** instância — é assim que o Singleton evita esgotar conexões do banco.
->
-> **Facade** — `services/eventosService.js` é uma fachada simples sobre o repositório: o controller não precisa saber que, por trás de `criarEvento`, existem validação de negócio e uma chamada ao banco. Ele só vê uma operação de alto nível.
->
-> **Repository** — `repositories/eventosRepository.mysql.js` encapsula toda a SQL; o resto da aplicação nunca escreve `SELECT`/`INSERT` fora dessa camada.
->
-> **Strategy** — a escolha de **qual** repositório usar em tempo de execução (ver `src/repositories/index.js` na seção "Mão na massa") é o padrão Strategy: a mesma interface (`listar`, `criar`...), implementações intercambiáveis por ambiente (MySQL em produção, memória em teste).
->
-> **Builder** — a montagem de uma query de listagem com filtros opcionais (categoria, texto, paginação) usa um builder que acumula condições passo a passo antes de gerar o SQL final — ver `QueryBuilder` na Seção 7.2 abaixo.
 
 ## 6. Testes automatizados
 
@@ -622,31 +624,33 @@ function montarAppDeTeste() {
 }
 
 describe('rotas de /api/eventos', () => {
-  it('GET /api/eventos retorna 200 e um array', async () => {
+  it('GET /api/eventos retorna 200 e o envelope { dados, paginacao }', async () => {
     const app = montarAppDeTeste()
     const resposta = await request(app).get('/api/eventos')
 
     expect(resposta.status).toBe(200)
-    expect(Array.isArray(resposta.body)).toBe(true)
-    expect(resposta.body).toHaveLength(1)
+    expect(Array.isArray(resposta.body.dados)).toBe(true)
+    expect(resposta.body.dados).toHaveLength(1)
+    expect(resposta.body.paginacao.total).toBe(1)
   })
 
-  it('GET /api/eventos/:id inexistente retorna 404 com mensagem', async () => {
+  it('GET /api/eventos/:id inexistente retorna 404 no envelope de erro', async () => {
     const app = montarAppDeTeste()
     const resposta = await request(app).get('/api/eventos/999')
 
     expect(resposta.status).toBe(404)
-    expect(resposta.body.mensagem).toMatch(/não encontrado/i)
+    expect(resposta.body.erro.mensagem).toMatch(/não encontrado/i)
+    expect(resposta.body.erro.codigo).toBe('NAO_ENCONTRADO')
   })
 
-  it('POST /api/eventos sem título retorna 400 (validação zod)', async () => {
+  it('POST /api/eventos sem título retorna 422 (validação zod)', async () => {
     const app = montarAppDeTeste()
     const resposta = await request(app)
       .post('/api/eventos')
       .send({ categoria: 'palestra', vagas: 10 })
 
-    expect(resposta.status).toBe(400)
-    expect(resposta.body.detalhes).toBeDefined()
+    expect(resposta.status).toBe(422)
+    expect(resposta.body.erro.detalhes).toBeDefined()
   })
 
   it('POST /api/eventos válido retorna 201 e o evento criado', async () => {
@@ -677,6 +681,9 @@ function criarRepositorioFalso(eventosIniciais = []) {
     async listar() {
       return eventos
     },
+    async contar() {
+      return eventos.length
+    },
     async buscarPorId(id) {
       return eventos.find((evento) => evento.id === id) ?? null
     },
@@ -689,15 +696,16 @@ function criarRepositorioFalso(eventosIniciais = []) {
 }
 
 describe('eventosService (unitário)', () => {
-  it('listarEventos delega ao repositório e devolve o array', async () => {
+  it('listarEventos devolve o envelope { dados, paginacao }', async () => {
     const service = criarServicoDeEventos({
       eventosRepository: criarRepositorioFalso([{ id: 1, titulo: 'Evento A' }]),
     })
 
-    const eventos = await service.listarEventos()
+    const resultado = await service.listarEventos()
 
-    expect(eventos).toHaveLength(1)
-    expect(eventos[0].titulo).toBe('Evento A')
+    expect(resultado.dados).toHaveLength(1)
+    expect(resultado.dados[0].titulo).toBe('Evento A')
+    expect(resultado.paginacao).toEqual({ pagina: 1, porPagina: 20, total: 1, totalPaginas: 1 })
   })
 
   it('buscarEventoPorId lança ErroNaoEncontrado quando o id não existe', async () => {
@@ -745,44 +753,69 @@ Até a Aula 09, o banco foi criado rodando um `schema.sql` inteiro na mão. Isso
 
 ### 7.2 Implementação simples: scripts numerados + tabela de controle
 
+As migrations não inventam um schema novo: elas **reconstroem exatamente o `sql/schema.sql` da Aula 09** (mesmas tabelas, mesmos tamanhos de coluna, mesmas chaves) e, a partir daí, registram como um passo versionado a mudança que a Aula 11 fez à mão no banco. É essa continuidade que permite jogar o `schema.sql` fora sem perder nada.
+
 ```sql
--- migrations/0001_criar_tabela_eventos.sql
+-- migrations/0001_criar_tabela_usuarios.sql
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  firebase_uid VARCHAR(128) NOT NULL UNIQUE,
+  nome VARCHAR(120) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+```sql
+-- migrations/0002_criar_tabela_eventos.sql
 CREATE TABLE IF NOT EXISTS eventos (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  titulo VARCHAR(150) NOT NULL,
+  titulo VARCHAR(160) NOT NULL,
   descricao TEXT,
   categoria ENUM('palestra', 'minicurso', 'workshop') NOT NULL,
   data_hora DATETIME NOT NULL,
-  local VARCHAR(150) NOT NULL,
+  local VARCHAR(160) NOT NULL,
   vagas INT NOT NULL DEFAULT 0,
-  imagem_url VARCHAR(255),
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  imagem_url VARCHAR(400),
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_eventos_categoria (categoria),
+  INDEX idx_eventos_data_hora (data_hora)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
 ```sql
--- migrations/0002_criar_tabela_inscricoes.sql
+-- migrations/0003_criar_tabela_inscricoes.sql
+-- versão da Aula 09: a inscrição aponta para a tabela `usuarios`
 CREATE TABLE IF NOT EXISTS inscricoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   evento_id INT NOT NULL,
-  usuario_uid VARCHAR(128) NOT NULL,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE,
-  UNIQUE KEY uk_evento_usuario (evento_id, usuario_uid)
+  usuario_id INT NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_inscricoes_evento FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE,
+  CONSTRAINT fk_inscricoes_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  UNIQUE KEY uk_inscricao_unica (evento_id, usuario_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
 ```sql
--- migrations/0003_adicionar_indice_categoria.sql
-ALTER TABLE eventos ADD INDEX idx_categoria (categoria);
+-- migrations/0004_inscricao_por_uid_do_firebase.sql
+-- A MUDANÇA da Aula 11, agora versionada: com o Firebase como fonte de identidade
+-- (Aula 10), a inscrição passa a guardar o uid direto, sem depender da tabela local.
+ALTER TABLE inscricoes DROP FOREIGN KEY fk_inscricoes_usuario;
+ALTER TABLE inscricoes DROP INDEX uk_inscricao_unica;
+ALTER TABLE inscricoes CHANGE COLUMN usuario_id usuario_uid VARCHAR(128) NOT NULL;
+ALTER TABLE inscricoes ADD UNIQUE KEY uk_evento_usuario (evento_id, usuario_uid);
 ```
+
+> **⚠️ Atenção**
+> A migration 0004 é destrutiva se rodada num banco com dados reais: os `usuario_id` inteiros viram texto e perdem a ligação com `usuarios`. Em produção, isso viraria três migrations (adicionar a coluna nova, copiar `usuarios.firebase_uid` para ela, só então remover a antiga). Aqui, com banco de desenvolvimento, a versão curta serve — mas **saiba que a versão curta é a exceção, não a regra**.
 
 ```js
 // scripts/migrar.js
 // Executor de migrations minimalista: lê migrations/*.sql em ordem numérica,
 // aplica só as que ainda não constam na tabela de controle.
 import { readdir, readFile } from 'node:fs/promises'
-import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import mysql from 'mysql2/promise'
 import { config } from '../src/config/index.js'
 
@@ -828,7 +861,9 @@ async function executarMigracoes() {
         continue
       }
 
-      const caminhoCompleto = path.join(new URL(PASTA_DE_MIGRATIONS).pathname, arquivo)
+      // fileURLToPath, não `.pathname`: no Windows, `new URL(...).pathname` devolve
+      // "/C:/Users/..." — com a barra sobrando — e o readFile falha
+      const caminhoCompleto = fileURLToPath(new URL(`../migrations/${arquivo}`, import.meta.url))
       const sql = await readFile(caminhoCompleto, 'utf-8')
 
       console.log(`▶ aplicando ${arquivo}...`)
@@ -880,6 +915,34 @@ npm run migrar
 
 > **🔎 Por baixo do capô**
 > Ferramentas prontas como `node-pg-migrate` (Postgres) ou `umzug` (multi-banco) fazem exatamente isso — tabela de controle + arquivos ordenados — só que com mais recursos (rollback automático, geração de esqueleto de arquivo, migrations em JS além de SQL). Entender o mecanismo manual antes de usar a ferramenta pronta evita tratá-la como caixa-preta.
+
+## 🧩 Padrão de projeto em uso — Builder, Dependency Injection, Singleton, Facade, Repository, Strategy
+
+Esta aula é a mais densa em padrões GoF do semestre, porque a arquitetura em camadas é literalmente a aplicação simultânea de vários deles.
+
+**Dependency Injection** — Seção 2: `criarServicoDeEventos({ eventosRepository })` recebe a dependência em vez de importá-la. O service não conhece a implementação concreta, só a interface (`listar`, `buscarPorId`, `criar`...).
+
+**Singleton** — o pool de conexões do MySQL (criado na Aula 09 com `mysql2.createPool`) é instanciado **uma única vez** por processo e reutilizado por todos os repositórios:
+```js
+// src/db/pool.js (o mesmo arquivo da Seção 3, visto agora pelo ângulo do padrão)
+let instanciaDoPool // módulo ES: só existe uma vez por processo Node — Singleton natural
+
+export function obterPool() {
+  if (!instanciaDoPool) {
+    instanciaDoPool = mysql.createPool(configuracaoDoPool)
+  }
+  return instanciaDoPool
+}
+```
+Qualquer repositório que chame `obterPool()` recebe a **mesma** instância — é assim que o Singleton evita esgotar conexões do banco.
+
+**Facade** — `services/eventosService.js` é uma fachada simples sobre o repositório: o controller não precisa saber que, por trás de `criarEvento`, existem validação de negócio e uma chamada ao banco. Ele só vê uma operação de alto nível.
+
+**Repository** — `repositories/eventosRepository.mysql.js` encapsula toda a SQL; o resto da aplicação nunca escreve `SELECT`/`INSERT` fora dessa camada.
+
+**Strategy** — a escolha de **qual** repositório usar em tempo de execução (ver `src/repositories/index.js` na seção "Mão na massa") é o padrão Strategy: a mesma interface (`listar`, `criar`...), implementações intercambiáveis por ambiente (MySQL em produção, memória em teste).
+
+**Builder** — a montagem de uma query de listagem com filtros opcionais (categoria, texto, paginação) usa um builder que acumula condições passo a passo antes de gerar o SQL final — ver `QueryBuilder` no Passo 7 do Mão na massa.
 
 ## 💻 Mão na massa — refatorando o `unieventos-api` para arquitetura em camadas
 
@@ -939,7 +1002,7 @@ export const eventoSchema = z.object({
   dataHora: z.string().datetime({ message: 'dataHora precisa ser um ISO 8601 válido' }),
   local: z.string().min(3).max(150),
   vagas: z.coerce.number().int().nonnegative('vagas não pode ser negativo'),
-  imagemUrl: z.string().url().optional(),
+  imagemUrl: z.url().optional(),
 })
 
 export const eventoAtualizacaoSchema = eventoSchema.partial()
@@ -947,7 +1010,7 @@ export const eventoAtualizacaoSchema = eventoSchema.partial()
 
 ```js
 // src/middlewares/validar.js
-import { ErroDeValidacao } from '../errors/index.js'
+import { ErroDeValidacao } from '../erros/index.js'
 
 // Middleware genérico: recebe um schema zod e devolve um middleware Express
 // que valida req.body antes de deixar a requisição seguir para o controller.
@@ -971,7 +1034,7 @@ export function validar(schema) {
 
 **Passo 6 — os erros de domínio:**
 
-Use o conteúdo de `src/errors/index.js` da Seção 4.1.
+Use o conteúdo de `src/erros/index.js` da Seção 4.1.
 
 **Passo 7 — o repositório MySQL (com Builder de query):**
 
@@ -1023,6 +1086,15 @@ export class QueryBuilderDeListagem {
       parametros: [...this.parametros, this.limiteValor, this.deslocamentoValor],
     }
   }
+
+  // mesma cláusula WHERE, sem ORDER BY nem paginação — para o `total` do envelope
+  construirContagem() {
+    const clausulaWhere = this.condicoes.length > 0 ? `WHERE ${this.condicoes.join(' AND ')}` : ''
+    return {
+      sql: `SELECT COUNT(*) AS total FROM ${this.tabela} ${clausulaWhere}`,
+      parametros: [...this.parametros],
+    }
+  }
 }
 ```
 
@@ -1057,6 +1129,16 @@ export function criarRepositorioDeEventosMySQL() {
 
       const [linhas] = await pool.query(sql, parametros)
       return linhas.map(linhaParaEvento)
+    },
+
+    async contar({ categoria, busca } = {}) {
+      const { sql, parametros } = new QueryBuilderDeListagem('eventos')
+        .comCategoria(categoria)
+        .comBuscaDeTexto(busca)
+        .construirContagem()
+
+      const [[{ total }]] = await pool.query(sql, parametros)
+      return total
     },
 
     async buscarPorId(id) {
@@ -1104,6 +1186,9 @@ export function criarRepositorioDeEventosEmMemoria(eventosIniciais = []) {
       if (!categoria) return eventos
       return eventos.filter((evento) => evento.categoria === categoria)
     },
+    async contar({ categoria } = {}) {
+      return (await this.listar({ categoria })).length
+    },
     async buscarPorId(id) {
       return eventos.find((evento) => evento.id === Number(id)) ?? null
     },
@@ -1141,9 +1226,9 @@ export function obterRepositorioDeEventos() {
 }
 ```
 
-**Passo 10 — o service (mostrado completo na Seção 3):**
+**Passo 10 — o service (mostrado completo na Seção 2):**
 
-Use `src/services/eventosService.js` da Seção 3, já com a hierarquia de erros da Seção 4.1.
+Use `src/services/eventosService.js` da Seção 2, já com a hierarquia de erros da Seção 4.1.
 
 **Passo 11 — o controller:**
 
@@ -1153,8 +1238,9 @@ export function criarControllerDeEventos({ eventosService }) {
   return {
     async listar(req, res) {
       const { categoria, busca, pagina, porPagina } = req.query
-      const eventos = await eventosService.listarEventos({ categoria, busca, pagina, porPagina })
-      res.status(200).json(eventos)
+      // já vem no envelope { dados, paginacao } montado pelo service
+      const resultado = await eventosService.listarEventos({ categoria, busca, pagina, porPagina })
+      res.status(200).json(resultado)
     },
 
     async buscarPorId(req, res) {
@@ -1190,7 +1276,8 @@ export function criarControllerDeEventos({ eventosService }) {
 import { Router } from 'express'
 import { validar } from '../middlewares/validar.js'
 import { eventoSchema, eventoAtualizacaoSchema } from '../validators/eventoSchema.js'
-import { verificarToken } from '../middlewares/autenticacao.js'
+import { autenticar } from '../middlewares/autenticar.js'
+import { autorizar } from '../middlewares/autorizar.js'
 
 export function criarRotasDeEventos({ eventosController }) {
   const router = Router()
@@ -1199,9 +1286,10 @@ export function criarRotasDeEventos({ eventosController }) {
   router.get('/:id', eventosController.buscarPorId)
 
   // Rotas de escrita exigem autenticação (middleware da Aula 10) e corpo validado.
-  router.post('/', verificarToken, validar(eventoSchema), eventosController.criar)
-  router.put('/:id', verificarToken, validar(eventoAtualizacaoSchema), eventosController.atualizar)
-  router.delete('/:id', verificarToken, eventosController.remover)
+  router.post('/', autenticar, validar(eventoSchema), eventosController.criar)
+  router.put('/:id', autenticar, validar(eventoAtualizacaoSchema), eventosController.atualizar)
+  // exclusão continua exigindo admin, como nas Aulas 10 e 11
+  router.delete('/:id', autenticar, autorizar(['admin']), eventosController.remover)
 
   return router
 }
@@ -1262,6 +1350,36 @@ npm test
 
 Confira que os 7 testes das Seções 6.3 e 6.4 passam.
 
+### Como testar
+
+A refatoração só terminou quando a API **continua respondendo exatamente o mesmo contrato de antes**. Verifique nesta ordem:
+
+```bash
+# 1) migrations aplicadas do zero, em um banco vazio
+npm run migrar
+```
+
+Resultado esperado: as quatro migrations são aplicadas em ordem e a tabela `migrations_executadas` lista as quatro; rodar `npm run migrar` de novo imprime "já aplicada, pulando" e não altera nada.
+
+```bash
+# 2) o contrato de listagem, com o envelope de sempre
+curl -s "http://localhost:3000/api/eventos?pagina=1&porPagina=2" | jq
+```
+
+Resultado esperado: `{ "dados": [ … ], "paginacao": { "pagina": 1, "porPagina": 2, "total": 3, "totalPaginas": 2 } }`, com os campos em camelCase (`dataHora`, `imagemUrl`).
+
+```bash
+# 3) o envelope de erro, idêntico ao da Aula 08
+curl -s http://localhost:3000/api/eventos/999 | jq
+curl -s -X POST http://localhost:3000/api/eventos -H "Content-Type: application/json" -d '{"titulo":"Ab"}' | jq
+```
+
+Resultado esperado: `404` com `{ "erro": { "mensagem": "Evento 999 não encontrado", "codigo": "NAO_ENCONTRADO" } }` e `422` com `codigo: "VALIDACAO"` mais o array `detalhes`.
+
+4. **Configuração** — remova `DB_PASSWORD` do `.env` e rode `npm run dev`. Resultado esperado: o processo **não sobe**, e a mensagem diz qual variável falta.
+5. **Front intacto** — suba o `unieventos-web` da Aula 11 contra esta API refatorada e repita o CRUD pela tela. Resultado esperado: tudo funciona sem uma linha alterada no front. Esse é o teste real da refatoração: por fora, nada mudou.
+6. **Testes** — `npm test` passa com o MySQL **desligado**, porque a suíte usa o repositório em memória.
+
 ## 🧪 Laboratório
 
 ### Nível A — Fixação
@@ -1281,13 +1399,13 @@ if (jaInscrito) {
 
 **A4.** Em duas linhas: por que `test/eventos.rota.test.js` sobe a aplicação Express inteira e ainda assim não precisa de MySQL rodando? Aponte o parâmetro que torna isso possível.
 
-**A5.** Classifique cada trecho na camada certa (`routes`, `controllers`, `services`, `repositories`, `middlewares`) e justifique em uma linha: (a) `if (inscritos > 0) throw new ErroDeConflito(...)`; (b) `res.status(204).end()`; (c) `LIMIT ? OFFSET ?`; (d) `req.body = resultado.data`; (e) `router.put('/:id', verificarToken, ...)`.
+**A5.** Classifique cada trecho na camada certa (`routes`, `controllers`, `services`, `repositories`, `middlewares`) e justifique em uma linha: (a) `if (inscritos > 0) throw new ErroDeConflito(...)`; (b) `res.status(204).end()`; (c) `LIMIT ? OFFSET ?`; (d) `req.body = resultado.data`; (e) `router.put('/:id', autenticar, ...)`.
 
 **A6.** Você rodou `npm run migrar` e as três migrations foram aplicadas. Depois editou `0002_criar_tabela_inscricoes.sql` para acrescentar uma coluna e rodou `npm run migrar` de novo. O que o script imprime, e o que acontece com a coluna? Qual é o jeito certo de fazer essa mudança?
 
 ### Nível B — Aplicação
 
-**B1.** Refatore seu projeto autoral para a arquitetura em camadas — crie as pastas `config/`, `db/`, `errors/`, `middlewares/`, `repositories/`, `services/`, `controllers/`, `routes/`, mova o código existente para os lugares certos.
+**B1.** Refatore seu projeto autoral para a arquitetura em camadas — crie as pastas `config/`, `db/`, `erros/`, `middlewares/`, `repositories/`, `services/`, `controllers/`, `routes/`, mova o código existente para os lugares certos.
 
 Resultado esperado: `npm run dev` continua funcionando, e nenhuma rota importa o pool do banco diretamente.
 
@@ -1309,7 +1427,7 @@ Use `safeParse`, não `parse` — assim você controla a mensagem de erro antes 
 
 **B3.** Implemente a hierarquia de erros e o tratador central no seu projeto, substituindo `throw new Error(...)` genérico por `ErroDeValidacao`, `ErroNaoEncontrado` etc.
 
-Resultado esperado: uma requisição a um recurso inexistente devolve `404` com `{ mensagem: "..." }`, sem stack trace em produção.
+Resultado esperado: uma requisição a um recurso inexistente devolve `404` com `{ "erro": { "mensagem": "...", "codigo": "NAO_ENCONTRADO" } }`, sem stack trace em produção.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1339,14 +1457,14 @@ Teste abrindo o front em uma porta e fazendo uma requisição para a API configu
 
 ### Nível C — Desafio em sala
 
-**C1.** Service de inscrições com injeção de dependência e testes sem banco. Escreva `criarServicoDeInscricoes({ inscricoesRepository, eventosRepository })` com quatro regras: evento inexistente (`ErroNaoEncontrado`), evento lotado (`ErroDeConflito`), já inscrito (`ErroDeConflito`) e cancelamento por quem não é dono (`ErroDeAutorizacao`). Cubra cada regra com um teste unitário usando repositórios falsos e escreva um teste de rota para `POST /api/inscricoes` — que hoje é impossível sem Firebase, porque `verificarToken` é importado direto dentro de `criarRotasDeInscricoes`. Resolva isso sem tocar no Firebase.
+**C1.** Service de inscrições com injeção de dependência e testes sem banco. Escreva `criarServicoDeInscricoes({ inscricoesRepository, eventosRepository })` com quatro regras: evento inexistente (`ErroNaoEncontrado`), evento lotado (`ErroDeConflito`), já inscrito (`ErroDeConflito`) e cancelamento por quem não é dono (`ErroDeAutorizacao`). Cubra cada regra com um teste unitário usando repositórios falsos e escreva um teste de rota para `POST /api/inscricoes` — que hoje é impossível sem Firebase, porque `autenticar` é importado direto dentro de `criarRotasDeInscricoes`. Resolva isso sem tocar no Firebase.
 
 Resultado esperado: `npm test` mostra 5 testes novos passando (4 unitários + 1 de rota) com MySQL e Firebase desligados; o teste de rota confirma `201` com token "válido" e `401` sem token.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-A mesma técnica do repositório vale para o middleware: `criarRotasDeInscricoes({ inscricoesController, verificarToken = verificarTokenReal })`. No teste, injete `(req, res, next) => { req.usuario = { uid: 'uid-teste' }; next() }` para o caso `201`, e um que responde `res.status(401).json({ mensagem: 'Token ausente' })` para o outro. `criarApp` precisa repassar esse parâmetro até as rotas.
+A mesma técnica do repositório vale para o middleware: `criarRotasDeInscricoes({ inscricoesController, autenticar = autenticarReal })`. No teste, injete `(req, res, next) => { req.usuario = { uid: 'uid-teste' }; next() }` para o caso `201`, e um que responde `res.status(401).json({ erro: { mensagem: 'Token ausente', codigo: 'NAO_AUTENTICADO' } })` para o outro. `criarApp` precisa repassar esse parâmetro até as rotas.
 </details>
 
 ## 🏆 Desafios
@@ -1354,7 +1472,7 @@ A mesma técnica do repositório vale para o middleware: `criarRotasDeInscricoes
 ### ⭐ A ordem que quebra tudo
 Tags: express, middleware, bug, testes
 
-Um colega reorganizou o `app.js` "para ficar mais legível" e agora os testes de rota falham de um jeito curioso: `POST /api/eventos` válido devolve `400` dizendo que **todos** os campos são obrigatórios, e `GET /api/eventos/999` devolve uma página HTML em vez de `{ "mensagem": "..." }`. Este é o arquivo:
+Um colega reorganizou o `app.js` "para ficar mais legível" e agora os testes de rota falham de um jeito curioso: `POST /api/eventos` válido devolve `422` dizendo que **todos** os campos são obrigatórios, e `GET /api/eventos/999` devolve uma página HTML em vez de `{ "erro": { "mensagem": "..." } }`. Este é o arquivo:
 
 ```js
 // src/app.js — versão com os bugs plantados
@@ -1404,14 +1522,14 @@ No laboratório da faculdade todo mundo sai para a internet pelo mesmo IP. Com `
 - Um script `scripts/estressar.sh` faz 101 requisições a `GET /health` em sequência e mostra, com `curl -i`, os cabeçalhos `RateLimit-Limit`/`RateLimit-Remaining` caindo até o `429`.
 - Leituras públicas (`GET`) têm um limite folgado; escritas (`POST`/`PUT`/`DELETE`) têm um limite apertado e separado.
 - Em rotas autenticadas, a chave do limitador é o `uid` do usuário, não o IP — dois usuários no mesmo IP têm cotas independentes.
-- Um teste com `supertest` prova que a 21ª escrita seguida do mesmo usuário recebe `429` com `{ mensagem }` em JSON, e o limitador é injetável (o resto da suíte não pode passar a falhar por causa dele).
+- Um teste com `supertest` prova que a 21ª escrita seguida do mesmo usuário recebe `429` com `{ erro: { mensagem, codigo } }` em JSON, e o limitador é injetável (o resto da suíte não pode passar a falhar por causa dele).
 - O README explica o que muda quando a API está atrás de um proxy (Render, Nginx) e o que `app.set('trust proxy', ...)` tem a ver com isso.
 
 <details markdown="1">
 <summary>Pistas</summary>
 
 1. `express-rate-limit` aceita várias instâncias com configurações diferentes; aplique cada uma com `router.use` ou por método, não só com `app.use` global.
-2. A opção `keyGenerator: (req) => req.usuario?.uid ?? req.ip` resolve a chave — mas só funciona se o limitador rodar **depois** de `verificarToken`.
+2. A opção `keyGenerator: (req) => req.usuario?.uid ?? req.ip` resolve a chave — mas só funciona se o limitador rodar **depois** de `autenticar`.
 3. Para os testes, deixe `criarApp` aceitar `{ limitadores }` e injete instâncias com `limit` baixo (e `windowMs` curto) só no teste que verifica o `429`.
 4. Atrás de um proxy, `req.ip` é o IP do proxy até você configurar `trust proxy`; a documentação do `express-rate-limit` tem uma seção inteira sobre isso.
 </details>
@@ -1447,7 +1565,7 @@ Sete testes dão confiança — mas confiança em quê, exatamente? Meça: insta
 
 - `npm run test:cobertura` gera o relatório e falha se `services/` ou `controllers/` ficarem abaixo de 90% de linhas.
 - Testes novos cobrem: `PUT`/`DELETE` felizes e com `404`; `409` de inscrição duplicada; `403` de cancelamento alheio; `413` para corpo maior que `10kb`; `400` para JSON malformado.
-- Rotas autenticadas são testadas com um `verificarToken` injetado (Nível C do laboratório), nunca com token real do Firebase.
+- Rotas autenticadas são testadas com um `autenticar` injetado (Nível C do laboratório), nunca com token real do Firebase.
 - A suíte inteira roda em menos de 5 segundos e não depende de variável de ambiente além de `NODE_ENV=test`.
 - Um trecho no README explica, em três frases, por que 90% não significa "sem bugs" — com um exemplo real de linha coberta que ainda poderia estar errada.
 
@@ -1502,6 +1620,4 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 - [helmet.js — documentação](https://helmetjs.github.io)
 - Martin, Robert C. — *Clean Architecture* (capítulos sobre a regra de dependência), referência complementar da bibliografia do plano de curso.
 
----
-
-**Próxima aula (14):** documentamos a API inteira com OpenAPI 3 e Swagger UI — cada endpoint que construímos até aqui ganha um contrato formal, testável direto do navegador. Traga o `unieventos-api` (ou seu projeto autoral) já na arquitetura em camadas desta aula.
+**Na Aula 14** documentamos a API inteira com OpenAPI 3 e Swagger UI — cada endpoint que construímos até aqui ganha um contrato formal, testável direto do navegador. Traga o `unieventos-api` (ou seu projeto autoral) já na arquitetura em camadas desta aula.

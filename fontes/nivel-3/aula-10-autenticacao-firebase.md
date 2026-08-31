@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 09 o UniEventos passou a persistir eventos no MySQL, com a API `unieventos-api` seguindo a arquitetura controller → service → repository. Qualquer pessoa com acesso à API conseguia criar, editar ou excluir um evento — não havia noção de "quem" fazia a requisição. Hoje isso muda: vamos exigir identidade.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - Diferenciar dois níveis de proteção (rota no front = UX; middleware no back = segurança) e implementar autorização por papel com custom claims.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 09 o UniEventos passou a persistir eventos no MySQL, com a API `unieventos-api` seguindo a arquitetura controller → service → repository. Qualquer pessoa com acesso à API conseguia criar, editar ou excluir um evento — não havia noção de "quem" fazia a requisição. Hoje isso muda: vamos exigir identidade.
 
 Checklist antes de começar:
 
@@ -92,7 +93,7 @@ Cada parte é um objeto codificado em Base64URL. Decodificando as duas primeiras
 }
 ```
 
-`iat` (issued at) e `exp` (expiration) são timestamps Unix. `admin` é um exemplo de **custom claim** — vamos usar exatamente isso na seção 6 para autorização.
+`iat` (issued at) e `exp` (expiration) são timestamps Unix. `admin` é um exemplo de **custom claim** — vamos usar exatamente isso na seção 8.4 para autorização.
 
 > **🔎 Por baixo do capô**
 > Um JWT **é assinado, não é criptografado**. Qualquer pessoa pode pegar esse token e decodificar o header e o payload num site como jwt.io ou com `atob()` no console do navegador — não há segredo nenhum escondido ali, e por isso **nunca coloque dados sensíveis no payload** (senha, número de cartão, CPF). A assinatura (terceira parte) é o que garante que ninguém alterou o conteúdo sem ter a chave privada do emissor. Se você mudar um único caractere do payload — por exemplo, trocar `"admin": false` para `"admin": true` — a assinatura deixa de bater, e quem valida o token (no nosso caso, o `firebase-admin` no back-end) rejeita o token inteiro.
@@ -131,10 +132,10 @@ Isso é configuração de infraestrutura, feita uma vez. O código vem agora.
 
 ## 4. Firebase Auth no front — SDK modular
 
-O pacote já está instalado desde a Aula 07 (`firebase@12.17.1`). Se o seu projeto ainda não tem, instale:
+O pacote já está instalado desde a Aula 07 (`firebase@12`). Se o seu projeto ainda não tem, instale:
 
 ```bash
-npm install firebase@12.17.1
+npm install firebase@12
 ```
 
 ```js
@@ -297,18 +298,31 @@ export const useAuthStore = defineStore('auth', () => {
 
   const estaLogado = computed(() => usuario.value !== null)
 
-  // Custom claim "admin" só aparece depois de setCustomUserClaims (seção 7)
-  // e de o usuário obter um novo ID token — ver observação na seção 7.
-  const ehAdmin = computed(() => usuario.value?.customClaims?.admin === true)
+  // Custom claim "admin" só aparece depois de setCustomUserClaims (seção 8.4)
+  // e de o usuário obter um novo ID token — ver observação logo abaixo.
+  // custom claims NÃO vêm no objeto `User`: é preciso decodificar o ID token.
+  // Guardamos o resultado em um ref próprio, atualizado a cada mudança de sessão.
+  const ehAdmin = ref(false)
 
-  return { usuario, carregando, inicializado, inicializar, estaLogado, ehAdmin }
+  async function atualizarClaims() {
+    if (!usuario.value) {
+      ehAdmin.value = false
+      return
+    }
+    // `true` força a busca de um token novo — necessário logo depois de o professor
+    // marcar você como admin no back-end (seção 8.4)
+    const resultado = await usuario.value.getIdTokenResult(true)
+    ehAdmin.value = resultado.claims.admin === true
+  }
+
+  return { usuario, carregando, inicializado, inicializar, estaLogado, ehAdmin, atualizarClaims }
 })
 ```
 
 > **🔎 Por baixo do capô**
 > `onAuthStateChanged` dispara de novo toda vez que o token é renovado, mas resolvemos a Promise só na **primeira** vez (`if (!inicializado.value)`). Depois disso, os componentes que precisam de reatividade (menu, header) simplesmente leem `usuario` e `estaLogado`, que são refs/computed normais e continuam atualizando sozinhos.
 
-`ehAdmin` como escrito acima lê `customClaims` diretamente do objeto `User` do Firebase, que **não** expõe essa propriedade por padrão — claims custom exigem decodificar o ID token (`getIdTokenResult`). Ajustamos isso corretamente na seção 7, depois de explicar custom claims no back-end; por ora, mantenha o getter, ele será completado adiante.
+Repare no cuidado com `ehAdmin`: a tentação é escrever `usuario.value?.customClaims?.admin`, mas o objeto `User` do Firebase **não** expõe `customClaims` — essa propriedade simplesmente não existe ali, e o getter devolveria `undefined` para todo mundo, sem erro nenhum no console. Claims custom vivem *dentro* do ID token e só aparecem depois de decodificá-lo com `getIdTokenResult()`. Por isso `ehAdmin` é um `ref` alimentado por `atualizarClaims()`, chamado no `onAuthStateChanged` e de novo depois que alguém vira admin no back-end (seção 8.4).
 
 ## 6. Protegendo rotas no Vue Router
 
@@ -445,29 +459,23 @@ async function aoClicarSair() {
 ```
 
 > **⚠️ Atenção**
-> Um `beforeEach` no Router impede que a *interface* mostre a tela protegida — mas qualquer pessoa pode desligar o JavaScript, chamar a API diretamente com `curl` ou editar o guard no DevTools. **Guard de rota é UX, não segurança.** A única barreira real está no back-end, validando o token em cada requisição — é o que vem na seção 7.
-
-## 🧩 Padrão de projeto em uso: Proxy de proteção + Guard
-
-O **Proxy de proteção** (variação estrutural do padrão Proxy) intercepta o acesso a um objeto real e decide se o acesso é permitido antes de repassar a chamada. É exatamente o papel do middleware `autenticar` que construímos na seção 7: ele fica *na frente* do controller real, verifica credenciais, e só deixa a chamada prosseguir se o token for válido — o controller nunca sabe que existe um "porteiro" antes dele.
-
-O **Guard** (aqui usado no sentido do Vue Router — um "guarda de rota" comportamental, correlato ao Proxy de proteção do lado do front) cumpre o mesmo papel do lado da navegação: intercepta a transição de rota e decide, antes de renderizar, se ela deve prosseguir, ser bloqueada ou redirecionada. Repare que os dois padrões resolvem o mesmo problema — controlar acesso — em duas camadas diferentes da aplicação, e nenhum substitui o outro.
+> Um `beforeEach` no Router impede que a *interface* mostre a tela protegida — mas qualquer pessoa pode desligar o JavaScript, chamar a API diretamente com `curl` ou editar o guard no DevTools. **Guard de rota é UX, não segurança.** A única barreira real está no back-end, validando o token em cada requisição — é o que vem na seção 8.
 
 ## 7. Enviando o token em cada requisição
 
 O usuário logado no Firebase tem um método `getIdToken()` que devolve o JWT atual (renovando-o automaticamente se estiver perto de expirar). Plugamos isso no interceptor de requisição do Axios, criado na Aula 06:
 
 ```js
-// src/services/api.js
+// src/services/http.js — o MESMO arquivo da Aula 06, agora com o token do Firebase
 import axios from 'axios'
 import { auth } from './firebase'
 import router from '@/router'
 
-const api = axios.create({
+const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api',
 })
 
-api.interceptors.request.use(async (config) => {
+http.interceptors.request.use(async (config) => {
   const usuarioAtual = auth.currentUser
 
   if (usuarioAtual) {
@@ -480,7 +488,7 @@ api.interceptors.request.use(async (config) => {
   return config
 })
 
-api.interceptors.response.use(
+http.interceptors.response.use(
   (resposta) => resposta,
   (erro) => {
     if (erro.response?.status === 401) {
@@ -493,7 +501,7 @@ api.interceptors.response.use(
   },
 )
 
-export default api
+export default http
 ```
 
 > **💡 Dica**
@@ -555,11 +563,17 @@ export const authAdmin = getAuth()
 // unieventos-api/src/middlewares/autenticar.js
 import { authAdmin } from '../config/firebaseAdmin.js'
 
+// Envelope de erro: o mesmo { erro: { mensagem, codigo } } da Aula 08.
+// O front (store da Aula 11) lê `erro.mensagem` — devolver uma string solta aqui
+// faria a mensagem sumir da tela sem erro nenhum no console.
+
 export async function autenticar(req, res, next) {
   const cabecalho = req.headers.authorization
 
   if (!cabecalho?.startsWith('Bearer ')) {
-    return res.status(401).json({ erro: 'Token de autenticação ausente.' })
+    return res.status(401).json({
+      erro: { mensagem: 'Token de autenticação ausente.', codigo: 'NAO_AUTENTICADO' },
+    })
   }
 
   const token = cabecalho.replace('Bearer ', '')
@@ -578,7 +592,9 @@ export async function autenticar(req, res, next) {
     next()
   } catch (erro) {
     // Cobre token expirado, assinatura inválida, token forjado etc.
-    return res.status(401).json({ erro: 'Token inválido ou expirado.' })
+    return res.status(401).json({
+      erro: { mensagem: 'Token inválido ou expirado.', codigo: 'TOKEN_INVALIDO' },
+    })
   }
 }
 ```
@@ -593,13 +609,17 @@ export function autorizar(papeis = []) {
   return (req, res, next) => {
     if (!req.usuario) {
       // autenticar() deve sempre rodar antes de autorizar() na cadeia
-      return res.status(401).json({ erro: 'Token de autenticação ausente.' })
+      return res.status(401).json({
+        erro: { mensagem: 'Token de autenticação ausente.', codigo: 'NAO_AUTENTICADO' },
+      })
     }
 
     const temPermissao = papeis.includes('admin') ? req.usuario.admin : true
 
     if (!temPermissao) {
-      return res.status(403).json({ erro: 'Você não tem permissão para esta ação.' })
+      return res.status(403).json({
+        erro: { mensagem: 'Você não tem permissão para esta ação.', codigo: 'NAO_AUTORIZADO' },
+      })
     }
 
     next()
@@ -679,12 +699,16 @@ const ehAdmin = computed(() => ehAdminClaim.value)
 
 ### 8.5 Aplicando nos endpoints de eventos
 
+É o **mesmo** `src/routes/eventos.routes.js` da Aula 09 — mesmos caminhos, mesmos controllers, mesma validação Zod. A única mudança é a cadeia de middlewares que passa a preceder os handlers de escrita:
+
 ```js
-// unieventos-api/src/routes/eventosRoutes.js
+// unieventos-api/src/routes/eventos.routes.js
 import { Router } from 'express'
+import * as eventosController from '../controllers/eventosController.js'
+import { validar } from '../middlewares/validador.js'
+import { schemaEvento, schemaEventoParcial } from '../schemas/evento.schema.js'
 import { autenticar } from '../middlewares/autenticar.js'
 import { autorizar } from '../middlewares/autorizar.js'
-import * as eventosController from '../controllers/eventosController.js'
 
 const router = Router()
 
@@ -692,15 +716,25 @@ const router = Router()
 router.get('/', eventosController.listar)
 router.get('/:id', eventosController.buscarPorId)
 
-// Escrita exige apenas estar autenticado
-router.post('/', autenticar, eventosController.criar)
-router.put('/:id', autenticar, eventosController.atualizar)
+// Escrita exige apenas estar autenticado (o `validar` da Aula 09 continua no lugar)
+router.post('/', autenticar, validar(schemaEvento), eventosController.criar)
+router.put('/:id', autenticar, validar(schemaEvento), eventosController.substituir)
+router.patch('/:id', autenticar, validar(schemaEventoParcial), eventosController.atualizarParcial)
 
 // Exclusão exige estar autenticado E ser admin
-router.delete('/:id', autenticar, autorizar(['admin']), eventosController.remover)
+router.delete('/:id', autenticar, autorizar(['admin']), eventosController.excluir)
 
 export default router
 ```
+
+> **💡 Dica**
+> A ordem importa: `autenticar` vem **antes** de `validar`. Não faz sentido gastar validação de corpo em quem nem provou quem é — e o `401` sai mais barato que o `422`.
+
+## 🧩 Padrão de projeto em uso — Proxy de proteção + Guard
+
+O **Proxy de proteção** (variação estrutural do padrão Proxy) intercepta o acesso a um objeto real e decide se o acesso é permitido antes de repassar a chamada. É exatamente o papel do middleware `autenticar` que construímos na seção 8.2: ele fica *na frente* do controller real, verifica credenciais, e só deixa a chamada prosseguir se o token for válido — o controller nunca sabe que existe um "porteiro" antes dele.
+
+O **Guard** (aqui usado no sentido do Vue Router — um "guarda de rota" comportamental, correlato ao Proxy de proteção do lado do front) cumpre o mesmo papel do lado da navegação: intercepta a transição de rota e decide, antes de renderizar, se ela deve prosseguir, ser bloqueada ou redirecionada. Repare que os dois padrões resolvem o mesmo problema — controlar acesso — em duas camadas diferentes da aplicação, e nenhum substitui o outro.
 
 ## 💻 Mão na massa — telas de autenticação completas
 
@@ -982,7 +1016,7 @@ Com token válido — copie o token real do DevTools (aba Network, requisição 
 curl -i http://localhost:3000/api/eventos -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer COLE_O_TOKEN_AQUI" \
-  -d '{"titulo":"Semana da Computação","categoria":"palestra","data_hora":"2026-12-01T19:00:00","local":"Auditório","vagas":80}'
+  -d '{"titulo":"Semana da Computação","categoria":"palestra","dataHora":"2026-12-01T19:00:00","local":"Auditório","vagas":80}'
 ```
 
 Tentando excluir sem ser admin (usuário autenticado comum) — deve retornar 403:
@@ -991,6 +1025,17 @@ Tentando excluir sem ser admin (usuário autenticado comum) — deve retornar 40
 curl -i http://localhost:3000/api/eventos/1 -X DELETE \
   -H "Authorization: Bearer TOKEN_DE_USUARIO_COMUM"
 ```
+
+### Como testar
+
+Com a API e o front rodando ao mesmo tempo, confira os seis pontos abaixo, nesta ordem:
+
+1. **Cadastro** — crie uma conta pelo formulário do Passo 1. Resultado esperado: redirecionamento para a home já logado, e o usuário novo visível em Firebase Console → Authentication → Users.
+2. **F5 com sessão** — recarregue a página logada. Resultado esperado: o menu **não** pisca "Entrar/Cadastrar" antes de mostrar o nome — é o `inicializado` da store fazendo efeito.
+3. **Guard** — deslogue e digite `/admin` na barra de endereços. Resultado esperado: redirecionamento para `/login?redirect=/admin`; ao entrar, você cai direto em `/admin`.
+4. **Token na requisição** — logado, abra DevTools → Network e provoque um `POST`. Resultado esperado: o cabeçalho `Authorization: Bearer eyJ...` sai junto, colocado pelo interceptor do `http.js`.
+5. **Back-end** — rode os três `curl` acima. Resultado esperado: `401` sem token, `401` com token forjado, `201` com token válido.
+6. **Autorização** — com um usuário comum (sem a custom claim), tente o `DELETE`. Resultado esperado: `403` com `{ "erro": { "mensagem": "...", "codigo": "..." } }`; marque o usuário como admin (Seção 8.4), chame `atualizarClaims()` e repita — agora sai `204`.
 
 ## 🧪 Laboratório
 
@@ -1092,7 +1137,7 @@ Se continuar `false`, o token em cache é o antigo — force `getIdTokenResult(t
 
 **C1.** Sessão comprometida, ponta a ponta. Hoje, se um usuário desconfiar que seu token vazou (ex.: perdeu o notebook destravado), trocar a senha **não** invalida tokens já emitidos: o ID token continua válido até expirar (até 1h) e o refresh token, que renova automaticamente, também segue válido. Implemente um endpoint `POST /api/usuarios/revogar-sessoes` (autenticado) que chama `authAdmin.revokeRefreshTokens(uid)`, e prove com `curl` que o efeito é real de imediato — não só depois de o token expirar sozinho.
 
-Resultado esperado: antes da revogação, uma chamada a um endpoint protegido com um token guardado retorna sucesso normalmente; depois de `POST /api/usuarios/revogar-sessoes`, a mesma chamada com o **mesmo** token (ainda dentro da validade de 1h) passa a retornar `401` com uma mensagem clara (`{"erro": "Sessão revogada, faça login novamente."}`).
+Resultado esperado: antes da revogação, uma chamada a um endpoint protegido com um token guardado retorna sucesso normalmente; depois de `POST /api/usuarios/revogar-sessoes`, a mesma chamada com o **mesmo** token (ainda dentro da validade de 1h) passa a retornar `401` com uma mensagem clara (`{"erro": {"mensagem": "Sessão revogada, faça login novamente.", "codigo": "SESSAO_REVOGADA"}}`).
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1148,7 +1193,7 @@ Ao dar F5 numa página do UniEventos com o usuário já logado, por uma fração
 ### ⭐⭐⭐ Ninguém publica sem confirmar o e-mail
 Tags: firebase, autenticacao, seguranca, express
 
-Hoje, qualquer conta criada por e-mail/senha pode criar um evento imediatamente — mesmo com um e-mail inventado (`fulano@empresa-que-nao-existe.com`) que a pessoa nem é dona de verdade. Ainda não confirmamos que o e-mail é real. Implemente a confirmação de e-mail de ponta a ponta: o cadastro dispara a verificação, o front bloqueia a criação de eventos até o e-mail estar confirmado, e o **back-end confirma isso de novo** — porque, como vimos na Seção 1, guard de rota é UX, não segurança.
+Hoje, qualquer conta criada por e-mail/senha pode criar um evento imediatamente — mesmo com um e-mail inventado (`fulano@empresa-que-nao-existe.com`) que a pessoa nem é dona de verdade. Ainda não confirmamos que o e-mail é real. Implemente a confirmação de e-mail de ponta a ponta: o cadastro dispara a verificação, o front bloqueia a criação de eventos até o e-mail estar confirmado, e o **back-end confirma isso de novo** — porque, como vimos no fim da Seção 6, guard de rota é UX, não segurança.
 
 **Critérios de pronto**
 

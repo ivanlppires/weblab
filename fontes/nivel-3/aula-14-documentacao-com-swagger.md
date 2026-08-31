@@ -2,6 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -17,6 +18,8 @@ Ao final desta aula você será capaz de:
 - Produzir um README de qualidade, um `CONTRIBUTING.md` mínimo e registrar decisões de arquitetura em formato ADR.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 13 transformamos o `unieventos-api` em uma arquitetura em camadas testável e segura. O código ficou sólido por dentro — mas de fora, para quem nunca viu o projeto (um colega de equipe, um avaliador, você mesmo em três meses), ele ainda é uma caixa-preta: só descobre o que a API faz lendo o código-fonte inteiro. Hoje resolvemos isso com um contrato formal e navegável: **OpenAPI + Swagger UI**.
 
 - `unieventos-api` (ou projeto autoral) já refatorado para arquitetura em camadas (Aula 13), com rotas de eventos, inscrições e autenticação funcionando.
 - Node.js 22 LTS e a API rodando localmente com `npm run dev`.
@@ -34,10 +37,6 @@ Checklist antes de começar:
 | 1 | 50 min | Por que documentar, OpenAPI vs. Swagger, anatomia do documento |
 | 2 | 50 min | `swagger-jsdoc` + `swagger-ui-express`: configuração e primeiros endpoints anotados |
 | 3 | 50 min | Documentando toda a API do UniEventos, segurança com bearerAuth, README/ADR |
-
-## Retomando a Aula 13
-
-Na Aula 13 transformamos o `unieventos-api` em uma arquitetura em camadas testável e segura. O código ficou sólido por dentro — mas de fora, para quem nunca viu o projeto (um colega de equipe, um avaliador, você mesmo em três meses), ele ainda é uma caixa-preta: só descobre o que a API faz lendo o código-fonte inteiro. Hoje resolvemos isso com um contrato formal e navegável: **OpenAPI + Swagger UI**.
 
 ## 1. Por que documentar uma API
 
@@ -148,621 +147,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(documentoOpenApi))
 ```
 
 Vantagem: controle total do texto, sem depender de comentário no meio do código. Desvantagem: fica fácil o YAML "descolar" do código real, porque nada obriga a atualizá-lo junto com a rota. Por isso, nesta disciplina, a abordagem oficial é a (a) — anotações junto ao código, sempre atualizadas na mesma revisão.
-
-## 🧩 Padrão de projeto em uso — Decorator (documentação como anotação)
-
-O padrão **Decorator** adiciona comportamento ou informação a um objeto sem alterar sua estrutura original. As anotações `@openapi` fazem exatamente isso, só que no nível de **documentação de código-fonte** em vez de tempo de execução: o comentário JSDoc "decora" a rota com metadados (parâmetros, respostas, segurança) sem alterar uma linha da lógica real do `router.get(...)`. Remova o comentário e a rota continua funcionando idêntica — a documentação é uma camada adicionada por cima, não uma dependência funcional.
-
-```js
-/**
- * @openapi
- * /api/eventos:
- *   get:
- *     summary: Lista eventos                    ← "decoração": metadado
- *     tags: [Eventos]                            ← "decoração": metadado
- */
-router.get('/', eventosController.listar)         // ← comportamento real, intocado
-```
-
-É a mesma lógica dos decorators de linguagens como TypeScript/Java (`@Component`, `@Test`) — mas aqui implementada via convenção de comentário, lida por uma ferramenta externa (`swagger-jsdoc`), porque JavaScript puro (sem TypeScript) não tem decorators nativos estáveis no runtime do Node.
-
-## 💻 Mão na massa — documentando a unieventos-api com Swagger
-
-Chega de teoria: agora você instala as duas bibliotecas, configura a spec, serve a interface, documenta os schemas e todos os endpoints do UniEventos, e liga a segurança `bearerAuth` — na ordem em que você faria isso de verdade num projeto novo.
-
-### Passo 1 — Instalar e configurar o `swagger-jsdoc`
-
-```bash
-npm install swagger-jsdoc swagger-ui-express
-```
-
-```js
-// src/docs/swaggerSpec.js
-import swaggerJsdoc from 'swagger-jsdoc'
-
-// ATENÇÃO: a chave é "definition", NÃO "swaggerDefinition" — swagger-jsdoc 6.x
-// renomeou essa chave em relação a versões anteriores. Usar o nome errado faz
-// a spec sair vazia, sem erro nenhum no console.
-const opcoes = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'UniEventos API',
-      version: '1.0.0',
-      description:
-        'API REST da plataforma UniEventos — divulgação e inscrição em eventos acadêmicos. ' +
-        'Desenvolvida na disciplina FACET-SNP-310 (UNEMAT/Sinop).',
-      contact: {
-        name: 'Prof. Ivan Luiz Pedroso Pires',
-        email: 'ivanpires@gmail.com',
-      },
-      license: {
-        name: 'MIT',
-      },
-    },
-    servers: [
-      { url: 'http://localhost:3000', description: 'Ambiente local' },
-      { url: 'https://unieventos-api.onrender.com', description: 'Produção' },
-    ],
-    tags: [
-      { name: 'Eventos', description: 'Cadastro e consulta de eventos acadêmicos' },
-      { name: 'Inscrições', description: 'Inscrição de usuários autenticados em eventos' },
-      { name: 'Autenticação', description: 'Fluxo de login com Firebase Auth' },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-          description: 'Token de ID do Firebase Auth, obtido após o login no front-end.',
-        },
-      },
-    },
-  },
-  // Arquivos onde o swagger-jsdoc procura comentários @openapi.
-  apis: ['./src/routes/*.js', './src/docs/schemas/*.js'],
-}
-
-export const swaggerSpec = swaggerJsdoc(opcoes)
-```
-
-> **⚠️ Atenção**
-> Repare na chave `definition` dentro de `opcoes`. Em versões antigas do `swagger-jsdoc` (2.x/3.x) essa chave se chamava `swaggerDefinition`. Nesta disciplina usamos `swagger-jsdoc@6.3.0`, que exige `definition`. Se você copiar um tutorial antigo da internet com `swaggerDefinition`, a spec gerada fica com `paths: {}` vazio e nenhum erro é lançado — o bug é silencioso.
-
-### Passo 2 — Servir a documentação com `swagger-ui-express`
-
-```js
-// src/app.js — trecho adicionado à montagem da aplicação (depois das rotas de negócio)
-import swaggerUi from 'swagger-ui-express'
-import { swaggerSpec } from './docs/swaggerSpec.js'
-
-// Opções de customização visual do Swagger UI.
-const opcoesDoSwaggerUi = {
-  customSiteTitle: 'UniEventos API — Documentação',
-  customCss: '.swagger-ui .topbar { display: none }', // esconde a barra verde padrão
-}
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, opcoesDoSwaggerUi))
-
-// Expõe o JSON cru da spec — útil para importar em Insomnia/Postman
-// ou para ferramentas de geração de cliente consumirem diretamente.
-app.get('/api-docs.json', (req, res) => {
-  res.status(200).json(swaggerSpec)
-})
-```
-
-```bash
-npm run dev
-# abra no navegador:
-# http://localhost:3000/api-docs       → interface interativa
-# http://localhost:3000/api-docs.json  → JSON cru da especificação
-```
-
-> **💡 Dica**
-> `swaggerUi.serve` é um **array** de middlewares (serve os arquivos estáticos da interface: CSS, JS, HTML); `swaggerUi.setup(spec, opcoes)` é o middleware que injeta sua spec nessa interface. Os dois sempre andam juntos, nessa ordem, no mesmo `app.use`.
-
-### Passo 3 — Documentar os schemas reutilizáveis
-
-Antes de anotar cada rota, definimos os formatos de objeto que se repetem — assim cada endpoint só referencia (`$ref`) em vez de redigitar os mesmos campos.
-
-```js
-// src/docs/schemas/evento.schema.js
-/**
- * @openapi
- * components:
- *   schemas:
- *     Evento:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 3
- *         titulo:
- *           type: string
- *           example: Hackathon FACET
- *         descricao:
- *           type: string
- *           example: Maratona de programação de 24 horas aberta a todos os cursos.
- *         categoria:
- *           type: string
- *           enum: [palestra, minicurso, workshop]
- *           example: workshop
- *         dataHora:
- *           type: string
- *           format: date-time
- *           example: 2026-10-05T08:00:00
- *         local:
- *           type: string
- *           example: Bloco A, Auditório
- *         vagas:
- *           type: integer
- *           example: 60
- *         imagemUrl:
- *           type: string
- *           format: uri
- *           example: https://storage.unieventos.dev/eventos/hackathon.jpg
- *
- *     EventoInput:
- *       type: object
- *       required: [titulo, categoria, dataHora, local, vagas]
- *       properties:
- *         titulo:
- *           type: string
- *           minLength: 3
- *           maxLength: 150
- *         descricao:
- *           type: string
- *         categoria:
- *           type: string
- *           enum: [palestra, minicurso, workshop]
- *         dataHora:
- *           type: string
- *           format: date-time
- *         local:
- *           type: string
- *         vagas:
- *           type: integer
- *           minimum: 0
- *         imagemUrl:
- *           type: string
- *           format: uri
- *
- *     Erro:
- *       type: object
- *       properties:
- *         mensagem:
- *           type: string
- *           example: Evento não encontrado
- *         detalhes:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               campo:
- *                 type: string
- *               mensagem:
- *                 type: string
- *
- *     Paginacao:
- *       type: object
- *       properties:
- *         pagina:
- *           type: integer
- *           example: 1
- *         porPagina:
- *           type: integer
- *           example: 20
- *         total:
- *           type: integer
- *           example: 47
- */
-export {} // arquivo só existe para hospedar o comentário — sem código de fato
-```
-
-```js
-// src/docs/schemas/inscricao.schema.js
-/**
- * @openapi
- * components:
- *   schemas:
- *     Inscricao:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 12
- *         eventoId:
- *           type: integer
- *           example: 3
- *         usuarioUid:
- *           type: string
- *           example: fY3k9sLp2QaB1cD4eF5gH6iJ7kL8
- *         criadoEm:
- *           type: string
- *           format: date-time
- *
- *     InscricaoInput:
- *       type: object
- *       required: [eventoId]
- *       properties:
- *         eventoId:
- *           type: integer
- *           example: 3
- */
-export {}
-```
-
-> **🔎 Por baixo do capô**
-> Esses arquivos `*.schema.js` não exportam nada útil em termos de código JavaScript — servem só para o `swagger-jsdoc` encontrar o comentário (por isso estão incluídos em `apis: [...]` na configuração do Passo 1). É uma convenção comum para não poluir arquivos de rota reais com blocos de schema grandes.
-
-### Passo 4 — Documentar os endpoints do UniEventos
-
-#### Eventos — as 5 operações (CRUD completo)
-
-```js
-// src/routes/eventos.routes.js — versão anotada
-import { Router } from 'express'
-import { validar } from '../middlewares/validar.js'
-import { eventoSchema, eventoAtualizacaoSchema } from '../validators/eventoSchema.js'
-import { verificarToken } from '../middlewares/autenticacao.js'
-
-export function criarRotasDeEventos({ eventosController }) {
-  const router = Router()
-
-  /**
-   * @openapi
-   * /api/eventos:
-   *   get:
-   *     summary: Lista eventos, com filtros opcionais
-   *     tags: [Eventos]
-   *     parameters:
-   *       - in: query
-   *         name: categoria
-   *         schema:
-   *           type: string
-   *           enum: [palestra, minicurso, workshop]
-   *         description: Filtra por categoria do evento
-   *       - in: query
-   *         name: busca
-   *         schema:
-   *           type: string
-   *         description: Filtra por trecho do título
-   *       - in: query
-   *         name: pagina
-   *         schema:
-   *           type: integer
-   *           default: 1
-   *       - in: query
-   *         name: porPagina
-   *         schema:
-   *           type: integer
-   *           default: 20
-   *     responses:
-   *       200:
-   *         description: Lista de eventos encontrados
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: array
-   *               items:
-   *                 $ref: '#/components/schemas/Evento'
-   */
-  router.get('/', eventosController.listar)
-
-  /**
-   * @openapi
-   * /api/eventos/{id}:
-   *   get:
-   *     summary: Busca um evento pelo id
-   *     tags: [Eventos]
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *         description: Id numérico do evento
-   *     responses:
-   *       200:
-   *         description: Evento encontrado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Evento'
-   *       404:
-   *         description: Evento não encontrado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.get('/:id', eventosController.buscarPorId)
-
-  /**
-   * @openapi
-   * /api/eventos:
-   *   post:
-   *     summary: Cria um novo evento
-   *     tags: [Eventos]
-   *     security:
-   *       - bearerAuth: []
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/EventoInput'
-   *     responses:
-   *       201:
-   *         description: Evento criado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Evento'
-   *       400:
-   *         description: Dados inválidos
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   *       401:
-   *         description: Token ausente ou inválido
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.post('/', verificarToken, validar(eventoSchema), eventosController.criar)
-
-  /**
-   * @openapi
-   * /api/eventos/{id}:
-   *   put:
-   *     summary: Atualiza um evento existente
-   *     tags: [Eventos]
-   *     security:
-   *       - bearerAuth: []
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/EventoInput'
-   *     responses:
-   *       200:
-   *         description: Evento atualizado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Evento'
-   *       404:
-   *         description: Evento não encontrado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.put('/:id', verificarToken, validar(eventoAtualizacaoSchema), eventosController.atualizar)
-
-  /**
-   * @openapi
-   * /api/eventos/{id}:
-   *   delete:
-   *     summary: Remove um evento
-   *     tags: [Eventos]
-   *     security:
-   *       - bearerAuth: []
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *     responses:
-   *       204:
-   *         description: Evento removido com sucesso, sem corpo de resposta
-   *       404:
-   *         description: Evento não encontrado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.delete('/:id', verificarToken, eventosController.remover)
-
-  return router
-}
-```
-
-#### Inscrições
-
-```js
-// src/routes/inscricoes.routes.js — versão anotada
-import { Router } from 'express'
-import { validar } from '../middlewares/validar.js'
-import { inscricaoSchema } from '../validators/inscricaoSchema.js'
-import { verificarToken } from '../middlewares/autenticacao.js'
-
-export function criarRotasDeInscricoes({ inscricoesController }) {
-  const router = Router()
-
-  /**
-   * @openapi
-   * /api/inscricoes:
-   *   get:
-   *     summary: Lista as inscrições do usuário autenticado
-   *     tags: [Inscrições]
-   *     security:
-   *       - bearerAuth: []
-   *     responses:
-   *       200:
-   *         description: Lista de inscrições do usuário logado
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: array
-   *               items:
-   *                 $ref: '#/components/schemas/Inscricao'
-   *       401:
-   *         description: Token ausente ou inválido
-   */
-  router.get('/', verificarToken, inscricoesController.listarMinhas)
-
-  /**
-   * @openapi
-   * /api/inscricoes:
-   *   post:
-   *     summary: Inscreve o usuário autenticado em um evento
-   *     tags: [Inscrições]
-   *     security:
-   *       - bearerAuth: []
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             $ref: '#/components/schemas/InscricaoInput'
-   *     responses:
-   *       201:
-   *         description: Inscrição criada
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Inscricao'
-   *       409:
-   *         description: Usuário já está inscrito neste evento
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.post('/', verificarToken, validar(inscricaoSchema), inscricoesController.criar)
-
-  /**
-   * @openapi
-   * /api/inscricoes/{id}:
-   *   delete:
-   *     summary: Cancela uma inscrição do próprio usuário
-   *     tags: [Inscrições]
-   *     security:
-   *       - bearerAuth: []
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: integer
-   *     responses:
-   *       204:
-   *         description: Inscrição cancelada
-   *       403:
-   *         description: A inscrição pertence a outro usuário
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.delete('/:id', verificarToken, inscricoesController.cancelar)
-
-  return router
-}
-```
-
-#### Autenticação
-
-O UniEventos não implementa login no back-end — o login acontece no front, direto contra o Firebase Auth (Aula 10). O back-end só **verifica** o token recebido. Ainda assim, documentamos esse fluxo, porque quem consumir a API precisa saber como obter o token:
-
-```js
-// src/routes/autenticacao.routes.js
-import { Router } from 'express'
-
-export function criarRotasDeAutenticacao() {
-  const router = Router()
-
-  /**
-   * @openapi
-   * /api/auth/verificar:
-   *   get:
-   *     summary: Confirma se o token enviado é válido e devolve os dados do usuário
-   *     description: >
-   *       Não existe endpoint de login nesta API — o login acontece no front-end,
-   *       diretamente contra o Firebase Auth (signInWithEmailAndPassword). Este
-   *       endpoint serve apenas para confirmar que um token de ID do Firebase é válido.
-   *     tags: [Autenticação]
-   *     security:
-   *       - bearerAuth: []
-   *     responses:
-   *       200:
-   *         description: Token válido
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 uid:
-   *                   type: string
-   *                 email:
-   *                   type: string
-   *       401:
-   *         description: Token ausente, expirado ou inválido
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/Erro'
-   */
-  router.get('/verificar', (req, res) => {
-    res.status(200).json({ uid: req.usuario.uid, email: req.usuario.email })
-  })
-
-  return router
-}
-```
-
-### Passo 5 — Segurança com bearerAuth e o botão "Authorize"
-
-O esquema `bearerAuth` já foi declarado em `components.securitySchemes` (Passo 1):
-
-```yaml
-securitySchemes:
-  bearerAuth:
-    type: http
-    scheme: bearer
-    bearerFormat: JWT
-```
-
-Cada endpoint protegido referencia esse esquema com `security: [{ bearerAuth: [] }]` (como fizemos em `POST /api/eventos`, `PUT /api/eventos/{id}`, `DELETE /api/eventos/{id}` e todas as rotas de inscrições). O efeito no Swagger UI:
-
-1. Um cadeado aparece ao lado de cada operação protegida.
-2. Um botão verde **"Authorize"** aparece no topo da página.
-3. Clicar nele abre um campo para colar o token — só o token puro, sem o prefixo `Bearer` (o Swagger UI adiciona isso sozinho no cabeçalho `Authorization`).
-4. Depois de autorizado, todo "Try it out" em endpoint protegido já envia o cabeçalho automaticamente.
-
-> **💡 Dica**
-> Para obter um token de teste rápido, abra o console do navegador na sua aplicação front-end já logada e rode:
-> ```js
-> import { getAuth } from 'firebase/auth'
-> const token = await getAuth().currentUser.getIdToken()
-> console.log(token)
-> ```
-> Copie o valor impresso e cole no botão "Authorize" do Swagger UI.
-
-### Como testar
-
-1. Abra `http://localhost:3000/api-docs`.
-2. Expanda `GET /api/eventos`, clique em **"Try it out"**, depois em **"Execute"** — a resposta real da API aparece embaixo, com status e corpo formatado.
-3. Para testar `POST /api/eventos`, clique em **"Authorize"** primeiro (Passo 5), depois expanda a operação, edite o JSON de exemplo no campo de corpo, e execute.
-
-Resultado esperado: as três chamadas respondem com o status e o corpo documentados — a lista de eventos em `GET`, e o evento recém-criado com `201` em `POST` depois de autorizar.
-
-> **⚠️ Atenção — CORS e `servers`**
-> O Swagger UI faz a requisição **do navegador**, então as mesmas regras de CORS da Aula 13 se aplicam: se `servers` apontar para uma URL diferente da que está rodando o front (ou se a API não liberar a origem da própria página do Swagger UI), o "Try it out" falha com erro de CORS no console — mesmo a API estando no ar. Garanta que `CORS_ORIGEM_PERMITIDA` inclua a origem de onde o Swagger UI está sendo servido (geralmente a própria API, `http://localhost:3000`, o que já é liberado por padrão pelo mesmo processo).
 
 ## 4. Além do Swagger: documentação completa do projeto
 
@@ -904,7 +288,7 @@ Um ADR é um documento curto (10 a 20 linhas) que registra **uma decisão técni
 # ADR 0001: Usar o padrão Repository para acesso a dados
 
 **Status:** aceito
-**Data:** 2025-08-12
+**Data:** AAAA-MM-DD
 
 ## Contexto
 O service de eventos precisava consultar o MySQL diretamente, o que impedia
@@ -927,6 +311,646 @@ código pela primeira vez.
 
 > **📌 Na prova**
 > Um ADR não documenta código — documenta **decisão e motivo**. Se a resposta para "por que você fez assim?" está só na sua cabeça, ela vai se perder. Escrever ADRs curtos ao longo do desenvolvimento é mais barato do que reconstruir esse raciocínio depois.
+
+## 🧩 Padrão de projeto em uso — Decorator (documentação como anotação)
+
+O padrão **Decorator** adiciona comportamento ou informação a um objeto sem alterar sua estrutura original. As anotações `@openapi` fazem exatamente isso, só que no nível de **documentação de código-fonte** em vez de tempo de execução: o comentário JSDoc "decora" a rota com metadados (parâmetros, respostas, segurança) sem alterar uma linha da lógica real do `router.get(...)`. Remova o comentário e a rota continua funcionando idêntica — a documentação é uma camada adicionada por cima, não uma dependência funcional.
+
+```js
+/**
+ * @openapi
+ * /api/eventos:
+ *   get:
+ *     summary: Lista eventos                    ← "decoração": metadado
+ *     tags: [Eventos]                            ← "decoração": metadado
+ */
+router.get('/', eventosController.listar)         // ← comportamento real, intocado
+```
+
+É a mesma lógica dos decorators de linguagens como TypeScript/Java (`@Component`, `@Test`) — mas aqui implementada via convenção de comentário, lida por uma ferramenta externa (`swagger-jsdoc`), porque JavaScript puro (sem TypeScript) não tem decorators nativos estáveis no runtime do Node.
+
+## 💻 Mão na massa — documentando a unieventos-api com Swagger
+
+Chega de teoria: agora você instala as duas bibliotecas, configura a spec, serve a interface, documenta os schemas e todos os endpoints do UniEventos, e liga a segurança `bearerAuth` — na ordem em que você faria isso de verdade num projeto novo.
+
+### Passo 1 — Instalar e configurar o `swagger-jsdoc`
+
+```bash
+npm install swagger-jsdoc swagger-ui-express
+```
+
+```js
+// src/docs/swaggerSpec.js
+import swaggerJsdoc from 'swagger-jsdoc'
+
+// ATENÇÃO: a chave é "definition", NÃO "swaggerDefinition" — swagger-jsdoc 6.x
+// renomeou essa chave em relação a versões anteriores. Usar o nome errado faz
+// a spec sair vazia, sem erro nenhum no console.
+const opcoes = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'UniEventos API',
+      version: '1.0.0',
+      description:
+        'API REST da plataforma UniEventos — divulgação e inscrição em eventos acadêmicos. ' +
+        'Desenvolvida na disciplina FACET-SNP-310 (UNEMAT/Sinop).',
+      contact: {
+        name: 'Prof. Ivan Luiz Pedroso Pires',
+        email: 'ivanpires@unemat.br',
+      },
+      license: {
+        name: 'MIT',
+      },
+    },
+    servers: [
+      { url: 'http://localhost:3000', description: 'Ambiente local' },
+      { url: 'https://unieventos-api.onrender.com', description: 'Produção' },
+    ],
+    tags: [
+      { name: 'Eventos', description: 'Cadastro e consulta de eventos acadêmicos' },
+      { name: 'Inscrições', description: 'Inscrição de usuários autenticados em eventos' },
+      { name: 'Autenticação', description: 'Fluxo de login com Firebase Auth' },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Token de ID do Firebase Auth, obtido após o login no front-end.',
+        },
+      },
+    },
+  },
+  // Arquivos onde o swagger-jsdoc procura comentários @openapi.
+  apis: ['./src/routes/*.js', './src/docs/schemas/*.js'],
+}
+
+export const swaggerSpec = swaggerJsdoc(opcoes)
+```
+
+> **⚠️ Atenção**
+> Repare na chave `definition` dentro de `opcoes`. Em versões antigas do `swagger-jsdoc` (2.x/3.x) essa chave se chamava `swaggerDefinition`. Nesta disciplina usamos `swagger-jsdoc@6.3.0`, que exige `definition`. Se você copiar um tutorial antigo da internet com `swaggerDefinition`, a spec gerada fica com `paths: {}` vazio e nenhum erro é lançado — o bug é silencioso.
+
+### Passo 2 — Servir a documentação com `swagger-ui-express`
+
+```js
+// src/app.js — trecho adicionado à montagem da aplicação (depois das rotas de negócio)
+import swaggerUi from 'swagger-ui-express'
+import { swaggerSpec } from './docs/swaggerSpec.js'
+
+// Opções de customização visual do Swagger UI.
+const opcoesDoSwaggerUi = {
+  customSiteTitle: 'UniEventos API — Documentação',
+  customCss: '.swagger-ui .topbar { display: none }', // esconde a barra verde padrão
+}
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, opcoesDoSwaggerUi))
+
+// Expõe o JSON cru da spec — útil para importar em Insomnia/Postman
+// ou para ferramentas de geração de cliente consumirem diretamente.
+app.get('/api-docs.json', (req, res) => {
+  res.status(200).json(swaggerSpec)
+})
+```
+
+```bash
+npm run dev
+# abra no navegador:
+# http://localhost:3000/api-docs       → interface interativa
+# http://localhost:3000/api-docs.json  → JSON cru da especificação
+```
+
+> **💡 Dica**
+> `swaggerUi.serve` é um **array** de middlewares (serve os arquivos estáticos da interface: CSS, JS, HTML); `swaggerUi.setup(spec, opcoes)` é o middleware que injeta sua spec nessa interface. Os dois sempre andam juntos, nessa ordem, no mesmo `app.use`.
+
+### Passo 3 — Documentar os schemas reutilizáveis
+
+Antes de anotar cada rota, definimos os formatos de objeto que se repetem — assim cada endpoint só referencia (`$ref`) em vez de redigitar os mesmos campos.
+
+```js
+// src/docs/schemas/evento.schema.js
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Evento:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 3
+ *         titulo:
+ *           type: string
+ *           example: Hackathon FACET
+ *         descricao:
+ *           type: string
+ *           example: Maratona de programação de 24 horas aberta a todos os cursos.
+ *         categoria:
+ *           type: string
+ *           enum: [palestra, minicurso, workshop]
+ *           example: workshop
+ *         dataHora:
+ *           type: string
+ *           format: date-time
+ *           example: 2026-10-05T08:00:00
+ *         local:
+ *           type: string
+ *           example: Bloco A, Auditório
+ *         vagas:
+ *           type: integer
+ *           example: 60
+ *         imagemUrl:
+ *           type: string
+ *           format: uri
+ *           example: https://storage.unieventos.dev/eventos/hackathon.jpg
+ *
+ *     EventoInput:
+ *       type: object
+ *       required: [titulo, categoria, dataHora, local, vagas]
+ *       properties:
+ *         titulo:
+ *           type: string
+ *           minLength: 3
+ *           maxLength: 150
+ *         descricao:
+ *           type: string
+ *         categoria:
+ *           type: string
+ *           enum: [palestra, minicurso, workshop]
+ *         dataHora:
+ *           type: string
+ *           format: date-time
+ *         local:
+ *           type: string
+ *         vagas:
+ *           type: integer
+ *           minimum: 0
+ *         imagemUrl:
+ *           type: string
+ *           format: uri
+ *
+ *     Erro:
+ *       type: object
+ *       description: Envelope único de erro da API, fixado na Aula 08.
+ *       properties:
+ *         erro:
+ *           type: object
+ *           properties:
+ *             mensagem:
+ *               type: string
+ *               example: Evento não encontrado
+ *             codigo:
+ *               type: string
+ *               example: NAO_ENCONTRADO
+ *             detalhes:
+ *               type: array
+ *               description: Presente apenas em erros de validação (422).
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   campo:
+ *                     type: string
+ *                   mensagem:
+ *                     type: string
+ *
+ *     Paginacao:
+ *       type: object
+ *       properties:
+ *         pagina:
+ *           type: integer
+ *           example: 1
+ *         porPagina:
+ *           type: integer
+ *           example: 20
+ *         total:
+ *           type: integer
+ *           example: 47
+ *         totalPaginas:
+ *           type: integer
+ *           example: 3
+ *
+ *     ListaDeEventos:
+ *       type: object
+ *       description: Envelope de listagem da API — { dados, paginacao }.
+ *       properties:
+ *         dados:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Evento'
+ *         paginacao:
+ *           $ref: '#/components/schemas/Paginacao'
+ */
+export {} // arquivo só existe para hospedar o comentário — sem código de fato
+```
+
+```js
+// src/docs/schemas/inscricao.schema.js
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Inscricao:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 12
+ *         eventoId:
+ *           type: integer
+ *           example: 3
+ *         usuarioUid:
+ *           type: string
+ *           example: fY3k9sLp2QaB1cD4eF5gH6iJ7kL8
+ *         criadoEm:
+ *           type: string
+ *           format: date-time
+ *
+ *     InscricaoInput:
+ *       type: object
+ *       required: [eventoId]
+ *       properties:
+ *         eventoId:
+ *           type: integer
+ *           example: 3
+ */
+export {}
+```
+
+> **🔎 Por baixo do capô**
+> Esses arquivos `*.schema.js` não exportam nada útil em termos de código JavaScript — servem só para o `swagger-jsdoc` encontrar o comentário (por isso estão incluídos em `apis: [...]` na configuração do Passo 1). É uma convenção comum para não poluir arquivos de rota reais com blocos de schema grandes.
+
+### Passo 4 — Documentar os endpoints do UniEventos
+
+#### Eventos — as 5 operações (CRUD completo)
+
+```js
+// src/routes/eventos.routes.js — versão anotada
+import { Router } from 'express'
+import { validar } from '../middlewares/validar.js'
+import { eventoSchema, eventoAtualizacaoSchema } from '../validators/eventoSchema.js'
+import { autenticar } from '../middlewares/autenticar.js'
+import { autorizar } from '../middlewares/autorizar.js'
+
+export function criarRotasDeEventos({ eventosController }) {
+  const router = Router()
+
+  /**
+   * @openapi
+   * /api/eventos:
+   *   get:
+   *     summary: Lista eventos, com filtros opcionais
+   *     tags: [Eventos]
+   *     parameters:
+   *       - in: query
+   *         name: categoria
+   *         schema:
+   *           type: string
+   *           enum: [palestra, minicurso, workshop]
+   *         description: Filtra por categoria do evento
+   *       - in: query
+   *         name: busca
+   *         schema:
+   *           type: string
+   *         description: Filtra por trecho do título
+   *       - in: query
+   *         name: pagina
+   *         schema:
+   *           type: integer
+   *           default: 1
+   *       - in: query
+   *         name: porPagina
+   *         schema:
+   *           type: integer
+   *           default: 20
+   *     responses:
+   *       200:
+   *         description: Lista paginada de eventos, no envelope { dados, paginacao }
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ListaDeEventos'
+   */
+  router.get('/', eventosController.listar)
+
+  /**
+   * @openapi
+   * /api/eventos/{id}:
+   *   get:
+   *     summary: Busca um evento pelo id
+   *     tags: [Eventos]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: Id numérico do evento
+   *     responses:
+   *       200:
+   *         description: Evento encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Evento'
+   *       404:
+   *         description: Evento não encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.get('/:id', eventosController.buscarPorId)
+
+  /**
+   * @openapi
+   * /api/eventos:
+   *   post:
+   *     summary: Cria um novo evento
+   *     tags: [Eventos]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/EventoInput'
+   *     responses:
+   *       201:
+   *         description: Evento criado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Evento'
+   *       400:
+   *         description: Dados inválidos
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   *       401:
+   *         description: Token ausente ou inválido
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.post('/', autenticar, validar(eventoSchema), eventosController.criar)
+
+  /**
+   * @openapi
+   * /api/eventos/{id}:
+   *   put:
+   *     summary: Atualiza um evento existente
+   *     tags: [Eventos]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/EventoInput'
+   *     responses:
+   *       200:
+   *         description: Evento atualizado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Evento'
+   *       404:
+   *         description: Evento não encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.put('/:id', autenticar, validar(eventoAtualizacaoSchema), eventosController.atualizar)
+
+  /**
+   * @openapi
+   * /api/eventos/{id}:
+   *   delete:
+   *     summary: Remove um evento
+   *     tags: [Eventos]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       204:
+   *         description: Evento removido com sucesso, sem corpo de resposta
+   *       404:
+   *         description: Evento não encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.delete('/:id', autenticar, autorizar(['admin']), eventosController.remover)
+
+  return router
+}
+```
+
+#### Inscrições
+
+```js
+// src/routes/inscricoes.routes.js — versão anotada
+import { Router } from 'express'
+import { validar } from '../middlewares/validar.js'
+import { inscricaoSchema } from '../validators/inscricaoSchema.js'
+import { autenticar } from '../middlewares/autenticar.js'
+import { autorizar } from '../middlewares/autorizar.js'
+
+export function criarRotasDeInscricoes({ inscricoesController }) {
+  const router = Router()
+
+  /**
+   * @openapi
+   * /api/inscricoes:
+   *   get:
+   *     summary: Lista as inscrições do usuário autenticado
+   *     tags: [Inscrições]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Lista de inscrições do usuário logado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Inscricao'
+   *       401:
+   *         description: Token ausente ou inválido
+   */
+  router.get('/', autenticar, inscricoesController.listarMinhas)
+
+  /**
+   * @openapi
+   * /api/inscricoes:
+   *   post:
+   *     summary: Inscreve o usuário autenticado em um evento
+   *     tags: [Inscrições]
+   *     security:
+   *       - bearerAuth: []
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/InscricaoInput'
+   *     responses:
+   *       201:
+   *         description: Inscrição criada
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Inscricao'
+   *       409:
+   *         description: Usuário já está inscrito neste evento
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.post('/', autenticar, validar(inscricaoSchema), inscricoesController.criar)
+
+  /**
+   * @openapi
+   * /api/inscricoes/{id}:
+   *   delete:
+   *     summary: Cancela uma inscrição do próprio usuário
+   *     tags: [Inscrições]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       204:
+   *         description: Inscrição cancelada
+   *       403:
+   *         description: A inscrição pertence a outro usuário
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  router.delete('/:id', autenticar, inscricoesController.cancelar)
+
+  return router
+}
+```
+
+#### Autenticação
+
+O UniEventos não implementa login no back-end — o login acontece no front, direto contra o Firebase Auth (Aula 10). O back-end só **verifica** o token recebido. Ainda assim, documentamos esse fluxo, porque quem consumir a API precisa saber como obter o token:
+
+```js
+// src/routes/autenticacao.routes.js
+import { Router } from 'express'
+import { autenticar } from '../middlewares/autenticar.js'
+
+export function criarRotasDeAutenticacao() {
+  const router = Router()
+
+  /**
+   * @openapi
+   * /api/auth/verificar:
+   *   get:
+   *     summary: Confirma se o token enviado é válido e devolve os dados do usuário
+   *     description: >
+   *       Não existe endpoint de login nesta API — o login acontece no front-end,
+   *       diretamente contra o Firebase Auth (signInWithEmailAndPassword). Este
+   *       endpoint serve apenas para confirmar que um token de ID do Firebase é válido.
+   *     tags: [Autenticação]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Token válido
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 uid:
+   *                   type: string
+   *                 email:
+   *                   type: string
+   *       401:
+   *         description: Token ausente, expirado ou inválido
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Erro'
+   */
+  // o `autenticar` NÃO é decorativo: é ele que valida o token e preenche
+  // `req.usuario`. Sem ele, a anotação promete 401 e o handler estoura 500.
+  router.get('/verificar', autenticar, (req, res) => {
+    res.status(200).json({ uid: req.usuario.uid, email: req.usuario.email })
+  })
+
+  return router
+}
+```
+
+### Passo 5 — Segurança com bearerAuth e o botão "Authorize"
+
+O esquema `bearerAuth` já foi declarado em `components.securitySchemes` (Passo 1):
+
+```yaml
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+```
+
+Cada endpoint protegido referencia esse esquema com `security: [{ bearerAuth: [] }]` (como fizemos em `POST /api/eventos`, `PUT /api/eventos/{id}`, `DELETE /api/eventos/{id}` e todas as rotas de inscrições). O efeito no Swagger UI:
+
+1. Um cadeado aparece ao lado de cada operação protegida.
+2. Um botão verde **"Authorize"** aparece no topo da página.
+3. Clicar nele abre um campo para colar o token — só o token puro, sem o prefixo `Bearer` (o Swagger UI adiciona isso sozinho no cabeçalho `Authorization`).
+4. Depois de autorizado, todo "Try it out" em endpoint protegido já envia o cabeçalho automaticamente.
+
+> **💡 Dica**
+> Para obter um token de teste rápido, abra o console do navegador na sua aplicação front-end já logada e rode:
+> ```js
+> import { getAuth } from 'firebase/auth'
+> const token = await getAuth().currentUser.getIdToken()
+> console.log(token)
+> ```
+> Copie o valor impresso e cole no botão "Authorize" do Swagger UI.
+
+### Como testar
+
+1. Abra `http://localhost:3000/api-docs`.
+2. Expanda `GET /api/eventos`, clique em **"Try it out"**, depois em **"Execute"** — a resposta real da API aparece embaixo, com status e corpo formatado.
+3. Para testar `POST /api/eventos`, clique em **"Authorize"** primeiro (Passo 5), depois expanda a operação, edite o JSON de exemplo no campo de corpo, e execute.
+
+Resultado esperado: as chamadas respondem com o status e o corpo documentados — `GET /api/eventos` devolve o envelope `{ dados, paginacao }` exatamente como o schema `ListaDeEventos` promete; `POST /api/eventos` sem autorizar devolve `401` no envelope `{ erro: { mensagem, codigo } }`; depois do "Authorize", devolve `201` com o evento criado. Se a resposta real e o exemplo documentado divergirem em **qualquer** campo, a documentação está mentindo — conserte o schema, não o print.
+
+> **⚠️ Atenção — CORS e `servers`**
+> O Swagger UI faz a requisição **do navegador**, então as mesmas regras de CORS da Aula 13 se aplicam: se `servers` apontar para uma URL diferente da que está rodando o front (ou se a API não liberar a origem da própria página do Swagger UI), o "Try it out" falha com erro de CORS no console — mesmo a API estando no ar. Garanta que `CORS_ORIGEM_PERMITIDA` inclua a origem de onde o Swagger UI está sendo servido (geralmente a própria API, `http://localhost:3000`, o que já é liberado por padrão pelo mesmo processo).
 
 ## 🧪 Laboratório
 
@@ -1047,11 +1071,11 @@ Um colega documentou um novo endpoint `PATCH /api/eventos/{id}/destaque` (marca 
 ### ⭐⭐ O schema que não bate mais
 Tags: swagger, refatoracao, api, json
 
-Um refactor recente trocou o nome de um campo no banco (de `dataHora` para `data_hora`, para bater com a convenção de colunas do MySQL), e o controller já devolve o campo novo — mas a documentação Swagger de `GET /api/eventos/{id}` ainda mostra `dataHora` no exemplo, porque só uma das rotas foi corrigida manualmente na correria. Quem está integrando o front pelo Swagger UI está escrevendo código para um campo que não existe mais na resposta real. Encontre e corrija a origem da divergência — sem editar o mesmo nome de campo em três lugares diferentes.
+Reproduza no seu repositório uma divergência que acontece o tempo todo em projeto real. Renomeie, **só no `linhaParaEvento` do repositório**, o campo `imagemUrl` para `urlDaImagem`, e ajuste a anotação Swagger de `GET /api/eventos/{id}` — e apenas ela — para o nome novo. Suba a API: agora `GET /api/eventos` (a listagem) documenta `imagemUrl`, `GET /api/eventos/{id}` documenta `urlDaImagem`, e as duas devolvem a mesma coisa. Quem está integrando o front pelo Swagger UI vai escrever código para um campo que não existe na metade das respostas. Encontre a causa estrutural dessa divergência e conserte — sem editar o mesmo nome de campo em três lugares diferentes.
 
 **Critérios de pronto**
 
-- O nome correto do campo aparece em **todas** as operações que retornam um evento — não só na que foi corrigida na correria.
+- Ao final, o campo volta a se chamar `imagemUrl` (o nome do contrato da trilha) e aparece igual em **todas** as operações que retornam um evento.
 - A correção acontece em **um único lugar** (o schema `Evento` em `components.schemas`), referenciado por `$ref` em todos os endpoints — não copiado em cada anotação de rota.
 - Um teste manual (`curl` num endpoint real) confirma que o nome do campo na resposta bate exatamente com o que a documentação promete.
 - Um comentário de uma linha explica por que documentar o mesmo campo em vários lugares (em vez de usar `$ref`) foi o que permitiu essa divergência passar despercebida.
@@ -1124,7 +1148,6 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 - [Swagger.io — guia oficial de OpenAPI](https://swagger.io/docs/specification/about/)
 - [ADR GitHub organization — modelos de Architecture Decision Record](https://adr.github.io)
 - [Keep a README — checklist do que compõe um bom README](https://www.makeareadme.com/)
+- Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre documentação de APIs REST e contratos de serviço.
 
----
-
-**Na próxima aula:** fechamos o semestre com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, guia de estudo para o exame final e as instruções completas da Avaliação 3. Traga a API documentada e pronta para publicar.
+**Na Aula 15** fechamos o semestre com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, guia de estudo para o exame final e as instruções completas da Avaliação 3. Traga a API documentada e pronta para publicar.

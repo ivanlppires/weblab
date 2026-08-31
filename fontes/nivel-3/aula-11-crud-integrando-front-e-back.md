@@ -2,8 +2,7 @@
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-
-Na Aula 10 o UniEventos passou a exigir token do Firebase para escrever dados, e a API passou a validar esse token com `firebase-admin`. Todas as peças já existem separadas: Vue no front, Express no back, MySQL persistindo, Firebase autenticando. Hoje é a aula de **fechar o ciclo** — o CRUD completo de eventos, ponta a ponta, com as duas pontas conversando por um contrato bem definido.
+> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,6 +17,8 @@ Ao final desta aula você será capaz de:
 - Depurar uma integração front-back usando a aba Network do DevTools e reproduzir requisições em `curl`.
 
 ## 📋 Pré-requisitos desta aula
+
+Na Aula 10 o UniEventos passou a exigir token do Firebase para escrever dados, e a API passou a validar esse token com `firebase-admin`. Todas as peças já existem separadas: Vue no front, Express no back, MySQL persistindo, Firebase autenticando. Hoje é a aula de **fechar o ciclo** — o CRUD completo de eventos, ponta a ponta, com as duas pontas conversando por um contrato bem definido.
 
 Checklist antes de começar:
 
@@ -46,13 +47,14 @@ Antes de escrever uma linha de código de integração, front e back precisam co
 | GET | `/api/eventos/:id` | Pública |
 | POST | `/api/eventos` | Autenticado |
 | PUT | `/api/eventos/:id` | Autenticado |
+| PATCH | `/api/eventos/:id` | Autenticado |
 | DELETE | `/api/eventos/:id` | Admin |
 
 Detalhando corpo e resposta de cada um:
 
 **`GET /api/eventos`** — lista paginada, com filtros por query string.
 
-Query string: `?pagina=1&limite=10&busca=semana&categoria=palestra`
+Query string: `?pagina=1&porPagina=10&busca=semana&categoria=palestra`
 
 ```json
 {
@@ -62,20 +64,23 @@ Query string: `?pagina=1&limite=10&busca=semana&categoria=palestra`
       "titulo": "Semana da Computação",
       "descricao": "Palestras e minicursos de tecnologia",
       "categoria": "palestra",
-      "data_hora": "2026-12-01T19:00:00.000Z",
+      "dataHora": "2026-12-01T19:00:00.000Z",
       "local": "Auditório Central",
       "vagas": 80,
-      "vagas_disponiveis": 62,
-      "imagem_url": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
+      "vagasDisponiveis": 62,
+      "imagemUrl": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
     }
   ],
-  "paginacao": { "pagina": 1, "limite": 10, "total": 34, "totalPaginas": 4 }
+  "paginacao": { "pagina": 1, "porPagina": 10, "total": 34, "totalPaginas": 4 }
 }
 ```
 
 Status: `200 OK`.
 
-**`GET /api/eventos/:id`** — um evento. Status `200 OK` ou `404 Not Found` com `{ "erro": "Evento não encontrado." }`.
+> **⚠️ Atenção — camelCase no JSON, snake_case no banco**
+> As colunas do MySQL são `data_hora` e `imagem_url` (Aula 09), mas o JSON que a API troca com o front é `dataHora` e `imagemUrl`, **camelCase, desde a Aula 06**. Quem traduz é o repositório, com uma função `linhaParaEvento` — e só ele. Se você deixar o `SELECT *` vazar os nomes de coluna para a resposta, o formulário do Passo 3 grava campo errado e a tela mostra "Invalid Date" sem erro nenhum no console.
+
+**`GET /api/eventos/:id`** — um evento. Status `200 OK` ou `404 Not Found` com `{ "erro": { "mensagem": "Evento não encontrado.", "codigo": "NAO_ENCONTRADO" } }`.
 
 **`POST /api/eventos`** — corpo:
 
@@ -84,18 +89,22 @@ Status: `200 OK`.
   "titulo": "Semana da Computação",
   "descricao": "Palestras e minicursos de tecnologia",
   "categoria": "palestra",
-  "data_hora": "2026-12-01T19:00:00",
+  "dataHora": "2026-12-01T19:00:00",
   "local": "Auditório Central",
   "vagas": 80,
-  "imagem_url": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
+  "imagemUrl": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
 }
 ```
 
-Resposta: o evento criado, com `id`, status `201 Created`. Erros de validação: `400 Bad Request` com `{ "erro": "...", "detalhes": [...] }`. Sem token: `401`.
+Resposta: o evento criado, com `id`, status `201 Created`. Erros de validação: `422 Unprocessable Entity` com `{ "erro": { "mensagem": "...", "codigo": "VALIDACAO", "detalhes": [...] } }` — o mesmo envelope de erro da Aula 08. Sem token: `401`.
 
-**`PUT /api/eventos/:id`** — mesmo corpo do `POST` (campos parciais também aceitos). Resposta: o evento atualizado, `200 OK`. Sem token: `401`. Não é dono nem admin: decisão de negócio do projeto (aqui, qualquer autenticado pode editar — ver seção 3). Evento inexistente: `404`.
+**`PUT /api/eventos/:id`** — **o corpo completo**, exatamente o mesmo esquema do `POST` (é o que "substituir o recurso inteiro" significa; para atualização parcial existe o `PATCH`, da Aula 09). Resposta: o evento atualizado, `200 OK`. Sem token: `401`. Não é dono nem admin: decisão de negócio do projeto (aqui, qualquer autenticado pode editar — o desafio ⭐⭐ desta aula fecha essa brecha). Evento inexistente: `404`.
 
-**`DELETE /api/eventos/:id`** — sem corpo. Resposta: `204 No Content`. Sem token: `401`. Sem ser admin: `403`. Evento com inscritos: `409 Conflict` com `{ "erro": "Não é possível excluir evento com inscritos." }`.
+**`PATCH /api/eventos/:id`** — herdado da Aula 09: corpo com **apenas os campos que mudam**, validado pelo `esquemaEventoParcial`. Resposta: o evento atualizado, `200 OK`. Mesmos códigos de erro do `PUT`.
+
+**`DELETE /api/eventos/:id`** — sem corpo. Resposta: `204 No Content`. Sem token: `401`. Sem ser admin: `403`. Evento com inscritos: `409 Conflict` com `{ "erro": { "mensagem": "Não é possível excluir evento com inscritos.", "codigo": "CONFLITO" } }`.
+
+Todo erro, em qualquer endpoint, sai no envelope único `{ "erro": { "mensagem", "codigo" } }` fixado na Aula 08 — com um `detalhes` extra quando a falha é de validação. O front nunca precisa adivinhar a forma de uma resposta de erro.
 
 > **💡 Dica**
 > Escreva esse contrato **antes** de codificar, mesmo sozinho. Ele vira a fonte da verdade quando front e back divergem — e em equipes reais costuma virar um arquivo OpenAPI/Swagger, que veremos na Aula 14. Por ora, uma tabela em Markdown já resolve.
@@ -109,12 +118,51 @@ Revisamos a estrutura da Aula 09 e adicionamos: validação com zod, regras de n
 
 ### 2.1 Repository — só acesso a dados, sem regra de negócio
 
+Duas mudanças em relação à Aula 09, ambas declaradas de propósito antes do código.
+
+**1. Os nomes das funções encurtam.** Como o arquivo já se chama `eventosRepository.js`, repetir "Evento" em cada função é redundante: `listarEventos` vira `listar`, `buscarEventoPorId` vira `buscarPorId`, `inserirEvento` vira `criar`, `substituirEvento` vira `atualizar`, `excluirEvento` vira `remover`. É uma renomeação mecânica — troque os nomes no repositório e no service, e o resto da aplicação nem percebe. O caminho do pool **não** muda: continua `src/bancoDeDados.js`, como na Aula 09.
+
+**2. `vagas` passa a ser capacidade total, não vagas restantes.** Na Aula 09, inscrever alguém fazia `UPDATE eventos SET vagas = vagas - 1`: o contador era mantido à mão, e qualquer inscrição perdida ou revertida deixava o número errado para sempre. A partir de agora, `eventos.vagas` guarda a **capacidade** do evento (um número que só muda quando o organizador edita), e a disponibilidade é **derivada** por consulta: `vagas - COUNT(inscricoes)`. Dado derivado nunca "desincroniza" — é sempre calculado a partir da fonte da verdade, que são as linhas de `inscricoes`.
+
+A migração do banco da Aula 09 para esse modelo, para rodar uma única vez:
+
+```sql
+-- 1) devolve a `vagas` o valor de capacidade (vagas restantes + inscritos já feitos)
+UPDATE eventos e
+SET e.vagas = e.vagas + (SELECT COUNT(*) FROM inscricoes i WHERE i.evento_id = e.id);
+
+-- 2) a inscrição passa a ser identificada pelo uid do Firebase (Aula 10),
+--    não mais por um id inteiro da tabela `usuarios`
+ALTER TABLE inscricoes DROP FOREIGN KEY fk_inscricoes_usuario;
+ALTER TABLE inscricoes CHANGE COLUMN usuario_id usuario_uid VARCHAR(128) NOT NULL;
+ALTER TABLE inscricoes ADD CONSTRAINT uq_inscricao UNIQUE (evento_id, usuario_uid);
+```
+
+> **⚠️ Atenção**
+> Rode o passo 1 **antes** de qualquer coisa e só uma vez: rodar duas vezes soma os inscritos de novo e infla a capacidade. Se o seu banco de desenvolvimento estiver vazio de inscrições, os dois números coincidem e nada muda — o que é o caso mais provável em sala.
+
 ```js
 // unieventos-api/src/repositories/eventosRepository.js
-import { pool } from '../config/database.js'
+import { pool } from '../bancoDeDados.js'
+import { ErroHttp, erroNaoEncontrado } from '../erros/ErroHttp.js'
 
-export async function listar({ pagina, limite, busca, categoria }) {
-  const offset = (pagina - 1) * limite
+// tradução única entre o vocabulário do banco (snake_case) e o da API (camelCase)
+function linhaParaEvento(linha) {
+  return {
+    id: linha.id,
+    titulo: linha.titulo,
+    descricao: linha.descricao,
+    categoria: linha.categoria,
+    dataHora: linha.data_hora,
+    local: linha.local,
+    vagas: linha.vagas,
+    vagasDisponiveis: linha.vagas_disponiveis,
+    imagemUrl: linha.imagem_url,
+  }
+}
+
+export async function listar({ pagina, porPagina, busca, categoria }) {
+  const offset = (pagina - 1) * porPagina
   const condicoes = []
   const parametros = []
 
@@ -137,7 +185,7 @@ export async function listar({ pagina, limite, busca, categoria }) {
      GROUP BY e.id
      ORDER BY e.data_hora ASC
      LIMIT ? OFFSET ?`,
-    [...parametros, limite, offset],
+    [...parametros, porPagina, offset],
   )
 
   const [[{ total }]] = await pool.query(
@@ -145,7 +193,7 @@ export async function listar({ pagina, limite, busca, categoria }) {
     parametros,
   )
 
-  return { linhas, total }
+  return { linhas: linhas.map(linhaParaEvento), total }
 }
 
 export async function buscarPorId(id) {
@@ -157,7 +205,7 @@ export async function buscarPorId(id) {
      GROUP BY e.id`,
     [id],
   )
-  return linhas[0] ?? null
+  return linhas[0] ? linhaParaEvento(linhas[0]) : null
 }
 
 export async function contarInscritos(id, conexao = pool) {
@@ -176,10 +224,10 @@ export async function criar(evento) {
       evento.titulo,
       evento.descricao,
       evento.categoria,
-      evento.data_hora,
+      evento.dataHora,
       evento.local,
       evento.vagas,
-      evento.imagem_url ?? null,
+      evento.imagemUrl ?? null,
     ],
   )
   return buscarPorId(resultado.insertId)
@@ -194,10 +242,10 @@ export async function atualizar(id, evento) {
       evento.titulo,
       evento.descricao,
       evento.categoria,
-      evento.data_hora,
+      evento.dataHora,
       evento.local,
       evento.vagas,
-      evento.imagem_url ?? null,
+      evento.imagemUrl ?? null,
       id,
     ],
   )
@@ -208,7 +256,10 @@ export async function remover(id) {
   await pool.query('DELETE FROM eventos WHERE id = ?', [id])
 }
 
-export async function decrementarVagaEmTransacao(id) {
+// ATENÇÃO: esta função está DELIBERADAMENTE incompleta — ela abre a transação,
+// trava a linha e confere as vagas, mas ainda não insere a inscrição. Completá-la
+// (e expor o endpoint) é o Laboratório C1 desta aula.
+export async function verificarVagaEInscrever(id, usuarioUid) {
   // Transação: ler vagas disponíveis e inserir a inscrição são duas
   // operações que precisam ser atômicas — senão dois usuários podem
   // "ganhar" a última vaga ao mesmo tempo (condição de corrida).
@@ -222,18 +273,17 @@ export async function decrementarVagaEmTransacao(id) {
     )
 
     const evento = linhas[0]
-    if (!evento) {
-      await conexao.rollback()
-      throw new Error('EVENTO_NAO_ENCONTRADO')
-    }
+    if (!evento) throw erroNaoEncontrado('Evento não encontrado.')
     if (evento.inscritos >= evento.vagas) {
-      await conexao.rollback()
-      throw new Error('SEM_VAGAS')
+      throw new ErroHttp(409, 'Não há vagas disponíveis para este evento.', 'SEM_VAGAS')
     }
+
+    // (o Laboratório C1 insere aqui a linha em `inscricoes`, usando esta mesma conexão)
 
     await conexao.commit()
     return true
   } catch (erro) {
+    // um único rollback, no caminho de erro — os `throw` acima caem todos aqui
     await conexao.rollback()
     throw erro
   } finally {
@@ -251,6 +301,7 @@ export async function decrementarVagaEmTransacao(id) {
 // unieventos-api/src/services/eventosService.js
 import { z } from 'zod'
 import * as eventosRepository from '../repositories/eventosRepository.js'
+import { ErroHttp, erroNaoEncontrado } from '../erros/ErroHttp.js'
 
 export const esquemaEvento = z.object({
   titulo: z.string().trim().min(3, 'Título precisa ter ao menos 3 caracteres'),
@@ -258,7 +309,7 @@ export const esquemaEvento = z.object({
   categoria: z.enum(['palestra', 'minicurso', 'workshop'], {
     message: 'Categoria precisa ser palestra, minicurso ou workshop',
   }),
-  data_hora: z
+  dataHora: z
     .string()
     .datetime({ offset: true, message: 'Data e hora em formato ISO inválido' })
     .or(z.string().min(1)) // aceita também "2026-12-01T19:00:00" sem offset
@@ -266,18 +317,18 @@ export const esquemaEvento = z.object({
     .refine((valor) => new Date(valor).getTime() > Date.now(), 'A data do evento não pode estar no passado'),
   local: z.string().trim().min(3, 'Local precisa ter ao menos 3 caracteres'),
   vagas: z.number().int().positive('Vagas precisa ser um número positivo'),
-  imagem_url: z.url('URL de imagem inválida').optional().or(z.literal('')),
+  imagemUrl: z.url('URL de imagem inválida').optional().or(z.literal('')),
 })
 
 export const esquemaEventoParcial = esquemaEvento.partial()
 
-export async function listar({ pagina = 1, limite = 10, busca, categoria }) {
+export async function listar({ pagina = 1, porPagina = 10, busca, categoria }) {
   const paginaSegura = Math.max(1, Number(pagina))
-  const limiteSeguro = Math.min(50, Math.max(1, Number(limite)))
+  const porPaginaSegura = Math.min(50, Math.max(1, Number(porPagina)))
 
   const { linhas, total } = await eventosRepository.listar({
     pagina: paginaSegura,
-    limite: limiteSeguro,
+    porPagina: porPaginaSegura,
     busca,
     categoria,
   })
@@ -286,20 +337,16 @@ export async function listar({ pagina = 1, limite = 10, busca, categoria }) {
     dados: linhas,
     paginacao: {
       pagina: paginaSegura,
-      limite: limiteSeguro,
+      porPagina: porPaginaSegura,
       total,
-      totalPaginas: Math.ceil(total / limiteSeguro),
+      totalPaginas: Math.ceil(total / porPaginaSegura),
     },
   }
 }
 
 export async function buscarPorId(id) {
   const evento = await eventosRepository.buscarPorId(id)
-  if (!evento) {
-    const erro = new Error('Evento não encontrado.')
-    erro.status = 404
-    throw erro
-  }
+  if (!evento) throw erroNaoEncontrado('Evento não encontrado.')
   return evento
 }
 
@@ -310,8 +357,15 @@ export async function criar(dadosBrutos) {
 
 export async function atualizar(id, dadosBrutos) {
   await buscarPorId(id) // garante 404 antes de tentar validar/atualizar
+  // MESMO esquema do POST: PUT substitui o recurso inteiro (ver contrato da §1)
   const dados = esquemaEvento.parse(dadosBrutos)
   return eventosRepository.atualizar(id, dados)
+}
+
+export async function atualizarParcial(id, dadosBrutos) {
+  const atual = await buscarPorId(id)
+  const dados = esquemaEventoParcial.parse(dadosBrutos)
+  return eventosRepository.atualizar(id, { ...atual, ...dados })
 }
 
 export async function remover(id) {
@@ -319,9 +373,7 @@ export async function remover(id) {
 
   const inscritos = await eventosRepository.contarInscritos(id)
   if (inscritos > 0) {
-    const erro = new Error('Não é possível excluir evento com inscritos.')
-    erro.status = 409
-    throw erro
+    throw new ErroHttp(409, 'Não é possível excluir evento com inscritos.', 'CONFLITO')
   }
 
   await eventosRepository.remover(id)
@@ -335,8 +387,8 @@ export async function remover(id) {
 import * as eventosService from '../services/eventosService.js'
 
 export async function listar(req, res) {
-  const { pagina, limite, busca, categoria } = req.query
-  const resultado = await eventosService.listar({ pagina, limite, busca, categoria })
+  const { pagina, porPagina, busca, categoria } = req.query
+  const resultado = await eventosService.listar({ pagina, porPagina, busca, categoria })
   res.json(resultado)
 }
 
@@ -355,38 +407,50 @@ export async function atualizar(req, res) {
   res.json(evento)
 }
 
+export async function atualizarParcial(req, res) {
+  const evento = await eventosService.atualizarParcial(req.params.id, req.body)
+  res.json(evento)
+}
+
 export async function remover(req, res) {
   await eventosService.remover(req.params.id)
   res.status(204).send()
 }
 ```
 
-Sem `try/catch` nos controllers: Express 5 encaminha automaticamente qualquer rejeição de handler `async` para o middleware de erro central, criado na Aula 08. Só precisamos garantir que esse middleware trate `ZodError` (400), erros com `.status` customizado (404, 409) e, por padrão, 500:
+Sem `try/catch` nos controllers: Express 5 encaminha automaticamente qualquer rejeição de handler `async` para o middleware de erro central, criado na Aula 08. Ele **não muda de envelope** aqui — continua sendo `{ erro: { mensagem, codigo } }`, com `422` para validação. A única adição é reconhecer o `ZodError` que escapa do `esquemaEvento.parse()` dentro do service:
 
 ```js
-// unieventos-api/src/middlewares/tratadorErros.js
+// unieventos-api/src/middlewares/tratadorDeErros.js — o da Aula 08, com um caso a mais
 import { ZodError } from 'zod'
+import { ErroHttp } from '../erros/ErroHttp.js'
 
-export function tratadorErros(erro, req, res, next) {
-  if (erro instanceof ZodError) {
-    return res.status(400).json({
-      erro: 'Dados inválidos.',
-      detalhes: erro.issues.map((i) => ({ campo: i.path.join('.'), mensagem: i.message })),
+export function tratadorDeErros(err, req, res, next) {
+  if (err instanceof ZodError) {
+    return res.status(422).json({
+      erro: {
+        mensagem: 'Dados inválidos.',
+        codigo: 'VALIDACAO',
+        detalhes: err.issues.map((i) => ({ campo: i.path.join('.'), mensagem: i.message })),
+      },
     })
   }
 
-  if (erro.status) {
-    return res.status(erro.status).json({ erro: erro.message })
-  }
+  const status = err instanceof ErroHttp ? err.status : 500
+  const codigo = err instanceof ErroHttp ? err.codigo : 'ERRO_INTERNO'
+  const mensagem = err instanceof ErroHttp ? err.message : 'Erro interno do servidor'
 
-  console.error(erro)
-  res.status(500).json({ erro: 'Erro interno do servidor.' })
+  if (status === 500) console.error(err)
+  res.status(status).json({ erro: { mensagem, codigo } })
 }
 ```
 
+> **⚠️ Atenção**
+> Nada de inventar um terceiro formato de erro. `ErroHttp` e o envelope `{ erro: { mensagem, codigo } }` vêm da Aula 08 e valem até o fim da trilha — inclusive na documentação Swagger da Aula 14. Um front que aprendeu a ler `erro.mensagem` uma vez lê para sempre.
+
 ### 2.4 Rotas com validação por middleware Zod
 
-Reaproveitando o padrão de validação da Aula 08, mas agora com o esquema parcial para `PUT`:
+Reaproveitando o padrão de validação da Aula 08, com o mesmo esquema completo nos dois pontos em que o `PUT` passa (middleware e service):
 
 ```js
 // unieventos-api/src/middlewares/validar.js
@@ -399,7 +463,7 @@ export function validar(esquema) {
 ```
 
 ```js
-// unieventos-api/src/routes/eventosRoutes.js
+// unieventos-api/src/routes/eventos.routes.js
 import { Router } from 'express'
 import { autenticar } from '../middlewares/autenticar.js'
 import { autorizar } from '../middlewares/autorizar.js'
@@ -412,7 +476,10 @@ const router = Router()
 router.get('/', eventosController.listar)
 router.get('/:id', eventosController.buscarPorId)
 router.post('/', autenticar, validar(esquemaEvento), eventosController.criar)
-router.put('/:id', autenticar, validar(esquemaEventoParcial), eventosController.atualizar)
+// PUT usa o esquema COMPLETO, o mesmo do POST — é o que o service revalida adiante.
+// O esquema parcial é do PATCH (Aula 09), não do PUT.
+router.put('/:id', autenticar, validar(esquemaEvento), eventosController.atualizar)
+router.patch('/:id', autenticar, validar(esquemaEventoParcial), eventosController.atualizarParcial)
 router.delete('/:id', autenticar, autorizar(['admin']), eventosController.remover)
 
 export default router
@@ -422,37 +489,33 @@ export default router
 
 ```js
 // src/services/eventosService.js
-import api from './api'
+import http from './http'
 
-export function listarEventos({ pagina = 1, limite = 10, busca = '', categoria = '' } = {}) {
-  return api
-    .get('/eventos', { params: { pagina, limite, busca, categoria } })
+export function listarEventos({ pagina = 1, porPagina = 10, busca = '', categoria = '' } = {}) {
+  return http
+    .get('/eventos', { params: { pagina, porPagina, busca, categoria } })
     .then((resposta) => resposta.data)
 }
 
 export function buscarEvento(id) {
-  return api.get(`/eventos/${id}`).then((resposta) => resposta.data)
+  return http.get(`/eventos/${id}`).then((resposta) => resposta.data)
 }
 
 export function criarEvento(evento) {
-  return api.post('/eventos', evento).then((resposta) => resposta.data)
+  return http.post('/eventos', evento).then((resposta) => resposta.data)
 }
 
 export function atualizarEvento(id, evento) {
-  return api.put(`/eventos/${id}`, evento).then((resposta) => resposta.data)
+  return http.put(`/eventos/${id}`, evento).then((resposta) => resposta.data)
 }
 
 export function removerEvento(id) {
-  return api.delete(`/eventos/${id}`)
+  return http.delete(`/eventos/${id}`)
 }
 ```
 
 > **💡 Dica**
 > Repare que cada função do service tem exatamente uma responsabilidade e um nome que espelha o contrato da seção 1. Ninguém que ler esse arquivo precisa saber que por trás existe Axios, interceptors ou token — e é exatamente esse esconderijo que a store vai explorar.
-
-## 🧩 Padrão de projeto em uso: Facade
-
-A camada `services/` do front é um **Facade** (padrão estrutural): oferece uma interface simples (`listarEventos()`, `criarEvento()`) escondendo a complexidade de configurar o Axios, montar query string, tratar cabeçalhos de autenticação e formatar a resposta. A store, os componentes e as views nunca chamam `api.get(...)` diretamente — eles conversam só com o Facade. Se amanhã trocarmos Axios por `fetch` nativo, ou a URL base da API mudar de estrutura, só o `services/` muda; store e telas continuam iguais. Voltaremos a esse mesmo princípio na Aula 12, quando o Adapter permitir trocar Express+MySQL por Supabase sem tocar no front.
 
 ## 4. Store Pinia: estado da lista, item atual e paginação
 
@@ -467,17 +530,17 @@ export const useEventosStore = defineStore('eventos', () => {
   const itemAtual = ref(null)
   const carregando = ref(false)
   const erro = ref(null)
-  const paginacao = ref({ pagina: 1, limite: 10, total: 0, totalPaginas: 0 })
+  const paginacao = ref({ pagina: 1, porPagina: 10, total: 0, totalPaginas: 0 })
 
-  async function carregar({ pagina = 1, limite = 10 } = {}) {
+  async function carregar({ pagina = 1, porPagina = 10 } = {}) {
     carregando.value = true
     erro.value = null
     try {
-      const resultado = await eventosService.listarEventos({ pagina, limite })
+      const resultado = await eventosService.listarEventos({ pagina, porPagina })
       lista.value = resultado.dados
       paginacao.value = resultado.paginacao
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Não foi possível carregar os eventos.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Não foi possível carregar os eventos.'
     } finally {
       carregando.value = false
     }
@@ -489,14 +552,14 @@ export const useEventosStore = defineStore('eventos', () => {
     try {
       const resultado = await eventosService.listarEventos({
         pagina,
-        limite: paginacao.value.limite,
+        porPagina: paginacao.value.porPagina,
         busca: termo,
         categoria,
       })
       lista.value = resultado.dados
       paginacao.value = resultado.paginacao
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Não foi possível buscar os eventos.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Não foi possível buscar os eventos.'
     } finally {
       carregando.value = false
     }
@@ -508,7 +571,7 @@ export const useEventosStore = defineStore('eventos', () => {
     try {
       itemAtual.value = await eventosService.buscarEvento(id)
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Evento não encontrado.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Evento não encontrado.'
     } finally {
       carregando.value = false
     }
@@ -525,7 +588,7 @@ export const useEventosStore = defineStore('eventos', () => {
       lista.value = [novoEvento, ...lista.value]
       return novoEvento
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Não foi possível criar o evento.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Não foi possível criar o evento.'
       throw e
     } finally {
       carregando.value = false
@@ -541,7 +604,7 @@ export const useEventosStore = defineStore('eventos', () => {
       if (indice !== -1) lista.value[indice] = eventoAtualizado
       return eventoAtualizado
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Não foi possível atualizar o evento.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Não foi possível atualizar o evento.'
       throw e
     } finally {
       carregando.value = false
@@ -555,7 +618,7 @@ export const useEventosStore = defineStore('eventos', () => {
       await eventosService.removerEvento(id)
       lista.value = lista.value.filter((e) => e.id !== Number(id))
     } catch (e) {
-      erro.value = e.response?.data?.erro ?? 'Não foi possível excluir o evento.'
+      erro.value = e.response?.data?.erro?.mensagem ?? 'Não foi possível excluir o evento.'
       throw e
     } finally {
       carregando.value = false
@@ -577,6 +640,143 @@ A store acima implementa a **pessimista** de propósito: cada ação (`criar`, `
 
 > **📌 Na prova**
 > Otimista = muda a tela antes de saber o resultado (rápido, mas exige lógica de desfazer). Pessimista = muda a tela só após confirmação do servidor (mais lento, mais seguro). Nesta disciplina, sempre pessimista.
+
+## 6. Upload de imagem do evento com Firebase Storage
+
+Escolhemos Firebase Storage (o front já tem o SDK do Firebase configurado desde a Aula 07/10) para o upload da imagem do evento.
+
+```js
+// src/services/storageService.js
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { auth } from './firebase'
+
+const storage = getStorage()
+
+export async function enviarImagemEvento(arquivo) {
+  if (!auth.currentUser) {
+    throw new Error('É preciso estar autenticado para enviar imagens.')
+  }
+
+  const nomeUnico = `${Date.now()}-${arquivo.name}`
+  const caminho = `eventos/${nomeUnico}`
+  const referencia = storageRef(storage, caminho)
+
+  await uploadBytes(referencia, arquivo)
+  return getDownloadURL(referencia)
+}
+```
+
+O trecho abaixo entra no `EventoFormView.vue` que você constrói no Passo 3 do Mão na massa — guarde-o para lá:
+
+```vue
+<!-- trecho a adicionar em EventoFormView.vue: campo de upload -->
+<script setup>
+// os mesmos imports do Passo 3, mais o serviço de storage
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useEventosStore } from '@/stores/eventosStore'
+import { enviarImagemEvento } from '@/services/storageService'
+
+const enviandoImagem = ref(false)
+
+async function aoSelecionarImagem(arquivos) {
+  // sem `multiple`, o v-file-input emite um File solto; com `multiple`, um array.
+  // Normalizar aqui evita o clássico "arquivo é undefined" em um dos dois casos.
+  const arquivo = Array.isArray(arquivos) ? arquivos[0] : arquivos
+  if (!arquivo) return
+
+  enviandoImagem.value = true
+  try {
+    form.value.imagemUrl = await enviarImagemEvento(arquivo)
+  } catch (e) {
+    erroSubmissao.value = 'Falha ao enviar imagem: ' + e.message
+  } finally {
+    enviandoImagem.value = false
+  }
+}
+</script>
+
+<template>
+  <!-- dentro do v-form, antes do botão de submit -->
+  <v-file-input
+    label="Imagem do evento"
+    accept="image/*"
+    prepend-icon="mdi-camera"
+    :loading="enviandoImagem"
+    @update:model-value="aoSelecionarImagem"
+  />
+  <v-img v-if="form.imagemUrl" :src="form.imagemUrl" max-height="200" class="mb-4" cover />
+</template>
+```
+
+> **💡 Dica**
+> A alternativa é usar `multer` no Express, recebendo o arquivo direto no back-end (`multipart/form-data`) e salvando em disco ou repassando para um storage. É uma escolha igualmente válida — inclusive mais simples de proteger, já que o upload passa pelos seus próprios middlewares de autenticação. A vantagem do Firebase Storage é tirar carga de rede do seu servidor: o arquivo vai direto do navegador para o Firebase, e sua API só recebe a URL final, pequena, no corpo do `POST`/`PUT`.
+
+## 7. Depuração ponta a ponta
+
+Quando o front manda uma requisição e algo dá errado, o fluxo de depuração é sempre o mesmo:
+
+1. **Aba Network do DevTools.** Filtre por Fetch/XHR, clique na requisição. Aba **Headers** mostra método, URL, status. Aba **Payload** (ou **Request**) mostra o corpo enviado. Aba **Response** mostra o corpo devolvido pelo servidor — é aqui que aparece a mensagem de erro do `tratadorErros`.
+2. **Reproduza em `curl`.** Copie a requisição do Network (botão direito → Copy → Copy as cURL) ou monte à mão:
+
+```bash
+curl -i http://localhost:3000/api/eventos \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "titulo": "Minicurso de Docker",
+    "descricao": "Introdução prática a containers",
+    "categoria": "minicurso",
+    "dataHora": "2026-12-10T14:00:00",
+    "local": "Laboratório 3",
+    "vagas": 30
+  }'
+```
+
+Isso isola o problema: se o `curl` reproduz o erro, o problema é no back-end (ou nos dados enviados). Se o `curl` funciona mas o front falha, o problema é no front (token não enviado, payload montado errado, CORS).
+
+3. **Leia os logs do servidor.** O terminal onde `unieventos-api` está rodando mostra qualquer `console.error` do `tratadorErros` e, se usar `morgan` ou similar, cada requisição recebida — confirme que ela chegou, com o método e caminho certos.
+
+### CORS: erros mais comuns e configuração correta
+
+CORS (Cross-Origin Resource Sharing) é uma proteção do **navegador**, não do servidor — ele bloqueia a resposta de chegar ao JavaScript da página quando origem (protocolo + domínio + porta) da página é diferente da origem da API, a menos que o servidor autorize explicitamente via cabeçalhos.
+
+Sintomas típicos no console do navegador:
+
+- `has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present` → o servidor não está usando `cors()`, ou está usando com `origin` que não bate com a URL do front.
+- `Request header field authorization is not allowed by Access-Control-Allow-Headers` → o servidor não liberou explicitamente o cabeçalho `Authorization`.
+- Requisição aparece como `OPTIONS` seguida de falha → é o *preflight* automático do navegador para métodos como `PUT`/`DELETE` ou cabeçalhos customizados; se o servidor não responde `200`/`204` a esse `OPTIONS`, o navegador cancela a requisição real.
+
+> **🔬 Investigue**
+> Com front e API rodando, abra a aba Network, filtre por `eventos` e edite um evento. Você verá **duas** requisições para a mesma URL: um `OPTIONS` e o `PUT`. Clique no `OPTIONS`: qual foi o status e quais cabeçalhos `Access-Control-Allow-*` vieram na resposta? Agora saia da conta e recarregue a lista (um `GET` sem `Authorization`): apareceu algum `OPTIONS` antes dele? A diferença é a definição de "requisição simples" do CORS — `GET` sem cabeçalhos fora da lista segura dispensa o preflight; `PUT` com `Authorization` e `Content-Type: application/json` não.
+
+Configuração correta para o UniEventos:
+
+```js
+// unieventos-api/src/servidor.js (trecho)
+import express from 'express'
+import cors from 'cors'
+
+const app = express()
+
+app.use(
+  cors({
+    origin: process.env.FRONT_URL ?? 'http://localhost:5173',
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+)
+
+app.use(express.json())
+```
+
+> **⚠️ Atenção**
+> `origin: '*'` (liberar qualquer origem) parece resolver tudo rápido, mas **não funciona junto com `credentials: true`** — o navegador rejeita essa combinação por especificação. Como o UniEventos usa `Authorization` (não cookies), `credentials: true` nem é estritamente necessário aqui, mas vale registrar: se um dia usar cookies de sessão, `origin` precisa ser um domínio explícito, nunca `*`.
+
+## 🧩 Padrão de projeto em uso — Facade
+
+A camada `services/` do front é um **Facade** (padrão estrutural): oferece uma interface simples (`listarEventos()`, `criarEvento()`) escondendo a complexidade de configurar o Axios, montar query string, tratar cabeçalhos de autenticação e formatar a resposta. A store, os componentes e as views nunca chamam `http.get(...)` diretamente — eles conversam só com o Facade. Se amanhã trocarmos Axios por `fetch` nativo, ou a URL base da API mudar de estrutura, só o `services/` muda; store e telas continuam iguais. Voltaremos a esse mesmo princípio na Aula 12, quando o Adapter permitir trocar Express+MySQL por Supabase sem tocar no front.
 
 ## 💻 Mão na massa — telas de CRUD completas
 
@@ -604,8 +804,8 @@ const snackbar = ref({ aberto: false, texto: '', cor: 'success' })
 const cabecalhos = [
   { title: 'Título', key: 'titulo' },
   { title: 'Categoria', key: 'categoria' },
-  { title: 'Data', key: 'data_hora' },
-  { title: 'Vagas', key: 'vagas_disponiveis' },
+  { title: 'Data', key: 'dataHora' },
+  { title: 'Vagas', key: 'vagasDisponiveis' },
   { title: 'Ações', key: 'acoes', sortable: false },
 ]
 
@@ -638,7 +838,8 @@ function abrirNovo() {
 }
 
 function abrirEdicao(evento) {
-  router.push({ name: 'evento-form', params: { id: evento.id } })
+  // rota DIFERENTE da de criação: 'evento-form' é /eventos/novo, sem :id
+  router.push({ name: 'evento-form-editar', params: { id: evento.id } })
 }
 
 function pedirConfirmacaoExclusao(evento) {
@@ -690,8 +891,8 @@ async function confirmarExclusao() {
       :loading="eventosStore.carregando"
       item-value="id"
     >
-      <template #item.data_hora="{ item }">
-        {{ formatarData(item.data_hora) }}
+      <template #item.dataHora="{ item }">
+        {{ formatarData(item.dataHora) }}
       </template>
 
       <template #item.acoes="{ item }">
@@ -775,6 +976,11 @@ A mesma tela serve para os dois casos: a rota `/eventos/novo` não tem `:id`, e 
 ```js
 // src/router/index.js — trecho das rotas de evento (adicionar ao array de routes)
 {
+  path: '/eventos',
+  name: 'eventos-lista',
+  component: () => import('@/views/EventosListaView.vue'),
+},
+{
   path: '/eventos/novo',
   name: 'evento-form',
   component: () => import('@/views/EventoFormView.vue'),
@@ -811,10 +1017,10 @@ const form = ref({
   titulo: '',
   descricao: '',
   categoria: 'palestra',
-  data_hora: '',
+  dataHora: '',
   local: '',
   vagas: 1,
-  imagem_url: '',
+  imagemUrl: '',
 })
 
 const categorias = [
@@ -838,10 +1044,10 @@ onMounted(async () => {
         titulo: evento.titulo,
         descricao: evento.descricao,
         categoria: evento.categoria,
-        data_hora: evento.data_hora?.slice(0, 16), // ISO -> formato do input datetime-local
+        dataHora: evento.dataHora?.slice(0, 16), // ISO -> formato do input datetime-local
         local: evento.local,
         vagas: evento.vagas,
-        imagem_url: evento.imagem_url ?? '',
+        imagemUrl: evento.imagemUrl ?? '',
       }
     }
   }
@@ -880,10 +1086,10 @@ async function aoSubmeter() {
       <v-text-field v-model="form.titulo" label="Título" :rules="[regraObrigatorio]" />
       <v-textarea v-model="form.descricao" label="Descrição" :rules="[regraObrigatorio]" />
       <v-select v-model="form.categoria" :items="categorias" label="Categoria" />
-      <v-text-field v-model="form.data_hora" type="datetime-local" label="Data e hora" :rules="[regraObrigatorio]" />
+      <v-text-field v-model="form.dataHora" type="datetime-local" label="Data e hora" :rules="[regraObrigatorio]" />
       <v-text-field v-model="form.local" label="Local" :rules="[regraObrigatorio]" />
       <v-text-field v-model.number="form.vagas" type="number" label="Vagas" :rules="[regraObrigatorio, regraVagasPositiva]" />
-      <v-text-field v-model="form.imagem_url" label="URL da imagem (opcional)" />
+      <v-text-field v-model="form.imagemUrl" label="URL da imagem (opcional)" />
 
       <v-btn type="submit" color="primary" :loading="salvando">
         {{ ehEdicao ? 'Salvar alterações' : 'Criar evento' }}
@@ -895,136 +1101,41 @@ async function aoSubmeter() {
 ```
 
 > **⚠️ Atenção**
-> `data_hora?.slice(0, 16)` funciona porque o back-end devolve um ISO 8601 completo (`2026-12-01T19:00:00.000Z`) e o input `datetime-local` espera `AAAA-MM-DDTHH:mm`. É um detalhe de formato pequeno, mas quebra silenciosamente se esquecido — o campo simplesmente aparece vazio.
+> `dataHora?.slice(0, 16)` funciona porque o back-end devolve um ISO 8601 completo (`2026-12-01T19:00:00.000Z`) e o input `datetime-local` espera `AAAA-MM-DDTHH:mm`. É um detalhe de formato pequeno, mas quebra silenciosamente se esquecido — o campo simplesmente aparece vazio.
 
-## 6. Upload de imagem do evento com Firebase Storage
+### Como testar
 
-Escolhemos Firebase Storage (o front já tem o SDK do Firebase configurado desde a Aula 07/10) para o upload da imagem do evento.
+Com o MySQL, a `unieventos-api` e o `unieventos-web` rodando, feche o ciclo nas duas pontas.
 
-```js
-// src/services/storageService.js
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { auth } from './firebase'
-
-const storage = getStorage()
-
-export async function enviarImagemEvento(arquivo) {
-  if (!auth.currentUser) {
-    throw new Error('É preciso estar autenticado para enviar imagens.')
-  }
-
-  const nomeUnico = `${Date.now()}-${arquivo.name}`
-  const caminho = `eventos/${nomeUnico}`
-  const referencia = storageRef(storage, caminho)
-
-  await uploadBytes(referencia, arquivo)
-  return getDownloadURL(referencia)
-}
-```
-
-```vue
-<!-- trecho a adicionar em EventoFormView.vue: campo de upload -->
-<script setup>
-// imports que o componente já tinha no Passo 3, mais o serviço de storage
-import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useEventosStore } from '@/stores/eventosStore'
-import { enviarImagemEvento } from '@/services/storageService'
-
-const enviandoImagem = ref(false)
-
-async function aoSelecionarImagem(arquivos) {
-  const arquivo = arquivos?.[0]
-  if (!arquivo) return
-
-  enviandoImagem.value = true
-  try {
-    form.value.imagem_url = await enviarImagemEvento(arquivo)
-  } catch (e) {
-    erroSubmissao.value = 'Falha ao enviar imagem: ' + e.message
-  } finally {
-    enviandoImagem.value = false
-  }
-}
-</script>
-
-<template>
-  <!-- dentro do v-form, antes do botão de submit -->
-  <v-file-input
-    label="Imagem do evento"
-    accept="image/*"
-    prepend-icon="mdi-camera"
-    :loading="enviandoImagem"
-    @update:model-value="aoSelecionarImagem"
-  />
-  <v-img v-if="form.imagem_url" :src="form.imagem_url" max-height="200" class="mb-4" cover />
-</template>
-```
-
-> **💡 Dica**
-> A alternativa é usar `multer` no Express, recebendo o arquivo direto no back-end (`multipart/form-data`) e salvando em disco ou repassando para um storage. É uma escolha igualmente válida — inclusive mais simples de proteger, já que o upload passa pelos seus próprios middlewares de autenticação. A vantagem do Firebase Storage é tirar carga de rede do seu servidor: o arquivo vai direto do navegador para o Firebase, e sua API só recebe a URL final, pequena, no corpo do `POST`/`PUT`.
-
-## 7. Depuração ponta a ponta
-
-Quando o front manda uma requisição e algo dá errado, o fluxo de depuração é sempre o mesmo:
-
-1. **Aba Network do DevTools.** Filtre por Fetch/XHR, clique na requisição. Aba **Headers** mostra método, URL, status. Aba **Payload** (ou **Request**) mostra o corpo enviado. Aba **Response** mostra o corpo devolvido pelo servidor — é aqui que aparece a mensagem de erro do `tratadorErros`.
-2. **Reproduza em `curl`.** Copie a requisição do Network (botão direito → Copy → Copy as cURL) ou monte à mão:
+Primeiro só a API:
 
 ```bash
-curl -i http://localhost:3000/api/eventos \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{
-    "titulo": "Minicurso de Docker",
-    "descricao": "Introdução prática a containers",
-    "categoria": "minicurso",
-    "data_hora": "2026-12-10T14:00:00",
-    "local": "Laboratório 3",
-    "vagas": 30
-  }'
+curl -s "http://localhost:3000/api/eventos?pagina=1&porPagina=2" | jq
 ```
 
-Isso isola o problema: se o `curl` reproduz o erro, o problema é no back-end (ou nos dados enviados). Se o `curl` funciona mas o front falha, o problema é no front (token não enviado, payload montado errado, CORS).
+Resultado esperado:
 
-3. **Leia os logs do servidor.** O terminal onde `unieventos-api` está rodando mostra qualquer `console.error` do `tratadorErros` e, se usar `morgan` ou similar, cada requisição recebida — confirme que ela chegou, com o método e caminho certos.
-
-### CORS: erros mais comuns e configuração correta
-
-CORS (Cross-Origin Resource Sharing) é uma proteção do **navegador**, não do servidor — ele bloqueia a resposta de chegar ao JavaScript da página quando origem (protocolo + domínio + porta) da página é diferente da origem da API, a menos que o servidor autorize explicitamente via cabeçalhos.
-
-Sintomas típicos no console do navegador:
-
-- `has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present` → o servidor não está usando `cors()`, ou está usando com `origin` que não bate com a URL do front.
-- `Request header field authorization is not allowed by Access-Control-Allow-Headers` → o servidor não liberou explicitamente o cabeçalho `Authorization`.
-- Requisição aparece como `OPTIONS` seguida de falha → é o *preflight* automático do navegador para métodos como `PUT`/`DELETE` ou cabeçalhos customizados; se o servidor não responde `200`/`204` a esse `OPTIONS`, o navegador cancela a requisição real.
-
-> **🔬 Investigue**
-> Com front e API rodando, abra a aba Network, filtre por `eventos` e edite um evento. Você verá **duas** requisições para a mesma URL: um `OPTIONS` e o `PUT`. Clique no `OPTIONS`: qual foi o status e quais cabeçalhos `Access-Control-Allow-*` vieram na resposta? Agora saia da conta e recarregue a lista (um `GET` sem `Authorization`): apareceu algum `OPTIONS` antes dele? A diferença é a definição de "requisição simples" do CORS — `GET` sem cabeçalhos fora da lista segura dispensa o preflight; `PUT` com `Authorization` e `Content-Type: application/json` não.
-
-Configuração correta para o UniEventos:
-
-```js
-// unieventos-api/src/servidor.js (trecho)
-import express from 'express'
-import cors from 'cors'
-
-const app = express()
-
-app.use(
-  cors({
-    origin: process.env.FRONT_URL ?? 'http://localhost:5173',
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-)
-
-app.use(express.json())
+```json
+{
+  "dados": [
+    { "id": 1, "titulo": "Semana da Computação", "categoria": "palestra", "dataHora": "2026-12-01T19:00:00.000Z", "local": "Auditório Central", "vagas": 80, "vagasDisponiveis": 62, "imagemUrl": null }
+  ],
+  "paginacao": { "pagina": 1, "porPagina": 2, "total": 8, "totalPaginas": 4 }
+}
 ```
 
-> **⚠️ Atenção**
-> `origin: '*'` (liberar qualquer origem) parece resolver tudo rápido, mas **não funciona junto com `credentials: true`** — o navegador rejeita essa combinação por especificação. Como o UniEventos usa `Authorization` (não cookies), `credentials: true` nem é estritamente necessário aqui, mas vale registrar: se um dia usar cookies de sessão, `origin` precisa ser um domínio explícito, nunca `*`.
+Repare em três coisas: as chaves em **camelCase**, o `vagasDisponiveis` **derivado** pelo `LEFT JOIN` (não guardado em coluna) e o envelope `{ dados, paginacao }`.
+
+Depois o CRUD pela tela, na ordem:
+
+1. **Listar** — `/eventos` mostra a tabela paginada; digitar na busca espera 400 ms e recarrega; ir para a página 2 dispara nova requisição (confira na aba Network que `?pagina=2` sai de verdade — paginação é no servidor).
+2. **Criar** — "Novo evento" abre `/eventos/novo` em modo criação; salvar um evento válido volta para a lista **com o evento novo no topo**.
+3. **Editar** — o lápis abre `/eventos/:id/editar` **já preenchido** (se abrir vazio, o nome da rota está errado: `evento-form-editar`, não `evento-form`); alterar o título e salvar reflete na tabela.
+4. **Excluir** — a lixeira (visível só para admin) pede confirmação e remove a linha; em um evento com inscritos, o snackbar mostra a mensagem de `409` vinda de `erro.mensagem`.
+5. **Erro de validação** — envie um evento com `vagas: 0`: a resposta é `422`, e a mensagem que aparece na tela é a do campo, não um "Erro interno".
+6. **Sem token** — deslogue e tente criar pelo `curl`: `401`, e o front redireciona para `/login`.
+
+Se os seis passam, front e back estão falando exatamente o contrato da seção 1.
 
 ## 🧪 Laboratório
 
@@ -1043,13 +1154,23 @@ curl -i -X DELETE http://localhost:3000/api/eventos/7 -H "Authorization: Bearer 
 curl -i -X DELETE http://localhost:3000/api/eventos/7 -H "Authorization: Bearer $TOKEN_ADMIN"
 ```
 
-**A2.** O front chama `GET /api/eventos?pagina=0&limite=500`. Que valores de `paginacao.pagina` e `paginacao.limite` voltam na resposta? Aponte a linha de `eventosService.listar` (back-end) que decide cada um.
+Resultado esperado: (a) `401`, barrado pelo `autenticar` antes de qualquer regra; (b) `403`, barrado pelo `autorizar(['admin'])`; (c) `409` com `{ "erro": { "mensagem": "Não é possível excluir evento com inscritos.", "codigo": "CONFLITO" } }`, vindo do service.
 
-**A3.** Verdadeiro ou falso, com justificativa de uma linha: "No Express 5, o controller `criar` precisa de `try/catch` para que um `ZodError` lançado dentro de `eventosService.criar` chegue ao `tratadorErros`."
+**A2.** O front chama `GET /api/eventos?pagina=0&porPagina=500`. Que valores de `paginacao.pagina` e `paginacao.porPagina` voltam na resposta? Aponte a linha de `eventosService.listar` (back-end) que decide cada um.
 
-**A4.** Em duas linhas: por que `EventoFormView.vue` faz `evento.data_hora?.slice(0, 16)` antes de preencher o formulário? O que aparece no campo se você remover o `.slice`?
+Resultado esperado: `pagina: 1` (o `Math.max(1, …)` corrige o zero) e `porPagina: 50` (o `Math.min(50, …)` corta o excesso) — nenhum erro é devolvido, os valores são apenas normalizados.
+
+**A3.** Verdadeiro ou falso, com justificativa de uma linha: "No Express 5, o controller `criar` precisa de `try/catch` para que um `ZodError` lançado dentro de `eventosService.criar` chegue ao `tratadorDeErros`."
+
+Resultado esperado: falso — o Express 5 encaminha automaticamente a rejeição de um handler `async` para o middleware de erro; o `try/catch` seria redundante (e, se engolisse o erro sem `next(err)`, faria a requisição travar sem resposta).
+
+**A4.** Em duas linhas: por que `EventoFormView.vue` faz `evento.dataHora?.slice(0, 16)` antes de preencher o formulário? O que aparece no campo se você remover o `.slice`?
+
+Resultado esperado: o back-end devolve ISO completo (`2026-12-01T19:00:00.000Z`) e o `datetime-local` só aceita `AAAA-MM-DDTHH:mm`; sem o `.slice`, o navegador descarta o valor inteiro e o campo aparece **vazio**, sem aviso no console.
 
 **A5.** Na store, `remover(id)` termina com `lista.value.filter((e) => e.id !== Number(id))`. Se alguém trocar por `e.id !== id` e o `id` chegar como a string `'3'` vinda de `route.params`, o que o usuário vê na tela logo depois de excluir? E depois de apertar F5? Explique a diferença.
+
+Resultado esperado: com `!==` estrito entre número e string a comparação nunca é falsa, então a linha **continua na tabela** mesmo depois do `204` do servidor; após o F5 ela some, porque a lista é recarregada do banco — o clássico "some quando recarrego", sinal de estado local dessincronizado do servidor.
 
 ### Nível B — Aplicação
 
@@ -1065,7 +1186,7 @@ Cinco linhas — uma por endpoint — método, caminho, autenticação. Corpo e 
 
 **B2.** Back-end completo. Implemente `controller → service → repository` da sua entidade principal com validação zod, paginação e ao menos uma regra de negócio (ex.: não aceitar valor negativo, não excluir se houver dependência).
 
-Resultado esperado: os 5 endpoints respondem no `curl` com os status do contrato; um `POST` com campo inválido devolve `400` com `detalhes` apontando o campo; `?pagina=2&limite=5` muda a fatia devolvida.
+Resultado esperado: os 5 endpoints respondem no `curl` com os status do contrato; um `POST` com campo inválido devolve `400` com `detalhes` apontando o campo; `?pagina=2&porPagina=5` muda a fatia devolvida.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1105,14 +1226,14 @@ Depois do teste de CORS, não esqueça de voltar o `origin` correto — é fáci
 
 ### Nível C — Desafio em sala
 
-**C1.** Inscrição atômica, ponta a ponta. A função `decrementarVagaEmTransacao` do repositório (seção 2.1) abre a transação, trava a linha com `FOR UPDATE` e confere as vagas — mas ainda não insere a inscrição. Complete-a e exponha o recurso: `POST /api/eventos/:id/inscricoes` (autenticado) responde `201` com a inscrição, `404` se o evento não existe e `409` se não há vagas; no front, um botão "Inscrever-se" que some quando `vagas_disponiveis` chega a zero. Para fechar, prove a atomicidade: com um evento de 5 vagas, dispare 20 requisições simultâneas e confira no banco quantas inscrições existem.
+**C1.** Inscrição atômica, ponta a ponta. A função `verificarVagaEInscrever` do repositório (seção 2.1) abre a transação, trava a linha com `FOR UPDATE` e confere as vagas — mas ainda não insere a inscrição. Complete-a e exponha o recurso: `POST /api/eventos/:id/inscricoes` (autenticado) responde `201` com a inscrição, `404` se o evento não existe e `409` se não há vagas; no front, um botão "Inscrever-se" que some quando `vagasDisponiveis` chega a zero. Para fechar, prove a atomicidade: com um evento de 5 vagas, dispare 20 requisições simultâneas e confira no banco quantas inscrições existem.
 
 Resultado esperado: `SELECT COUNT(*) FROM inscricoes WHERE evento_id = ?` devolve exatamente 5, e as outras 15 respostas foram `409`.
 
 <details markdown="1">
 <summary>Dica</summary>
 
-O `INSERT INTO inscricoes (evento_id, usuario_uid)` precisa acontecer **entre** o `SELECT ... FOR UPDATE` e o `commit()`, usando a mesma `conexao`. No service, converta `SEM_VAGAS` em erro com `status = 409` e `EVENTO_NAO_ENCONTRADO` em `404`. Para as 20 requisições simultâneas, um script Node com `Promise.all(Array.from({ length: 20 }, () => fetch(url, opcoes)))` basta — use tokens de usuários diferentes, ou a `UNIQUE (evento_id, usuario_uid)` vai barrar antes da regra de vagas.
+O `INSERT INTO inscricoes (evento_id, usuario_uid)` precisa acontecer **entre** o `SELECT ... FOR UPDATE` e o `commit()`, usando a mesma `conexao`. Os erros já saem no formato certo: `erroNaoEncontrado()` vira `404` e o `ErroHttp(409, …, 'SEM_VAGAS')` vira `409` no `tratadorDeErros`. Para as 20 requisições simultâneas, um script Node com `Promise.all(Array.from({ length: 20 }, () => fetch(url, opcoes)))` basta — use tokens de usuários diferentes, ou a `UNIQUE (evento_id, usuario_uid)` vai barrar antes da regra de vagas.
 </details>
 
 ## 🏆 Desafios
@@ -1179,8 +1300,8 @@ O botão de editar só aparece para quem está logado, e o de excluir só para a
 **Critérios de pronto**
 
 - A tabela `eventos` ganha a coluna `criado_por` (uid do Firebase), preenchida no `POST` a partir do token — nunca a partir do corpo da requisição.
-- `PUT` e `DELETE` feitos por quem não é dono nem admin respondem `403` com `{ "erro": "..." }`; a regra mora no service, não na rota.
-- O contrato da seção 1 e a store são atualizados: a resposta de `GET` inclui `criado_por`, e a tela só mostra os botões para o dono ou para admin.
+- `PUT` e `DELETE` feitos por quem não é dono nem admin respondem `403` com `{ "erro": { "mensagem": "...", "codigo": "..." } }`; a regra mora no service, não na rota.
+- O contrato da seção 1 e a store são atualizados: a resposta de `GET` inclui `criadoPor` (o `linhaParaEvento` ganha mais uma linha), e a tela só mostra os botões para o dono ou para admin.
 - Um script `docs/teste-permissoes.sh` com quatro chamadas `curl` (dono edita, outro usuário tenta editar, admin exclui, anônimo tenta excluir) e o status esperado em comentário ao lado de cada uma.
 
 <details markdown="1">
@@ -1201,7 +1322,7 @@ Tags: mysql, performance, api, banco-de-dados
 
 - Um script `scripts/semear.js` insere 100.000 eventos em lotes (`INSERT ... VALUES (...), (...)`) em menos de um minuto.
 - Uma tabela no README compara o tempo de resposta (aba Network ou `curl -w '%{time_total}'`) de `?pagina=1`, `?pagina=5000` e `?pagina=10000`, antes e depois.
-- `GET /api/eventos?depois=<cursor>&limite=10` devolve os próximos 10 eventos em ordem de `data_hora, id` e um campo `proximoCursor` (`null` na última página).
+- `GET /api/eventos?depois=<cursor>&porPagina=10` devolve os próximos 10 eventos em ordem de `dataHora, id` e um campo `proximoCursor` (`null` na última página).
 - O `EXPLAIN` das duas consultas está colado no README, com uma frase apontando a diferença nas colunas `rows` e `type`.
 - A tela de listagem continua funcionando no modo antigo (`pagina`) — o novo modo é adicional, e a store escolhe um deles.
 
@@ -1218,7 +1339,7 @@ Tags: mysql, performance, api, banco-de-dados
 
 | Sintoma | Causa | Solução |
 |---|---|---|
-| Formulário de edição abre vazio | Formato de `data_hora` incompatível com `datetime-local` | Usar `.slice(0, 16)` no ISO recebido antes de atribuir ao `v-model` |
+| Formulário de edição abre vazio | Formato de `dataHora` incompatível com `datetime-local` | Usar `.slice(0, 16)` no ISO recebido antes de atribuir ao `v-model` |
 | Lista não atualiza após criar/editar | Store otimista incompleta, ou índice errado ao substituir item | Conferir `findIndex` comparando tipos (`Number(id)` × `item.id`) |
 | Erro 400 sem detalhe visível na tela | Front não está lendo `e.response.data.erro` | Padronizar leitura do erro em todo `catch` da store |
 | CORS bloqueia só `PUT`/`DELETE`, `GET` funciona | Preflight `OPTIONS` não tratado — normalmente falta de `cors()` global antes das rotas | Garantir `app.use(cors(...))` antes de `app.use('/api/eventos', ...)` |
@@ -1237,7 +1358,7 @@ No seu projeto autoral: implemente o CRUD completo (os 5 endpoints do contrato) 
 - [ ] Contrato de API documentado em tabela para pelo menos duas entidades.
 - [ ] Back-end com `controller → service → repository`, validação zod e ao menos uma regra de negócio por entidade.
 - [ ] Paginação e busca por query string funcionando no endpoint de listagem.
-- [ ] `services/` do front alinhado ao contrato, sem chamadas diretas a `api.get/post/...` fora dessa camada.
+- [ ] `services/` do front alinhado ao contrato, sem chamadas diretas a `http.get/post/...` fora dessa camada.
 - [ ] Store Pinia com `lista`, `itemAtual`, `carregando`, `erro`, `paginacao` e atualização pessimista.
 - [ ] Telas de listagem (busca + paginação), formulário único (criar/editar) e diálogo de confirmação de exclusão.
 - [ ] Upload de imagem funcionando (Firebase Storage ou `multer`) em pelo menos uma entidade.
