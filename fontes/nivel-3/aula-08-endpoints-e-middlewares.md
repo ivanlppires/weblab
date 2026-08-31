@@ -171,7 +171,7 @@ export const eventos = [
     titulo: 'Semana Acadêmica de Computação',
     descricao: 'Palestras e minicursos sobre o mercado de tecnologia.',
     categoria: 'palestra',
-    dataHora: '2026-10-15T19:00:00',
+    dataHora: '2030-10-15T19:00:00',
     local: 'Auditório FACET',
     vagas: 80,
     imagemUrl: 'https://picsum.photos/seed/semana-computacao/400/240',
@@ -181,7 +181,7 @@ export const eventos = [
     titulo: 'Minicurso de Vue 3',
     descricao: 'Introdução prática ao framework Vue com Composition API.',
     categoria: 'minicurso',
-    dataHora: '2026-10-20T14:00:00',
+    dataHora: '2030-10-20T14:00:00',
     local: 'Laboratório 3',
     vagas: 30,
     imagemUrl: 'https://picsum.photos/seed/minicurso-vue/400/240',
@@ -191,7 +191,7 @@ export const eventos = [
     titulo: 'Workshop de Firebase e Express',
     descricao: 'Construindo uma API real do zero.',
     categoria: 'workshop',
-    dataHora: '2026-10-28T19:30:00',
+    dataHora: '2030-10-28T19:30:00',
     local: 'Laboratório 1',
     vagas: 25,
     imagemUrl: 'https://picsum.photos/seed/workshop-firebase/400/240',
@@ -775,7 +775,7 @@ Content-Type: application/json
 {
   "titulo": "Palestra de Segurança da Informação",
   "categoria": "palestra",
-  "dataHora": "2026-11-05T19:00:00",
+  "dataHora": "2030-11-05T19:00:00",
   "local": "Auditório FACET",
   "vagas": 60
 }
@@ -796,7 +796,7 @@ Content-Type: application/json
 {
   "titulo": "Semana Acadêmica de Computação — atualizada",
   "categoria": "palestra",
-  "dataHora": "2026-10-16T19:00:00",
+  "dataHora": "2030-10-16T19:00:00",
   "local": "Auditório FACET",
   "vagas": 100
 }
@@ -907,7 +907,7 @@ Resultado esperado:
 ```json
 {
   "dados": [
-    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2026-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120 }
+    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2030-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120 }
   ],
   "paginacao": { "pagina": 1, "porPagina": 2, "total": 3 }
 }
@@ -1167,7 +1167,7 @@ Total: **10,0 pontos**.
 
 **Formato de entrega.** Link do repositório Git (GitHub, GitLab ou similar), **público ou com acesso liberado para o professor**, enviado via **SIGAA**, no campo de entrega da Avaliação 2. O `README.md` do repositório deve conter: nome do projeto autoral, instruções de instalação (`npm install`, `npm run dev`) e uma breve descrição do domínio escolhido.
 
-**Prazo.** Até **o prazo do cronograma da trilha, 23h59** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), horário de Brasília. O SIGAA registra o horário da submissão — entregas após o prazo entram na política de atraso abaixo.
+**Prazo.** Até 23h59 do prazo publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)), horário de Brasília. O SIGAA registra o horário da submissão — entregas após o prazo entram na política de atraso abaixo.
 
 **Política de atraso.** Cada 24h de atraso desconta 1,0 ponto da nota final da avaliação, até o limite de 5 dias corridos; após esse prazo, a atividade recebe nota zero, salvo justificativa formal (atestado médico ou similar) protocolada junto à coordenação.
 

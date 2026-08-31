@@ -346,7 +346,7 @@ Antes do HTML5, tudo era `<div>`. O resultado era a chamada *div soup*: código 
     <article>
       <header>
         <h2>Título do artigo</h2>
-        <p>Publicado em <time datetime="2027-10-14">14 de outubro</time></p>
+        <p>Publicado em <time datetime="2030-10-14">14 de outubro</time></p>
       </header>
       <section>
         <h3>Primeira seção</h3>

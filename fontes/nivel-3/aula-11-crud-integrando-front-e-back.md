@@ -64,7 +64,7 @@ Query string: `?pagina=1&porPagina=10&busca=semana&categoria=palestra`
       "titulo": "Semana da Computação",
       "descricao": "Palestras e minicursos de tecnologia",
       "categoria": "palestra",
-      "dataHora": "2026-12-01T19:00:00.000Z",
+      "dataHora": "2030-12-01T19:00:00.000Z",
       "local": "Auditório Central",
       "vagas": 80,
       "vagasDisponiveis": 62,
@@ -89,7 +89,7 @@ Status: `200 OK`.
   "titulo": "Semana da Computação",
   "descricao": "Palestras e minicursos de tecnologia",
   "categoria": "palestra",
-  "dataHora": "2026-12-01T19:00:00",
+  "dataHora": "2030-12-01T19:00:00",
   "local": "Auditório Central",
   "vagas": 80,
   "imagemUrl": "https://storage.unieventos.dev/eventos/semana-computacao.jpg"
@@ -312,7 +312,7 @@ export const esquemaEvento = z.object({
   dataHora: z
     .string()
     .datetime({ offset: true, message: 'Data e hora em formato ISO inválido' })
-    .or(z.string().min(1)) // aceita também "2026-12-01T19:00:00" sem offset
+    .or(z.string().min(1)) // aceita também "2030-12-01T19:00:00" sem offset
     .refine((valor) => !Number.isNaN(Date.parse(valor)), 'Data e hora inválidas')
     .refine((valor) => new Date(valor).getTime() > Date.now(), 'A data do evento não pode estar no passado'),
   local: z.string().trim().min(3, 'Local precisa ter ao menos 3 caracteres'),
@@ -728,7 +728,7 @@ curl -i http://localhost:3000/api/eventos \
     "titulo": "Minicurso de Docker",
     "descricao": "Introdução prática a containers",
     "categoria": "minicurso",
-    "dataHora": "2026-12-10T14:00:00",
+    "dataHora": "2030-12-10T14:00:00",
     "local": "Laboratório 3",
     "vagas": 30
   }'
@@ -1101,7 +1101,7 @@ async function aoSubmeter() {
 ```
 
 > **⚠️ Atenção**
-> `dataHora?.slice(0, 16)` funciona porque o back-end devolve um ISO 8601 completo (`2026-12-01T19:00:00.000Z`) e o input `datetime-local` espera `AAAA-MM-DDTHH:mm`. É um detalhe de formato pequeno, mas quebra silenciosamente se esquecido — o campo simplesmente aparece vazio.
+> `dataHora?.slice(0, 16)` funciona porque o back-end devolve um ISO 8601 completo (`2030-12-01T19:00:00.000Z`) e o input `datetime-local` espera `AAAA-MM-DDTHH:mm`. É um detalhe de formato pequeno, mas quebra silenciosamente se esquecido — o campo simplesmente aparece vazio.
 
 ### Como testar
 
@@ -1118,7 +1118,7 @@ Resultado esperado:
 ```json
 {
   "dados": [
-    { "id": 1, "titulo": "Semana da Computação", "categoria": "palestra", "dataHora": "2026-12-01T19:00:00.000Z", "local": "Auditório Central", "vagas": 80, "vagasDisponiveis": 62, "imagemUrl": null }
+    { "id": 1, "titulo": "Semana da Computação", "categoria": "palestra", "dataHora": "2030-12-01T19:00:00.000Z", "local": "Auditório Central", "vagas": 80, "vagasDisponiveis": 62, "imagemUrl": null }
   ],
   "paginacao": { "pagina": 1, "porPagina": 2, "total": 8, "totalPaginas": 4 }
 }
@@ -1166,7 +1166,7 @@ Resultado esperado: falso — o Express 5 encaminha automaticamente a rejeição
 
 **A4.** Em duas linhas: por que `EventoFormView.vue` faz `evento.dataHora?.slice(0, 16)` antes de preencher o formulário? O que aparece no campo se você remover o `.slice`?
 
-Resultado esperado: o back-end devolve ISO completo (`2026-12-01T19:00:00.000Z`) e o `datetime-local` só aceita `AAAA-MM-DDTHH:mm`; sem o `.slice`, o navegador descarta o valor inteiro e o campo aparece **vazio**, sem aviso no console.
+Resultado esperado: o back-end devolve ISO completo (`2030-12-01T19:00:00.000Z`) e o `datetime-local` só aceita `AAAA-MM-DDTHH:mm`; sem o `.slice`, o navegador descarta o valor inteiro e o campo aparece **vazio**, sem aviso no console.
 
 **A5.** Na store, `remover(id)` termina com `lista.value.filter((e) => e.id !== Number(id))`. Se alguém trocar por `e.id !== id` e o `id` chegar como a string `'3'` vinda de `route.params`, o que o usuário vê na tela logo depois de excluir? E depois de apertar F5? Explique a diferença.
 

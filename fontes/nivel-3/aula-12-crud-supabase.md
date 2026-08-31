@@ -330,7 +330,7 @@ const { data: novoEvento, error: erroInsert } = await supabase
     titulo: 'Minicurso de Docker',
     descricao: 'Introdução prática a containers',
     categoria: 'minicurso',
-    data_hora: '2026-12-10T14:00:00-04:00',
+    data_hora: '2030-12-10T14:00:00-04:00',
     local: 'Laboratório 3',
     vagas: 30,
     usuario_id: (await supabase.auth.getUser()).data.user.id,

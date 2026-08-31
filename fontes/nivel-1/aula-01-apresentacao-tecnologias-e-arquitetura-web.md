@@ -56,31 +56,33 @@ A palavra-chave é *front-end*: tudo que roda no navegador do usuário. Você va
 
 As três avaliações incidem sobre **o mesmo site**: a Avaliação 1 constrói a estrutura em HTML, a Avaliação 2 aplica o design com CSS, a Avaliação 3 acrescenta o comportamento com JavaScript. Por isso é importante escolher hoje um tema que você aguente desenvolver até o fim do semestre.
 
-### 1.3 Cronograma e prazos
+### 1.3 A sequência das aulas
 
-| Aula | Data | Tema |
-|---|---|---|
-| 01 | 11/08/2026 | Apresentação da disciplina; tecnologias e arquitetura da Web |
-| 02 | 18/08/2026 | Introdução ao HTML: estrutura, textos, links, tabelas |
-| 03 | 25/08/2026 | Introdução ao formulário |
-| 04 | 01/09/2026 | Formulário, mídias e listas |
-| 05 | 08/09/2026 | Elementos HTML para layout e introdução ao CSS |
-| 06 | 15/09/2026 | CSS: sintaxe, seletores, classes, atributos e valores — envio da Avaliação 1 |
-| 07 | 22/09/2026 | Formatando o layout de um website e o menu |
-| 08 | 29/09/2026 | Criando telas responsivas |
-| 09 | 06/10/2026 | Animações e efeitos em CSS |
-| 10 | 13/10/2026 | Introdução ao JavaScript — envio da Avaliação 2 |
-| 11 | 20/10/2026 | Variáveis, operações aritméticas e estruturas de controle |
-| 12 | 27/10/2026 | Estruturas sequenciais, condicionais e de repetição |
-| 13 | 03/11/2026 | Funções e eventos |
-| 14 | 10/11/2026 | JavaScript para validação de formulários e consultas dinâmicas |
-| 15 | 17/11/2026 | Publicando seu website na internet — envio da Avaliação 3 |
+| Aula | Tema |
+|---|---|
+| 01 | Apresentação da disciplina; tecnologias e arquitetura da Web |
+| 02 | Introdução ao HTML: estrutura, textos, links, tabelas |
+| 03 | Introdução ao formulário |
+| 04 | Formulário, mídias e listas |
+| 05 | Elementos HTML para layout e introdução ao CSS |
+| 06 | CSS: sintaxe, seletores, classes, atributos e valores — envio da Avaliação 1 |
+| 07 | Formatando o layout de um website e o menu |
+| 08 | Criando telas responsivas |
+| 09 | Animações e efeitos em CSS |
+| 10 | Introdução ao JavaScript — envio da Avaliação 2 |
+| 11 | Variáveis, operações aritméticas e estruturas de controle |
+| 12 | Estruturas sequenciais, condicionais e de repetição |
+| 13 | Funções e eventos |
+| 14 | JavaScript para validação de formulários e consultas dinâmicas |
+| 15 | Publicando seu website na internet — envio da Avaliação 3 |
 
-| Avaliação | Prazo | Escopo |
-|---|---|---|
-| 1 | 15/09/2026 | Site em HTML com os elementos da Unidade 1 (estrutura, textos, links, tabelas, formulários, mídias, listas). |
-| 2 | 13/10/2026 | O mesmo site estilizado com CSS: layout, menu, responsividade e animações. |
-| 3 | 17/11/2026 | O site dinâmico e interativo com JavaScript: eventos, validação de formulários e consultas dinâmicas. |
+As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
+
+| Avaliação | Escopo |
+|---|---|
+| 1 | Site em HTML com os elementos da Unidade 1 (estrutura, textos, links, tabelas, formulários, mídias, listas). |
+| 2 | O mesmo site estilizado com CSS: layout, menu, responsividade e animações. |
+| 3 | O site dinâmico e interativo com JavaScript: eventos, validação de formulários e consultas dinâmicas. |
 
 **Regras de aprovação:** Média final = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0; frequência mínima de 75%.
 
@@ -249,7 +251,7 @@ A primeira linha diz **o que** se quer (`GET`) e **onde** (`/cursos/sistemas`). 
 
 ```http
 HTTP/1.1 200 OK
-Date: Wed, 12 Aug 2026 22:14:05 GMT
+Date: Wed, 12 Aug 2030 22:14:05 GMT
 Content-Type: text/html; charset=UTF-8
 Content-Length: 8420
 Cache-Control: max-age=3600

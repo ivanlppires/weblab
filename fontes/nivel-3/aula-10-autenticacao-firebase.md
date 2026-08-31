@@ -1016,7 +1016,7 @@ Com token válido — copie o token real do DevTools (aba Network, requisição 
 curl -i http://localhost:3000/api/eventos -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer COLE_O_TOKEN_AQUI" \
-  -d '{"titulo":"Semana da Computação","categoria":"palestra","dataHora":"2026-12-01T19:00:00","local":"Auditório","vagas":80}'
+  -d '{"titulo":"Semana da Computação","categoria":"palestra","dataHora":"2030-12-01T19:00:00","local":"Auditório","vagas":80}'
 ```
 
 Tentando excluir sem ser admin (usuário autenticado comum) — deve retornar 403:

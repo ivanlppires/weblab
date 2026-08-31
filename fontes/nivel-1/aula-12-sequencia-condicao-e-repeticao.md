@@ -1447,7 +1447,7 @@ Você já agrupou atividades por dia e contou por área. Agora repare: os dois c
 
 **Parte 3 — Fórum (10 min).** No fórum "Laço ou método" do SIGAA: discuta quando o `for` clássico ainda é preferível a `map`/`filter`/`reduce`, com um exemplo concreto de cada situação (um em que o laço vence, um em que o método vence). Comente a resposta de um colega apontando um caso que ele não considerou.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo do cronograma da trilha.
+**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
 
 ## ✅ Checkpoint do projeto
 

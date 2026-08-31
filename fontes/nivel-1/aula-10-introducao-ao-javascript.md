@@ -1031,7 +1031,7 @@ Um sistema de inscrição cobra R$ 0,10 de taxa por SMS e envia três. No Consol
 
 **Parte 3 — Fórum (10 min).** No fórum "Coerção de tipos", traga um resultado surpreendente de comparação ou de operação em JavaScript (diferente dos que apareceram nesta aula), explique tecnicamente por que ele ocorre e como evitá-lo.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo do cronograma da trilha.
+**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
 
 ## ✅ Checkpoint do projeto
 
@@ -1046,7 +1046,7 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 
 ## 📝 Avaliação 2 — instruções de entrega
 
-**Escopo.** A segunda avaliação verifica o uso de CSS para estilizar o site e torná-lo responsivo. O objeto é o **mesmo site da Avaliação 1** (com as correções apontadas já aplicadas), agora completamente estilizado: layout, menu, responsividade em três larguras e animações. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo do cronograma da trilha.
+**Escopo.** A segunda avaliação verifica o uso de CSS para estilizar o site e torná-lo responsivo. O objeto é o **mesmo site da Avaliação 1** (com as correções apontadas já aplicadas), agora completamente estilizado: layout, menu, responsividade em três larguras e animações. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado no Plano de Curso da sua turma.
 
 **Requisitos obrigatórios.**
 

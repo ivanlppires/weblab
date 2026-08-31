@@ -1188,7 +1188,7 @@ O projeto deve:
 
 Entregue, na atividade "Avaliação 1" do SIGAA, **dois links colados no campo de texto**: o do repositório público no GitHub e o do site publicado no GitHub Pages. **Não anexe arquivo `.zip`** — a entrega é por link, e um repositório sem histórico de commits perde ponto no critério 6 da rubrica.
 
-O prazo é o publicado no cronograma da disciplina (índice do Nível 2 no WebLab e a própria atividade no SIGAA). Confira a data lá; ela não é repetida aqui de propósito, para que este material continue válido em qualquer semestre.
+O prazo é o publicado no índice do Nível 2 no WebLab e na própria atividade no SIGAA. Confira a data lá; ela não é repetida aqui de propósito, para que este material continue válido em qualquer semestre.
 
 ### Rubrica (10,0 pontos)
 

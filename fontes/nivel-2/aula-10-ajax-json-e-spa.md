@@ -109,7 +109,7 @@ Parece, mas não é. As diferenças pegam todo mundo pelo menos uma vez:
 | `{ "f": function () {} }` | funções | erro de parse |
 | `{ "x": undefined }` | `undefined` | erro de parse |
 
-Não existe tipo data em JSON: datas viajam como string (normalmente no formato ISO, `"2026-03-15T19:00:00.000Z"`) e são convertidas para `Date` no destino, se precisar.
+Não existe tipo data em JSON: datas viajam como string (normalmente no formato ISO, `"2030-03-15T19:00:00.000Z"`) e são convertidas para `Date` no destino, se precisar.
 
 ### 2.3 As duas conversões
 
@@ -141,7 +141,7 @@ console.log(JSON.stringify(produto, null, 2));
 ```js
 const bagunca = {
   nome: "Café",
-  quando: new Date("2026-03-15T19:00:00Z"),
+  quando: new Date("2030-03-15T19:00:00Z"),
   calcular: function () { return 1; },
   nada: undefined,
 };
@@ -149,7 +149,7 @@ const bagunca = {
 console.log(JSON.stringify(bagunca));
 ```
 
-A saída é `{"nome":"Café","quando":"2026-03-15T19:00:00.000Z"}`. A função e o `undefined` **somem sem aviso**, e a data virou string. Não é bug: é a especificação. Mas é motivo frequente de "meus dados chegaram incompletos no servidor".
+A saída é `{"nome":"Café","quando":"2030-03-15T19:00:00.000Z"}`. A função e o `undefined` **somem sem aviso**, e a data virou string. Não é bug: é a especificação. Mas é motivo frequente de "meus dados chegaram incompletos no servidor".
 
 > **🔬 Investigue**
 > Abra o console e rode `JSON.parse('{ "a": 1, }')`. Leia a mensagem de erro inteira, com atenção ao número da posição. Agora rode `JSON.parse("{ 'a': 1 }")` e depois `JSON.parse('{ a: 1 }')`. Anote as três mensagens: elas são exatamente as que você vai ver quando escrever um `.json` à mão e esquecer uma vírgula ou uma aspa. Saber traduzir "position 10" para "a décima primeira letra do arquivo" economiza muito tempo.
@@ -1439,7 +1439,7 @@ Total: **10,0 pontos**.
 
 **Formato de entrega.** Link do repositório Git público (GitHub, GitLab ou similar) enviado pelo **SIGAA**, no campo da Avaliação 2. **Não envie arquivos `.zip`.** O repositório deve estar publicado no GitHub Pages, e o link do site publicado deve constar no topo do `README.md`. Um projeto que não abre pelo link publicado é corrigido como incompleto.
 
-**Prazo.** O prazo oficial está no cronograma da disciplina (índice da trilha, Aula 01 e SIGAA), sempre às 23h59 do dia indicado. O SIGAA registra o horário da submissão.
+**Prazo.** O prazo oficial está publicado no índice da trilha e no SIGAA, sempre às 23h59 do dia indicado. O SIGAA registra o horário da submissão.
 
 **Política de atraso.** Cada dia corrido de atraso desconta 1,0 ponto da nota, até o limite de 5 dias; depois disso, a avaliação recebe zero, salvo justificativa formal protocolada junto à coordenação.
 

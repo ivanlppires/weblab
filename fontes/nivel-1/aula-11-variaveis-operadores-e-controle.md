@@ -1281,7 +1281,7 @@ A organização da Semana Acadêmica precisa saber, a qualquer momento, em que f
 
 **Parte 3 — Fórum (10 min).** No fórum "`let` ou `const`" do SIGAA: defenda, com argumentos técnicos, a prática de declarar tudo como `const` por padrão e usar `let` só quando a reatribuição for necessária. Traga um trecho do seu próprio projeto em que a escolha importou, e comente o argumento de um colega.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo do cronograma da trilha.
+**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
 
 ## ✅ Checkpoint do projeto
 

@@ -387,7 +387,7 @@ async function criarEventoDeTeste() {
     titulo: 'Semana Acadêmica de Computação',
     categoria: 'palestra',
     vagas: 80,
-    dataHora: '2026-10-15T19:00:00',
+    dataHora: '2030-10-15T19:00:00',
   })
   console.log('documento criado com id:', referencia.id)
 }
@@ -567,7 +567,7 @@ const pagina = Number(req.query.pagina) || 1
 
 // Express 5: curinga nomeado — req.params.splat vem como ARRAY de segmentos
 app.get('/arquivos/*splat', (req, res) => {
-  console.log(req.params.splat) // ex.: ['pdf', 'edital-2026.pdf']
+  console.log(req.params.splat) // ex.: ['pdf', 'edital-2030.pdf']
 })
 
 // Express 4 (não use): segmento opcional com "?"
@@ -576,7 +576,7 @@ app.get('/arquivos/*splat', (req, res) => {
 // Express 5: segmento opcional entre chaves
 app.get('/relatorio{/:ano}', (req, res) => {
   // GET /relatorio      -> req.params.ano é undefined
-  // GET /relatorio/2026 -> req.params.ano é '2026'
+  // GET /relatorio/2030 -> req.params.ano é '2030'
   const ano = req.params.ano || 'atual'
   res.json({ relatorioDoAno: ano })
 })
@@ -663,7 +663,7 @@ export const eventos = [
     titulo: 'Semana Acadêmica de Computação',
     descricao: 'Palestras e minicursos sobre tendências em tecnologia.',
     categoria: 'palestra',
-    dataHora: '2026-09-29T19:00:00',
+    dataHora: '2030-09-29T19:00:00',
     local: 'Auditório Central',
     vagas: 40,
     imagemUrl: 'https://picsum.photos/seed/evento1/600/300',
@@ -673,7 +673,7 @@ export const eventos = [
     titulo: 'Minicurso de Vue.js Avançado',
     descricao: 'Componentização, roteamento e gerenciamento de estado.',
     categoria: 'minicurso',
-    dataHora: '2026-09-15T18:30:00',
+    dataHora: '2030-09-15T18:30:00',
     local: 'Laboratório 3',
     vagas: 25,
     imagemUrl: 'https://picsum.photos/seed/evento2/600/300',
@@ -683,7 +683,7 @@ export const eventos = [
     titulo: 'Workshop de Prototipação em Figma',
     descricao: 'Fundamentos de design de interfaces para desenvolvedores.',
     categoria: 'workshop',
-    dataHora: '2026-09-20T14:00:00',
+    dataHora: '2030-09-20T14:00:00',
     local: 'Sala 12',
     vagas: 30,
     imagemUrl: 'https://picsum.photos/seed/evento3/600/300',

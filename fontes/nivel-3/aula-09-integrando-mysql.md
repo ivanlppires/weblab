@@ -170,9 +170,9 @@ INSERT INTO usuarios (firebase_uid, nome, email) VALUES
   ('uid-exemplo-002', 'Bruno Lima', 'bruno.lima@exemplo.com');
 
 INSERT INTO eventos (titulo, descricao, categoria, data_hora, local, vagas, imagem_url) VALUES
-  ('Semana Acadêmica de Computação', 'Palestras e minicursos sobre o mercado de tecnologia.', 'palestra', '2026-10-15 19:00:00', 'Auditório FACET', 80, 'https://picsum.photos/seed/semana-computacao/400/240'),
-  ('Minicurso de Vue 3', 'Introdução prática ao framework Vue com Composition API.', 'minicurso', '2026-10-20 14:00:00', 'Laboratório 3', 30, 'https://picsum.photos/seed/minicurso-vue/400/240'),
-  ('Workshop de Firebase e Express', 'Construindo uma API real do zero.', 'workshop', '2026-10-28 19:30:00', 'Laboratório 1', 25, 'https://picsum.photos/seed/workshop-firebase/400/240');
+  ('Semana Acadêmica de Computação', 'Palestras e minicursos sobre o mercado de tecnologia.', 'palestra', '2030-10-15 19:00:00', 'Auditório FACET', 80, 'https://picsum.photos/seed/semana-computacao/400/240'),
+  ('Minicurso de Vue 3', 'Introdução prática ao framework Vue com Composition API.', 'minicurso', '2030-10-20 14:00:00', 'Laboratório 3', 30, 'https://picsum.photos/seed/minicurso-vue/400/240'),
+  ('Workshop de Firebase e Express', 'Construindo uma API real do zero.', 'workshop', '2030-10-28 19:30:00', 'Laboratório 1', 25, 'https://picsum.photos/seed/workshop-firebase/400/240');
 
 INSERT INTO inscricoes (evento_id, usuario_id) VALUES
   (1, 1),
@@ -327,7 +327,7 @@ const evento = linhas[0] // undefined se não encontrou
 // INSERT: o resultado é um objeto com metadados da inserção
 const [resultado] = await pool.execute(
   'INSERT INTO eventos (titulo, categoria, data_hora, local, vagas) VALUES (?, ?, ?, ?, ?)',
-  ['Palestra de teste', 'palestra', '2026-11-05 19:00:00', 'Auditório FACET', 60],
+  ['Palestra de teste', 'palestra', '2030-11-05 19:00:00', 'Auditório FACET', 60],
 )
 console.log(resultado.insertId)       // id gerado pelo AUTO_INCREMENT
 console.log(resultado.affectedRows)   // quantas linhas foram afetadas (1, aqui)
@@ -834,7 +834,7 @@ Resultado esperado:
 ```json
 {
   "dados": [
-    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2026-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120, "imagemUrl": null }
+    { "id": 1, "titulo": "Semana Acadêmica de Computação", "categoria": "palestra", "dataHora": "2030-09-10T19:00:00.000Z", "local": "Auditório Central", "vagas": 120, "imagemUrl": null }
   ],
   "paginacao": { "pagina": 1, "porPagina": 2, "total": 3 }
 }

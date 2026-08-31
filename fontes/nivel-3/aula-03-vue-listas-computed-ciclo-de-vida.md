@@ -520,7 +520,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
     "id": 1,
     "titulo": "Semana da Computação",
     "categoria": "palestra",
-    "dataHora": "2026-09-10T19:00:00",
+    "dataHora": "2030-09-10T19:00:00",
     "local": "Auditório Central",
     "vagas": 40,
     "inscritos": 12
@@ -529,7 +529,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
     "id": 2,
     "titulo": "Oficina de Vue.js",
     "categoria": "minicurso",
-    "dataHora": "2026-08-20T14:00:00",
+    "dataHora": "2030-08-20T14:00:00",
     "local": "Laboratório 3",
     "vagas": 25,
     "inscritos": 25
@@ -538,7 +538,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
     "id": 3,
     "titulo": "Hackathon FACET",
     "categoria": "workshop",
-    "dataHora": "2026-10-05T08:00:00",
+    "dataHora": "2030-10-05T08:00:00",
     "local": "Bloco B",
     "vagas": 60,
     "inscritos": 18
@@ -547,7 +547,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
     "id": 4,
     "titulo": "Introdução a IA",
     "categoria": "palestra",
-    "dataHora": "2026-08-18T19:30:00",
+    "dataHora": "2030-08-18T19:30:00",
     "local": "Auditório Central",
     "vagas": 80,
     "inscritos": 55
@@ -564,7 +564,7 @@ Crie o arquivo de dados simulando uma API, em `public/eventos.json` (a pasta `pu
 
 ```vue
 <script setup>
-const dataEvento = new Date('2026-09-10T19:00:00')
+const dataEvento = new Date('2030-09-10T19:00:00')
 const valorInscricao = 45.9
 
 const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
@@ -583,7 +583,7 @@ const valorFormatado = new Intl.NumberFormat('pt-BR', {
 
 <template>
   <p>Data: {{ dataFormatada }}</p>
-  <!-- 10 de setembro de 2026 19:00 -->
+  <!-- 10 de setembro de 2030 19:00 -->
 
   <p>Valor: {{ valorFormatado }}</p>
   <!-- R$ 45,90 -->
@@ -1258,7 +1258,7 @@ No repositório do seu projeto autoral:
 Na próxima aula você vai reestruturar seu projeto com **Vuetify** e **Vue Router** — os filtros e listas que você já tem hoje continuam valendo, só ganham um visual pronto e navegação entre telas.
 
 > **⚠️ Atenção**
-> A **Avaliação 1** vence no prazo do cronograma da trilha (confira em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)), e as instruções completas — escopo, rubrica e formato de entrega — estão na **Aula 04**.
+> O prazo da **Avaliação 1** é publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)), e as instruções completas — escopo, rubrica e formato de entrega — estão na **Aula 04**.
 
 ## 📚 Para aprofundar
 

@@ -454,7 +454,7 @@ Antes de anotar cada rota, definimos os formatos de objeto que se repetem — as
  *         dataHora:
  *           type: string
  *           format: date-time
- *           example: 2026-10-05T08:00:00
+ *           example: 2030-10-05T08:00:00
  *         local:
  *           type: string
  *           example: Bloco A, Auditório

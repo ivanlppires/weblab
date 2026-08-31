@@ -36,7 +36,7 @@ Você **não** precisa saber Git, terminal ou Node.js. Tudo isso começa do zero
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Como a disciplina funciona; cronograma e avaliações; Café Cerrado e o projeto autoral; modelo cliente-servidor |
+| 1 | 50 min | Como a disciplina funciona; a sequência das aulas e as avaliações; Café Cerrado e o projeto autoral; modelo cliente-servidor |
 | 2 | 50 min | HTTP na prática (métodos, status, URL, cabeçalhos); as três camadas; quem consome a web hoje; IA no fluxo de trabalho; ambiente de desenvolvimento |
 | 3 | 50 min | Git do zero: ciclo básico, GitHub e GitHub Pages — o repositório `cafe-cerrado` no ar; laboratório |
 
@@ -62,37 +62,41 @@ A disciplina adota **aprendizagem baseada em projeto**: um único aplicativo, co
 
 Repare que as unidades são cumulativas: o HTML da Unidade 1 continua lá na Unidade 3, servido pelo seu próprio servidor. Nada é jogado fora.
 
-### 1.3 Cronograma
+### 1.3 A sequência das aulas
 
-| Aula | Data | Tema |
-|---|---|---|
-| 01 | 11/08/2026 | Apresentação; arquitetura web; ambiente de desenvolvimento e Git |
-| 02 | 18/08/2026 | Introdução ao desenvolvimento web moderno |
-| 03 | 25/08/2026 | Revisão de HTML: layout, links e formulários |
-| 04 | 01/09/2026 | Frameworks CSS |
-| 05 | 08/09/2026 | Animação e SVG |
-| 06 | 15/09/2026 | Acessibilidade e ARIA |
-| 07 | 22/09/2026 | Revisão de JavaScript: objetos, funções, eventos e DOM |
-| 08 | 29/09/2026 | Funções, arrow functions, callbacks e vetores — prazo da Avaliação 1 (23h59) |
-| 09 | 06/10/2026 | Promises e async/await |
-| 10 | 13/10/2026 | AJAX, JSON e Single Page Application |
-| 11 | 20/10/2026 | Introdução ao Express |
-| 12 | 27/10/2026 | Express estruturado e middlewares — prazo da Avaliação 2 (23h59) |
-| 13 | 03/11/2026 | Rotas e controladores |
-| 14 | 10/11/2026 | Autenticação com Google (front e back) |
-| 15 | 17/11/2026 | CRUD com front-end assíncrono (AJAX/SPA) |
-| 16 | 24/11/2026 | CRUD completo com autenticação Google — prazo da Avaliação 3 (23h59) |
+| Aula | Tema |
+|---|---|
+| 01 | Apresentação; arquitetura web; ambiente de desenvolvimento e Git |
+| 02 | Introdução ao desenvolvimento web moderno |
+| 03 | Revisão de HTML: layout, links e formulários |
+| 04 | Frameworks CSS |
+| 05 | Animação e SVG |
+| 06 | Acessibilidade e ARIA |
+| 07 | Revisão de JavaScript: objetos, funções, eventos e DOM |
+| 08 | Funções, arrow functions, callbacks e vetores |
+| 09 | Promises e async/await |
+| 10 | AJAX, JSON e Single Page Application |
+| 11 | Introdução ao Express |
+| 12 | Express estruturado e middlewares |
+| 13 | Rotas e controladores |
+| 14 | Autenticação com Google (front e back) |
+| 15 | CRUD com front-end assíncrono (AJAX/SPA) |
+| 16 | CRUD completo com autenticação Google |
+
+As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
 
 > **⚠️ Atenção**
 > Os prazos das avaliações caem em dias de aula, sempre às 23h59. A aula acontece normalmente — o prazo é apenas o fim do período de entrega no SIGAA. Não conte com "entregar no fim da aula": a rede do laboratório escolhe justamente esses dias para cair.
 
 ### 1.4 Avaliações e aprovação
 
-| Avaliação | Prazo | Escopo |
-|---|---|---|
-| 1 | 29/09/2026, 23h59 | Website client-side em HTML e CSS: HTML semântico, layout responsivo, framework CSS, animação/SVG, acessibilidade. |
-| 2 | 27/10/2026, 23h59 | Evolução do site com JavaScript: validação de formulários, DOM e eventos, programação assíncrona, SPA com AJAX/JSON. |
-| 3 | 24/11/2026, 23h59 | Aplicação full-stack com Node.js e Express: rotas e controladores, autenticação Google, CRUD com persistência, front-end assíncrono. |
+| Avaliação | Escopo |
+|---|---|
+| 1 | Website client-side em HTML e CSS: HTML semântico, layout responsivo, framework CSS, animação/SVG, acessibilidade. |
+| 2 | Evolução do site com JavaScript: validação de formulários, DOM e eventos, programação assíncrona, SPA com AJAX/JSON. |
+| 3 | Aplicação full-stack com Node.js e Express: rotas e controladores, autenticação Google, CRUD com persistência, front-end assíncrono. |
+
+O prazo de cada avaliação é publicado no SIGAA.
 
 **Regras de aprovação:** Média final = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0; frequência mínima de 75%.
 
@@ -249,7 +253,7 @@ Essas quatro operações são exatamente o **CRUD** (*Create, Read, Update, Dele
 | `4xx` | Erro do cliente | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found` |
 | `5xx` | Erro do servidor | `500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable` |
 
-Os que você mais vai usar (e devolver) neste semestre:
+Os que você mais vai usar (e devolver) nesta disciplina:
 
 | Código | Quando aparece | O que fazer |
 |---|---|---|
@@ -370,7 +374,7 @@ A pergunta não é "pode usar IA?". Pode. A pergunta é "como usar bem?".
 | Node.js 22 LTS | Executar JavaScript fora do navegador (ferramentas agora; servidor na Unidade 3) | <https://nodejs.org/> |
 | Git | Controle de versão | <https://git-scm.com/> |
 
-Sobre o Node.js: baixe sempre a versão marcada como **LTS** (*Long Term Support*). LTS significa suporte prolongado e estabilidade — é a versão que se usa em produção. Neste semestre usamos o **Node.js 22 LTS**.
+Sobre o Node.js: baixe sempre a versão marcada como **LTS** (*Long Term Support*). LTS significa suporte prolongado e estabilidade — é a versão que se usa em produção. Nesta disciplina usamos o **Node.js 22 LTS**.
 
 ### 7.2 Verificando as instalações pelo terminal
 

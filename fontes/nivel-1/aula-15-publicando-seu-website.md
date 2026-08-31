@@ -1198,7 +1198,7 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 
 ## 📝 Avaliação 3 — instruções de entrega
 
-**Escopo.** A terceira avaliação verifica o uso de **JavaScript para tornar o site dinâmico e interativo** — eventos, validação de formulários e consultas dinâmicas —, com o resultado **publicado na internet**. O objeto é o seu **projeto autoral**, o mesmo das Avaliações 1 e 2, com as correções apontadas já aplicadas e agora acrescido da camada de comportamento. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo do cronograma da trilha.
+**Escopo.** A terceira avaliação verifica o uso de **JavaScript para tornar o site dinâmico e interativo** — eventos, validação de formulários e consultas dinâmicas —, com o resultado **publicado na internet**. O objeto é o seu **projeto autoral**, o mesmo das Avaliações 1 e 2, com as correções apontadas já aplicadas e agora acrescido da camada de comportamento. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado no Plano de Curso da sua turma.
 
 **Requisitos obrigatórios.**
 

@@ -995,7 +995,7 @@ A área administrativa que começa aqui **altera** a lista de eventos: exclui, c
 import { reactive } from 'vue'
 
 export const eventos = reactive([
-  { id: 1, titulo: 'Semana Acadêmica de Computação', descricao: 'Palestras e minicursos sobre tendências em tecnologia.', categoria: 'palestra', dataHora: '2026-09-29T19:00:00', local: 'Auditório Central', vagas: 40, imagemUrl: 'https://picsum.photos/seed/evento1/600/300' },
+  { id: 1, titulo: 'Semana Acadêmica de Computação', descricao: 'Palestras e minicursos sobre tendências em tecnologia.', categoria: 'palestra', dataHora: '2030-09-29T19:00:00', local: 'Auditório Central', vagas: 40, imagemUrl: 'https://picsum.photos/seed/evento1/600/300' },
   // … os outros sete eventos, sem alteração
 ])
 ```

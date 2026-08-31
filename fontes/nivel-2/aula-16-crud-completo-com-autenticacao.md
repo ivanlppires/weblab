@@ -93,7 +93,7 @@ const novo = {
 > **⚠️ Atenção**
 > A linha `dono: req.usuario.email` é a linha mais importante desta aula. Se ela fosse `dono: req.body.dono`, qualquer pessoa poderia mandar `{ "dono": "professor@unemat.br" }` e criar registros em nome de outra — e depois nem editá-los conseguiria. Vale como princípio geral: **tudo que identifica o autor de uma ação vem do token verificado; tudo que o cliente manda no corpo é palpite até ser validado.**
 
-`criadoEm` guarda o instante em ISO 8601 (`"2027-03-14T18:32:05.123Z"`), o formato que `new Date()` entende de volta sem ambiguidade e que ordena corretamente como texto. Nunca grave data como `"14/03 às 18h32"`: formatar é trabalho da interface, com `Intl.DateTimeFormat`.
+`criadoEm` guarda o instante em ISO 8601 (`"2030-03-14T18:32:05.123Z"`), o formato que `new Date()` entende de volta sem ambiguidade e que ordena corretamente como texto. Nunca grave data como `"14/03 às 18h32"`: formatar é trabalho da interface, com `Intl.DateTimeFormat`.
 
 ### 2.2 Os registros que já existem
 
@@ -713,7 +713,7 @@ Seu Nome — disciplina Desenvolvimento Web, UNEMAT Sinop.
 
 Os blocos de comando dentro do README acima estão recuados em oito espaços: dentro de um bloco de código Markdown, essa é a forma de mostrar código sem abrir outra cerca. No seu README de verdade, use cercas normais com três crases.
 
-## 7. O que você construiu neste semestre
+## 7. O que você construiu nesta disciplina
 
 Em dezesseis encontros, o mesmo projeto atravessou a pilha inteira de uma aplicação web profissional:
 
@@ -981,7 +981,7 @@ Esta é a última atividade do semestre, e ela é a própria preparação da ent
 
 **Critério de pronto:** o repositório clonado numa pasta vazia roda com `npm install && npm run dev`; um usuário logado só altera o que é dele; a documentação permite que outra pessoa reproduza tudo sem perguntar nada.
 
-**Entrega:** link do repositório público no SIGAA, no prazo da Avaliação 3 indicado no cronograma da trilha.
+**Entrega:** link do repositório público no SIGAA, no prazo da Avaliação 3 publicado lá.
 
 ## ✅ Checkpoint do projeto
 
@@ -1000,7 +1000,7 @@ Ao final desta aula, o seu repositório precisa ter:
 
 ## 📝 Avaliação 3 — instruções de entrega
 
-**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o site da Avaliação 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo do cronograma da trilha.
+**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o site da Avaliação 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado lá.
 
 **Requisitos obrigatórios.**
 
@@ -1043,7 +1043,7 @@ Ao final desta aula, o seu repositório precisa ter:
 
 ## 8. Depois daqui: para onde ir agora
 
-Você entra nesta disciplina sabendo HTML e CSS e sai com uma aplicação full-stack autenticada. O próximo passo depende do que despertou mais curiosidade neste semestre — e há dois caminhos naturais dentro do próprio WebLab.
+Você entra nesta disciplina sabendo HTML e CSS e sai com uma aplicação full-stack autenticada. O próximo passo depende do que despertou mais curiosidade ao longo do curso — e há dois caminhos naturais dentro do próprio WebLab.
 
 ### 8.1 Nível 3 — Frameworks Modernos
 

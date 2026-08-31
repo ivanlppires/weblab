@@ -56,27 +56,27 @@ Isso significa duas coisas na prática: (1) você vai aprender a construir aplic
 | U2 | Vue.js avançado: Vuetify, Axios, Vue Router, Pinia | 05–06 |
 | U3 | Integração front-end/back-end: Firebase, Supabase, Express, autenticação, banco de dados, deploy | 07–15 |
 
-### 1.3 Cronograma completo
+### 1.3 A sequência das aulas
 
-Guarde esta tabela — ela é o mapa do semestre inteiro.
+| # | Unidade | Tema |
+|---|---|---|
+| 01 | U1 | Apresentação da disciplina e revisão de JavaScript |
+| 02 | U1 | Introdução ao Vue: lifecycle, instância, data e methods, diretivas básicas |
+| 03 | U1 | Vue: v-if, v-else, v-for, computed e onMounted |
+| 04 | U1 | Introdução a Vuetify e Vue Router — **entrega da Avaliação 1** |
+| 05 | U2 | Componentes, Vue Router e Vuetify |
+| 06 | U2 | Axios e Pinia |
+| 07 | U3 | Firebase, Node.js e Express |
+| 08 | U3 | Endpoints e middlewares — **entrega da Avaliação 2** |
+| 09 | U3 | Integração com MySQL |
+| 10 | U3 | Requisições autenticadas com Firebase |
+| 11 | U3 | CRUD front-end + back-end |
+| 12 | U3 | CRUD com banco de dados em nuvem (Supabase) |
+| 13 | U3 | Desenvolvimento do back-end em camadas |
+| 14 | U3 | Documentação com Swagger |
+| 15 | U3 | Apresentação dos resultados — **entrega da Avaliação 3** |
 
-| # | Data | Unidade | Tema |
-|---|---|---|---|
-| 01 | 12/08/2026 | U1 | Apresentação da disciplina e revisão de JavaScript |
-| 02 | 19/08/2026 | U1 | Introdução ao Vue: lifecycle, instância, data e methods, diretivas básicas |
-| 03 | 26/08/2026 | U1 | Vue: v-if, v-else, v-for, computed e onMounted |
-| 04 | 02/09/2026 | U1 | Introdução a Vuetify e Vue Router — **entrega da Avaliação 1** |
-| 05 | 16/09/2026 | U2 | Componentes, Vue Router e Vuetify |
-| 06 | 23/09/2026 | U2 | Axios e Pinia |
-| 07 | 30/09/2026 | U3 | Firebase, Node.js e Express |
-| 08 | 07/10/2026 | U3 | Endpoints e middlewares — **entrega da Avaliação 2** |
-| 09 | 21/10/2026 | U3 | Integração com MySQL |
-| 10 | 28/10/2026 | U3 | Requisições autenticadas com Firebase |
-| 11 | 11/11/2026 | U3 | CRUD front-end + back-end |
-| 12 | 18/11/2026 | U3 | CRUD com banco de dados em nuvem (Supabase) |
-| 13 | 25/11/2026 | U3 | Desenvolvimento do back-end em camadas |
-| 14 | 09/12/2026 | U3 | Documentação com Swagger |
-| 15 | 16/12/2026 | U3 | Apresentação dos resultados — **entrega da Avaliação 3** |
+As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
 
 Todas as aulas 01 a 15 constroem, em sala, uma aplicação de referência chamada **UniEventos** — uma plataforma de divulgação e inscrição em eventos acadêmicos. Você vai acompanhar essa construção passo a passo, mas seu **projeto autoral** (o que você entrega nas avaliações) terá a mesma arquitetura aplicada a um domínio diferente, escolhido por você. Falamos disso na Seção 1.6.
 
@@ -84,13 +84,13 @@ Todas as aulas 01 a 15 constroem, em sala, uma aplicação de referência chamad
 
 A nota final é a **média aritmética simples das três avaliações**.
 
-| Avaliação | Escopo | Entrega |
-|---|---|---|
-| Avaliação 1 | Vue 3 com CLI: estrutura de projeto, componentes, diretivas | até 02/09/2026, 23h59 |
-| Avaliação 2 | Vue avançado: Vuetify + Axios + Vue Router + Pinia | até 07/10/2026, 23h59 |
-| Avaliação 3 | Back-end: Firebase/Express/Supabase, banco de dados, autenticação | até 16/12/2026, 23h59 |
+| Avaliação | Escopo |
+|---|---|
+| Avaliação 1 | Vue 3 com CLI: estrutura de projeto, componentes, diretivas |
+| Avaliação 2 | Vue avançado: Vuetify + Axios + Vue Router + Pinia |
+| Avaliação 3 | Back-end: Firebase/Express/Supabase, banco de dados, autenticação |
 
-Todas as entregas são feitas **via SIGAA**, dentro do prazo. As instruções detalhadas de cada avaliação (escopo exato, rubrica, formato de entrega) serão publicadas na aula correspondente — a Avaliação 1 será detalhada na Aula 04.
+Todas as entregas são feitas **via SIGAA**. Os prazos de cada avaliação são publicados no SIGAA e anunciados em aula. As instruções detalhadas de cada avaliação (escopo exato, rubrica, formato de entrega) serão publicadas na aula correspondente — a Avaliação 1 será detalhada na Aula 04.
 
 > **📌 Na prova**
 > Existe também um **exame final**: prova teórica, presencial e individual, cobrindo as três unidades. Ele é aplicado a quem não atinge a média mínima de aprovação direta pelas três avaliações, conforme o regimento da UNEMAT. Estude a teoria, não só a prática — o exame não é sobre "rodar o código", é sobre entender os conceitos.
@@ -129,7 +129,7 @@ Regras para o tema:
 
 ### 1.7 Ambiente de desenvolvimento
 
-Vamos instalar, nesta aula, tudo que será usado até o fim do semestre. As versões abaixo foram testadas em 12/08/2026 no ambiente real da disciplina — use exatamente estas.
+Vamos instalar, nesta aula, tudo que será usado até o fim do semestre. As versões abaixo foram testadas no ambiente real da disciplina — use exatamente estas.
 
 | Ferramenta | Versão usada na disciplina |
 |---|---|
@@ -530,10 +530,10 @@ Vamos usar o mesmo array de eventos em todos os exemplos — é o dado que suste
 
 ```js
 const eventos = [
-  { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2026-09-10T19:00:00', vagas: 40, inscritos: 12 },
-  { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2026-08-20T14:00:00', vagas: 25, inscritos: 25 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2026-10-05T08:00:00', vagas: 60, inscritos: 18 },
-  { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2026-08-18T19:30:00', vagas: 80, inscritos: 55 },
+  { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2030-09-10T19:00:00', vagas: 40, inscritos: 12 },
+  { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2030-08-20T14:00:00', vagas: 25, inscritos: 25 },
+  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
+  { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2030-08-18T19:30:00', vagas: 80, inscritos: 55 },
 ]
 ```
 
@@ -956,10 +956,10 @@ touch index.html eventos.js main.js
 ```js
 // eventos.js
 export const eventos = [
-  { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2026-09-10T19:00:00', vagas: 40, inscritos: 12 },
-  { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2026-08-20T14:00:00', vagas: 25, inscritos: 25 },
-  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2026-10-05T08:00:00', vagas: 60, inscritos: 18 },
-  { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2026-08-18T19:30:00', vagas: 80, inscritos: 55 },
+  { id: 1, titulo: 'Semana da Computação', categoria: 'palestra', dataHora: '2030-09-10T19:00:00', vagas: 40, inscritos: 12 },
+  { id: 2, titulo: 'Oficina de Vue.js', categoria: 'minicurso', dataHora: '2030-08-20T14:00:00', vagas: 25, inscritos: 25 },
+  { id: 3, titulo: 'Hackathon FACET', categoria: 'workshop', dataHora: '2030-10-05T08:00:00', vagas: 60, inscritos: 18 },
+  { id: 4, titulo: 'Introdução a IA', categoria: 'palestra', dataHora: '2030-08-18T19:30:00', vagas: 80, inscritos: 55 },
 ]
 
 export function filtrarPorCategoria(lista, categoria) {
@@ -1135,7 +1135,7 @@ Resultado esperado: `95` (para o array de exemplo: 28 + 0 + 42 + 25).
 `lista.reduce((total, evento) => total + (evento.vagas - evento.inscritos), 0)`
 </details>
 
-**B4.** Formatar datas em pt-BR. Usando `Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' })`, formate a `dataHora` de cada evento e monte um array de strings como `"10 de setembro de 2026"`.
+**B4.** Formatar datas em pt-BR. Usando `Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' })`, formate a `dataHora` de cada evento e monte um array de strings como `"10 de setembro de 2030"`.
 
 Resultado esperado: 4 strings de data em português.
 

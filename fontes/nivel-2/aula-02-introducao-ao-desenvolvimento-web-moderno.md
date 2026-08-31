@@ -54,7 +54,7 @@ Do ponto de vista técnico, o que muda de uma fase para a outra é **onde o HTML
 - Na Web 2.0, o JavaScript passa a fazer requisições em segundo plano e a **alterar a página já carregada** sem recarregá-la. É o que se chamou de AJAX, e é o assunto da Aula 10.
 - Na Web moderna, o servidor muitas vezes entrega só um esqueleto e **dados** (JSON), e o navegador monta a interface. É a arquitetura SPA — que você vai construir na Unidade 2 e sofisticar no Nível 3.
 
-O Café Cerrado vai atravessar as três fases neste semestre, nessa mesma ordem. Hoje ele está firmemente na primeira: arquivos estáticos entregues pelo GitHub Pages.
+O Café Cerrado vai atravessar as três fases ao longo do curso, nessa mesma ordem. Hoje ele está firmemente na primeira: arquivos estáticos entregues pelo GitHub Pages.
 
 ## 2. Quem define as regras: padrões abertos
 

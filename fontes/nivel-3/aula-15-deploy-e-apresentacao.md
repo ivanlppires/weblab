@@ -709,7 +709,7 @@ A ordem de apresentação é definida por sorteio, feito em sala na aula anterio
 
 ## 9. Encerramento: caminhos depois da disciplina
 
-O que foi construído neste semestre é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
+O que foi construído nesta disciplina é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
 
 - **Nuxt** — framework full stack sobre o Vue, com SSR (Server-Side Rendering) e SSG (Static Site Generation) nativos, útil quando SEO ou performance de primeira carga importam mais do que em uma SPA pura.
 - **TypeScript** — adicionar tipagem estática ao que hoje é JavaScript puro; o Vue 3 e o Vuetify 4 têm suporte de primeira classe a TS, e o ganho em projetos maiores (detecção de erro em tempo de escrita, autocomplete mais forte) é significativo.
@@ -718,7 +718,7 @@ O que foi construído neste semestre é uma base real de desenvolvimento full st
 - **Mobile com Capacitor/Ionic** — reaproveitar o conhecimento de Vue para publicar o mesmo código (ou uma variação) como app nativo Android/iOS.
 - **Back-end com NestJS** — um framework Node.js opinativo, construído sobre Express (ou Fastify), que formaliza com decorators e módulos exatamente a arquitetura em camadas que construímos manualmente na Aula 13.
 
-### 9.1 Como montar um portfólio a partir deste semestre
+### 9.1 Como montar um portfólio a partir desta disciplina
 
 - Deixe o projeto autoral **publicado e funcionando** — um link ao vivo vale mais, para quem recruta, do que um repositório que só roda localmente.
 - Escreva um README que conte a história do projeto: problema, decisões técnicas, dificuldades reais (os ADRs da Aula 14 são ótimo material bruto para isso).
@@ -727,7 +727,7 @@ O que foi construído neste semestre é uma base real de desenvolvimento full st
 
 ### 9.2 Convite para iniciação científica e extensão
 
-Muitos dos temas tocados de leve neste semestre — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do prazo de uma avaliação, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
+Muitos dos temas tocados de leve nesta disciplina — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do prazo de uma avaliação, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
 
 ## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
 

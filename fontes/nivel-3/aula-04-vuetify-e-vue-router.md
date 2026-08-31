@@ -698,14 +698,14 @@ app.mount('#app')
 ```js
 // src/data/eventos.js
 export const eventos = [
-  { id: 1, titulo: 'Semana Acadêmica de Computação', descricao: 'Palestras e minicursos sobre tendências em tecnologia.', categoria: 'palestra', dataHora: '2026-09-29T19:00:00', local: 'Auditório Central', vagas: 40, imagemUrl: 'https://picsum.photos/seed/evento1/600/300' },
-  { id: 2, titulo: 'Minicurso de Vue.js Avançado', descricao: 'Componentização, roteamento e gerenciamento de estado.', categoria: 'minicurso', dataHora: '2026-09-15T18:30:00', local: 'Laboratório 3', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento2/600/300' },
-  { id: 3, titulo: 'Workshop de Prototipação em Figma', descricao: 'Fundamentos de design de interfaces para desenvolvedores.', categoria: 'workshop', dataHora: '2026-09-20T14:00:00', local: 'Sala 12', vagas: 30, imagemUrl: 'https://picsum.photos/seed/evento3/600/300' },
-  { id: 4, titulo: 'Palestra: Carreira em Dados', descricao: 'Trilhas profissionais em ciência e engenharia de dados.', categoria: 'palestra', dataHora: '2026-10-02T19:30:00', local: 'Auditório Central', vagas: 50, imagemUrl: 'https://picsum.photos/seed/evento4/600/300' },
-  { id: 5, titulo: 'Minicurso de Banco de Dados NoSQL', descricao: 'Modelagem de dados com MongoDB na prática.', categoria: 'minicurso', dataHora: '2026-09-22T18:30:00', local: 'Laboratório 2', vagas: 20, imagemUrl: 'https://picsum.photos/seed/evento5/600/300' },
-  { id: 6, titulo: 'Workshop de Testes Automatizados', descricao: 'Testes unitários e de integração em aplicações web.', categoria: 'workshop', dataHora: '2026-10-05T14:00:00', local: 'Sala 12', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento6/600/300' },
-  { id: 7, titulo: 'Palestra: Ética em Inteligência Artificial', descricao: 'Discussão sobre vieses e responsabilidade em sistemas de IA.', categoria: 'palestra', dataHora: '2026-10-10T19:00:00', local: 'Auditório Central', vagas: 60, imagemUrl: 'https://picsum.photos/seed/evento7/600/300' },
-  { id: 8, titulo: 'Minicurso de Node.js e Express', descricao: 'Construindo APIs REST do zero.', categoria: 'minicurso', dataHora: '2026-09-25T18:30:00', local: 'Laboratório 1', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento8/600/300' },
+  { id: 1, titulo: 'Semana Acadêmica de Computação', descricao: 'Palestras e minicursos sobre tendências em tecnologia.', categoria: 'palestra', dataHora: '2030-09-29T19:00:00', local: 'Auditório Central', vagas: 40, imagemUrl: 'https://picsum.photos/seed/evento1/600/300' },
+  { id: 2, titulo: 'Minicurso de Vue.js Avançado', descricao: 'Componentização, roteamento e gerenciamento de estado.', categoria: 'minicurso', dataHora: '2030-09-15T18:30:00', local: 'Laboratório 3', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento2/600/300' },
+  { id: 3, titulo: 'Workshop de Prototipação em Figma', descricao: 'Fundamentos de design de interfaces para desenvolvedores.', categoria: 'workshop', dataHora: '2030-09-20T14:00:00', local: 'Sala 12', vagas: 30, imagemUrl: 'https://picsum.photos/seed/evento3/600/300' },
+  { id: 4, titulo: 'Palestra: Carreira em Dados', descricao: 'Trilhas profissionais em ciência e engenharia de dados.', categoria: 'palestra', dataHora: '2030-10-02T19:30:00', local: 'Auditório Central', vagas: 50, imagemUrl: 'https://picsum.photos/seed/evento4/600/300' },
+  { id: 5, titulo: 'Minicurso de Banco de Dados NoSQL', descricao: 'Modelagem de dados com MongoDB na prática.', categoria: 'minicurso', dataHora: '2030-09-22T18:30:00', local: 'Laboratório 2', vagas: 20, imagemUrl: 'https://picsum.photos/seed/evento5/600/300' },
+  { id: 6, titulo: 'Workshop de Testes Automatizados', descricao: 'Testes unitários e de integração em aplicações web.', categoria: 'workshop', dataHora: '2030-10-05T14:00:00', local: 'Sala 12', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento6/600/300' },
+  { id: 7, titulo: 'Palestra: Ética em Inteligência Artificial', descricao: 'Discussão sobre vieses e responsabilidade em sistemas de IA.', categoria: 'palestra', dataHora: '2030-10-10T19:00:00', local: 'Auditório Central', vagas: 60, imagemUrl: 'https://picsum.photos/seed/evento7/600/300' },
+  { id: 8, titulo: 'Minicurso de Node.js e Express', descricao: 'Construindo APIs REST do zero.', categoria: 'minicurso', dataHora: '2030-09-25T18:30:00', local: 'Laboratório 1', vagas: 25, imagemUrl: 'https://picsum.photos/seed/evento8/600/300' },
 ]
 ```
 
@@ -1273,7 +1273,7 @@ O projeto deve:
 
 ### Formato e prazo de entrega
 
-Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Avaliação 1", até **o prazo do cronograma da trilha, 23h59** (confira a data em [`../nivel-3/#cronograma`](../nivel-3/#cronograma)). Cole o link diretamente no campo de texto da atividade — não anexe `.zip`.
+Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Avaliação 1", até 23h59 do prazo publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)). Cole o link diretamente no campo de texto da atividade — não anexe `.zip`.
 
 ### Rubrica (10,0 pontos)
 
