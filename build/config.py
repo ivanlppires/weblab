@@ -21,7 +21,7 @@ SITE = RAIZ / "site"
 URL_BASE = "https://weblab.aprendabit.com"
 NOME_SITE = "WebLab"
 SUBTITULO = "Laboratório de Desenvolvimento Web"
-INSTITUICAO = "UNEMAT — Universidade do Estado de Mato Grosso · Campus Sinop · FACET"
+INSTITUICAO = ""  # o material não é institucional; a filiação dos autores vive em AUTORES
 PROFESSOR = "Prof. Ivan Luiz Pedroso Pires"
 SEMESTRE = ""  # ex.: "2027.1"; vazio deixa o site atemporal
 
@@ -135,7 +135,7 @@ TRILHAS = {
         "curto": "Nível 1",
         "titulo_curto": "Introdução ao Desenvolvimento Web",
         "cor": "n1",
-        "codigo": "Nível 1 · sem pré-requisito", "origem": "Disciplina FACET-SNP-319 (UNEMAT — Campus Sinop)",
+        "codigo": "Nível 1 · sem pré-requisito", "origem": "Nasceu de uma disciplina de graduação em desenvolvimento web",
         "carga": "≈60 h de estudo",
         "prerequisito": "Nenhum",
         "prefixo": "aula",
@@ -158,7 +158,7 @@ TRILHAS = {
         "curto": "Nível 2",
         "titulo_curto": "Desenvolvimento Web: do front-end ao full-stack",
         "cor": "n2",
-        "codigo": "Nível 2 · sequência do Nível 1", "origem": "Disciplina FACET-SNP-307 (UNEMAT — Campus Sinop)",
+        "codigo": "Nível 2 · sequência do Nível 1", "origem": "Nasceu de uma disciplina de graduação em desenvolvimento web",
         "carga": "≈60 h de estudo",
         "prerequisito": "Nível 1 concluído (ou HTML, CSS e JavaScript básicos)",
         "prefixo": "aula",
@@ -182,7 +182,7 @@ TRILHAS = {
         "curto": "Nível 3",
         "titulo_curto": "Frameworks Modernos: front-end e back-end",
         "cor": "n3",
-        "codigo": "Nível 3 · sequência do Nível 2", "origem": "Disciplina FACET-SNP-310 (UNEMAT — Campus Sinop)",
+        "codigo": "Nível 3 · sequência do Nível 2", "origem": "Nasceu de uma disciplina de graduação em frameworks e integração",
         "carga": "≈60 h de estudo",
         "prerequisito": "Nível 2 concluído (ou JavaScript assíncrono e Node/Express básicos)",
         "prefixo": "aula",
@@ -247,9 +247,10 @@ EXTRAS = {
 AUTORES = [
     {
         "nome": "Ivan Luiz Pedroso Pires",
+        "titulacao": "Dr.",
         "papel": ["concepção", "redação", "software", "curadoria"],
         "escopo": "Concepção do material, redação das quatro trilhas e desenvolvimento do gerador do site.",
-        "instituicao": "UNEMAT — Campus Sinop, FACET",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0000-0002-1380-082X",
         "lattes": "",
         "principal": True,
@@ -258,49 +259,64 @@ AUTORES = [
     # (ex.: "Nível 2, aulas 11 a 16") assim que a revisão for concluída.
     {
         "nome": "Benevid Félix da Silva",
+        "titulacao": "Dr.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0000-0003-4896-6069",
         "lattes": "",
     },
     {
         "nome": "Emiliano Soares Monteiro",
+        "titulacao": "Dr.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0000-0003-3476-3842",
         "lattes": "",
     },
     {
         "nome": "Francisco Sanches Banhos Filho",
+        "titulacao": "Me.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0009-0008-2600-7629",
         "lattes": "",
     },
     {
         "nome": "Elaine Alves da Rocha Pires",
+        "titulacao": "Dra.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "IFMT — Campus Sinop",
         "orcid": "0000-0002-1488-5036",
         "lattes": "",
     },
     {
         "nome": "Maicon Aparecido Sartin",
+        "titulacao": "Dr.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "UNEMAT — Campus Sinop",
+        "orcid": "",  # PENDENTE: o identificador informado antes pertence a outra pessoa
+        "lattes": "",
+    },
+    {
+        "nome": "Érico Fernando de Oliveira Martins",
+        "titulacao": "Dr.",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0000-0003-2513-9714",
         "lattes": "",
     },
     {
         "nome": "Tales Nereu Bogoni",
+        "titulacao": "Dr.",
         "papel": ["revisão"],
         "escopo": "Revisão técnica do material.",
-        "instituicao": "",
+        "instituicao": "UNEMAT — Campus Sinop",
         "orcid": "0000-0002-6877-2934",
         "lattes": "",
     },

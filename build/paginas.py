@@ -61,7 +61,7 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
 <div id="progresso" role="presentation"></div>
 <header class="topo"><div class="topo-in">
   {menu_btn}
-  <a class="logo" href="{raiz_rel}"><span class="q" aria-hidden="true"></span>WebLab<small>UNEMAT</small></a>
+  <a class="logo" href="{raiz_rel}"><span class="q" aria-hidden="true"></span>WebLab<small>aprendabit</small></a>
   <nav class="trilhas-nav" aria-label="Trilhas">{nav}</nav>
   <span class="espaco"></span>
   <div class="busca-wrap">
@@ -74,7 +74,7 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
   {lateral}
   <main id="conteudo">{corpo}
     <div class="rodape">
-      <strong>WebLab</strong> — {e(config.SUBTITULO)} · {e(config.INSTITUICAO)}<br>
+      <strong>WebLab</strong> — {e(config.SUBTITULO)}<br>
       Conteúdo sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" rel="license noopener">CC BY 4.0</a>; o gerador do site, sob licença MIT. Reuso livre com atribuição.<br>
       <a href="{raiz_rel}">Início</a> · <a href="{raiz_rel}autores/">Autoria e créditos</a> · <a href="{raiz_rel}desafios/">Banco de Desafios</a> · <a href="{raiz_rel}links/">Links úteis</a> · <a href="https://github.com/ivanlppires/weblab">Fontes no GitHub</a>
     </div>
@@ -381,7 +381,7 @@ def pagina_home(home_html, totais):
         )
     corpo = f"""
 <div class="hero">
-  <div class="eyebrow">WebLab · {e(config.SUBTITULO)} · {e(config.INSTITUICAO)}</div>
+  <div class="eyebrow">WebLab · {e(config.SUBTITULO)}</div>
   <h1>Programação não se aprende lendo.<br><span class="marca-texto">Abra o editor.</span></h1>
   <p class="lead">Uma apostila online, gratuita e feita para ser praticada: três níveis de desenvolvimento web — do primeiro HTML ao full-stack com frameworks — mais uma trilha para colocar tudo no ar. Cada aula termina em código escrito por você.</p>
   <div class="acoes"><a class="btn primario" href="nivel-1/">Começar do zero</a><a class="btn" href="desafios/">Ver os desafios</a><a class="btn" href="links/">Links úteis</a></div>
@@ -396,7 +396,7 @@ def pagina_home(home_html, totais):
 {home_html}
 """
     return pagina_base(
-        titulo="WebLab — Laboratório de Desenvolvimento Web · UNEMAT",
+        titulo="WebLab — Laboratório de Desenvolvimento Web",
         descricao="Apostila online de desenvolvimento web em três níveis (HTML/CSS/JS, front e back-end, frameworks modernos) mais deploy, banco de desafios e links úteis.",
         corpo=corpo,
         trilha_id="home",
@@ -506,7 +506,7 @@ def pagina_autores(texto_html):
         linha_ids = f'<p class="m">{" · ".join(ids)}</p>' if ids else ""
         inst = f'<p class="m">{e(a["instituicao"])}</p>' if a.get("instituicao") else ""
         return (f'<article class="ficha">'
-                f'<h3>{e(a["nome"])}</h3>'
+                f'<h3>{e((a.get("titulacao", "") + " " + a["nome"]).strip())}</h3>'
                 f'<p class="tags"><span class="tag">{e(papeis)}</span></p>'
                 f'{inst}<p>{e(a.get("escopo", ""))}</p>{linha_ids}</article>')
 
