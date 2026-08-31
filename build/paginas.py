@@ -41,6 +41,7 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
 <html lang="pt-BR" data-tema="claro" data-trilha="{e(trilha_id)}" data-raiz="{e(raiz_rel)}">
 <head>
 <meta charset="utf-8">
+<script>try{{var t=localStorage.getItem('weblab:tema');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='escuro';if(t)document.documentElement.setAttribute('data-tema',t)}}catch(e){{}}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(titulo)}</title>
 <meta name="description" content="{e(descricao)}">
