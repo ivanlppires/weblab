@@ -248,21 +248,62 @@ AUTORES = [
     {
         "nome": "Ivan Luiz Pedroso Pires",
         "papel": ["concepção", "redação", "software", "curadoria"],
-        "escopo": "Todas as trilhas e o gerador do site.",
+        "escopo": "Concepção do material, redação das quatro trilhas e desenvolvimento do gerador do site.",
         "instituicao": "UNEMAT — Campus Sinop, FACET",
-        "orcid": "",   # ex.: "0000-0000-0000-0000"
-        "lattes": "",  # ex.: "http://lattes.cnpq.br/0000000000000000"
+        "orcid": "0000-0002-1380-082X",
+        "lattes": "",
         "principal": True,
     },
-    # Exemplo de quem entra por revisão (remova o comentário e preencha):
-    # {
-    #     "nome": "Nome do colega",
-    #     "papel": ["revisão"],
-    #     "escopo": "Nível 2, aulas 11 a 16 (Node.js, Express e autenticação).",
-    #     "instituicao": "Instituição",
-    #     "orcid": "",
-    #     "lattes": "",
-    # },
+    # Revisão técnica — preencha "escopo" com o que cada pessoa revisou
+    # (ex.: "Nível 2, aulas 11 a 16") assim que a revisão for concluída.
+    {
+        "nome": "Benevid Félix da Silva",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0000-0003-4896-6069",
+        "lattes": "",
+    },
+    {
+        "nome": "Emiliano Soares Monteiro",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0000-0003-3476-3842",
+        "lattes": "",
+    },
+    {
+        "nome": "Francisco Sanches Banhos Filho",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0009-0008-2600-7629",
+        "lattes": "",
+    },
+    {
+        "nome": "Elaine Alves da Rocha Pires",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0000-0002-1488-5036",
+        "lattes": "",
+    },
+    {
+        "nome": "Maicon Aparecido Sartin",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0000-0003-2513-9714",
+        "lattes": "",
+    },
+    {
+        "nome": "Tales Nereu Bogoni",
+        "papel": ["revisão"],
+        "escopo": "Revisão técnica do material.",
+        "instituicao": "",
+        "orcid": "0000-0002-6877-2934",
+        "lattes": "",
+    },
 ]
 
 # Crédito de revisão por aula: "trilha/num" -> ["Nome", ...]

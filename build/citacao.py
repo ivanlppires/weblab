@@ -22,9 +22,26 @@ PALAVRAS = ["desenvolvimento web", "recurso educacional aberto", "ensino de prog
             "HTML", "CSS", "JavaScript", "Node.js", "Vue.js", "material didático"]
 
 
+SUFIXOS = {"filho", "neto", "sobrinho", "júnior", "junior", "jr", "jr.", "ii", "iii"}
+PARTICULAS = {"da", "de", "do", "das", "dos", "e", "del", "van", "von"}
+
+
 def _partes(nome):
+    """Separa nome em (prenomes, sobrenome) respeitando o uso brasileiro.
+
+    'Francisco Sanches Banhos Filho' -> ('Francisco Sanches', 'Banhos Filho')
+    'Benevid Félix da Silva'         -> ('Benevid Félix', 'da Silva')
+    'Ivan Luiz Pedroso Pires'        -> ('Ivan Luiz Pedroso', 'Pires')
+    """
     p = nome.split()
-    return " ".join(p[:-1]), p[-1]
+    if len(p) == 1:
+        return "", p[0]
+    corte = len(p) - 1
+    if p[corte].lower() in SUFIXOS and corte > 0:   # sufixo acompanha o sobrenome
+        corte -= 1
+    while corte > 0 and p[corte - 1].lower() in PARTICULAS:  # partícula idem
+        corte -= 1
+    return " ".join(p[:corte]), " ".join(p[corte:])
 
 
 def cff():
