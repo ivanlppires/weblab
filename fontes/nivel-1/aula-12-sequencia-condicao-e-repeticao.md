@@ -1270,7 +1270,7 @@ Resultado esperado: `gerarTabuada(7)` devolve uma string de dez linhas começand
 
 <details><summary>Dica</summary>
 
-Acumule com `texto += \`${n} x ${i} = ${n * i}\n\``. O `\n` é a quebra de linha da Aula 10 — e o `console.log` de uma string com `\n` já imprime em várias linhas. Uma alternativa mais elegante: monte um array de linhas e use `join("\n")` no fim.
+Acumule com ``texto += `${n} x ${i} = ${n * i}\n` ``. O `\n` é a quebra de linha da Aula 10 — e o `console.log` de uma string com `\n` já imprime em várias linhas. Uma alternativa mais elegante: monte um array de linhas e use `join("\n")` no fim.
 </details>
 
 **B4.** Usando o array `palestrantes`, escreva **um único encadeamento** (`filter` + `map` + `sort` + `join`) que produza uma string com os nomes dos palestrantes das áreas de web e de IA, em ordem alfabética portuguesa, separados por vírgula.

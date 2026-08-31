@@ -581,7 +581,7 @@ Uma cor sozinha não resolve: não existe tom que fique a 3:1 do creme **e** a 3
 
 /* Dentro da navbar escura, inverte as duas camadas */
 .navbar :focus-visible {
-  outline-color: var(--cor-superficie);         /* 7,1:1 sobre o marrom da marca */
+  outline-color: var(--cor-superficie);         /* 7,4:1 sobre o marrom da marca */
   box-shadow: 0 0 0 6px var(--cor-marca-escura);
 }
 ```
@@ -819,7 +819,7 @@ Auditoria da Unidade 1 (Lighthouse, categoria Accessibility, modo mobile).
 As três principais correções:
 
 1. Contraste do texto secundário: o cinza claro sobre creme dava 2,7:1 e foi trocado
-   pelo café médio (6,7:1), acima do mínimo de 4,5:1 da WCAG 1.4.3.
+   pelo marrom de texto suave (8,0:1), acima do mínimo de 4,5:1 da WCAG 1.4.3.
 2. Botão do menu sem nome acessível: recebeu `aria-label`, porque o ícone do
    Bootstrap é imagem de fundo e não gera texto.
 3. Link de salto ausente: adicionado como primeiro elemento do body das três

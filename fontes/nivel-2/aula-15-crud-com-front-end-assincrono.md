@@ -200,6 +200,9 @@ O truque do arquivo temporário resolve isso:
 > **🔎 Por baixo do capô**
 > A atomicidade do `rename` não é gentileza do Node: é garantia do POSIX, o padrão que rege os sistemas Unix. Renomear um arquivo é trocar uma entrada no diretório, uma operação que o sistema de arquivos trata como indivisível. É o mesmo mecanismo que bancos de dados, editores de texto e o próprio `git` usam para nunca deixarem um arquivo pela metade. Bancos de dados de verdade vão além, com *journaling* e *write-ahead log*, mas o princípio é este.
 
+> **🧠 Você sabia?**
+> O JSON que você está gravando aqui nasceu como um efeito colateral do JavaScript: Douglas Crockford formalizou o formato em 2001 a partir da sintaxe de objeto literal da linguagem, sem inventar nada novo — e por isso ele pegou. A ironia é que hoje `JSON.parse` é **mais rápido** que escrever o mesmo objeto direto no código: o motor V8 sabe que um texto JSON tem gramática fechada e o lê de uma vez, enquanto um literal de objeto precisa passar pelo parser completo de JavaScript. Times de front-end grandes exploram isso para carregar dados de configuração, e é por isso que sempre tratamos dados como texto a ser interpretado, nunca como código a ser executado.
+
 > **🔬 Investigue**
 > Com o servidor rodando, abra `data/produtos.json` no VS Code e deixe-o visível ao lado do navegador. Agora cadastre um produto pela API (via `testes.http`, ainda) e observe: o arquivo muda sozinho, na sua frente. Em seguida, rode `echo '[{ "id": 1,' > data/produtos.json` para corromper o arquivo de propósito e recarregue `GET /api/produtos`. Qual mensagem exata aparece no terminal? Em que linha do `repositorio.js` ela nasce? Restaure com `echo "[]" > data/produtos.json` e siga em frente — agora você reconhece esse erro em um segundo.
 

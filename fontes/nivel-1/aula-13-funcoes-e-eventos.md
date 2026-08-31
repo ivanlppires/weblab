@@ -1468,7 +1468,7 @@ Crie uma função auxiliar `saoNumeros(...valores)` que use `valores.every((v) =
 
 <details><summary>Dica</summary>
 
-`querySelectorAll("ul li").forEach((li, indice) => …)` — o segundo parâmetro do `forEach` é o índice. Para o texto, `li.textContent = \`${indice + 1}. ${li.textContent}\``. Para o primeiro e o último, compare `indice` com `0` e com `lista.length - 1`.
+`querySelectorAll("ul li").forEach((li, indice) => …)` — o segundo parâmetro do `forEach` é o índice. Para o texto, ``li.textContent = `${indice + 1}. ${li.textContent}` ``. Para o primeiro e o último, compare `indice` com `0` e com `lista.length - 1`.
 </details>
 
 **B3.** Construa uma tabela dinâmica: dado um array de alunos com três notas, gere uma `<table>` completa com `<thead>`, `<tbody>`, média calculada e uma coluna "Situação" cuja célula recebe a classe `.aprovado`, `.exame` ou `.reprovado` conforme o valor (≥ 6, ≥ 4, abaixo).

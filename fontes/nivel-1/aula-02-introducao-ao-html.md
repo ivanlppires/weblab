@@ -346,7 +346,7 @@ Antes do HTML5, tudo era `<div>`. O resultado era a chamada *div soup*: código 
     <article>
       <header>
         <h2>Título do artigo</h2>
-        <p>Publicado em <time datetime="2026-08-19">19 de agosto</time></p>
+        <p>Publicado em <time datetime="2027-10-14">14 de outubro</time></p>
       </header>
       <section>
         <h3>Primeira seção</h3>
@@ -921,11 +921,11 @@ Comece pela tabela de programação do Mão na massa: um `<tbody>` por unidade d
 <div id="conteudo">
   <div class="post">
     <div class="titulo-post">Como estudar programação</div>
-    <div class="data">19/08/2026</div>
+    <div class="data">14 de outubro</div>
     <div class="texto">Estudar programação exige prática diária e projetos pequenos que cresçam aos poucos.</div>
   </div>
 </div>
-<div id="rodape">Copyright 2026</div>
+<div id="rodape">Copyright Semana Acadêmica de Sistemas de Informação</div>
 ```
 
 **Resultado esperado:** zero `<div>` no resultado; `<header>`, `<nav>` com `<ul>`, `<main>`, `<article>` com `<h2>` e `<time datetime>`, `<footer>` com `&copy;`.

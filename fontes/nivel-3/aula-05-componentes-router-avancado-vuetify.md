@@ -114,8 +114,13 @@ function aoClicarInscrever() {
 
 <template>
   <v-card>
-    <!-- ... -->
-    <v-btn color="primary" @click="aoClicarInscrever">Inscrever-se</v-btn>
+    <v-card-title>{{ evento.titulo }}</v-card-title>
+    <v-card-subtitle>{{ evento.local }}</v-card-subtitle>
+    <v-card-actions>
+      <v-btn variant="text" @click="emit('favoritar', evento.id)">Favoritar</v-btn>
+      <v-spacer />
+      <v-btn color="primary" @click="aoClicarInscrever">Inscrever-se</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 ```
