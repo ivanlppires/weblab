@@ -1186,7 +1186,7 @@ Cinco linhas — uma por endpoint — método, caminho, autenticação. Corpo e 
 
 **B2.** Back-end completo. Implemente `controller → service → repository` da sua entidade principal com validação zod, paginação e ao menos uma regra de negócio (ex.: não aceitar valor negativo, não excluir se houver dependência).
 
-Resultado esperado: os 5 endpoints respondem no `curl` com os status do contrato; um `POST` com campo inválido devolve `400` com `detalhes` apontando o campo; `?pagina=2&porPagina=5` muda a fatia devolvida.
+Resultado esperado: os 5 endpoints respondem no `curl` com os status do contrato; um `POST` com campo inválido devolve `422` com `detalhes` apontando o campo; `?pagina=2&porPagina=5` muda a fatia devolvida.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1196,7 +1196,7 @@ Reaproveite a estrutura de `eventosService.js` — troque só os campos do `z.ob
 
 **B3.** Store pessimista. Implemente a store Pinia da entidade com `lista`, `carregando`, `erro` e as ações CRUD, todas aguardando confirmação do servidor antes de mudar o estado local.
 
-Resultado esperado: cada ação só altera `lista` depois do `await`; provocar um `400` deixa `erro` preenchido e `carregando` de volta em `false`.
+Resultado esperado: cada ação só altera `lista` depois do `await`; provocar um `422` deixa `erro` preenchido e `carregando` de volta em `false`.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1214,9 +1214,9 @@ Resultado esperado: buscar, paginar, criar, editar e excluir funcionam sem F5; o
 Confira o formato do campo de data — é a causa mais comum de formulário de edição aparecer "vazio" mesmo com dado no banco.
 </details>
 
-**B5.** Depuração guiada. Provoque de propósito um erro 400 (mande um campo inválido) e um erro de CORS (mude temporariamente o `origin` do `cors()` para uma URL errada). Documente, com print da aba Network, o que cada um parece no navegador.
+**B5.** Depuração guiada. Provoque de propósito um erro 422 (mande um campo inválido) e um erro de CORS (mude temporariamente o `origin` do `cors()` para uma URL errada). Documente, com print da aba Network, o que cada um parece no navegador.
 
-Resultado esperado: dois prints (um `400` com o `detalhes` visível na aba Response; um bloqueio de CORS com a mensagem do console) e duas linhas dizendo qual lado — front ou back — causou cada um.
+Resultado esperado: dois prints (um `422` com o `detalhes` visível na aba Response; um bloqueio de CORS com a mensagem do console) e duas linhas dizendo qual lado — front ou back — causou cada um.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1341,7 +1341,7 @@ Tags: mysql, performance, api, banco-de-dados
 |---|---|---|
 | Formulário de edição abre vazio | Formato de `dataHora` incompatível com `datetime-local` | Usar `.slice(0, 16)` no ISO recebido antes de atribuir ao `v-model` |
 | Lista não atualiza após criar/editar | Store otimista incompleta, ou índice errado ao substituir item | Conferir `findIndex` comparando tipos (`Number(id)` × `item.id`) |
-| Erro 400 sem detalhe visível na tela | Front não está lendo `e.response.data.erro` | Padronizar leitura do erro em todo `catch` da store |
+| Erro 422 sem detalhe visível na tela | Front não está lendo `e.response.data.erro` | Padronizar leitura do erro em todo `catch` da store |
 | CORS bloqueia só `PUT`/`DELETE`, `GET` funciona | Preflight `OPTIONS` não tratado — normalmente falta de `cors()` global antes das rotas | Garantir `app.use(cors(...))` antes de `app.use('/api/eventos', ...)` |
 | Upload de imagem falha com "permission denied" | Regra do Firebase Storage exige autenticação e o usuário não está logado | Checar `auth.currentUser` antes de chamar `uploadBytes` |
 | `curl` funciona mas o front não | Token não está sendo enviado pelo interceptor, ou front aponta para porta errada | Conferir `VITE_API_URL` e o cabeçalho `Authorization` na aba Network |
