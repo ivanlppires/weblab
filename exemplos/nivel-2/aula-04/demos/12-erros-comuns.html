@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 12 — Os erros comuns, reproduzidos ao vivo</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <style>
+    body { background: #fdfaf6; }
+    .aula { background: #2b2118; color: #fdfaf6; }
+    .aula code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+    iframe { width: 100%; border: 1px solid rgba(111,78,55,.25); border-radius: .5rem; background: #fff; }
+    .estreito { width: 360px; max-width: 100%; height: 9rem; }
+    .erro { border-left: .35rem solid var(--bs-danger); padding-left: 1rem; }
+    .conserto { border-left: .35rem solid var(--bs-success); padding-left: 1rem; }
+    .bloco { background:#6f4e37; color:#fff; padding:.75rem; border-radius:.5rem; text-align:center; font-size:.85rem; }
+    .link-hex { --bs-link-color-rgb: #6f4e37; }
+    .card-img-top { aspect-ratio: 4/3; object-fit: cover; }
+    .moldura { border: 3px solid #c2703d; overflow-x: auto; max-width: 20rem; }
+  </style>
+</head>
+<body>
+
+<header class="aula p-4">
+  <div class="container">
+    <h1 class="h5">Demo 12 — 🐛 Erros comuns, cada um reproduzido de propósito</h1>
+    <p class="mb-0">
+      A tabela da aula lista quinze sintomas. Aqui estão os oito que dá para <b>ver</b>.
+      Mostre o erro <b>antes</b> de mostrar o conserto — a turma decora o sintoma, não a regra.
+    </p>
+  </div>
+</header>
+
+<main class="container py-4">
+
+  <!-- 1 -->
+  <section class="mb-5">
+    <h2 class="h5">1. A página perde todo o estilo</h2>
+    <p><b>Sintoma no console:</b> <code>Failed to find a valid digest in the 'integrity' attribute…</code>
+       — <b>causa:</b> hash SRI errada ou versão da URL diferente da versão da hash.
+       Veja ao vivo na <a href="02-cdn-e-sri.html#hash-quebrada">Demo 02</a>.</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="mb-5">
+    <h2 class="h5">2. O hambúrguer aparece mas não abre</h2>
+    <p>
+      <b>Causa:</b> o <code>bootstrap.bundle.min.js</code> não foi carregado, ou o
+      <code>data-bs-target</code> não bate com o <code>id</code>.
+      <a href="erros/sem-javascript.html" target="_blank" rel="noopener">Abrir a página sem o bundle ↗</a>
+      (estreite a janela abaixo de 992 px e clique).
+    </p>
+  </section>
+
+  <!-- 3 -->
+  <section class="mb-5">
+    <h2 class="h5">3. "O meu CSS não está pegando"</h2>
+    <p>
+      <b>Causa:</b> o <code>estilo.css</code> foi carregado antes do framework, ou o seletor é menos
+      específico. Comparação ao vivo na <a href="03-ordem-no-head.html">Demo 03</a>. No DevTools a
+      declaração perdedora aparece <s>riscada</s>.
+    </p>
+  </section>
+
+  <!-- 4 -->
+  <section class="mb-5">
+    <h2 class="h5">4. Trocar <code>--bs-primary</code> não muda a cor dos botões</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger">O que o colega fez</p>
+<pre class="p-3 bg-body-tertiary rounded-3 small"><code>:root { --bs-primary: #6f4e37; }</code></pre>
+        <p><button class="btn btn-primary">Continua azul</button></p>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success">O que resolve</p>
+<pre class="p-3 bg-body-tertiary rounded-3 small"><code>.btn-cafe { --bs-btn-bg: #6f4e37; … }</code></pre>
+        <p><button class="btn" style="--bs-btn-bg:#6f4e37;--bs-btn-border-color:#6f4e37;--bs-btn-color:#fff;--bs-btn-hover-bg:#4a3325;--bs-btn-hover-border-color:#4a3325;--bs-btn-hover-color:#fff">Cor da marca</button></p>
+      </div>
+    </div>
+    <p class="mt-2 mb-0 text-body-secondary">Botões leem <code>--bs-btn-*</code>; <code>--bs-primary</code> alimenta os utilitários (<code>.text-primary</code>, <code>.bg-primary</code>).</p>
+  </section>
+
+  <!-- 5 -->
+  <section class="mb-5" id="link-preto">
+    <h2 class="h5">5. Links pretos depois de definir a cor do link</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger"><code>--bs-link-color-rgb: #6f4e37</code></p>
+        <p class="link-hex"><a href="#link-preto">Este link ficou preto</a></p>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success"><code>--bs-link-color-rgb: 111, 78, 55</code></p>
+        <p style="--bs-link-color-rgb:111,78,55"><a href="#link-preto">Este link está na cor da marca</a></p>
+      </div>
+    </div>
+    <p class="mb-0 text-body-secondary">A variável espera três números porque o framework monta <code>rgba()</code> com eles.</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="mb-5">
+    <h2 class="h5">6. Rolagem horizontal no celular</h2>
+    <p>Os dois quadros abaixo têm <b>360 px</b> de largura — o tamanho de um celular pequeno.</p>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger"><code>row</code> sem <code>container</code> em volta</p>
+        <iframe class="estreito" src="erros/rolagem-horizontal.html" title="Rolagem horizontal" loading="lazy"></iframe>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success"><code>container → row → col</code></p>
+        <iframe class="estreito" src="erros/rolagem-corrigida.html" title="Sem rolagem horizontal" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="mb-5">
+    <h2 class="h5">7. Cards da mesma fileira com alturas diferentes</h2>
+    <p>Falta <code>h-100</code> no card. Comparação ao vivo na <a href="06-componentes.html#card-h100">Demo 06</a>.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="mb-5">
+    <h2 class="h5">8. Imagem estourando a largura</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger">sem <code>img-fluid</code></p>
+        <div class="moldura"><img src="../cafe-cerrado/img/fachada.jpg" alt="Fachada do Café Cerrado" width="1200" height="800"></div>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success">com <code>img-fluid</code></p>
+        <div class="moldura"><img class="img-fluid" src="../cafe-cerrado/img/fachada.jpg" alt="Fachada do Café Cerrado" width="1200" height="800"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="mb-5">
+    <h2 class="h5">9. O <code>select</code> continua com a aparência antiga</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger"><code>class="form-control"</code> no select</p>
+        <select class="form-control">
+          <option>Reserva de mesa</option><option>Encomenda</option>
+        </select>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success"><code>class="form-select"</code></p>
+        <select class="form-select">
+          <option>Reserva de mesa</option><option>Encomenda</option>
+        </select>
+      </div>
+    </div>
+    <p class="mt-2 mb-0 text-body-secondary">Cada tipo de controle tem a sua classe. A seta desenhada só vem com <code>form-select</code>.</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="mb-5">
+    <h2 class="h5">10. Mobile-first entendido ao contrário</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6 erro">
+        <p class="fw-bold text-danger"><code>col-lg-4</code> sozinho</p>
+        <div class="row g-2">
+          <div class="col-lg-4"><div class="bloco">1</div></div>
+          <div class="col-lg-4"><div class="bloco">2</div></div>
+          <div class="col-lg-4"><div class="bloco">3</div></div>
+        </div>
+        <p class="small text-body-secondary mt-1 mb-0">Funciona no monitor e empilha em tudo abaixo de 992 px — o que pode até ser o que você quer, mas raramente é o que você achou que escreveu.</p>
+      </div>
+      <div class="col-12 col-lg-6 conserto">
+        <p class="fw-bold text-success"><code>col-12 col-md-6 col-lg-4</code></p>
+        <div class="row g-2">
+          <div class="col-12 col-md-6 col-lg-4"><div class="bloco">1</div></div>
+          <div class="col-12 col-md-6 col-lg-4"><div class="bloco">2</div></div>
+          <div class="col-12 col-md-6 col-lg-4"><div class="bloco">3</div></div>
+        </div>
+        <p class="small text-body-secondary mt-1 mb-0">Declare sempre do menor para o maior. <code>md</code> vale <b>a partir de</b> 768 px, não "no tablet apenas".</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section>
+    <h2 class="h5">11. Dois frameworks na mesma página</h2>
+    <p>
+      <code>.card</code>, <code>.btn</code> e <code>.container</code> existem em quase todos os
+      frameworks — e o reset de um desmonta os componentes do outro.
+      <a href="erros/dois-frameworks.html" target="_blank" rel="noopener">Abrir Bootstrap + Tailwind juntos ↗</a>
+      e comparar com a <a href="06-componentes.html">Demo 06</a>.
+    </p>
+    <div class="alert alert-danger mb-0">
+      <b>Um framework por projeto.</b> Quer trocar no meio do caminho? Troque — mas remova o
+      anterior por inteiro.
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

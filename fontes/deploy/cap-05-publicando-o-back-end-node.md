@@ -549,7 +549,7 @@ Isto derruba muita gente: CORS protege o **usuário**, não o seu servidor. Ele 
 | Plano gratuito | sim, com *cold start* e disco efêmero | crédito de teste; depois, por uso |
 | Região mais próxima | EUA / Europa / Ásia | Fly.io tem São Paulo (`gru`) |
 | Como se publica | conectar o repositório no painel | linha de comando (`railway up`, `fly deploy`) |
-| Melhor para | primeiro deploy e trabalhos da disciplina | projeto com banco junto ou que precise de baixa latência |
+| Melhor para | primeiro deploy e projetos de estudo | projeto com banco junto ou que precise de baixa latência |
 
 Para este capítulo: **Render**. Ele é o que exige menos ferramentas instaladas, tem plano gratuito de verdade e ensina o contrato (build, start, `PORT`, variáveis, health check) que vale em qualquer lugar.
 
@@ -895,4 +895,4 @@ Na API do seu **projeto autoral** (ou na `cafe-cerrado-api`, se o seu projeto ai
 - MDN — "Same-origin policy": <https://developer.mozilla.org/pt-BR/docs/Web/Security/Same-origin_policy> — por que a regra existe, do ponto de vista do usuário.
 - npm — `npm ci`: <https://docs.npmjs.com/cli/v10/commands/npm-ci> — as diferenças exatas para o `npm install`.
 
-No próximo capítulo você sai da PaaS e aluga um servidor inteiro: um VPS com Ubuntu, acesso por SSH com chave, firewall, Node e MySQL instalados na mão, nginx fazendo proxy reverso, pm2 mantendo o processo vivo e o `certbot` emitindo o certificado — inclusive no laboratório real da disciplina, em `ivanpires.dev/dsw/gN/`.
+No próximo capítulo você sai da PaaS e aluga um servidor inteiro: um VPS com Ubuntu, acesso por SSH com chave, firewall, Node e MySQL instalados na mão, nginx fazendo proxy reverso, pm2 mantendo o processo vivo e o `certbot` emitindo o certificado — inclusive no estudo de caso de um laboratório real, em `ivanpires.dev/dsw/gN/`.

@@ -94,7 +94,7 @@ _N2 = [
 # Nível 3 — Frameworks Modernos (FACET-SNP-310)
 # --------------------------------------------------------------------------
 _N3 = [
-    ("01", "apresentacao-e-revisao-javascript", "Apresentação da disciplina e revisão de JavaScript"),
+    ("01", "apresentacao-e-revisao-javascript", "Apresentação da trilha e revisão de JavaScript"),
     ("02", "introducao-ao-vue-diretivas", "Introdução ao Vue: instância, ciclo de vida e diretivas"),
     ("03", "vue-listas-computed-ciclo-de-vida", "Vue: listas, computed e ciclo de vida"),
     ("04", "vuetify-e-vue-router", "Introdução a Vuetify e Vue Router"),

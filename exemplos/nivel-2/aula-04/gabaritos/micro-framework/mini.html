@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Café Cerrado com mini.css: a página inicial sem nenhuma dependência externa.">
+  <title>Café Cerrado com mini.css — desafio ⭐⭐⭐</title>
+
+  <!-- Nenhuma CDN. Nenhum integrity. Nenhum JavaScript. 146 linhas de CSS local. -->
+  <link rel="stylesheet" href="mini.css">
+</head>
+<body>
+
+  <header class="barra">
+    <div class="container barra__interno">
+      <a class="barra__marca" href="mini.html">Café Cerrado</a>
+
+      <input type="checkbox" id="abrir-menu" class="barra__gatilho">
+      <label class="barra__botao" for="abrir-menu">☰ Menu</label>
+
+      <nav class="barra__menu" aria-label="Navegação principal">
+        <ul>
+          <li><a href="mini.html" aria-current="page">Início</a></li>
+          <li><a href="../../cafe-cerrado/cardapio.html">Cardápio</a></li>
+          <li><a href="../../cafe-cerrado/contato.html">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="secao centro" style="background: #fff; border-bottom: 1px solid var(--borda)">
+      <div class="container">
+        <h1>Café do Cerrado, torrado em Sinop</h1>
+        <p class="suave">Grãos de produtores de Mato Grosso, torra artesanal e um lugar para ficar.</p>
+        <a class="botao" href="../../cafe-cerrado/cardapio.html">Ver o cardápio</a>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container">
+        <div class="grade">
+          <div class="c-12 c-md-6">
+            <h2>Nossa história</h2>
+            <p>
+              O Café Cerrado nasceu em uma garagem no Setor Comercial de Sinop, com um
+              torrador de dois quilos e a teimosia de provar que o café produzido no
+              Mato Grosso pode brigar com os grãos mais famosos do país.
+            </p>
+            <ul class="lista-limpa">
+              <li>Wi-Fi liberado e tomada em todas as mesas</li>
+              <li>Moagem na hora, com escolha da torra</li>
+              <li>Opções sem lactose e sem glúten identificadas no cardápio</li>
+            </ul>
+          </div>
+          <div class="c-12 c-md-6">
+            <img src="../../cafe-cerrado/img/fachada.jpg" style="border-radius: var(--raio)"
+                 alt="Fachada do Café Cerrado com toldo verde e mesas na calçada"
+                 width="1200" height="800">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container">
+        <h2>Destaques da semana</h2>
+        <div class="grade">
+          <div class="c-12 c-sm-6 c-lg-4">
+            <article class="card">
+              <img class="card__img" src="../../cafe-cerrado/img/cold-brew.jpg"
+                   alt="Copo alto de cold brew com gelo e rodela de laranja" loading="lazy">
+              <div class="card__corpo">
+                <h3>Cold Brew da Chapada</h3>
+                <p>Extração a frio por dezoito horas, servido com gelo e rodela de laranja.</p>
+              </div>
+              <div class="card__rodape entre">
+                <strong>R$ 15,00</strong>
+                <a class="botao botao--vazado" href="#">Ver</a>
+              </div>
+            </article>
+          </div>
+          <div class="c-12 c-sm-6 c-lg-4">
+            <article class="card">
+              <img class="card__img" src="../../cafe-cerrado/img/pao-de-queijo.jpg"
+                   alt="Porção de pães de queijo dourados em um prato branco" loading="lazy">
+              <div class="card__corpo">
+                <h3>Pão de Queijo Mineiro</h3>
+                <p>Massa de polvilho azedo com queijo canastra, assado de hora em hora. Uma descrição mais longa, de propósito.</p>
+              </div>
+              <div class="card__rodape entre">
+                <strong>R$ 7,00</strong>
+                <a class="botao botao--vazado" href="#">Ver</a>
+              </div>
+            </article>
+          </div>
+          <div class="c-12 c-sm-6 c-lg-4">
+            <article class="card">
+              <img class="card__img" src="../../cafe-cerrado/img/bolo-de-milho.jpg"
+                   alt="Fatia de bolo de milho verde sobre papel manteiga" loading="lazy">
+              <div class="card__corpo">
+                <h3>Bolo de Milho Verde</h3>
+                <p>Fatia de bolo cremoso feito com milho da feira do produtor.</p>
+              </div>
+              <div class="card__rodape entre">
+                <strong>R$ 9,50</strong>
+                <a class="botao botao--vazado" href="#">Ver</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container">
+        <h2>Horário de atendimento</h2>
+        <table>
+          <caption>Horário de atendimento do Café Cerrado</caption>
+          <thead>
+            <tr><th scope="col">Dia</th><th scope="col">Abertura</th><th scope="col">Fechamento</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Segunda a sexta</th><td>07h00</td><td>20h00</td></tr>
+            <tr><th scope="row">Sábado</th><td>08h00</td><td>18h00</td></tr>
+            <tr><th scope="row">Domingo</th><td colspan="2">Fechado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="secao">
+      <div class="container">
+        <h2>Um campo de formulário, para fechar os quatro componentes</h2>
+        <form class="grade" action="#" method="post">
+          <div class="c-12 c-md-6">
+            <div class="campo">
+              <label for="nome">Nome completo *</label>
+              <input type="text" id="nome" name="nome" required minlength="3">
+              <p class="campo__ajuda">Digite duas letras e saia do campo: a borda fica vermelha (<code>:user-invalid</code>).</p>
+            </div>
+          </div>
+          <div class="c-12 c-md-6">
+            <div class="campo">
+              <label for="assunto">Assunto *</label>
+              <select id="assunto" name="assunto" required>
+                <option value="">Selecione</option>
+                <option value="reserva">Reserva de mesa</option>
+              </select>
+            </div>
+          </div>
+          <div class="c-12">
+            <button class="botao" type="submit">Enviar</button>
+            <button class="botao botao--vazado" type="reset">Limpar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container secao">
+      <div class="grade">
+        <section class="c-12 c-md-4">
+          <h2>Café Cerrado</h2>
+          <p>Torrefação artesanal de grãos do Cerrado mato-grossense. Projeto fictício da disciplina.</p>
+        </section>
+        <section class="c-12 c-md-4">
+          <h2>Onde estamos</h2>
+          <address>Avenida dos Jacarandás, 1200 — Sinop, MT</address>
+        </section>
+        <nav class="c-12 c-md-4" aria-label="Rodapé">
+          <h2>Navegação</h2>
+          <ul class="lista-limpa">
+            <li><a href="mini.html">Início</a></li>
+            <li><a href="../../cafe-cerrado/cardapio.html">Cardápio</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="centro">Café Cerrado · UNEMAT Sinop · feito com mini.css</p>
+    </div>
+  </footer>
+
+</body>
+</html>

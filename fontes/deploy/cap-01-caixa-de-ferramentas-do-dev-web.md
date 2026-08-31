@@ -9,7 +9,7 @@
 Ao final deste capítulo você será capaz de:
 
 - Navegar, criar pastas e ler arquivos pelo terminal (`pwd`, `ls`, `cd`, `mkdir`, `cat`, `code .`) em Linux, macOS e Windows, sabendo qual shell está usando.
-- Configurar o VS Code com as extensões da disciplina e um `settings.json` que formata o código ao salvar.
+- Configurar o VS Code com as extensões recomendadas nesta trilha e um `settings.json` que formata o código ao salvar.
 - Usar as abas Elements, Console, Network e Lighthouse do DevTools, e o modo de dispositivo, para inspecionar qualquer página da Web.
 - Instalar o Node.js LTS por um gerenciador de versões (nvm no Linux/macOS, nvm-windows no Windows) e explicar por que isso é melhor do que o instalador comum.
 - Ler um `package.json` e usar `npm init`, `npm install`, `npm run` e `npx` com segurança.
@@ -44,7 +44,7 @@ Cada ferramenta deste capítulo resolve uma dor específica:
 | VS Code + extensões | Escrever código com destaque de sintaxe, autocompletar, formatação automática e servidor local |
 | DevTools | Enxergar o que o navegador fez com o seu HTML/CSS/JS — e por que não fez o que você esperava |
 | Node.js + npm | Rodar JavaScript fora do navegador e instalar as ferramentas do ofício (Prettier, ESLint, Vite, Express) |
-| `.editorconfig` | Garantir que o código fique igual no seu editor, no do colega e no do professor |
+| `.editorconfig` | Garantir que o código fique igual no seu editor e no de qualquer outra pessoa que abrir o projeto |
 
 Você não precisa dominar tudo hoje. Precisa **instalar tudo hoje**, entender para que serve cada peça e saber onde conferir se está funcionando. É o que a maioria dos "não roda na minha máquina" do semestre tem em comum: uma peça faltando na bancada.
 
@@ -63,10 +63,10 @@ O terminal é um programa que recebe comandos digitados e mostra o resultado em 
 | macOS | Terminal.app (shell `zsh`, compatível com tudo daqui) | <kbd>Cmd</kbd>+<kbd>Espaço</kbd>, digite "Terminal" |
 | Windows | **Git Bash** (instalado junto com o Git for Windows) | Menu Iniciar → "Git Bash" |
 
-No Windows existe também o **PowerShell**, que aceita `ls`, `cd`, `pwd`, `cat` e `mkdir` como apelidos de comandos próprios — mas sem as opções do Linux (`ls -la` dá erro lá) e sem `touch`. Para não ter dois conjuntos de comandos na cabeça, use o Git Bash nas disciplinas. Você instala o Git for Windows no passo a passo deste capítulo e ganha os dois de uma vez: o `git` e um shell compatível com Linux.
+No Windows existe também o **PowerShell**, que aceita `ls`, `cd`, `pwd`, `cat` e `mkdir` como apelidos de comandos próprios — mas sem as opções do Linux (`ls -la` dá erro lá) e sem `touch`. Para não ter dois conjuntos de comandos na cabeça, use o Git Bash ao longo de toda esta trilha. Você instala o Git for Windows no passo a passo deste capítulo e ganha os dois de uma vez: o `git` e um shell compatível com Linux.
 
 > **💡 Dica**
-> Quem usa Windows e quer um Linux "de verdade" dentro do Windows pode instalar o **WSL** (`wsl --install` em um PowerShell como administrador). Não é obrigatório para nenhuma disciplina do WebLab; o Git Bash resolve tudo do que precisamos.
+> Quem usa Windows e quer um Linux "de verdade" dentro do Windows pode instalar o **WSL** (`wsl --install` em um PowerShell como administrador). Não é obrigatório para nada do WebLab; o Git Bash resolve tudo do que precisamos.
 
 Para descobrir qual shell está rodando:
 
@@ -169,7 +169,7 @@ code --version
 
 A saída tem três linhas: a versão, um hash do build e a arquitetura (`x64` ou `arm64`).
 
-### 3.2 Extensões da disciplina
+### 3.2 Extensões recomendadas
 
 Extensões são instaladas pela aba **Extensions** (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>) ou pelo terminal, o que é mais rápido e reproduzível. O identificador de cada uma é `editor.nome`:
 
@@ -373,7 +373,7 @@ Pense no npm como uma loja de aplicativos para código: qualquer pessoa publica 
 
 O Node tem duas linhas: **Current** (versões ímpares, novidades primeiro, suporte curto) e **LTS** (*Long Term Support* — versões pares, recebem correções por anos). Use sempre a **LTS**: hoje, a linha 22 (a 24 também é LTS e funciona). O `create-vue` do Nível 3 exige `^22.18.0 || >=24.12.0`, o que é mais um motivo para não ficar com um Node velho.
 
-Há dois jeitos de instalar. O instalador de <https://nodejs.org> funciona, mas deixa uma versão única e fixa, e no Linux/macOS costuma exigir `sudo` para instalar pacotes globais. O jeito recomendado é um **gerenciador de versões**, que instala o Node na sua pasta pessoal (sem `sudo`) e permite ter várias versões lado a lado — o projeto antigo de um freela em Node 18, a disciplina em Node 22.
+Há dois jeitos de instalar. O instalador de <https://nodejs.org> funciona, mas deixa uma versão única e fixa, e no Linux/macOS costuma exigir `sudo` para instalar pacotes globais. O jeito recomendado é um **gerenciador de versões**, que instala o Node na sua pasta pessoal (sem `sudo`) e permite ter várias versões lado a lado — o projeto antigo de um freela em Node 18, o projeto novo em Node 22.
 
 **Linux e macOS — nvm.** Copie o comando de instalação da página oficial (<https://github.com/nvm-sh/nvm#installing-and-updating>); ele tem este formato, com a versão atual do nvm no meio da URL:
 
@@ -514,7 +514,7 @@ Quem entrar na pasta e rodar `nvm use` recebe a versão certa sem pensar. Muitos
 
 ## 🚀 Passo a passo — Ambiente pronto e um projeto de teste no Live Server
 
-Ao fim destes passos, sua máquina responde a `node -v`, `npm -v` e `git --version`, o VS Code tem as extensões da disciplina, e um projeto mínimo abre no navegador pelo Live Server e recarrega sozinho ao salvar. Faça na ordem; cada passo tem um jeito de conferir.
+Ao fim destes passos, sua máquina responde a `node -v`, `npm -v` e `git --version`, o VS Code tem as extensões recomendadas, e um projeto mínimo abre no navegador pelo Live Server e recarrega sozinho ao salvar. Faça na ordem; cada passo tem um jeito de conferir.
 
 ### Passo 1 — Git (e o Git Bash, no Windows)
 

@@ -1,0 +1,146 @@
+/* ============================================================
+   mini.css — micro-framework do Café Cerrado
+   Desafio ⭐⭐⭐ da Aula 04. Limite autoimposto: 200 linhas.
+   Contém: reset, escala de espaçamento, grid de 12 colunas com
+   três breakpoints e quatro componentes (botão, card, campo, navbar).
+   O que ele NÃO faz está documentado em mini.md — e essa lista de
+   recusas é a parte mais valiosa do exercício.
+   ============================================================ */
+
+/* ---------- 1. Tokens: uma escala só, lida por todos os componentes ---------- */
+:root {
+  --e-1: .25rem;  --e-2: .5rem;   --e-3: 1rem;
+  --e-4: 1.5rem;  --e-5: 3rem;
+
+  --marca: #6f4e37;  --marca-escura: #4a3325;
+  --fundo: #fdfaf6;  --superficie: #fff;
+  --texto: #2b2118;  --texto-suave: #5c4b3c;
+  --borda: rgba(111, 78, 55, .18);
+
+  --raio: .75rem;
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --largura-max: 68rem;
+}
+
+/* ---------- 2. Reset: o mínimo honesto ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: var(--fonte); font-size: 1rem; line-height: 1.6;
+       color: var(--texto); background: var(--fundo); }
+h1, h2, h3, p, ul, dl, figure { margin: 0 0 var(--e-3); }
+h1 { font-size: 2rem; line-height: 1.2; }
+h2 { font-size: 1.5rem; line-height: 1.25; }
+h3 { font-size: 1.15rem; }
+img { max-width: 100%; height: auto; display: block; }  /* o img-fluid embutido */
+a { color: var(--marca); }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: var(--e-2) var(--e-3); border-bottom: 1px solid var(--borda); text-align: left; }
+caption { text-align: left; padding-bottom: var(--e-2); color: var(--texto-suave); }
+
+/* ---------- 3. Layout: container e grid de 12 colunas ---------- */
+.container { width: 100%; max-width: var(--largura-max); margin-inline: auto;
+             padding-inline: var(--e-3); }
+
+/* CSS Grid, e não Flexbox: o "12 colunas" já existe na propriedade
+   grid-template-columns, sem precisar de porcentagens nem de margem negativa
+   para a calha (o gap resolve). Foram 6 linhas onde o Bootstrap usa dezenas. */
+.grade { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--e-4); }
+.grade > * { grid-column: span 12; }        /* mobile-first: tudo ocupa a linha */
+
+.c-1 { grid-column: span 1; }   .c-2  { grid-column: span 2; }
+.c-3 { grid-column: span 3; }   .c-4  { grid-column: span 4; }
+.c-5 { grid-column: span 5; }   .c-6  { grid-column: span 6; }
+.c-7 { grid-column: span 7; }   .c-8  { grid-column: span 8; }
+.c-9 { grid-column: span 9; }   .c-10 { grid-column: span 10; }
+.c-11 { grid-column: span 11; } .c-12 { grid-column: span 12; }
+
+/* Três breakpoints, com os spans que o projeto realmente usa (2, 3, 4, 6, 12). */
+@media (min-width: 576px) {
+  .c-sm-2 { grid-column: span 2; }  .c-sm-3 { grid-column: span 3; }
+  .c-sm-4 { grid-column: span 4; }  .c-sm-6 { grid-column: span 6; }
+  .c-sm-12 { grid-column: span 12; }
+}
+@media (min-width: 768px) {
+  .c-md-2 { grid-column: span 2; }  .c-md-3 { grid-column: span 3; }
+  .c-md-4 { grid-column: span 4; }  .c-md-6 { grid-column: span 6; }
+  .c-md-12 { grid-column: span 12; }
+}
+@media (min-width: 992px) {
+  .c-lg-2 { grid-column: span 2; }  .c-lg-3 { grid-column: span 3; }
+  .c-lg-4 { grid-column: span 4; }  .c-lg-6 { grid-column: span 6; }
+  .c-lg-12 { grid-column: span 12; }
+}
+
+/* ---------- 4. Utilitários: só os cinco que o projeto usa ---------- */
+.secao { padding-block: var(--e-5); }
+.centro { text-align: center; }
+.suave { color: var(--texto-suave); }
+.lista-limpa { list-style: none; padding-left: 0; }
+.entre { display: flex; align-items: center; justify-content: space-between; gap: var(--e-3); }
+
+/* ---------- 5. Componente: botão ---------- */
+.botao {
+  display: inline-block; border: 2px solid var(--marca); border-radius: var(--raio);
+  padding: var(--e-2) var(--e-4); font: inherit; font-weight: 600; line-height: 1.2;
+  text-decoration: none; cursor: pointer;
+  background: var(--marca); color: var(--superficie);
+  transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+.botao:hover { background: var(--marca-escura); border-color: var(--marca-escura); }
+.botao:focus-visible { outline: 3px solid var(--marca); outline-offset: 2px; }
+.botao[disabled] { opacity: .6; cursor: not-allowed; }
+.botao--vazado { background: transparent; color: var(--marca); }
+.botao--vazado:hover { background: var(--marca); color: var(--superficie); }
+
+/* ---------- 6. Componente: card ---------- */
+.card {
+  display: flex; flex-direction: column; height: 100%;   /* o h-100 embutido */
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-radius: var(--raio); overflow: hidden;
+}
+.card__img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; }
+.card__corpo { flex: 1 1 auto; padding: var(--e-3); }
+.card__corpo > :last-child { margin-bottom: 0; }
+.card__rodape { padding: var(--e-3); border-top: 1px solid var(--borda); }
+
+/* ---------- 7. Componente: campo de formulário ---------- */
+.campo { margin-bottom: var(--e-3); }
+.campo > label { display: block; margin-bottom: var(--e-1); font-weight: 600; }
+.campo > input, .campo > select, .campo > textarea {
+  width: 100%; padding: var(--e-2) var(--e-3); font: inherit; color: inherit;
+  background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+}
+.campo > :is(input, select, textarea):focus-visible {
+  outline: 3px solid var(--marca); outline-offset: 1px; border-color: var(--marca);
+}
+.campo > :is(input, select, textarea):user-invalid { border-color: #b3261e; }
+.campo__ajuda { margin: var(--e-1) 0 0; font-size: .875rem; color: var(--texto-suave); }
+
+/* ---------- 8. Componente: barra de navegação ---------- */
+/* O menu colapsável é feito com checkbox + :checked — CSS puro, zero JavaScript.
+   É a diferença de arquitetura em relação ao Bootstrap, que usa JS e ARIA. */
+.barra { background: var(--marca); color: var(--superficie); }
+.barra__interno { display: flex; flex-wrap: wrap; align-items: center;
+                  gap: var(--e-3); padding-block: var(--e-3); }
+.barra__marca { font-size: 1.15rem; font-weight: 700; color: var(--superficie); text-decoration: none; }
+/* Escondido da vista, mas ainda alcançável pelo Tab — display:none tiraria
+   o checkbox da ordem de foco e o menu ficaria inacessível pelo teclado. */
+.barra__gatilho { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.barra__gatilho:focus-visible + .barra__botao { outline: 3px solid #fff; outline-offset: 2px; }
+.barra__botao { margin-left: auto; padding: var(--e-1) var(--e-2); cursor: pointer;
+                border: 1px solid rgba(255, 255, 255, .35); border-radius: .5rem; }
+.barra__menu { display: none; width: 100%; }
+.barra__gatilho:checked ~ .barra__menu { display: block; }
+.barra__menu ul { display: flex; flex-direction: column; gap: var(--e-2);
+                  list-style: none; margin: 0; padding: 0; }
+.barra__menu a { color: rgba(255, 255, 255, .85); text-decoration: none; padding-block: var(--e-1); }
+.barra__menu a:hover, .barra__menu a[aria-current="page"] { color: var(--superficie); font-weight: 600; }
+
+@media (min-width: 992px) {                     /* o navbar-expand-lg equivalente */
+  .barra__botao { display: none; }
+  .barra__menu { display: block; width: auto; margin-left: auto; }
+  .barra__menu ul { flex-direction: row; gap: var(--e-4); }
+}
+
+/* ---------- 9. Rodapé ---------- */
+.rodape { background: var(--marca-escura); color: rgba(255, 255, 255, .82); margin-top: var(--e-5); }
+.rodape a, .rodape h2 { color: var(--superficie); }

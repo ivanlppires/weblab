@@ -362,7 +362,7 @@ Uma função `async` **embrulha** o retorno numa Promise. Consequência prática
 
 ### 4.2 `await` pausa a função, não a página
 
-Este é o mal-entendido número um da turma. Quando o motor encontra um `await`, ele:
+Este é o mal-entendido número um de quem está aprendendo `async`/`await`. Quando o motor encontra um `await`, ele:
 
 1. Registra o resto da função como uma continuação (uma microtarefa).
 2. **Devolve o controle** para quem chamou a função.
@@ -404,7 +404,7 @@ async function exibirProdutoSeguro(id) {
 
 O mapeamento é direto: `.then` → o corpo do `try`; `.catch` → o bloco `catch`; `.finally` → o bloco `finally`.
 
-### 4.4 Os dois erros que a turma inteira comete
+### 4.4 Os dois erros mais comuns
 
 **Erro 1 — esquecer o `await`.**
 
@@ -1268,7 +1268,7 @@ O parâmetro precisa ser uma **função** que cria a Promise (`() => buscarProdu
 ### ⭐ O cronômetro do cardápio
 Tags: async, performance, devtools
 
-Você trocou dois `await` em sequência por um `Promise.all` e o professor disse que ficou mais rápido. Mas "mais rápido" é opinião até virar número. Meça: quanto tempo, exatamente, o seu cardápio leva para aparecer nas duas versões? E o que acontece com esses números quando a conexão é ruim de verdade?
+Você trocou dois `await` em sequência por um `Promise.all` e alguém disse que ficou mais rápido. Mas "mais rápido" é opinião até virar número. Meça: quanto tempo, exatamente, o seu cardápio leva para aparecer nas duas versões? E o que acontece com esses números quando a conexão é ruim de verdade?
 
 **Critérios de pronto**
 

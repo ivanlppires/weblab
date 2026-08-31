@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 08 — Experimento com Tailwind 4 (§5.1)</title>
+
+  <!-- Play CDN do Tailwind 4. Carrega o COMPILADOR no navegador e monta o CSS na hora.
+       Serve para aprender e prototipar. Em produção: npm install tailwindcss + build.
+       O endereço cdn.tailwindcss.com, dos tutoriais antigos, é do Tailwind 3. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-stone-100 p-8">
+
+  <h1 class="sr-only">Experimento com Tailwind 4</h1>
+
+  <p class="mb-6 max-w-xl text-sm text-stone-600">
+    Este é o arquivo <code class="rounded bg-stone-200 px-1">experimentos/tailwind.html</code> da §5.1,
+    linha por linha. Compare com o card do Bootstrap da §4.5: mesmo resultado visual,
+    filosofias opostas.
+  </p>
+
+  <div class="max-w-sm overflow-hidden rounded-xl bg-white shadow-lg">
+    <img class="h-48 w-full object-cover" src="../cafe-cerrado/img/espresso.jpg"
+         alt="Xícara de espresso sobre a mesa de madeira">
+    <div class="p-6">
+      <h2 class="mb-2 text-xl font-bold text-stone-800">Espresso do Cerrado</h2>
+      <p class="mb-4 text-stone-600">Grãos de Alto Paraíso, torra média, final achocolatado.</p>
+      <a href="#"
+         class="inline-block rounded-lg bg-amber-800 px-4 py-2 font-semibold text-white hover:bg-amber-900">
+        Ver detalhes
+      </a>
+    </div>
+  </div>
+
+  <div class="mt-8 max-w-xl rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-stone-700">
+    <p class="mb-2 font-bold">Para mostrar na aba Elements:</p>
+    <ul class="list-disc space-y-1 pl-5">
+      <li>Nenhuma dessas classes sabe o que é um botão. <code>px-4</code> é padding lateral;
+        <code>bg-amber-800</code> é uma cor da paleta; <code>hover:bg-amber-900</code> é a mesma
+        coisa dentro de <code>:hover</code>.</li>
+      <li>O Play CDN <b>injeta uma tag &lt;style&gt;</b> no topo do documento com o CSS que ele
+        acabou de gerar. Procure por ela na aba Elements: é o compilador trabalhando ao vivo.</li>
+      <li>Na aba Network não existe hash <code>integrity</code> — conteúdo gerado não tem hash fixa.
+        É por isso que o Tailwind entra no curso como experimento, não como dependência de produção (§7.1).</li>
+    </ul>
+  </div>
+
+</body>
+</html>

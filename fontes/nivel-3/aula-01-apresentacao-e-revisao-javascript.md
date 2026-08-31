@@ -1,4 +1,4 @@
-# Aula 01 — Apresentação da disciplina e revisão de JavaScript
+# Aula 01 — Apresentação da trilha e revisão de JavaScript
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
 > WebLab · UNEMAT — Campus Sinop
@@ -8,7 +8,7 @@
 
 Ao final desta aula você será capaz de:
 
-- Descrever a estrutura do curso: unidades, cronograma e os marcos do projeto autoral.
+- Descrever a estrutura da trilha: unidades e os marcos do projeto autoral.
 - Configurar o ambiente de desenvolvimento (Node.js 22 LTS, VS Code, Git) e validar a instalação.
 - Explicar por que frameworks front-end existem, comparando manipulação manual do DOM com um paradigma declarativo.
 - Escrever e ler código JavaScript moderno (ES2015+): `let`/`const`, arrow functions, desestruturação, spread/rest, template literals, optional chaining e nullish coalescing.
@@ -19,7 +19,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
-Esta é a primeira aula — não há pré-requisito de conteúdo da disciplina. Você precisa apenas de:
+Esta é a primeira aula — não há pré-requisito de conteúdo desta trilha. Você precisa apenas de:
 
 - Um notebook capaz de rodar Node.js 22 e o VS Code (Windows, Linux ou macOS).
 - Conta no [GitHub](https://github.com) criada antes da aula.
@@ -32,21 +32,21 @@ Esta é a primeira aula — não há pré-requisito de conteúdo da disciplina. 
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Apresentação da disciplina, cronograma, marcos do projeto autoral, instalação do ambiente |
+| 1 | 50 min | Apresentação da trilha, unidades, marcos do projeto autoral, instalação do ambiente |
 | 2 | 50 min | Por que frameworks existem: DOM manual vs. paradigma declarativo |
-| 3 | 50 min | Revisão de JavaScript moderno (ES2015+) com foco no domínio de dados do curso |
+| 3 | 50 min | Revisão de JavaScript moderno (ES2015+) com foco no domínio de dados da trilha |
 
-## 1. Apresentação da disciplina
+## 1. Apresentação da trilha
 
 ### 1.1 O que é esta trilha
 
 Esta trilha nasceu da disciplina **FACET-SNP-310 — Frameworks Modernos para Desenvolvimento de Sistemas** (FACET/UNEMAT — Campus Sinop) e é publicada aberta: são 15 aulas de cerca de 150 minutos cada, mais uma hora de prática por aula. Quem cursa a disciplina acompanha o calendário da turma; quem estuda por conta própria avança no ritmo que conseguir sustentar — a ordem das aulas é a mesma nos dois casos, porque cada uma depende da anterior. Quem escreveu e revisou cada parte está na página [Autoria e créditos](../autores/).
 
-A ementa oficial do curso é:
+O que esta trilha cobre:
 
 > "Desenvolvimento com uso de frameworks; padrões: criacionais, estruturais e comportamentais; aplicação conjunta das abordagens de frameworks e componentes no desenvolvimento de software."
 
-Isso significa duas coisas na prática: (1) você vai aprender a construir aplicações reais com um framework front-end moderno e depois integrá-las a um back-end; (2) ao longo do caminho, vamos identificar **padrões de projeto clássicos (GoF)** escondidos dentro das ferramentas que usamos — Vue, Vuetify, Pinia, Express — porque a ementa exige isso explicitamente, e porque entender o padrão por trás da ferramenta é o que separa quem usa framework de quem entende framework.
+Isso significa duas coisas na prática: (1) você vai aprender a construir aplicações reais com um framework front-end moderno e depois integrá-las a um back-end; (2) ao longo do caminho, vamos identificar **padrões de projeto clássicos (GoF)** escondidos dentro das ferramentas que usamos — Vue, Vuetify, Pinia, Express — porque isso é um compromisso central desta trilha, e porque entender o padrão por trás da ferramenta é o que separa quem usa framework de quem entende framework.
 
 ### 1.2 As três unidades
 
@@ -60,7 +60,7 @@ Isso significa duas coisas na prática: (1) você vai aprender a construir aplic
 
 | # | Unidade | Tema |
 |---|---|---|
-| 01 | U1 | Apresentação da disciplina e revisão de JavaScript |
+| 01 | U1 | Apresentação da trilha e revisão de JavaScript |
 | 02 | U1 | Introdução ao Vue: lifecycle, instância, data e methods, diretivas básicas |
 | 03 | U1 | Vue: v-if, v-else, v-for, computed e onMounted |
 | 04 | U1 | Introdução a Vuetify e Vue Router — **Marco 1 do projeto** |
@@ -76,13 +76,13 @@ Isso significa duas coisas na prática: (1) você vai aprender a construir aplic
 | 14 | U3 | Documentação com Swagger |
 | 15 | U3 | Apresentação dos resultados — **Marco 3 do projeto** |
 
-As datas dos encontros ficam no cronograma da disciplina, anunciado em aula e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
+O conteúdo abaixo é o mesmo, esteja você seguindo o calendário de uma turma ou estudando por conta própria, em qualquer época — as datas de uma oferta específica, quando existem, ficam de fora deste texto.
 
-Todas as aulas 01 a 15 constroem, em sala, uma aplicação de referência chamada **UniEventos** — uma plataforma de divulgação e inscrição em eventos acadêmicos. Você vai acompanhar essa construção passo a passo, mas seu **projeto autoral** (o que evolui até cada marco) terá a mesma arquitetura aplicada a um domínio diferente, escolhido por você. Falamos disso na Seção 1.6.
+Todas as aulas 01 a 15 constroem, passo a passo, uma aplicação de referência chamada **UniEventos** — uma plataforma de divulgação e inscrição em eventos acadêmicos. Você vai acompanhar essa construção junto com o material, mas seu **projeto autoral** (o que evolui até cada marco) terá a mesma arquitetura aplicada a um domínio diferente, escolhido por você. Falamos disso na Seção 1.6.
 
 ### 1.4 Marcos do projeto
 
-O curso está dividido em três marcos, um ao final de cada unidade. Cada marco é um estado que o seu projeto autoral precisa alcançar — não uma prova separada — e mostra que você domina o conteúdo daquela unidade.
+Esta trilha está dividida em três marcos, um ao final de cada unidade. Cada marco é um estado que o seu projeto autoral precisa alcançar — não uma prova separada — e mostra que você domina o conteúdo daquela unidade.
 
 | Marco | Escopo |
 |---|---|
@@ -90,23 +90,23 @@ O curso está dividido em três marcos, um ao final de cada unidade. Cada marco 
 | Marco 2 | Vue avançado: Vuetify + Axios + Vue Router + Pinia |
 | Marco 3 | Back-end: Firebase/Express/Supabase, banco de dados, autenticação |
 
-Os requisitos completos de cada marco — o que precisa estar pronto e como conferir — são detalhados na aula que fecha a unidade correspondente: o Marco 1 na Aula 04, o Marco 2 na Aula 08, o Marco 3 na Aula 15. Quem cursa a disciplina em sala recebe do professor os prazos e a forma de acompanhamento de cada marco; quem estuda por conta própria usa os marcos como metas de progresso no próprio ritmo.
+Os requisitos completos de cada marco — o que precisa estar pronto e como conferir — são detalhados na aula que fecha a unidade correspondente: o Marco 1 na Aula 04, o Marco 2 na Aula 08, o Marco 3 na Aula 15. Se você está seguindo esta trilha em uma disciplina com professor, é dele que vêm os prazos e a forma de acompanhamento de cada marco; se está estudando por conta própria, use os marcos como metas de progresso no seu próprio ritmo.
 
 ### 1.5 Comunicação
 
-Canais de acompanhamento do curso:
+Canais de acompanhamento:
 
 - **E-mail** — dúvidas pontuais sobre o conteúdo.
-- **GitHub** — cada estudante mantém um repositório público do projeto autoral; é ali que o progresso é acompanhado semana a semana, por você mesmo, por um colega ou pelo professor, para quem cursa a disciplina em sala.
+- **GitHub** — mantenha um repositório público do projeto autoral; é ali que o progresso fica visível ao longo do tempo, para você mesmo, para outra pessoa que revise seu código, ou para quem eventualmente lhe orienta (um professor, um mentor, um colega mais experiente).
 
-Quem cursa a disciplina em sala recebe também os avisos, datas e canais oficiais da própria instituição.
+Se você está cursando esta trilha como disciplina em uma instituição, ela também é quem fornece os avisos, prazos e canais complementares próprios daquela oferta.
 
 > **💡 Dica**
 > Comite no seu repositório do projeto autoral **toda semana**, mesmo que pouco. Um histórico de commits ao longo do tempo mostra evolução de verdade — vale muito mais do que um único commit gigante na véspera de um marco.
 
 ### 1.6 O projeto autoral
 
-Cada estudante escolhe, ainda nesta primeira semana, um **domínio de aplicação diferente** do UniEventos (o projeto que construiremos em sala), mas segue exatamente a mesma arquitetura técnica: Vue 3 → Vuetify + Vue Router → Axios + Pinia → back-end Express → banco de dados → autenticação → deploy.
+Escolha, logo no início desta trilha, um **domínio de aplicação diferente** do UniEventos (o projeto que construiremos ao longo do material), mas siga exatamente a mesma arquitetura técnica: Vue 3 → Vuetify + Vue Router → Axios + Pinia → back-end Express → banco de dados → autenticação → deploy.
 
 Exemplos de temas válidos:
 
@@ -125,9 +125,9 @@ Regras para o tema:
 
 ### 1.7 Ambiente de desenvolvimento
 
-Vamos instalar, nesta aula, tudo que será usado até o fim do semestre. As versões abaixo foram testadas no ambiente real da disciplina — use exatamente estas.
+Vamos instalar, nesta aula, tudo que será usado até o fim da trilha. As versões abaixo foram testadas no ambiente real desta trilha — use exatamente estas.
 
-| Ferramenta | Versão usada na disciplina |
+| Ferramenta | Versão usada nesta trilha |
 |---|---|
 | Node.js | 22.22.2 LTS |
 | npm | 10.9.7 (vem com o Node) |
@@ -166,7 +166,7 @@ npm -v
    - **ESLint** — aponta erros e más práticas enquanto você digita.
    - **Prettier - Code formatter** — formatação automática e consistente.
 
-4. **Navegador com DevTools.** Use Chrome, Edge ou Firefox — qualquer um com um bom painel de DevTools (`F12`). Vamos usar a aba **Elements** (inspecionar DOM), **Console** e **Network** (ver requisições) o semestre inteiro.
+4. **Navegador com DevTools.** Use Chrome, Edge ou Firefox — qualquer um com um bom painel de DevTools (`F12`). Vamos usar a aba **Elements** (inspecionar DOM), **Console** e **Network** (ver requisições) do início ao fim da trilha.
 
 5. **Git e GitHub.**
 
@@ -178,7 +178,7 @@ git config --global user.name "Seu Nome"
 git config --global user.email "seu-email@exemplo.com"
 ```
 
-Crie uma conta em [github.com](https://github.com) se ainda não tiver. Vamos usar o GitHub para hospedar o código do projeto autoral e, mais adiante no semestre, para o deploy.
+Crie uma conta em [github.com](https://github.com) se ainda não tiver. Vamos usar o GitHub para hospedar o código do projeto autoral e, mais adiante nesta trilha, para o deploy.
 
 > **💡 Dica**
 > Depois de instalar tudo, rode `node -v`, `npm -v` e `git --version` e tire um print. Cole no seu README como evidência de ambiente pronto — é o primeiro item do checkpoint desta aula.
@@ -297,16 +297,16 @@ Compare com o que faremos a partir da Aula 02, em Vue:
 
 Note a diferença de raciocínio: no código Vue você **descreve o resultado desejado** ("a lista deve mostrar `eventosFiltrados`") e o framework decide, sozinho, quando e como atualizar o DOM. Você não escreve `innerHTML = ''`, não escreve `addEventListener`, não gerencia manualmente qual elemento criar ou remover. Isso é **programação declarativa**: você declara o "o quê", o framework resolve o "como".
 
-Essa é a promessa central de um framework front-end reativo como o Vue — e é o fio condutor do semestre inteiro. Ainda não vamos escrever Vue hoje (isso começa na Aula 02); hoje construímos a base de JavaScript que sustenta tudo isso.
+Essa é a promessa central de um framework front-end reativo como o Vue — e é o fio condutor de toda esta trilha. Ainda não vamos escrever Vue hoje (isso começa na Aula 02); hoje construímos a base de JavaScript que sustenta tudo isso.
 
-### 2.3 Conceitos que você vai ouvir o semestre inteiro
+### 2.3 Conceitos que você vai ouvir o tempo todo
 
 - **SPA (Single Page Application) vs. MPA (Multi Page Application).** Uma MPA tradicional recarrega o HTML inteiro do servidor a cada navegação. Uma SPA carrega um único HTML inicial e, depois, troca apenas os pedaços de tela necessários via JavaScript — é o modelo que o Vue Router (Aula 04) implementa.
 - **Client-side rendering (CSR).** O HTML final da página é montado no navegador do usuário, em JavaScript, a partir de dados — em vez de vir pronto do servidor. É o padrão que usaremos com Vue + Vite.
 - **Bundler.** Ferramenta que pega seus arquivos-fonte (`.vue`, `.js`, `.css`, módulos separados) e os empacota em arquivos otimizados para o navegador. Usaremos o **Vite** a partir da Aula 02.
 - **Transpilação.** Processo de converter uma sintaxe moderna (ES2022+, ou até TypeScript) em um JavaScript que rode em navegadores mais antigos ou que corresponda ao que o navegador entende nativamente. O Vite faz isso por baixo dos panos.
 - **npm e `package.json`.** O `npm` (Node Package Manager) instala bibliotecas de terceiros. O `package.json` é o arquivo que lista essas dependências e os scripts do projeto (`npm run dev`, por exemplo).
-- **SemVer (versionamento semântico).** Versões no formato `MAIOR.MENOR.PATCH` (ex.: `3.5.41`). Mudanças de `MAIOR` podem quebrar compatibilidade; `MENOR` adiciona funcionalidade sem quebrar; `PATCH` corrige bugs. É por isso que, nesta disciplina, **fixamos versões exatas** — evita que seu projeto quebre por uma atualização automática no meio do semestre.
+- **SemVer (versionamento semântico).** Versões no formato `MAIOR.MENOR.PATCH` (ex.: `3.5.41`). Mudanças de `MAIOR` podem quebrar compatibilidade; `MENOR` adiciona funcionalidade sem quebrar; `PATCH` corrige bugs. É por isso que, nesta trilha, **fixamos versões exatas** — evita que seu projeto quebre por uma atualização automática inesperada.
 
 ## 3. Revisão de JavaScript moderno (ES2015+)
 
@@ -336,7 +336,7 @@ if (vagasDisponiveis > 0) {
 ```
 
 > **⚠️ Atenção**
-> Nunca use `var` em código novo. `var` "vaza" para fora de blocos `if`/`for`, o que gera bugs difíceis de rastrear. A disciplina inteira usa apenas `let` e `const`.
+> Nunca use `var` em código novo. `var` "vaza" para fora de blocos `if`/`for`, o que gera bugs difíceis de rastrear. Esta trilha inteira usa apenas `let` e `const`.
 
 ### 3.2 Template literals
 
@@ -836,7 +836,7 @@ carregarEvento()
 > **🔎 Por baixo do capô**
 > `async/await` não é uma tecnologia nova e diferente de Promise — é **açúcar sintático** sobre Promise. `await` pausa a execução da função `async` até a Promise resolver ou rejeitar, sem bloquear o restante do programa. Todo `await` precisa estar dentro de uma função marcada `async`.
 
-**`fetch` com `async/await` e `try/catch` — o padrão que vamos usar o semestre inteiro:**
+**`fetch` com `async/await` e `try/catch` — o padrão que vamos usar do início ao fim da trilha:**
 
 ```js
 async function buscarEventosDaApi() {
@@ -883,7 +883,7 @@ carregarDadosDaHome()
 ```
 
 > **⚠️ Atenção**
-> `Promise.all` falha rápido: se uma das promises rejeitar, todas as outras são "abandonadas" do ponto de vista do `.catch`/`try-catch`, mesmo que já estivessem resolvidas. Quando precisar do resultado de todas independentemente de falha, use `Promise.allSettled` (não obrigatório nesta disciplina, mas bom saber que existe).
+> `Promise.all` falha rápido: se uma das promises rejeitar, todas as outras são "abandonadas" do ponto de vista do `.catch`/`try-catch`, mesmo que já estivessem resolvidas. Quando precisar do resultado de todas independentemente de falha, use `Promise.allSettled` (não obrigatório nesta trilha, mas bom saber que existe).
 
 ## 🧩 Padrão de projeto em uso — Module / Revealing Module
 

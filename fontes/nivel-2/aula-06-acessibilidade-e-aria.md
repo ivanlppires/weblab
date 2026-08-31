@@ -76,10 +76,10 @@ As **WCAG** (*Web Content Accessibility Guidelines*), do W3C, são o padrão mun
 Cada princípio se desdobra em diretrizes, e cada diretriz em **critérios de sucesso** numerados (1.1.1, 1.4.3, 2.4.7…) e classificados em três níveis:
 
 - **A** — mínimo. Sem isso, há gente que simplesmente não usa o site.
-- **AA** — o nível exigido pela maioria das leis e contratos. **É a nossa meta na disciplina.**
+- **AA** — o nível exigido pela maioria das leis e contratos. **É a nossa meta nesta trilha.**
 - **AAA** — máximo. Nem sempre alcançável para todo tipo de conteúdo; o próprio W3C não recomenda exigi-lo como política geral.
 
-Os critérios que mais aparecem no trabalho de vocês:
+Os critérios que mais aparecem no seu trabalho:
 
 | Critério | Nível | O que exige |
 |---|---|---|
@@ -158,7 +158,7 @@ A paleta do Café Cerrado — a mesma do `:root` desde a Aula 02, sem uma cor a 
 
 Leia a tabela de baixo para cima, porque é ali que está a lição. As cinco primeiras linhas passam com folga: marrom escuro sobre creme e branco sobre marrom são combinações seguras, e foi por isso que ninguém percebeu nada de errado nas Aulas 02 a 05.
 
-As três últimas são o padrão da turma inteira. O **botão de destaque** que você escreveu na Aula 02 (`background: var(--cor-destaque)` com texto branco) reprova por pouco — 3,7:1 onde a norma pede 4,5:1 — e "por pouco" não existe em acessibilidade. O **anel de foco** que você escreveu na Aula 05 com `var(--cor-destaque)` passa sobre o fundo claro do conteúdo (3,6:1, e o critério 1.4.11 pede 3:1) e reprova em cima da navbar marrom, que é justamente onde o `Tab` começa. E o cinza-claro que os tutoriais chamam de "texto secundário" é o erro de contraste mais comum da web — no Café Cerrado ele nem existe, porque `--cor-texto-suave` foi escolhido escuro o bastante.
+As três últimas são o erro mais comum entre quem está começando. O **botão de destaque** que você escreveu na Aula 02 (`background: var(--cor-destaque)` com texto branco) reprova por pouco — 3,7:1 onde a norma pede 4,5:1 — e "por pouco" não existe em acessibilidade. O **anel de foco** que você escreveu na Aula 05 com `var(--cor-destaque)` passa sobre o fundo claro do conteúdo (3,6:1, e o critério 1.4.11 pede 3:1) e reprova em cima da navbar marrom, que é justamente onde o `Tab` começa. E o cinza-claro que os tutoriais chamam de "texto secundário" é o erro de contraste mais comum da web — no Café Cerrado ele nem existe, porque `--cor-texto-suave` foi escolhido escuro o bastante.
 
 Nenhum desses três defeitos é visível a olho nu. Todos os três aparecem no Lighthouse e no seletor de cor do DevTools. O Passo 6 do Mão na massa corrige os dois primeiros.
 
@@ -854,7 +854,7 @@ Substitua os números pelos **seus** — o que vale aqui é o antes/depois real 
 
 **A2.** Cite os quatro princípios das WCAG e escreva uma prática de código para cada um.
 
-**A3.** Qual a diferença entre os níveis A, AA e AAA? Qual é a meta desta disciplina e por quê?
+**A3.** Qual a diferença entre os níveis A, AA e AAA? Qual é a meta desta trilha e por quê?
 
 **A4.** Um leitor de tela lê o DOM ou a árvore de acessibilidade? Quais são as quatro informações que ele obtém de cada nó?
 
@@ -957,14 +957,14 @@ No Console, `document.querySelector("#status-envio").textContent = "Mensagem env
 
 ### Nível C — Desafio
 
-**C1.** **Auditoria cruzada.** Em duplas, troque a URL do seu GitHub Pages com um colega. Cada um audita o site do outro em 25 minutos, produzindo um relatório com: nota do Lighthouse por página; três erros automáticos com o critério WCAG correspondente; três problemas que **só** o teste manual revelou (teclado, ordem de foco, `alt` inútil, texto de link inútil); e uma recomendação priorizada. Depois, cada um corrige o próprio site com base no relatório recebido e mede de novo. Entregue os dois relatórios e as notas antes/depois.
+**C1.** **Auditoria cruzada.** Encontre outra pessoa disposta a trocar sites com você — alguém do seu grupo de estudos, um amigo que também esteja aprendendo, ou alguém de uma comunidade online de dev — e troquem a URL do GitHub Pages. Cada um audita o site do outro em 25 minutos, produzindo um relatório com: nota do Lighthouse por página; três erros automáticos com o critério WCAG correspondente; três problemas que **só** o teste manual revelou (teclado, ordem de foco, `alt` inútil, texto de link inútil); e uma recomendação priorizada. Depois, cada um corrige o próprio site com base no relatório recebido e mede de novo. Entregue os dois relatórios e as notas antes/depois.
 
 <details><summary>Dica</summary>
 
 Reserve 10 minutos para as ferramentas automáticas e 15 para o teste manual — é o manual que encontra o que vale nota. Um bom relatório diz "o quê, onde, qual critério e como corrigir", nunca "o site tem problemas de acessibilidade".
 </details>
 
-**C2.** **Dez minutos de olhos fechados.** Ligue o NVDA (ou o VoiceOver/TalkBack), feche os olhos ou desligue o monitor e tente cumprir três tarefas no site de um colega: descobrir o preço de um item do cardápio; encontrar o telefone de contato; e chegar ao campo "Mensagem" do formulário. Cronometre cada tarefa e anote em que ponto você se perdeu.
+**C2.** **Dez minutos de olhos fechados.** Ligue o NVDA (ou o VoiceOver/TalkBack), feche os olhos ou desligue o monitor e tente cumprir três tarefas no site de outra pessoa (peça a alguém do seu grupo de estudos, ou use qualquer site com cardápio e formulário de contato): descobrir o preço de um item do cardápio; encontrar o telefone de contato; e chegar ao campo "Mensagem" do formulário. Cronometre cada tarefa e anote em que ponto você se perdeu.
 
 <details><summary>Dica</summary>
 
@@ -977,7 +977,7 @@ No NVDA, <kbd>H</kbd> pula entre títulos, <kbd>D</kbd> entre landmarks, <kbd>K<
 
 Tags: acessibilidade, investigacao, devtools
 
-Desconecte o mouse. Fisicamente, do computador — ou desative o touchpad. Por vinte minutos você vai usar apenas o teclado: o seu site, o site da UNEMAT, o SIGAA e um site de comércio à sua escolha. A maior parte da turma desiste nos primeiros três minutos. Não desista: o que incomoda você por vinte minutos é o dia inteiro de alguém.
+Desconecte o mouse. Fisicamente, do computador — ou desative o touchpad. Por vinte minutos você vai usar apenas o teclado: o seu site, o site da UNEMAT, o SIGAA e um site de comércio à sua escolha. A maioria das pessoas desiste nos primeiros três minutos. Não desista: o que incomoda você por vinte minutos é o dia inteiro de alguém.
 
 **Critérios de pronto**
 
@@ -1093,11 +1093,11 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 1. Use os checkpoints das Aulas 02 a 06 como lista de verificação, na ordem. A maior parte você já fez; o Boss é o que falta mais a integração.
 2. Rode o Lighthouse **antes** de mexer em qualquer coisa e guarde a captura: metade da nota da seção de acessibilidade do `README.md` é essa comparação.
 3. O item que mais reprova é o contraste, e o segundo é o texto de link inútil ("Saiba mais", "Clique aqui", "Ver detalhes" repetido seis vezes). Os dois são correções de minutos.
-4. Peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada anotação é um problema real a menos no seu site.
+4. Peça a alguém — colega de estudos, amigo, familiar — que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada anotação é um problema real a menos no seu site.
 5. Deixe o `README.md` por último, mas não para a última hora: ele é o único lugar onde você defende as suas decisões, e decisões bem defendidas fecham três critérios do checklist de uma vez.
 </details>
 
-**Para ir além:** peça a alguém de fora do curso — um parente, um colega de trabalho — para realizar uma tarefa no seu site sem nenhuma instrução sua ("descubra quanto custa um cappuccino"). Fique calado e cronometre. O que essa pessoa não achou em 30 segundos é o que o seu site esconde.
+**Para ir além:** peça a alguém que não seja da área de tecnologia — um parente, um colega de trabalho — para realizar uma tarefa no seu site sem nenhuma instrução sua ("descubra quanto custa um cappuccino"). Fique calado e cronometre. O que essa pessoa não achou em 30 segundos é o que o seu site esconde.
 
 ## 🐛 Erros comuns
 
@@ -1136,7 +1136,7 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 
 **Critério de pronto:** Lighthouse ≥ 90 nas três páginas; zero *Errors* no WAVE; teste de teclado percorrido sem falha; seção "Acessibilidade" no `README.md` com números reais; `evidencias/` com as capturas antes e depois.
 
-**Parte 3 — Registro (5 min).** Em `docs/sem-mouse.md`, conte em um parágrafo o momento mais difícil da sua navegação por teclado desta semana e o que você mudou no seu site por causa dele. Se puder, compare com um colega apontando um problema semelhante ou uma solução diferente.
+**Parte 3 — Registro (5 min).** Em `docs/sem-mouse.md`, conte em um parágrafo o momento mais difícil da sua navegação por teclado desta semana e o que você mudou no seu site por causa dele. Se puder, compare com outra pessoa que esteja estudando, apontando um problema semelhante ou uma solução diferente.
 
 **Guarde no seu repositório:** commit + push, com o link do GitHub Pages atualizado.
 
@@ -1165,7 +1165,7 @@ Ao fim desta aula — e da Unidade 1 — o repositório do seu projeto autoral p
 
 ### Escopo
 
-Este marco fecha a **Unidade 1 — Web estática** inteira: um *website client-side em HTML e CSS, com HTML semântico, layout responsivo, framework CSS, animação/SVG e acessibilidade*. Ele é sobre o **projeto autoral** que vem evoluindo desde a Aula 01 — não o Café Cerrado, que é o exemplo construído em sala.
+Este marco fecha a **Unidade 1 — Web estática** inteira: um *website client-side em HTML e CSS, com HTML semântico, layout responsivo, framework CSS, animação/SVG e acessibilidade*. Ele é sobre o **projeto autoral** que vem evoluindo desde a Aula 01 — não o Café Cerrado, que é o projeto de exemplo construído ao longo das aulas.
 
 O projeto deve:
 

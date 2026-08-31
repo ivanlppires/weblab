@@ -71,7 +71,7 @@ Elementos podem conter outros, mas precisam ser fechados na **ordem inversa** da
 O aninhamento é o que transforma o HTML em uma **árvore** — a mesma árvore que você viu na Aula 01 com o nome de DOM. `<p>` é pai de `<strong>`, que é pai de `<em>`. Todo elemento tem exatamente um pai (exceto `<html>`, a raiz) e pode ter vários filhos.
 
 > **🧠 Você sabia?**
-> O navegador nunca se recusa a exibir um HTML "errado". A especificação da WHATWG descreve, passo a passo, como o parser deve **se recuperar** de cada tipo de erro: uma tag cruzada é reorganizada, um `</li>` esquecido é inserido, um `<p>` aberto dentro de outro `<p>` fecha o anterior. É por isso que páginas quebradas "funcionam" — e por isso que o resultado às vezes não é o que você escreveu. Aliás, pela especificação, fechar `<li>`, `<p>`, `<td>` e `<tr>` é **opcional**; nesta disciplina você fecha tudo, sempre, porque código previsível é mais fácil de ler, depurar e manter.
+> O navegador nunca se recusa a exibir um HTML "errado". A especificação da WHATWG descreve, passo a passo, como o parser deve **se recuperar** de cada tipo de erro: uma tag cruzada é reorganizada, um `</li>` esquecido é inserido, um `<p>` aberto dentro de outro `<p>` fecha o anterior. É por isso que páginas quebradas "funcionam" — e por isso que o resultado às vezes não é o que você escreveu. Aliás, pela especificação, fechar `<li>`, `<p>`, `<td>` e `<tr>` é **opcional**; nesta trilha você fecha tudo, sempre, porque código previsível é mais fácil de ler, depurar e manter.
 
 ## 2. Estrutura mínima de um documento
 
@@ -902,7 +902,7 @@ Use a página de palestrantes como modelo: `<header>` com seu nome no `<h1>`, `<
 O exemplo da §7 é quase esse esqueleto. O subtítulo da notícia é um `<p>` dentro do `<header>` do artigo, não um `<h2>` — subtítulo jornalístico é descrição, não seção. As tags do assunto cabem em uma `<ul>` dentro do `<footer>` do artigo.
 </details>
 
-**B3.** Reproduza em HTML a tabela com a sequência das 15 aulas desta disciplina (está na Aula 01), usando `<caption>`, `<thead>`, `<tbody>` e `<th scope>` corretamente. Mescle células nas linhas que fecham unidade (06, 10, 15) para indicar "Marco do projeto".
+**B3.** Reproduza em HTML a tabela com a sequência das 15 aulas desta trilha (está na Aula 01), usando `<caption>`, `<thead>`, `<tbody>` e `<th scope>` corretamente. Mescle células nas linhas que fecham unidade (06, 10, 15) para indicar "Marco do projeto".
 
 **Resultado esperado:** uma tabela de 15 linhas de dados, três `<th scope="row">` de marco mesclados com `colspan`, e cada linha somando o mesmo número de colunas.
 
@@ -962,7 +962,7 @@ Na aba Network, filtre por *Doc*: uma MPA carrega um novo documento HTML a cada 
 Use *Validate by URI*. Sites grandes costumam ter dezenas de erros — isso não os impede de funcionar (lembre-se do "Você sabia?" da §1), mas mostra por que o validador é um padrão de qualidade e não uma obrigação técnica.
 </details>
 
-**B8.** Página institucional do curso. Construa `exercicios/aula02/curso-si.html`, uma página sobre o curso de Sistemas de Informação, contendo obrigatoriamente: estrutura completa do documento com todas as `<meta>` vistas; `<header>` com `<h1>` e `<nav>` com 4 links de âncora interna; `<main>` com três `<section>`, cada uma com `<h2>` e conteúdo; uma lista ordenada com as etapas do ciclo requisição-resposta (Aula 01); uma lista de definições com 5 termos técnicos da Aula 01; uma tabela com a grade de uma fase do curso (disciplina, carga horária, professor); um `<blockquote>` com citação e `<cite>`; `<footer>` com direitos autorais usando `&copy;`.
+**B8.** Página institucional de um curso. Construa `exercicios/aula02/curso.html`, uma página sobre um curso técnico ou de graduação — o seu, se você estiver cursando um, ou o Sistemas de Informação da UNEMAT, como no exemplo a seguir —, contendo obrigatoriamente: estrutura completa do documento com todas as `<meta>` vistas; `<header>` com `<h1>` e `<nav>` com 4 links de âncora interna; `<main>` com três `<section>`, cada uma com `<h2>` e conteúdo; uma lista ordenada com as etapas do ciclo requisição-resposta (Aula 01); uma lista de definições com 5 termos técnicos da Aula 01; uma tabela com a grade de uma fase do curso (disciplina, carga horária, professor); um `<blockquote>` com citação e `<cite>`; `<footer>` com direitos autorais usando `&copy;`.
 
 **Resultado esperado:** zero erros no validador; os 4 links de âncora funcionando; a tabela com `<caption>`, `<thead>` e `<th scope>`.
 
@@ -973,7 +973,7 @@ Use *Validate by URI*. Sites grandes costumam ter dezenas de erros — isso não
 
 ### Nível C — Desafio
 
-**C1.** Site institucional de 4 páginas. Construa, em `exercicios/aula02/curso/`, um site sobre o curso de Sistemas de Informação da UNEMAT com quatro páginas interligadas: `index.html` (apresentação), `grade.html` (tabela com a grade curricular completa), `corpo-docente.html` (lista de professores com formação) e `contato.html` (endereço, telefone, e-mail e mapa em link). Requisitos: navegação idêntica em todas as páginas; caminhos relativos corretos; HTML5 semântico; zero erros no validador; nomes de arquivos em minúsculas sem acentos. Sem CSS ainda — este site será estilizado nas Aulas 05 e 06.
+**C1.** Site institucional de 4 páginas. Construa, em `exercicios/aula02/curso/`, um site sobre um curso técnico ou de graduação — o seu, ou o Sistemas de Informação da UNEMAT, cuja grade é pública — com quatro páginas interligadas: `index.html` (apresentação), `grade.html` (tabela com a grade curricular completa), `corpo-docente.html` (lista de professores com formação) e `contato.html` (endereço, telefone, e-mail e mapa em link). Requisitos: navegação idêntica em todas as páginas; caminhos relativos corretos; HTML5 semântico; zero erros no validador; nomes de arquivos em minúsculas sem acentos. Sem CSS ainda — este site será estilizado nas Aulas 05 e 06.
 
 <details><summary>Dica</summary>
 
@@ -1018,7 +1018,7 @@ O trecho abaixo "funciona" — abre no navegador e mostra tudo. Mesmo assim, ele
 **Critérios de pronto**
 
 - Uma lista numerada com cada problema, a linha em que está e uma classificação: "o validador encontra" ou "só um humano encontra".
-- Pelo menos oito problemas listados (há mais — quem achar dez ganha destaque em sala).
+- Pelo menos oito problemas listados (há mais — quem achar dez merece destaque especial).
 - A versão corrigida, validada com zero erros e zero avisos.
 - Uma frase explicando por que os problemas que o validador **não** encontra são, ainda assim, problemas.
 
@@ -1137,7 +1137,7 @@ A Wikipédia é um dos sites mais bem estruturados da Web: sumário com âncoras
 
 No **projeto autoral**: replique no seu `meu-projeto/` o que o site do evento ganhou hoje — `index.html` completo (cabeçalho, navegação com as cinco páginas, três seções com `<h2>`, uma lista ordenada, uma lista de definições, um `<blockquote>`, rodapé), mais uma página com uma tabela de dados do seu domínio e uma página com `<article>` por item (o equivalente aos palestrantes).
 
-**Parte 3 — Fórum (10 min).** Poste no fórum "Semântica importa": encontre um site real com problemas de semântica (uso excessivo de `div`, títulos fora de ordem, links "clique aqui") e descreva três problemas encontrados com a correção proposta para cada. Comente a postagem de um colega.
+**Parte 3 — Registro (10 min).** Escreva, no seu repositório ou no fórum da turma (se houver), uma nota "Semântica importa": encontre um site real com problemas de semântica (uso excessivo de `div`, títulos fora de ordem, links "clique aqui") e descreva três problemas encontrados com a correção proposta para cada. Se puder, compare com o que outra pessoa encontrou.
 
 **Critério de pronto:** o currículo e as três páginas do projeto autoral passam no validador com zero erros; a navegação do projeto autoral não leva a nenhum `404`.
 

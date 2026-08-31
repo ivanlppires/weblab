@@ -52,7 +52,7 @@ Até aqui o UniEventos não tinha usuários — só eventos. Se fôssemos implem
 1. **Nunca se guarda a senha em texto puro.** Se o banco vazar, todas as senhas vazam — e como a maioria das pessoas reutiliza senha entre sites, o estrago vai muito além do seu sistema.
 2. **Hash não é criptografia.** Criptografia é reversível (existe uma chave para desfazer). Hash é uma função de mão única: você transforma a senha em uma sequência de caracteres da qual, na prática, não dá para voltar. No login, você faz o hash da senha digitada e compara com o hash guardado — nunca descriptografa nada. Bibliotecas como `bcrypt` fazem isso com "salt" (um valor aleatório por usuário) para que duas pessoas com a mesma senha não gerem o mesmo hash, e com um custo computacional propositalmente alto, para dificultar ataques de força bruta.
 
-Fazer isso corretamente — hash com salt, custo ajustável, fluxo de "esqueci minha senha", verificação de e-mail, proteção contra força bruta, login social — é trabalho considerável e cheio de detalhes fáceis de errar. Por isso, na disciplina (e em grande parte dos projetos reais de pequeno e médio porte) **delegamos a identidade a um provedor especializado**: o Firebase Authentication. Ele guarda a senha (com hash correto, num banco que não é o seu), emite um token assinado provando quem é o usuário, e você só precisa validar esse token.
+Fazer isso corretamente — hash com salt, custo ajustável, fluxo de "esqueci minha senha", verificação de e-mail, proteção contra força bruta, login social — é trabalho considerável e cheio de detalhes fáceis de errar. Por isso, nesta trilha (e em grande parte dos projetos reais de pequeno e médio porte) **delegamos a identidade a um provedor especializado**: o Firebase Authentication. Ele guarda a senha (com hash correto, num banco que não é o seu), emite um token assinado provando quem é o usuário, e você só precisa validar esse token.
 
 > **⚠️ Atenção**
 > Delegar autenticação não elimina a responsabilidade de proteger seus endpoints. O Firebase resolve "provar quem é o usuário". Decidir "o que esse usuário pode fazer no meu sistema" continua sendo trabalho do seu back-end.
@@ -309,8 +309,8 @@ export const useAuthStore = defineStore('auth', () => {
       ehAdmin.value = false
       return
     }
-    // `true` força a busca de um token novo — necessário logo depois de o professor
-    // marcar você como admin no back-end (seção 8.4)
+    // `true` força a busca de um token novo — necessário logo depois de
+    // marcar o usuário como admin no back-end (seção 8.4)
     const resultado = await usuario.value.getIdTokenResult(true)
     ehAdmin.value = resultado.claims.admin === true
   }
@@ -526,7 +526,7 @@ serviceAccountKey.json
 > `serviceAccountKey.json` nunca vai para o Git. Se você já commitou por engano, o arquivo precisa ser considerado comprometido: revogue a chave no console (Contas de serviço → gerenciar chaves) e gere outra. Em produção (Render, Railway etc.) prefira uma variável de ambiente com o JSON inteiro codificado em base64, decodificada na inicialização — assim nenhum arquivo sensível precisa existir no disco do servidor.
 
 ```bash
-# instalação, versão travada conforme especificação da disciplina
+# instalação, versão travada conforme especificação desta trilha
 npm install firebase-admin@14.2.0
 ```
 
@@ -656,7 +656,7 @@ console.log(`${email} agora é administrador.`)
 ```
 
 ```bash
-node scripts/promoverAdmin.js professor@unemat.br
+node scripts/promoverAdmin.js usuario@exemplo.com
 ```
 
 > **⚠️ Atenção**

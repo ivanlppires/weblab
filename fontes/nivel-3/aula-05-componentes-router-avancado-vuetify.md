@@ -183,7 +183,7 @@ const emit = defineEmits(['update:modelValue'])
 </template>
 ```
 
-As duas formas produzem exatamente o mesmo comportamento externo — `<CampoBusca v-model="termoBusca" />` funciona igual nos dois casos. `defineModel()` é mais curto e é o padrão desta disciplina daqui em diante, mas você vai encontrar a forma clássica em muito código existente (inclusive em bibliotecas), então precisa reconhecê-la.
+As duas formas produzem exatamente o mesmo comportamento externo — `<CampoBusca v-model="termoBusca" />` funciona igual nos dois casos. `defineModel()` é mais curto e é o padrão desta trilha daqui em diante, mas você vai encontrar a forma clássica em muito código existente (inclusive em bibliotecas), então precisa reconhecê-la.
 
 > **🔎 Por baixo do capô:** `v-model="x"` em um componente é açúcar sintático para `:model-value="x" @update:model-value="x = $event"`. É exatamente o mesmo mecanismo de prop + evento que você já usa manualmente — só que com uma sintaxe mais curta, reconhecida pelo compilador do Vue.
 

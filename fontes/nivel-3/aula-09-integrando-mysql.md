@@ -28,7 +28,7 @@ Guarde desde já uma decisão que vai valer para toda a Unidade 3: **as colunas 
 - [ ] `unieventos-api` da Aula 08, com CRUD completo em memória, middlewares e validação Zod funcionando.
 - [ ] `requests.http` cobrindo todos os endpoints (Aula 08).
 - [ ] Marco 2 alcançado.
-- [ ] Modelagem relacional revisada: entidade, atributo, chave primária e estrangeira (conteúdo de disciplinas anteriores de banco de dados — hoje é aplicação, não introdução).
+- [ ] Modelagem relacional revisada: entidade, atributo, chave primária e estrangeira (conteúdo de cursos anteriores de banco de dados ou estudo prévio equivalente — hoje é aplicação, não introdução).
 - [ ] Máquina com privilégios de administrador para instalar o MySQL (ou Docker instalado, como alternativa).
 - [ ] Ao menos uma ferramenta gráfica de banco escolhida (MySQL Workbench, DBeaver ou a extensão do VS Code) para inspecionar tabelas visualmente durante a aula.
 
@@ -59,7 +59,7 @@ O array `eventos` das Aulas 07 e 08 vive na memória RAM do processo Node. Isso 
 
 O UniEventos tem entidades com relações claras entre si: um evento tem várias inscrições; uma inscrição pertence a um evento e a um usuário. Esse tipo de relação — um-para-muitos, muitos-para-muitos — é exatamente o que um **banco de dados relacional** (SGBD — Sistema Gerenciador de Banco de Dados) modela bem, com chaves estrangeiras garantindo a integridade dessas relações no próprio banco, não só no código da aplicação.
 
-**MySQL** é um dos SGBDs relacionais mais usados no mercado, de código aberto, com décadas de maturidade. A disciplina usa a versão 8, com o driver `mysql2` (Node) na versão 3.x, sempre pelo submódulo `mysql2/promise` — a variante que devolve `Promise`s em vez de exigir callbacks, compatível com `async`/`await`, no mesmo estilo que você já usa desde a Aula 01.
+**MySQL** é um dos SGBDs relacionais mais usados no mercado, de código aberto, com décadas de maturidade. Esta trilha usa a versão 8, com o driver `mysql2` (Node) na versão 3.x, sempre pelo submódulo `mysql2/promise` — a variante que devolve `Promise`s em vez de exigir callbacks, compatível com `async`/`await`, no mesmo estilo que você já usa desde a Aula 01.
 
 > **🔎 Por baixo do capô**
 > Você já viu o Firestore (Aula 07) como alternativa de persistência. A diferença central: o Firestore é um banco **NoSQL orientado a documentos** — cada documento é um JSON flexível, sem schema fixo entre documentos da mesma coleção, e relações entre coleções são geridas manualmente pela aplicação. Um SGBD relacional como o MySQL exige schema definido antes de inserir dados (as tabelas do script abaixo), mas em troca oferece integridade referencial garantida pelo próprio banco (`FOREIGN KEY`), consultas relacionais poderosas (`JOIN`) e transações ACID robustas. Nenhum dos dois é "melhor" em absoluto — a escolha depende do formato dos dados e das garantias que a aplicação precisa. O UniEventos usa MySQL a partir de hoje porque suas entidades são fortemente relacionadas (evento ↔ inscrição ↔ usuário), o caso de uso clássico para modelagem relacional.
@@ -105,7 +105,7 @@ Relembrando o modelo de dados do projeto (Aula 07, §3), as três entidades cent
 | índice em chave estrangeira | otimização | acelera buscas e junções (`JOIN`) que filtram por aquela coluna |
 
 > **⚠️ Atenção**
-> `DATETIME` no MySQL grava data e hora **sem informação de fuso** — é literalmente "19:00 no dia 15", sem dizer em qual fuso horário. Se a aplicação gravar horários locais (fuso de Sinop, UTC−4) e outra parte do sistema assumir UTC (o padrão do JavaScript com `new Date().toISOString()`), o horário exibido para o usuário fica deslocado. A prática mais segura: padronize um único fuso para toda a aplicação — o mais comum é gravar tudo em UTC no banco e converter para o fuso do usuário só na apresentação (no front-end). Esta disciplina, por simplicidade didática, grava os horários já no fuso local do evento; em um sistema com usuários em fusos diferentes, prefira UTC no banco.
+> `DATETIME` no MySQL grava data e hora **sem informação de fuso** — é literalmente "19:00 no dia 15", sem dizer em qual fuso horário. Se a aplicação gravar horários locais (fuso de Sinop, UTC−4) e outra parte do sistema assumir UTC (o padrão do JavaScript com `new Date().toISOString()`), o horário exibido para o usuário fica deslocado. A prática mais segura: padronize um único fuso para toda a aplicação — o mais comum é gravar tudo em UTC no banco e converter para o fuso do usuário só na apresentação (no front-end). Esta trilha, por simplicidade didática, grava os horários já no fuso local do evento; em um sistema com usuários em fusos diferentes, prefira UTC no banco.
 
 ### Script `sql/schema.sql` completo
 
@@ -283,7 +283,7 @@ const [linhas] = await pool.query('SELECT * FROM eventos WHERE categoria = ?', [
 const [linhas2] = await pool.execute('SELECT * FROM eventos WHERE categoria = ?', ['palestra'])
 ```
 
-Para a maioria dos casos, o comportamento observável é o mesmo — a diferença é performance em consultas repetidas com muita frequência (prepared statements do `execute` compensam o custo extra de preparo quando a mesma consulta roda muitas vezes). Esta disciplina usa `pool.execute` como padrão no repositório, por ser a prática mais recomendada em produção.
+Para a maioria dos casos, o comportamento observável é o mesmo — a diferença é performance em consultas repetidas com muita frequência (prepared statements do `execute` compensam o custo extra de preparo quando a mesma consulta roda muitas vezes). Esta trilha usa `pool.execute` como padrão no repositório, por ser a prática mais recomendada em produção.
 
 ### Consultas parametrizadas — e o ataque que elas evitam
 

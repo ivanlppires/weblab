@@ -15,7 +15,7 @@ Ao final deste capítulo você será capaz de:
 - Manter um processo Node vivo com pm2 (`pm2 start`, `pm2 save`, `pm2 startup`) e escrever a unidade `systemd` equivalente.
 - Emitir e renovar certificados com `sudo certbot --nginx`, conferindo o timer de renovação automática.
 - Publicar arquivos no servidor com `rsync` e explicar o que a barra final e o `--delete` fazem.
-- Operar o laboratório real da disciplina em `https://ivanpires.dev/dsw/gN/`: publicar o front em `~/frontend`, atualizar o back em `~/backend`, reiniciar o serviço e ler os logs.
+- Aplicar esse fluxo a um laboratório real usado como estudo de caso (§11), em `https://ivanpires.dev/dsw/gN/`: publicar o front em `~/frontend`, atualizar o back em `~/backend`, reiniciar o serviço e ler os logs — o mesmo passo a passo que você repete no seu próprio VPS.
 - Diagnosticar `502 Bad Gateway`, `403 Forbidden`, `Permission denied (publickey)` e falha de emissão de certificado usando os logs certos.
 
 ## 📋 Pré-requisitos
@@ -562,7 +562,7 @@ Os segredos (senha do banco, chaves) **não** entram aqui: este arquivo vai para
 
 ### 8.4 A alternativa nativa: `systemd`
 
-O pm2 é conveniente, mas o Ubuntu já tem um supervisor: o `systemd`, o mesmo que cuida do nginx e do MySQL. É o que o laboratório da disciplina usa (§11), e vale conhecer.
+O pm2 é conveniente, mas o Ubuntu já tem um supervisor: o `systemd`, o mesmo que cuida do nginx e do MySQL. É o que o estudo de caso da §11 usa, e vale conhecer.
 
 `/etc/systemd/system/unieventos-api.service`
 
@@ -703,7 +703,7 @@ Esta seção descreve o servidor real da turma de Deploy & Ferramentas na UNEMAT
 
 O front fica em `~/frontend` e é servido pelo nginx em `/dsw/gN/`. O back roda em `~/backend`, escuta em `127.0.0.1:350N` e recebe as requisições de `/dsw/gN/api/` por proxy reverso. O banco `db_gN` é acessível só de `localhost`.
 
-Na primeira vez, envie a sua chave pública para o professor (`cat ~/.ssh/id_ed25519.pub`) — a conta não aceita senha, exatamente como você configurou o seu VPS na §4.3.
+Na primeira vez, quem tem conta nesse laboratório envia a chave pública ao professor (`cat ~/.ssh/id_ed25519.pub`) — a conta não aceita senha, exatamente como você configurou o seu VPS na §4.3.
 
 ### 11.2 Como o professor montou isso (e você repetirá no seu VPS)
 
@@ -773,9 +773,9 @@ systemctl status dsw-g3 --no-pager
 journalctl -u dsw-g3 -n 50 --no-pager
 ```
 
-O `sudo systemctl restart dsw-g3` é o **único** comando privilegiado liberado para a sua conta: o professor autorizou exatamente essa linha na configuração do `sudo`. Qualquer outro `sudo` responde que você não está no arquivo de permissões — e isso é proposital: um grupo não consegue derrubar o serviço de outro nem tocar na configuração do nginx.
+Nesse laboratório, o `sudo systemctl restart dsw-g3` é o **único** comando privilegiado liberado para a conta do grupo: o professor autorizou exatamente essa linha na configuração do `sudo`. Qualquer outro `sudo` responde que a conta não está no arquivo de permissões — e isso é proposital: um grupo não consegue derrubar o serviço de outro nem tocar na configuração do nginx. No seu próprio VPS, você é o `root`, então é você quem decide (com `visudo`) se quer se impor a mesma restrição.
 
-### 11.4 O detalhe que quebra todo semestre: o subcaminho
+### 11.4 O detalhe que mais quebra: o subcaminho
 
 O seu site vive em `/dsw/g3/`, não na raiz. Tudo o que for caminho absoluto quebra:
 
@@ -1071,7 +1071,7 @@ Descubra o PID com `pm2 ls` ou `systemctl show -p MainPID unieventos-api`. O `Re
 
 ### Nível C — Desafio
 
-**C1.** Publique o seu projeto no laboratório da disciplina, do zero, em 20 minutos: build do front com `base` correta, `rsync` para `~/frontend`, `git pull` e `npm ci --omit=dev` no `~/backend`, `.env` apontando para `db_gN`, `sudo systemctl restart dsw-gN` e verificação em `https://ivanpires.dev/dsw/gN/`. Documente cada comando em um arquivo `PUBLICAR.md` no repositório, de modo que qualquer integrante do grupo consiga repetir sem perguntar nada.
+**C1.** Publique o seu projeto do zero, em 20 minutos, seguindo o roteiro do estudo de caso da §11: build do front com `base` correta, `rsync` para `~/frontend`, `git pull` e `npm ci --omit=dev` no `~/backend`, `.env` apontando para o banco do projeto, `sudo systemctl restart` do serviço e verificação no endereço público. Se você tem acesso ao laboratório da turma, use os nomes de lá (`db_gN`, `dsw-gN`, `https://ivanpires.dev/dsw/gN/`); no seu próprio VPS, use os nomes que você escolheu. Documente cada comando em um arquivo `PUBLICAR.md` no repositório, de modo que qualquer pessoa consiga repetir sem perguntar nada.
 
 <details><summary>Dica</summary>
 
@@ -1193,7 +1193,7 @@ Os três: o **site do evento** (Nível 1, estático), o **Café Cerrado** (Níve
 
 ## 🏠 Para praticar depois da aula (1 h)
 
-No seu **projeto autoral** (ou no projeto do grupo, no laboratório da disciplina):
+No seu **projeto autoral** (ou no projeto do grupo, se você tem acesso ao laboratório da turma):
 
 1. Publique o front e a API no servidor, seguindo o Passo a passo (ou a §11, se estiver usando `gN@ivanpires.dev`).
 2. Garanta que a API escuta apenas em `127.0.0.1` e que o nginx é a única porta de entrada. Comprove com `sudo ss -tlnp`.
@@ -1214,7 +1214,7 @@ No seu **projeto autoral** (ou no projeto do grupo, no laboratório da disciplin
 - [ ] `pm2 ls` mostra a API `online`; depois de `sudo reboot`, tudo volta sem intervenção.
 - [ ] `sudo certbot certificates` lista os certificados com validade futura e `sudo certbot renew --dry-run` passa sem erro.
 - [ ] `rsync -avz --delete dist/ meuvps:/var/www/...` publica uma alteração do front e você a vê no navegador depois de um `Ctrl+F5`.
-- [ ] No laboratório da disciplina, `https://ivanpires.dev/dsw/gN/` abre o seu projeto, com o front carregando de `~/frontend` e a API respondendo em `/dsw/gN/api/`.
+- [ ] Se você usa o laboratório da turma, `https://ivanpires.dev/dsw/gN/` abre o seu projeto, com o front carregando de `~/frontend` e a API respondendo em `/dsw/gN/api/`. Se usa o seu próprio VPS, o mesmo vale no seu domínio.
 - [ ] Você tem um `PUBLICAR.md` que permite repetir tudo sem consultar este capítulo.
 
 ## 📚 Para aprofundar

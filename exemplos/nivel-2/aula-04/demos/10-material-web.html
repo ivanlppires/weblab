@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 10 — Experimento com Material Web (§6.2)</title>
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+
+  <!-- 1. O importmap TRADUZ nome de pacote em URL. Precisa vir ANTES de qualquer import. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@material/web/": "https://esm.run/@material/web@2.5.0/"
+      }
+    }
+  </script>
+
+  <!-- 2. type="module" é obrigatório: import só existe em módulos ES. -->
+  <script type="module">
+    import '@material/web/all.js';
+    import { styles as typescaleStyles } from '@material/web/typography/md-typescale-styles.js';
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+
+  <style>
+    /* 3. Design tokens do Material 3: todos os componentes leem a mesma paleta. */
+    :root { --md-sys-color-primary: #6f4e37; --md-sys-color-on-primary: #ffffff; }
+    body { font-family: Roboto, system-ui, sans-serif; margin: 0; padding: 2rem;
+           display: flex; flex-direction: column; gap: 1.5rem; max-width: 24rem; }
+    .nota { max-width: 24rem; font-size: .85rem; line-height: 1.5; color: #5c4b3c;
+            border-left: 3px solid #6f4e37; padding-left: .75rem; }
+  </style>
+</head>
+<body>
+
+  <h1 class="md-typescale-headline-medium">Reserve sua mesa</h1>
+
+  <md-outlined-text-field label="Nome completo" required></md-outlined-text-field>
+  <md-outlined-text-field label="E-mail" type="email" required></md-outlined-text-field>
+
+  <label>
+    <md-checkbox touch-target="wrapper"></md-checkbox>
+    Quero receber avisos de novos lotes
+  </label>
+
+  <div>
+    <md-filled-button>Enviar</md-filled-button>
+    <md-text-button>Cancelar</md-text-button>
+  </div>
+
+  <p class="nota">
+    <b>Na aba Elements:</b> abra a seta de <code>&lt;md-filled-button&gt;</code>. Dentro dela aparece
+    <code>#shadow-root</code> — uma árvore de elementos com CSS <b>isolado</b> da página.
+    Você não escreve <code>&lt;button class="md-button"&gt;</code>: escreve uma tag que não existe no
+    HTML e que o JavaScript registrou.
+  </p>
+
+  <p class="nota">
+    <b>Teste que fecha o argumento da §6.3:</b> no DevTools, aba <b>Network</b>, marque
+    <i>Disable JavaScript</i> (ou bloqueie o esm.run) e recarregue. Os campos e os botões
+    <b>desaparecem da tela</b> — viram tags desconhecidas. Um site Bootstrap sem JavaScript perde
+    o menu hambúrguer; um site Material Web sem JavaScript perde tudo.
+  </p>
+
+  <p class="nota">
+    <b>Troque duas variáveis</b> (<code>--md-sys-color-primary</code> e
+    <code>--md-sys-color-on-primary</code>) e a interface inteira se recolore — exatamente a ideia
+    das <code>--bs-*</code>, com outro nome.
+  </p>
+
+</body>
+</html>

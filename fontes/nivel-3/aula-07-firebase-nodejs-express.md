@@ -161,7 +161,7 @@ Pense assim: quando seu código pede "leia este arquivo" ou "consulte este banco
 Isso é diferente de um modelo **bloqueante**, onde a thread ficaria parada, sem fazer nada, do início ao fim de cada consulta — atendendo uma requisição de cada vez, em fila, mesmo que 99% do tempo seja espera. Um servidor Node consegue lidar com milhares de conexões simultâneas com uma única thread principal porque quase todo esse tempo é espera de I/O, não cálculo.
 
 > **⚠️ Atenção**
-> Isso não significa que o Node é mágico para tudo. Se seu código fizer um cálculo pesado e síncrono (por exemplo, um laço `for` gigantesco processando dados em memória), ele **bloqueia** a thread principal e trava todas as requisições até terminar. O modelo não bloqueante vale para I/O — rede, disco, banco de dados —, não para processamento pesado de CPU. Para isso existem *worker threads*, fora do escopo desta disciplina.
+> Isso não significa que o Node é mágico para tudo. Se seu código fizer um cálculo pesado e síncrono (por exemplo, um laço `for` gigantesco processando dados em memória), ele **bloqueia** a thread principal e trava todas as requisições até terminar. O modelo não bloqueante vale para I/O — rede, disco, banco de dados —, não para processamento pesado de CPU. Para isso existem *worker threads*, fora do escopo desta trilha.
 
 Na prática, isso aparece no seu código como `async`/`await` e `Promise`, que você já usa desde a Aula 01. `await pool.query(...)` (aula 09) ou `await getDocs(...)` (Firestore, ainda hoje) são exatamente isso: "dispare esta operação de I/O e me devolva o controle quando o resultado chegar, sem travar o resto do programa".
 
@@ -187,12 +187,12 @@ module.exports = { minhaFuncao }
 Anos depois, o JavaScript ganhou um sistema de módulos oficial da linguagem: **ES Modules** (ESM), baseado em `import`/`export` — o mesmo que você já usa em todo componente Vue desde a Aula 01.
 
 ```js
-// estilo ES Modules (o que esta disciplina usa no back-end)
+// estilo ES Modules (o que esta trilha usa no back-end)
 import express from 'express'
 export function minhaFuncao() { /* ... */ }
 ```
 
-**Nesta disciplina, o back-end usa ESM.** É consistente com o que você já escreve no front-end, é o padrão recomendado para projetos novos e evita misturar dois estilos de `import`/`require` no mesmo projeto. Para o Node tratar seus arquivos `.js` como ESM (e não CommonJS, que é o padrão histórico), é preciso declarar isso no `package.json`:
+**Nesta trilha, o back-end usa ESM.** É consistente com o que você já escreve no front-end, é o padrão recomendado para projetos novos e evita misturar dois estilos de `import`/`require` no mesmo projeto. Para o Node tratar seus arquivos `.js` como ESM (e não CommonJS, que é o padrão histórico), é preciso declarar isso no `package.json`:
 
 ```json
 {
@@ -215,7 +215,7 @@ mkdir unieventos-api && cd unieventos-api
 npm init -y
 ```
 
-O `npm init -y` gera um `package.json` com valores padrão. Ajuste-o para o que a disciplina usa:
+O `npm init -y` gera um `package.json` com valores padrão. Ajuste-o para o que esta trilha usa:
 
 ```json
 {
@@ -276,7 +276,7 @@ O `package-lock.json`, gerado automaticamente, trava a versão exata (inclusive 
 
 Nem todo back-end precisa ser escrito do zero. Um **BaaS** (*Backend as a Service*) é um serviço de terceiros que já entrega pedaços prontos de back-end — banco de dados, autenticação, upload de arquivos, hospedagem — através de um SDK que você chama direto do seu front-end, sem escrever seu próprio servidor para essas partes.
 
-O **Firebase**, do Google, é o BaaS mais usado no mercado. Os serviços relevantes para esta disciplina:
+O **Firebase**, do Google, é o BaaS mais usado no mercado. Os serviços relevantes para esta trilha:
 
 | Serviço | Para que serve |
 |---|---|
@@ -288,15 +288,15 @@ O **Firebase**, do Google, é o BaaS mais usado no mercado. Os serviços relevan
 
 **Quando um BaaS resolve:** protótipos, MVPs, projetos pequenos ou médios onde autenticação e um banco de dados de propósito geral já cobrem a necessidade. Você escreve praticamente zero código de servidor — o SDK do Firebase fala direto com a nuvem do Google a partir do seu Vue.
 
-**Quando um BaaS não resolve:** quando a regra de negócio é complexa demais para expressar só em regras de segurança do Firestore; quando você precisa de consultas relacionais complexas (JOINs, agregações — ponto forte de um SGBD relacional, Aula 09); quando você precisa de controle total sobre a lógica do servidor; ou, como nesta disciplina, quando o objetivo é justamente **aprender a construir um back-end**. Por isso o UniEventos vai usar o Firestore hoje para uma leitura/escrita simples, mas a partir da Aula 08 a lógica de negócio migra para uma API Express própria, e na Aula 09 os dados migram para MySQL.
+**Quando um BaaS não resolve:** quando a regra de negócio é complexa demais para expressar só em regras de segurança do Firestore; quando você precisa de consultas relacionais complexas (JOINs, agregações — ponto forte de um SGBD relacional, Aula 09); quando você precisa de controle total sobre a lógica do servidor; ou, como nesta trilha, quando o objetivo é justamente **aprender a construir um back-end**. Por isso o UniEventos vai usar o Firestore hoje para uma leitura/escrita simples, mas a partir da Aula 08 a lógica de negócio migra para uma API Express própria, e na Aula 09 os dados migram para MySQL.
 
 > **⚠️ Atenção**
-> Nunca use a API antiga do Firebase, com namespace (`firebase.initializeApp(...)`, `firebase.firestore()`). Ela ainda aparece em vídeos e artigos antigos. Esta disciplina usa **exclusivamente a API modular**, versão 12, com `import` nomeado de funções: `import { initializeApp } from 'firebase/app'`.
+> Nunca use a API antiga do Firebase, com namespace (`firebase.initializeApp(...)`, `firebase.firestore()`). Ela ainda aparece em vídeos e artigos antigos. Esta trilha usa **exclusivamente a API modular**, versão 12, com `import` nomeado de funções: `import { initializeApp } from 'firebase/app'`.
 
 ### Criando o projeto no console do Firebase
 
 1. Acesse [console.firebase.google.com](https://console.firebase.google.com) com sua conta Google.
-2. Clique em **Adicionar projeto**, dê o nome `unieventos` (ou `unieventos-seu-nome`, já que o nome do projeto precisa ser único globalmente) e siga o assistente (pode desativar o Google Analytics, não é necessário para a disciplina).
+2. Clique em **Adicionar projeto**, dê o nome `unieventos` (ou `unieventos-seu-nome`, já que o nome do projeto precisa ser único globalmente) e siga o assistente (pode desativar o Google Analytics, não é necessário para esta trilha).
 3. Dentro do projeto, clique no ícone **`</>`** (Web) para registrar um app web. Dê o apelido `unieventos-web`.
 4. O console mostra um objeto `firebaseConfig` — **copie-o**, ele contém as chaves de configuração do seu projeto (não são segredos no sentido de senha, mas identificam seu projeto):
 
@@ -516,7 +516,7 @@ Vamos crescer essa estrutura nas próximas duas aulas (`routes/`, `middlewares/`
 
 ## 5. Express 5 não é Express 4
 
-Quando você instala Express hoje (`npm install express`), recebe a versão 5.2.1 — mas a maioria dos tutoriais, cursos gravados e respostas de fórum na internet ainda ensina Express 4, que tem sintaxe diferente em pontos que quebram silenciosamente ou lançam erro. A tabela a seguir foi **testada no ambiente real** desta disciplina — não é teoria, é o que de fato acontece rodando o código.
+Quando você instala Express hoje (`npm install express`), recebe a versão 5.2.1 — mas a maioria dos tutoriais, cursos gravados e respostas de fórum na internet ainda ensina Express 4, que tem sintaxe diferente em pontos que quebram silenciosamente ou lançam erro. A tabela a seguir foi **testada no ambiente real** desta trilha — não é teoria, é o que de fato acontece rodando o código.
 
 | Express 4 (não use) | Express 5.2.1 (use) |
 |---|---|
@@ -741,7 +741,7 @@ curl http://localhost:3000/api/eventos/999
 
 ### Três formas de testar, e quando usar cada uma
 
-Você vai testar a mesma API de três jeitos diferentes ao longo do curso. Cada um serve para um momento:
+Você vai testar a mesma API de três jeitos diferentes ao longo desta trilha. Cada um serve para um momento:
 
 **Navegador.** Rápido para conferir uma rota `GET` simples visualmente — cole a URL na barra de endereços. Limitação: o navegador só faz `GET` ao digitar uma URL; não dá para testar `POST`, `PUT`, `DELETE` nem enviar cabeçalhos customizados dessa forma.
 
@@ -756,7 +756,7 @@ curl -X POST http://localhost:3000/api/eventos \
 **REST Client / Thunder Client (VS Code).** O melhor equilíbrio para desenvolvimento do dia a dia: a requisição fica escrita em um arquivo versionado (`requests.http`), legível, reaproveitável pelo time todo, e você clica para executar sem digitar nada no terminal. É o que vamos usar como principal ferramenta de teste manual a partir de agora — inclusive na Aula 08, onde o arquivo `requests.http` cresce para cobrir todo o CRUD.
 
 > **💡 Dica**
-> Nenhuma das três ferramentas substitui testes automatizados (fora do escopo desta disciplina). Elas servem para verificação manual durante o desenvolvimento — e o arquivo `requests.http` tem a vantagem extra de documentar a API para quem vai usá-la depois, inclusive você mesmo daqui a um mês.
+> Nenhuma das três ferramentas substitui testes automatizados (fora do escopo desta trilha). Elas servem para verificação manual durante o desenvolvimento — e o arquivo `requests.http` tem a vantagem extra de documentar a API para quem vai usá-la depois, inclusive você mesmo daqui a um mês.
 
 ### Passo 4 — testando com REST Client (VS Code)
 
@@ -1048,7 +1048,7 @@ A seção 2 desta aula prometeu que o Node atende milhares de conexões com uma 
 | `FirebaseError: Missing or insufficient permissions` | as regras de segurança de teste do Firestore expiraram (30 dias) | reabra o modo de teste no console ou escreva regras explícitas (Aula 10) |
 | `Cannot find module 'firebase/app'` | instalou uma versão muito antiga do pacote, ou digitou `firebase-admin` por engano no front | confirme `npm install firebase@12` no `unieventos-web`; `firebase-admin` é só para back-end (Aula 10) |
 | Rota `GET /api/eventos/:id` sempre cai no "não encontrado" | comparou `req.params.id` (string) com `id` (number) sem converter | use `Number(req.params.id)` antes de comparar com `===` |
-| `npm run dev` não reinicia ao salvar o arquivo | versão do Node anterior à 18.11, sem suporte a `--watch` | rode `node -v` e atualize para a 22.x indicada na disciplina |
+| `npm run dev` não reinicia ao salvar o arquivo | versão do Node anterior à 18.11, sem suporte a `--watch` | rode `node -v` e atualize para a 22.x indicada nesta trilha |
 
 ## 🏠 Para praticar depois da aula (1 h)
 

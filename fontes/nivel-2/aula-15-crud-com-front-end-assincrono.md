@@ -4,7 +4,7 @@
 > WebLab · UNEMAT — Campus Sinop
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
-Sua API já faz CRUD completo e já sabe quem está batendo na porta. Só que, até agora, quem usou esses recursos foi você — pelo `testes.http`, com a extensão REST Client. Nenhuma pessoa de fora da disciplina consegue cadastrar um café no Café Cerrado sem escrever uma requisição HTTP na mão. Hoje isso muda: a interface que você construiu na Unidade 2 passa a criar, editar e excluir produtos consumindo a sua própria API, sem recarregar a página uma única vez.
+Sua API já faz CRUD completo e já sabe quem está batendo na porta. Só que, até agora, quem usou esses recursos foi você — pelo `testes.http`, com a extensão REST Client. Nenhuma outra pessoa consegue cadastrar um café no Café Cerrado sem escrever uma requisição HTTP na mão. Hoje isso muda: a interface que você construiu na Unidade 2 passa a criar, editar e excluir produtos consumindo a sua própria API, sem recarregar a página uma única vez.
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -27,7 +27,7 @@ Ao final desta aula você será capaz de:
 - [ ] Login Google funcionando, `.env` com `GOOGLE_CLIENT_ID` fora do Git e o middleware `exigirLogin` protegendo as rotas de escrita (Aula 14).
 - [ ] `fetch` com `async/await` e tratamento de erro no cliente (Aulas 09 e 10) — hoje é tudo isso ao mesmo tempo.
 
-> Na aula passada você delegou o login ao Google, verificou o ID token no servidor com `google-auth-library` e barrou com `401` toda escrita sem token. As duas metades do sistema — API com CRUD e API com autenticação — existem, mas só respondem ao `testes.http`. Hoje elas ganham interface: a tela do cardápio passa a listar, criar, editar e excluir produtos consumindo `/api/produtos` com `fetch`, e os dados passam a sobreviver ao reinício do servidor. Na próxima aula, cada registro ganha dono e a disciplina se encerra com o Marco 3.
+> Na aula passada você delegou o login ao Google, verificou o ID token no servidor com `google-auth-library` e barrou com `401` toda escrita sem token. As duas metades do sistema — API com CRUD e API com autenticação — existem, mas só respondem ao `testes.http`. Hoje elas ganham interface: a tela do cardápio passa a listar, criar, editar e excluir produtos consumindo `/api/produtos` com `fetch`, e os dados passam a sobreviver ao reinício do servidor. Na próxima aula, cada registro ganha dono e esta trilha se encerra com o Marco 3.
 
 ## 🗺️ Roteiro
 
@@ -294,7 +294,7 @@ export const api = {
 };
 ```
 
-Três decisões desse arquivo valem discussão em sala:
+Três decisões desse arquivo valem uma pausa para pensar — ou discutir, se você estiver estudando em grupo:
 
 - **`fetch` não rejeita em erro HTTP.** Um `404` ou um `500` são respostas válidas: a promessa resolve normalmente, com `resposta.ok === false`. O `try/catch` em volta do `fetch` só pega falha de rede. Quem esquece disso escreve código que "funciona" mesmo quando o servidor recusou tudo.
 - **Erro com status.** Uma `Error` comum só carrega a mensagem. A `ErroDeApi` carrega também o `status` e os `detalhes` da validação, e é isso que permite à tela reagir de formas diferentes a `401` (peça login) e a `400` (mostre o que está errado no formulário).
@@ -622,7 +622,7 @@ A limitação é séria: `confirm()` congela a aba inteira, não é estilizável
 
 ## 7. O caminho completo de um "Salvar"
 
-Vale parar um minuto e olhar o que a turma construiu. Cada clique em "Adicionar" percorre, em ordem, tudo o que foi estudado no semestre:
+Vale parar um minuto e olhar o que você construiu. Cada clique em "Adicionar" percorre, em ordem, tudo o que foi estudado até aqui:
 
 1. **HTML e CSS (Unidade 1)** — o formulário semântico, com `<label for>`, estados de foco visíveis e layout responsivo.
 2. **JavaScript no cliente (Unidade 2)** — `submit` interceptado com `preventDefault()`, dados lidos do formulário, `fetch` com `async/await`.
@@ -1308,4 +1308,4 @@ Ao final desta aula, o seu repositório precisa ter:
 
 ---
 
-Na próxima aula, cada produto ganha um **dono**: o e-mail extraído do token verificado passa a marcar quem criou cada registro, e a API aprende a diferença entre "não sei quem você é" (`401`) e "sei quem você é, mas isso não é seu" (`403`). É também a aula de encerramento da disciplina, com o roteiro completo de auto-teste, o Marco 3 e os caminhos para continuar depois daqui.
+Na próxima aula, cada produto ganha um **dono**: o e-mail extraído do token verificado passa a marcar quem criou cada registro, e a API aprende a diferença entre "não sei quem você é" (`401`) e "sei quem você é, mas isso não é seu" (`403`). É também a aula de encerramento desta trilha, com o roteiro completo de auto-teste, o Marco 3 e os caminhos para continuar depois daqui.

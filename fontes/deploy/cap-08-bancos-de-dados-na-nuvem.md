@@ -63,7 +63,7 @@ O que **não** muda: modelagem, índices, consultas eficientes e segurança da a
 
 ## 2. O mapa dos serviços
 
-Os três caminhos que interessam para os projetos da disciplina:
+Os três caminhos que interessam para os projetos desta trilha:
 
 | Serviço | Banco | Encaixa bem quando |
 |---|---|---|
@@ -180,7 +180,7 @@ export async function consultar(sql, parametros = []) {
 
 Três decisões dentro desse arquivo merecem explicação:
 
-- **`max: 10` é por processo.** Se você roda dois contêineres da API, são 20 conexões no pooler. Some as instâncias antes de escolher o número; em um plano gratuito, `max: 5` costuma ser mais do que suficiente para uma turma inteira testando.
+- **`max: 10` é por processo.** Se você roda dois contêineres da API, são 20 conexões no pooler. Some as instâncias antes de escolher o número; em um plano gratuito, `max: 5` costuma ser mais do que suficiente para várias pessoas testando ao mesmo tempo.
 - **`rejectUnauthorized: true` com `ca`.** Sem TLS, a senha do banco viaja em texto puro pela internet. Com TLS mas sem verificar o certificado (`rejectUnauthorized: false`), você está protegido contra quem só escuta, mas não contra quem se coloca no meio da conversa. O certificado da autoridade fecha essa porta.
 - **O tratador de `pool.on('error')`.** É o item que separa uma API que sobrevive à noite de uma que amanhece morta.
 
@@ -378,7 +378,7 @@ Duas sutilezas que economizam meia hora de depuração:
 
 ## 6. RLS: o que muda quando você conecta por SQL
 
-Na Aula 12 do Nível 3 você habilitou **Row Level Security** nas tabelas do Supabase e escreveu policies — sem elas, o `supabase-js` recebe `data: []` sem erro nenhum, o campeão de tempo perdido da disciplina.
+Na Aula 12 do Nível 3 você habilitou **Row Level Security** nas tabelas do Supabase e escreveu policies — sem elas, o `supabase-js` recebe `data: []` sem erro nenhum — um dos maiores consumidores de tempo de depuração nesta trilha.
 
 Aqui está o detalhe que quase ninguém conta: quando a sua API conecta com a **string de conexão do banco**, ela entra como o papel `postgres`, que é dono das tabelas. E o dono da tabela **ignora RLS**. Ou seja:
 

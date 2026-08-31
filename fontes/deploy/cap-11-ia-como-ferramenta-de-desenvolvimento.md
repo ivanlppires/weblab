@@ -32,7 +32,7 @@ Ao final deste capítulo você será capaz de:
 |---|---|---|
 | 1 | 50 min | O que o assistente é; os três formatos; anatomia de um prompt com contexto; os cinco usos que valem a pena |
 | 2 | 50 min | Modos de falha: alucinação de API e de versão, pacote inexistente, código inseguro; segredos no prompt; protocolo de verificação |
-| 3 | 50 min | Dependência e aprendizado; política das disciplinas; Passo a passo de revisão assistida do projeto autoral; Laboratório |
+| 3 | 50 min | Dependência e aprendizado; política pessoal de uso de IA; Passo a passo de revisão assistida do projeto autoral; Laboratório |
 
 ## 1. O que a ferramenta faz, de verdade
 
@@ -61,7 +61,7 @@ Três consequências práticas disso, que explicam quase todos os problemas do c
 | Traduzir entre linguagens ou estilos | Muito bom | Tarefa de forma, não de verdade |
 | Escrever `README`, commit, comentário | Bom, com revisão | Ele só sabe o que você contou do projeto |
 | Lembrar detalhes de uma versão recente | Fraco | A média do treino puxa para a versão antiga |
-| Decidir arquitetura do seu projeto | Fraco | Ele não conhece seus requisitos, prazo nem turma |
+| Decidir arquitetura do seu projeto | Fraco | Ele não conhece seus requisitos nem o seu prazo |
 | Afirmar que algo "não existe" | Muito fraco | Ele tende a inventar em vez de admitir lacuna |
 | Contar, medir, garantir desempenho | Muito fraco | Não executa nada; números costumam ser inventados |
 
@@ -160,7 +160,7 @@ Formato da resposta: causa em duas frases, depois a linha exata que falta e onde
 O segundo prompt tem uma resposta praticamente inevitável e correta: falta `app.use(express.json())` antes das rotas, e no Express 5 `req.body` é `undefined` (não `{}`) quando nada foi analisado. O primeiro prompt tem mil respostas possíveis, e você vai testar seis delas antes de chegar à certa.
 
 > **🔬 Investigue**
-> Faça o teste dos dois prompts acima com o seu próprio bug, agora. Abra duas conversas novas. Na primeira, escreva a versão preguiçosa. Na segunda, os seis elementos. Cronometre quanto tempo passa até você ter uma correção **que funciona** em cada caso. Anote os dois tempos — eles vão para o `IA.md` do Passo a passo. Na turma, a diferença costuma ser de uma ordem de grandeza.
+> Faça o teste dos dois prompts acima com o seu próprio bug, agora. Abra duas conversas novas. Na primeira, escreva a versão preguiçosa. Na segunda, os seis elementos. Cronometre quanto tempo passa até você ter uma correção **que funciona** em cada caso. Anote os dois tempos — eles vão para o `IA.md` do Passo a passo. É comum a diferença ser de uma ordem de grandeza.
 
 ### 3.1 Três frases que melhoram qualquer prompt
 
@@ -258,7 +258,7 @@ rotasInscricoes.post('/', async (req, res) => {
 });
 ```
 
-Repare que os `?` do `mysql2` não são "escapar aspas": o driver envia valor e comando separados, então nenhum conteúdo digitado pelo usuário vira instrução SQL. Essa é a frase que você precisa saber dizer se o professor perguntar.
+Repare que os `?` do `mysql2` não são "escapar aspas": o driver envia valor e comando separados, então nenhum conteúdo digitado pelo usuário vira instrução SQL. Essa é a frase que você precisa saber dizer se alguém perguntar — numa revisão de código, numa entrevista técnica ou para si mesmo.
 
 ### 4.3 Gerar testes
 
@@ -404,7 +404,7 @@ Depois de entender, **confirme na documentação oficial**. Esse par — explica
 
 ### 5.1 Alucinação de API e de versão
 
-O modo de falha mais frequente na nossa stack, porque quase toda biblioteca da disciplina teve uma virada de versão recente e o material de treino é dominado pela versão antiga. Os quatro casos que você vai encontrar neste semestre:
+O modo de falha mais frequente na nossa stack, porque quase toda biblioteca desta trilha teve uma virada de versão recente e o material de treino é dominado pela versão antiga. Os quatro casos que você vai encontrar com mais frequência:
 
 | Você usa | A IA costuma responder | Como flagrar |
 |---|---|---|
@@ -482,7 +482,7 @@ export const pool = mysql.createPool({
 Repare: o código continua completo e o assistente entende tudo o que precisa. O que ele não recebe é o valor.
 
 > **⚠️ Atenção**
-> Se um segredo escapar — para o chat, para um commit ou para um print no grupo da turma — a única correção é **rotacionar**: gere uma chave nova no painel do serviço, invalide a antiga, atualize o `.env` local, os secrets do GitHub Actions e o servidor. Apagar a mensagem não resolve, e reverter o commit não resolve: o valor continua no histórico do Git. O GitHub ajuda com a proteção de push, que recusa o envio com uma mensagem parecida com esta:
+> Se um segredo escapar — para o chat, para um commit ou para um print compartilhado com outras pessoas — a única correção é **rotacionar**: gere uma chave nova no painel do serviço, invalide a antiga, atualize o `.env` local, os secrets do GitHub Actions e o servidor. Apagar a mensagem não resolve, e reverter o commit não resolve: o valor continua no histórico do Git. O GitHub ajuda com a proteção de push, que recusa o envio com uma mensagem parecida com esta:
 >
 > ```text
 > remote: - GITHUB PUSH PROTECTION
@@ -768,7 +768,7 @@ Cronometre de verdade, com o relógio do celular. O tempo do prompt completo inc
 
 **B2.** Caça à alucinação. Faça cinco perguntas específicas de versão ao assistente (uma de Express 5, uma de Vuetify 4, uma de Firebase modular, uma de Supabase com RLS, uma de swagger-jsdoc) e confira cada resposta na documentação oficial.
 
-Resultado esperado: uma tabela de cinco linhas com pergunta, resposta da IA e veredito (`confere` ou `errado`, com o link da doc). Na turma, é normal aparecerem duas ou três erradas.
+Resultado esperado: uma tabela de cinco linhas com pergunta, resposta da IA e veredito (`confere` ou `errado`, com o link da doc). É normal aparecerem duas ou três erradas.
 
 <details><summary>Dica</summary>
 
@@ -862,7 +862,7 @@ Quem consegue medir uma ferramenta para de discutir sobre ela. Monte uma bateria
 
 **Critérios de pronto**
 
-- 10 perguntas específicas de versão, cobrindo pelo menos quatro tecnologias diferentes da disciplina (Express 5, Vuetify 4, Firebase modular, Supabase com RLS, mysql2, swagger-jsdoc, Vite, Pinia).
+- 10 perguntas específicas de versão, cobrindo pelo menos quatro tecnologias diferentes desta trilha (Express 5, Vuetify 4, Firebase modular, Supabase com RLS, mysql2, swagger-jsdoc, Vite, Pinia).
 - Um gabarito escrito **antes** de perguntar, cada resposta com o link da documentação oficial que a sustenta.
 - As respostas dos dois assistentes, classificadas em correta, parcialmente correta ou errada, com o critério de classificação declarado.
 - Um `PLACAR.md` com a tabela, o total de cada assistente e três frases sobre em que tipo de pergunta os dois erram junto.
@@ -879,7 +879,7 @@ Quem consegue medir uma ferramenta para de discutir sobre ela. Monte uma bateria
 ### ⭐⭐⭐ Revisor de segurança do seu projeto
 Tags: ia, seguranca, testes, projeto
 
-Toda API entregue nesta disciplina tem pelo menos uma falha de segurança real. A sua também. Use o assistente como um revisor incansável, mas prove cada coisa: aqui, um problema só conta depois que você escreveu o teste que **falha** por causa dele.
+Toda API construída nesta trilha tem pelo menos uma falha de segurança real. A sua também. Use o assistente como um revisor incansável, mas prove cada coisa: aqui, um problema só conta depois que você escreveu o teste que **falha** por causa dele.
 
 **Critérios de pronto**
 
@@ -912,13 +912,13 @@ Este é o encerramento da trilha, e ele é simples de enunciar: o seu projeto au
 - Monitoramento ativo: erros no Sentry, `/health` vigiado por um serviço de uptime e pelo menos um alerta recebido.
 - `README.md` que um estranho consegue seguir do clone ao servidor rodando, `IA.md` declarando o uso de assistentes e `SEGURANCA.md` com as falhas corrigidas.
 - Nenhum segredo no repositório: `git log -p -S "SUPABASE" | head -50` e a proteção de push do GitHub limpas.
-- Uma apresentação de 10 minutos, sem slides prontos, navegando pelo repositório e pelo sistema no ar, respondendo a três perguntas do professor sobre linhas escolhidas por ele.
+- Uma apresentação de 10 minutos, sem slides prontos, navegando pelo repositório e pelo sistema no ar, respondendo a três perguntas sobre linhas escolhidas por outra pessoa — quem te orienta, um colega ou alguém do seu grupo de estudos. Estudando sozinho? Peça para alguém sortear três números de linha do seu `git diff` (ou use um gerador aleatório) e explique exatamente essas linhas, sem ensaio prévio.
 
 <details><summary>Pistas</summary>
 
 1. Faça na ordem inversa da entrega: comece pelo que quebra em produção (variáveis de ambiente, CORS, banco) e deixe a maquiagem por último.
 2. Teste a restauração do backup em uma base nova e vazia. Backup nunca restaurado não é backup — é um arquivo.
-3. Ensaie a apresentação com um colega no papel de professor, deixando **ele** escolher as linhas. Escolher as próprias linhas esconde exatamente os trechos que você não entende.
+3. Ensaie a apresentação com outra pessoa escolhendo as linhas por você, não você mesmo. Escolher as próprias linhas esconde exatamente os trechos que você não entende.
 4. Se alguma linha do seu código só existe porque a IA escreveu e você não sabe explicar, apague e reescreva. Uma linha a menos que você entende vale mais do que dez que você defende mal.
 </details>
 

@@ -181,7 +181,7 @@ O objeto `Response` tem, entre outras, estas propriedades e métodos:
 
 ### 3.2 A pegadinha número um do `fetch`
 
-Leia com atenção, porque isso derruba metade da turma:
+Leia com atenção, porque isso derruba metade de quem está aprendendo:
 
 > **⚠️ Atenção**
 > A Promise do `fetch` **só rejeita quando a requisição não acontece**: sem internet, DNS que não resolve, CORS bloqueado, URL malformada. Um `404 Not Found` ou um `500 Internal Server Error` são respostas **bem-sucedidas** do ponto de vista do `fetch` — ele conseguiu falar com o servidor, e o servidor respondeu. A Promise resolve normalmente. Se você não testar `resposta.ok`, seu código vai tentar processar uma página de erro como se fossem dados.
@@ -1410,7 +1410,7 @@ No **seu projeto autoral**, feche a Unidade 2:
 
 ## 🎓 Marco do projeto — Unidade 2
 
-**Escopo.** A evolução do **seu projeto autoral** (não o Café Cerrado, que é o exemplo construído em sala) para uma aplicação client-side dinâmica: validação de formulários, DOM e eventos, programação assíncrona e SPA com AJAX/JSON. É o resultado das Aulas 07 a 10 sobre a base do Marco 1.
+**Escopo.** A evolução do **seu projeto autoral** (não o Café Cerrado, que é o projeto de exemplo construído ao longo das aulas) para uma aplicação client-side dinâmica: validação de formulários, DOM e eventos, programação assíncrona e SPA com AJAX/JSON. É o resultado das Aulas 07 a 10 sobre a base do Marco 1.
 
 **Requisitos:**
 

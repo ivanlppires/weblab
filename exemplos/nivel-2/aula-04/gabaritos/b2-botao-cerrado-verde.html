@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gabarito B2 — .btn-cerrado-verde só com variáveis --bs-btn-*</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <style>
+    /* B2 — 16 variáveis, ZERO propriedades CSS comuns, ZERO !important.
+       Verde-cerrado #4c6b3c, escurecido para hover/active. */
+    .btn-cerrado-verde {
+      /* estado normal */
+      --bs-btn-bg: #4c6b3c;
+      --bs-btn-border-color: #4c6b3c;
+      --bs-btn-color: #ffffff;
+      /* hover */
+      --bs-btn-hover-bg: #3b5430;
+      --bs-btn-hover-border-color: #354d2b;
+      --bs-btn-hover-color: #ffffff;
+      /* active (botão pressionado) */
+      --bs-btn-active-bg: #354d2b;
+      --bs-btn-active-border-color: #2f4426;
+      --bs-btn-active-color: #ffffff;
+      --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+      /* disabled */
+      --bs-btn-disabled-bg: #4c6b3c;
+      --bs-btn-disabled-border-color: #4c6b3c;
+      --bs-btn-disabled-color: #ffffff;
+      /* anel de foco na mesma família de cor (três números, como o rgba() exige) */
+      --bs-btn-focus-shadow-rgb: 76, 107, 60;
+    }
+
+    /* Variante vazada da mesma família, de brinde: mesma técnica, cores trocadas. */
+    .btn-cerrado-verde-vazado {
+      --bs-btn-bg: transparent;
+      --bs-btn-border-color: #4c6b3c;
+      --bs-btn-color: #4c6b3c;
+      --bs-btn-hover-bg: #4c6b3c;
+      --bs-btn-hover-border-color: #4c6b3c;
+      --bs-btn-hover-color: #ffffff;
+      --bs-btn-active-bg: #354d2b;
+      --bs-btn-active-border-color: #354d2b;
+      --bs-btn-active-color: #ffffff;
+      --bs-btn-disabled-bg: transparent;
+      --bs-btn-disabled-border-color: #4c6b3c;
+      --bs-btn-disabled-color: #4c6b3c;
+      --bs-btn-focus-shadow-rgb: 76, 107, 60;
+    }
+
+    body { background: #fdfaf6; }
+  </style>
+</head>
+<body>
+
+  <div class="container py-4">
+    <h1 class="h5">B2 — uma variante de botão que se comporta como as nativas</h1>
+    <p class="text-body-secondary">
+      Prova de que é uma variante de verdade: ela combina com <code>btn-lg</code> e
+      <code>btn-sm</code>, responde a <code>:hover</code>, <code>:active</code> e
+      <code>:disabled</code>, e tem anel de foco na própria família de cor.
+      <b>Navegue por <kbd>Tab</kbd></b> — o anel é verde, não azul.
+    </p>
+
+    <h2 class="h6 mt-4">Tamanhos</h2>
+    <p class="d-flex flex-wrap align-items-center gap-2">
+      <button class="btn btn-cerrado-verde btn-lg">btn-lg</button>
+      <button class="btn btn-cerrado-verde">padrão</button>
+      <button class="btn btn-cerrado-verde btn-sm">btn-sm</button>
+    </p>
+
+    <h2 class="h6 mt-4">Estados</h2>
+    <p class="d-flex flex-wrap align-items-center gap-2">
+      <button class="btn btn-cerrado-verde">normal (passe o mouse)</button>
+      <button class="btn btn-cerrado-verde active" aria-pressed="true">.active</button>
+      <button class="btn btn-cerrado-verde" disabled>disabled</button>
+    </p>
+
+    <h2 class="h6 mt-4">Variante vazada</h2>
+    <p class="d-flex flex-wrap align-items-center gap-2">
+      <button class="btn btn-cerrado-verde-vazado">vazado</button>
+      <button class="btn btn-cerrado-verde-vazado btn-sm">vazado pequeno</button>
+      <button class="btn btn-cerrado-verde-vazado" disabled>vazado disabled</button>
+    </p>
+
+    <h2 class="h6 mt-4">Combinado com outros utilitários</h2>
+    <p class="d-grid gap-2 col-12 col-md-6">
+      <button class="btn btn-cerrado-verde">d-grid → botão de largura total</button>
+    </p>
+
+    <div class="alert alert-primary mt-4 mb-0">
+      <b>Como conferir no DevTools:</b> selecione o botão → painel <b>Computed</b> → filtre por
+      <code>--bs-btn</code>. Todas as variáveis aparecem com o valor que você definiu e a regra
+      de origem. Nenhuma propriedade CSS comum foi escrita: o framework é que monta
+      <code>background-color: var(--bs-btn-bg)</code> por baixo.
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"></script>
+</body>
+</html>

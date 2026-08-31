@@ -69,9 +69,9 @@ Quando alguém digita o endereço do seu site, acontece o seguinte, nesta ordem:
 3. O navegador abre uma conexão com aquele IP e pede o caminho da URL.
 4. O servidor responde com o arquivo — ou com um status de erro, como o `404` que você já viu na aba Network.
 
-Registrar um domínio `.com.br` custa por volta de quarenta reais por ano no [Registro.br](https://registro.br). Para esta disciplina **você não precisa comprar nada**: o GitHub oferece um subdomínio gratuito no formato `https://<seu-usuario>.github.io/<nome-do-repositorio>/`, e ele é um endereço público de verdade — funciona no celular do seu colega, na casa da sua avó e em qualquer lugar com internet.
+Registrar um domínio `.com.br` custa por volta de quarenta reais por ano no [Registro.br](https://registro.br). Para esta trilha **você não precisa comprar nada**: o GitHub oferece um subdomínio gratuito no formato `https://<seu-usuario>.github.io/<nome-do-repositorio>/`, e ele é um endereço público de verdade — funciona no celular de qualquer pessoa, na casa da sua avó e em qualquer lugar com internet.
 
-Se, depois da disciplina, você quiser um domínio seu, o [Capítulo 04 — Domínios, DNS e HTTPS](../deploy/cap-04.html) da trilha Deploy cobre registro, registros `A` e `CNAME`, propagação e a configuração no lado da plataforma.
+Se, depois desta trilha, você quiser um domínio seu, o [Capítulo 04 — Domínios, DNS e HTTPS](../deploy/cap-04.html) da trilha Deploy cobre registro, registros `A` e `CNAME`, propagação e a configuração no lado da plataforma.
 
 ### 1.3 HTTPS: o cadeado
 
@@ -383,7 +383,7 @@ O `<meta name="robots" content="noindex">` pede aos buscadores que não indexem 
 
 ## 4. Auditoria: provar que está bom
 
-Publicar sem auditar é entregar prova sem reler. Três ferramentas dão, em minutos, um diagnóstico honesto do seu site.
+Publicar sem auditar é entregar um trabalho sem reler. Três ferramentas dão, em minutos, um diagnóstico honesto do seu site.
 
 ### 4.1 O validador do W3C
 
@@ -415,7 +415,7 @@ Para os links internos, o teste é manual e leva cinco minutos: clique em todos,
 
 O **Lighthouse** vem embutido no Chrome e no Edge. Ele carrega a sua página simulando um celular modesto em rede 4G, mede dezenas de indicadores e devolve quatro notas de 0 a 100.
 
-| Categoria | Meta na disciplina | O que costuma derrubar |
+| Categoria | Meta nesta trilha | O que costuma derrubar |
 |---|---|---|
 | Desempenho | ≥ 80 | Imagens grandes, fontes pesadas, layout instável |
 | Acessibilidade | ≥ 90 | Contraste, `alt` ausente, `label` ausente, ordem de títulos |
@@ -442,7 +442,7 @@ Rode duas ou três vezes: a nota de desempenho oscila alguns pontos entre execu�
 7. Preencher `title` e `description` de cada página.
 
 > **🔬 Investigue**
-> Rode o Lighthouse no site do evento **antes** de otimizar as imagens e anote as quatro notas. Depois abra a aba **Network**, marque **Disable cache**, recarregue e leia a barra de status no rodapé: ela mostra o total transferido. Anote também esse número. Faça a otimização das imagens e repita as duas medições. Em turmas anteriores, o peso da página inicial costuma cair de 6 MB para menos de 500 KB, e o desempenho salta trinta pontos — com **uma tarde** de trabalho e nenhuma linha de código. É a melhor relação entre esforço e resultado de toda a disciplina.
+> Rode o Lighthouse no site do evento **antes** de otimizar as imagens e anote as quatro notas. Depois abra a aba **Network**, marque **Disable cache**, recarregue e leia a barra de status no rodapé: ela mostra o total transferido. Anote também esse número. Faça a otimização das imagens e repita as duas medições. Na prática, o peso da página inicial costuma cair de 6 MB para menos de 500 KB, e o desempenho salta trinta pontos — com **uma tarde** de trabalho e nenhuma linha de código. É a melhor relação entre esforço e resultado de toda a trilha.
 
 ### 4.4 O teste que nenhuma ferramenta faz
 
@@ -468,7 +468,7 @@ git config --global user.email "seu-email@exemplo.com"
 git config --global init.defaultBranch main
 ```
 
-O e-mail precisa ser **o mesmo cadastrado no GitHub**. É por ele que a plataforma associa cada commit à sua conta — e é assim que o professor confere quem escreveu o quê. Confira o que ficou gravado:
+O e-mail precisa ser **o mesmo cadastrado no GitHub**. É por ele que a plataforma associa cada commit à sua conta — e é assim que fica registrado quem escreveu o quê (inclusive para o professor conferir, se você cursa esta trilha em uma turma). Confira o que ficou gravado:
 
 ```bash
 git config --global --list
@@ -633,7 +633,7 @@ Se a alteração não aparecer, o culpado quase sempre é o **cache do navegador
 
 ## 7. Netlify e Vercel: quando valem mais
 
-O GitHub Pages resolve o caso desta disciplina. Duas alternativas gratuitas resolvem casos que ele não cobre.
+O GitHub Pages resolve o caso desta trilha. Duas alternativas gratuitas resolvem casos que ele não cobre.
 
 **Netlify.** Em [netlify.com](https://www.netlify.com), há dois caminhos. O primeiro é literalmente arrastar a pasta do projeto para a área indicada no painel: em vinte segundos o site está no ar, sem Git nenhum. O segundo, recomendado, é **Import from Git** → autorizar o GitHub → escolher o repositório → deixar o *build command* vazio e o *publish directory* como `.` → **Deploy**. O endereço sai como `nome-aleatorio.netlify.app` e pode ser renomeado nas configurações do site.
 
@@ -671,8 +671,8 @@ O `README.md` é a primeira coisa que o GitHub mostra ao abrir o repositório �
 # Semana Acadêmica de Sistemas de Informação
 
 Site do evento acadêmico do curso de Sistemas de Informação da UNEMAT — Campus
-Sinop, desenvolvido na disciplina Introdução ao Desenvolvimento Web
-(FACET-SNP-319).
+Sinop, desenvolvido com o [WebLab](https://weblab.ivanpires.dev), trilha
+Introdução ao Desenvolvimento Web.
 
 **Site publicado:** https://usuario.github.io/site-evento/
 
@@ -931,7 +931,7 @@ git push
 
 Pegue o celular, **desligue o Wi-Fi** e abra o endereço público usando dados móveis. Navegue pelas cinco páginas, abra o menu, use a busca da programação e preencha o formulário de inscrição.
 
-Se tudo funcionar aí, o seu site está no ar de verdade. Mande o link para alguém que não é da turma e peça para abrir.
+Se tudo funcionar aí, o seu site está no ar de verdade. Mande o link para alguém que não viu o projeto antes e peça para abrir.
 
 ### Como testar
 
@@ -955,7 +955,7 @@ Se tudo funcionar aí, o seu site está no ar de verdade. Mande o link para algu
 
 **A2.** Por que o arquivo de entrada precisa se chamar `index.html` e ficar na raiz do repositório? O que o servidor faz quando não encontra esse arquivo?
 
-**A3.** Explique, para um colega que faltou, a diferença entre hospedagem, domínio e certificado HTTPS. Dê um exemplo de cada um no endereço `https://ana.github.io/site-evento/`.
+**A3.** Explique, para alguém que nunca ouviu falar do assunto, a diferença entre hospedagem, domínio e certificado HTTPS. Dê um exemplo de cada um no endereço `https://ana.github.io/site-evento/`.
 
 **A4.** Qual a diferença entre `href="/css/estilo.css"` e `href="css/estilo.css"` em um site publicado em `usuario.github.io/site-evento/`? Qual dos dois funciona, e por quê?
 
@@ -963,7 +963,7 @@ Se tudo funcionar aí, o seu site está no ar de verdade. Mande o link para algu
 
 **A6.** Escreva, na ordem correta, a sequência completa de comandos para transformar uma pasta com o site em um repositório publicado no GitHub — do `git init` ao `git push -u origin main`.
 
-**A7.** Quais são as quatro categorias avaliadas pelo Lighthouse e qual é a meta de cada uma na disciplina? Cite duas causas comuns de nota baixa em cada uma.
+**A7.** Quais são as quatro categorias avaliadas pelo Lighthouse e qual é a meta de cada uma nesta trilha? Cite duas causas comuns de nota baixa em cada uma.
 
 **A8.** Por que a auditoria do Lighthouse deve ser feita no site publicado, em janela anônima e no modo Mobile? O que cada uma dessas três escolhas evita?
 
@@ -993,7 +993,7 @@ Na aba Network, o rodapé mostra `transferred` (o que veio pela rede) e `resourc
 
 **B3.** Rode o Lighthouse no site publicado, registre as quatro pontuações iniciais, aplique todas as correções sugeridas pelo relatório e registre as pontuações finais. Escreva um parágrafo sobre qual correção teve o maior impacto e por quê.
 
-Resultado esperado: uma tabela antes/depois com as quatro notas no `README.md` e as metas da disciplina atingidas.
+Resultado esperado: uma tabela antes/depois com as quatro notas no `README.md` e as metas da trilha atingidas.
 
 <details><summary>Dica</summary>
 
@@ -1020,14 +1020,14 @@ Teste o resultado renderizado, não o texto-fonte: uma imagem referenciada com c
 
 ### Nível C — Desafio
 
-**C1.** Faça uma **auditoria cruzada**: forme dupla com um colega, troquem as URLs publicadas e cada um audita o site do outro. Produza um relatório de uma página com as quatro notas do Lighthouse (mobile e desktop), o resultado da validação W3C de todas as páginas, a navegação completa por teclado (o que quebrou), o teste com zoom em 200% e uma lista priorizada de cinco problemas com a correção sugerida para cada um.
+**C1.** Faça uma **auditoria cruzada**: troque URLs com outra pessoa que esteja estudando esta trilha (um colega de turma, alguém de um grupo de estudos, ou uma troca combinada em algum fórum de desenvolvimento) e cada um audita o site do outro. Sem ninguém para trocar? Audite o site de um projeto público que você admire, com os mesmos critérios. Produza um relatório de uma página com as quatro notas do Lighthouse (mobile e desktop), o resultado da validação W3C de todas as páginas, a navegação completa por teclado (o que quebrou), o teste com zoom em 200% e uma lista priorizada de cinco problemas com a correção sugerida para cada um.
 
 <details><summary>Dica</summary>
 
 Auditar site alheio é mais fácil que auditar o próprio: você não tem os atalhos mentais de quem construiu. Comece pelo teclado — desconecte o mouse de verdade — e depois rode as ferramentas. Escreva os problemas de forma acionável: "o botão de filtro não recebe foco visível" vale mais do que "acessibilidade ruim".
 </details>
 
-**C2.** Configure o repositório com um fluxo de trabalho por branch: crie uma branch com uma melhoria (por exemplo, um modo escuro no CSS), publique-a, abra um **pull request** descrevendo a mudança, peça a revisão de um colega e só então faça o merge na `main`. Documente o processo com as URLs do PR e das revisões.
+**C2.** Configure o repositório com um fluxo de trabalho por branch: crie uma branch com uma melhoria (por exemplo, um modo escuro no CSS), publique-a, abra um **pull request** descrevendo a mudança, peça a revisão de outra pessoa (ou revise você mesmo com calma, no dia seguinte) e só então faça o merge na `main`. Documente o processo com as URLs do PR e das revisões.
 
 <details><summary>Dica</summary>
 
@@ -1117,11 +1117,11 @@ A página inicial de um site de evento não deveria pesar mais que um aplicativo
 ### 🔥 Boss — Do zero ao ar, em três horas
 Tags: projeto, deploy, github, acessibilidade
 
-Este é o desafio que fecha a Unidade 3 e a disciplina. A regra é simples e desconfortável: **um tema novo, do zero, publicado e auditado em três horas**. Sem reaproveitar o código do site do evento nem o do seu projeto autoral — só o que está na sua cabeça e a documentação aberta.
+Este é o desafio que fecha a Unidade 3 e esta trilha. A regra é simples e desconfortável: **um tema novo, do zero, publicado e auditado em três horas**. Sem reaproveitar o código do site do evento nem o do seu projeto autoral — só o que está na sua cabeça e a documentação aberta.
 
-Escolha um tema que você nunca usou (catálogo de plantas do Pantanal, agenda de quadras do bairro, mural de estágios, brechó, controle de pescarias, cardápio de restaurante) e construa um site de três páginas que exercite tudo o que a disciplina cobriu: HTML semântico, CSS com sistema de design e responsividade, JavaScript com listagem renderizada a partir de dados, busca e formulário validado. Marque o tempo do início ao fim.
+Escolha um tema que você nunca usou (catálogo de plantas do Pantanal, agenda de quadras do bairro, mural de estágios, brechó, controle de pescarias, cardápio de restaurante) e construa um site de três páginas que exercite tudo o que esta trilha cobriu: HTML semântico, CSS com sistema de design e responsividade, JavaScript com listagem renderizada a partir de dados, busca e formulário validado. Marque o tempo do início ao fim.
 
-Esta é a simulação mais honesta do que se pede em um teste técnico de estágio — e a prova, para você mesmo, de que o semestre entrou.
+Esta é a simulação mais honesta do que se pede em um teste técnico de estágio — e a prova, para você mesmo, de que o conteúdo entrou de verdade.
 
 **Critérios de pronto**
 
@@ -1141,7 +1141,7 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 4. Guarde os últimos trinta minutos para auditar: validador, Lighthouse, teclado e o teste no celular. É onde os pontos aparecem.
 </details>
 
-**Para ir além:** publique o repositório com um tópico (*topic*) `weblab` no GitHub e compare o seu resultado com o dos colegas da turma.
+**Para ir além:** publique o repositório com um tópico (*topic*) `weblab` no GitHub e compare o seu resultado com o de outras pessoas que fizeram o mesmo desafio.
 
 ## 🐛 Erros comuns
 
@@ -1177,7 +1177,7 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 
 **Critério de pronto:** o link público abre o site em qualquer máquina, em janela anônima; o console está limpo; o validador não aponta erros; o README traz o link do site, as quatro notas do Lighthouse e a comparação de peso.
 
-**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): poste o link do seu projeto autoral publicado, com uma frase sobre o problema mais difícil da publicação. Se puder, peça a um colega para abrir o link, rodar o Lighthouse e devolver um elogio específico e uma sugestão acionável.
+**Parte 3 — Discussão (5 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: poste o link do seu projeto autoral publicado, com uma frase sobre o problema mais difícil da publicação. Se puder, peça a outra pessoa para abrir o link, rodar o Lighthouse e devolver um elogio específico e uma sugestão acionável.
 
 **Guarde no seu repositório:** o link do site publicado, registrado no README.
 
@@ -1261,7 +1261,7 @@ Frameworks e bibliotecas de JavaScript (jQuery, React, Vue e similares) não ent
 
 ---
 
-## 🎓 Fim da disciplina — para onde ir agora
+## 🎓 Fim da trilha — para onde ir agora
 
 Quinze aulas atrás você abriu um arquivo vazio e escreveu `<!DOCTYPE html>` sem saber direito por quê. Hoje você tem, no ar, um site de cinco páginas com estrutura semântica, um sistema de design em CSS, layout responsivo, animações que respeitam quem prefere menos movimento, listagens geradas por JavaScript, busca, filtro, ordenação e um formulário que valida CPF de verdade. E, o mais importante: **você entende cada linha**, porque escreveu cada uma.
 
@@ -1269,7 +1269,7 @@ Guarde o repositório. Ele já é peça de portfólio — o tipo de link que se 
 
 ### O Nível 2, a continuação direta
 
-O [Nível 2 — Desenvolvimento Web](../nivel-2/) (FACET-SNP-307) tem esta disciplina como pré-requisito e continua exatamente de onde você parou. Lá, o CSS escrito à mão ganha a companhia de frameworks (Bootstrap e Tailwind) e de SVG; o `js/dados.js` com o array fixo vira um `fetch` que busca dados de uma API real, com `async/await`, estados de carregamento e tratamento de erro; as cinco páginas HTML viram uma **SPA**, uma aplicação de página única com navegação sem recarregamento. E, na terceira unidade, o JavaScript sai do navegador: com **Node.js e Express** você escreve o servidor que responde às requisições, adiciona login com conta Google e constrói um CRUD completo, com dados que sobrevivem ao fechar do navegador.
+O [Nível 2 — Desenvolvimento Web](../nivel-2/) (FACET-SNP-307) tem esta trilha como pré-requisito e continua exatamente de onde você parou. Lá, o CSS escrito à mão ganha a companhia de frameworks (Bootstrap e Tailwind) e de SVG; o `js/dados.js` com o array fixo vira um `fetch` que busca dados de uma API real, com `async/await`, estados de carregamento e tratamento de erro; as cinco páginas HTML viram uma **SPA**, uma aplicação de página única com navegação sem recarregamento. E, na terceira unidade, o JavaScript sai do navegador: com **Node.js e Express** você escreve o servidor que responde às requisições, adiciona login com conta Google e constrói um CRUD completo, com dados que sobrevivem ao fechar do navegador.
 
 O projeto fio-condutor de lá é o **Café Cerrado**, uma cafeteria fictícia que percorre o mesmo caminho: site estático, depois dinâmico, depois full-stack.
 

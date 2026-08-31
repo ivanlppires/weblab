@@ -373,7 +373,7 @@ console.log(10 === 10);    // true  — mesmo valor E mesmo tipo
 console.log(10 !== "10");  // true  — tipos diferentes
 ```
 
-Você já sabe da Aula 10 que `==` converte os tipos antes de comparar e produz resultados absurdos (`0 == ""` é `true`, `"" == "0"` é `false`). A regra desta disciplina é definitiva: **`===` e `!==`, sempre**. Se um dos lados chegou como texto, converta explicitamente (`Number(entrada) === 5`) em vez de relaxar a comparação.
+Você já sabe da Aula 10 que `==` converte os tipos antes de comparar e produz resultados absurdos (`0 == ""` é `true`, `"" == "0"` é `false`). A regra desta trilha é definitiva: **`===` e `!==`, sempre**. Se um dos lados chegou como texto, converta explicitamente (`Number(entrada) === 5`) em vez de relaxar a comparação.
 
 ### 4.2 Comparar strings compara letra por letra
 
@@ -1279,7 +1279,7 @@ A organização da Semana Acadêmica precisa saber, a qualquer momento, em que f
 
 **Critério de pronto:** ao trocar um único número no topo do script do projeto autoral e recarregar, a mensagem e o destaque visual mudam de faixa; nenhuma página do projeto mostra erro vermelho no Console; nenhum número mágico aparece no meio do código; nenhum `var` e nenhum `==` sobreviveram nos arquivos `.js`.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): defenda, com argumentos técnicos, a prática de declarar tudo como `const` por padrão e usar `let` só quando a reatribuição for necessária. Traga um trecho do seu próprio projeto em que a escolha importou.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: defenda, com argumentos técnicos, a prática de declarar tudo como `const` por padrão e usar `let` só quando a reatribuição for necessária. Traga um trecho do seu próprio projeto em que a escolha importou.
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

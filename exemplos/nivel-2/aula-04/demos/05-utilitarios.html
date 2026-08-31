@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 05 — Os utilitários que você usa todo dia</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <style>
+    body { background: #fdfaf6; }
+    .aula { background: #2b2118; color: #fdfaf6; }
+    .aula code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+
+    /* Faixas listradas revelam o padding; a caixa interna revela o conteúdo. */
+    .caixa-padding { background: repeating-linear-gradient(45deg, #e7dccd, #e7dccd 6px, #f6f1ea 6px, #f6f1ea 12px);
+                     border-radius: .5rem; }
+    .miolo { background: #6f4e37; color: #fff; text-align: center; padding: .4rem; border-radius: .35rem; font-size: .85rem; }
+    .trilho { background: repeating-linear-gradient(45deg, #e7dccd, #e7dccd 6px, #f6f1ea 6px, #f6f1ea 12px);
+              border-radius: .5rem; overflow: hidden; }
+    .flex-demo { background: #f6f1ea; border: 1px dashed rgba(111,78,55,.4); border-radius: .5rem; min-height: 4rem; }
+    .flex-demo > span { background: #6f4e37; color: #fff; padding: .35rem .7rem; border-radius: .35rem; font-size: .85rem; }
+    .moldura { border: 3px solid #c2703d; overflow-x: auto; }
+  </style>
+</head>
+<body>
+
+<header class="aula p-4">
+  <div class="container">
+    <h1 class="h5">Demo 05 — §4.4. O vocabulário do dia a dia</h1>
+    <p class="mb-0">
+      O padrão é sempre <code>{propriedade}{lado}-{tamanho}</code>. Aprendido o padrão,
+      as ~200 classes de espaçamento viram uma só.
+    </p>
+  </div>
+</header>
+
+<main class="container py-4">
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">1. A escala: 0, 1, 2, 3, 4, 5</h2>
+    <p>As listras são o <i>padding</i>; o marrom é o conteúdo.</p>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+      <div class="col"><div class="caixa-padding p-0"><div class="miolo">p-0<br><small>0</small></div></div></div>
+      <div class="col"><div class="caixa-padding p-1"><div class="miolo">p-1<br><small>.25rem</small></div></div></div>
+      <div class="col"><div class="caixa-padding p-2"><div class="miolo">p-2<br><small>.5rem</small></div></div></div>
+      <div class="col"><div class="caixa-padding p-3"><div class="miolo">p-3<br><small>1rem</small></div></div></div>
+      <div class="col"><div class="caixa-padding p-4"><div class="miolo">p-4<br><small>1.5rem</small></div></div></div>
+      <div class="col"><div class="caixa-padding p-5"><div class="miolo">p-5<br><small>3rem</small></div></div></div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">2. O lado: <code>t b s e x y</code></h2>
+    <p>
+      <code>s</code> é <i>start</i> e <code>e</code> é <i>end</i> — não <i>left</i> e <i>right</i>.
+      Existe para o mesmo CSS funcionar em árabe, escrito da direita para a esquerda.
+    </p>
+
+    <div class="trilho mb-2"><div class="miolo ms-0">ms-0 · margem no início</div></div>
+    <div class="trilho mb-2"><div class="miolo ms-3">ms-3</div></div>
+    <div class="trilho mb-2"><div class="miolo ms-5">ms-5</div></div>
+    <div class="trilho mb-2"><div class="miolo me-5">me-5 · margem no fim (empurra da direita)</div></div>
+    <div class="trilho mb-2"><div class="miolo mx-auto" style="max-width:14rem">mx-auto · centraliza</div></div>
+
+    <div class="d-flex flex-demo p-2 mt-3">
+      <span>logo</span>
+      <span class="ms-auto">ms-auto → empurra este para a direita</span>
+    </div>
+    <p class="text-body-secondary mt-2 mb-0">
+      <code>ms-auto</code> dentro de um flex é o truque mais usado do framework —
+      é o que joga o menu da navbar para a direita, na Demo 06.
+    </p>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">3. Flexbox sem escrever flexbox</h2>
+
+<pre class="p-3 bg-body-tertiary rounded-3"><code>&lt;div class="d-flex align-items-center justify-content-between gap-3"&gt;</code></pre>
+
+    <div class="d-flex align-items-center justify-content-between gap-3 flex-demo p-2 mb-2">
+      <span>início</span><span>meio</span><span>fim</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-center gap-3 flex-demo p-2 mb-2">
+      <span>justify-content-center</span><span>·</span><span>·</span>
+    </div>
+    <div class="d-flex flex-column flex-md-row align-items-stretch gap-2 flex-demo p-2">
+      <span class="flex-fill text-center">flex-column no celular…</span>
+      <span class="flex-fill text-center">…flex-md-row a partir de 768 px</span>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">4. <code>img-fluid</code>: a linha que salva o celular</h2>
+    <div class="row g-4">
+      <div class="col-12 col-lg-6">
+        <p class="fw-bold"><span class="badge text-bg-danger">sem img-fluid</span> estoura a moldura</p>
+        <div class="moldura">
+          <img src="../cafe-cerrado/img/fachada.jpg" alt="Fachada do Café Cerrado" width="1200" height="800">
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <p class="fw-bold"><span class="badge text-bg-success">com img-fluid</span> cabe sempre</p>
+        <div class="moldura">
+          <img src="../cafe-cerrado/img/fachada.jpg" class="img-fluid" alt="Fachada do Café Cerrado" width="1200" height="800">
+        </div>
+      </div>
+    </div>
+    <p class="text-body-secondary mt-2 mb-0">
+      <code>img-fluid</code> é literalmente <code>max-width: 100%; height: auto</code>. Duas declarações.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="h5 mb-3">5. Os outros que aparecem no projeto</h2>
+    <p class="text-center text-body-secondary">
+      <code>text-center text-body-secondary</code> — texto centralizado e apagado
+    </p>
+    <p>
+      <span class="badge text-bg-success">Sem glúten</span>
+      <span class="badge text-bg-secondary">Torra média</span>
+      <span class="badge text-bg-danger">Esgotado</span>
+      — <code>badge text-bg-*</code>
+    </p>
+    <p class="mb-0">
+      Aqui existe um texto só para leitor de tela →
+      <span class="visually-hidden">Este texto está na página e é lido em voz alta, mas não ocupa espaço na tela.</span>
+      <span class="text-body-secondary">(inspecione o HTML: o <code>span.visually-hidden</code> está aí)</span>
+    </p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

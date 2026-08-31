@@ -421,7 +421,7 @@ O atributo `aria-current="page"` faz o leitor de tela anunciar "Cardápio, pági
 
 ## 4. Formulários: a porta de entrada de dados
 
-Formulário é onde o site deixa de ser um panfleto. Toda a Unidade 3 desta disciplina vive de dados que chegam por formulários: na Unidade 2 você vai validá-los com JavaScript e, na Unidade 3, recebê-los no Express. Estruturar o formulário direito agora é investimento nos três marcos do projeto.
+Formulário é onde o site deixa de ser um panfleto. Toda a Unidade 3 desta trilha vive de dados que chegam por formulários: na Unidade 2 você vai validá-los com JavaScript e, na Unidade 3, recebê-los no Express. Estruturar o formulário direito agora é investimento nos três marcos do projeto.
 
 ### 4.1 Anatomia do `<form>`
 
@@ -838,7 +838,7 @@ Escreva a página inicial inteira. O `<header>` e o `<footer>` deste arquivo sã
       <section>
         <h2>Café Cerrado</h2>
         <p>Torrefação artesanal de grãos do Cerrado mato-grossense. Projeto fictício
-           usado como estudo de caso da disciplina de Desenvolvimento Web.</p>
+           usado como estudo de caso do Nível 2 do WebLab (Desenvolvimento Web).</p>
       </section>
 
       <section>
@@ -1740,7 +1740,7 @@ Escolha uma página de um site que você usa toda semana — um portal de notíc
 3. As três páginas validadas no W3C — cole no `README.md` o print ou o texto "Document checking completed. No errors or warnings to show." para cada uma.
 4. `README.md` atualizado com: nome do projeto, uma frase sobre o domínio escolhido, a lista de páginas e o link do GitHub Pages.
 
-**Parte 3 — Explicar a decisão (10 min).** Em `docs/decisao.md`, escreva um trecho de dez a vinte linhas do HTML do seu projeto e explique **uma** decisão de marcação que você tomou e por quê (por exemplo: por que aquele bloco é `article` e não `section`). Se puder, compare com um colega (ou releia depois de um dia) e anote uma melhoria concreta que encontrar.
+**Parte 3 — Explicar a decisão (10 min).** Em `docs/decisao.md`, escreva um trecho de dez a vinte linhas do HTML do seu projeto e explique **uma** decisão de marcação que você tomou e por quê (por exemplo: por que aquele bloco é `article` e não `section`). Se puder, compare com outra pessoa que esteja estudando (ou releia depois de um dia) e anote uma melhoria concreta que encontrar.
 
 **Critério de pronto:** as três páginas do projeto autoral abrem pelo endereço do GitHub Pages; o menu leva de qualquer página para qualquer outra e marca a atual com `aria-current`; o formulário bloqueia o envio quando algum campo obrigatório está vazio, com mensagem específica; e o validador do W3C não aponta nenhum erro em nenhuma das três.
 

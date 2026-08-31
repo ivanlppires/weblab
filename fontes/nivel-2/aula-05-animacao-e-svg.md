@@ -270,7 +270,7 @@ O atalho segue esta ordem: `animation: nome duração curva atraso repetições 
 }
 ```
 
-O `animation-fill-mode` é a fonte de metade dos bugs de animação da turma:
+O `animation-fill-mode` é a fonte de metade dos bugs de animação que você vai encontrar por aí:
 
 - `none` (padrão): antes e depois da animação vale o CSS normal. O elemento **volta ao estado inicial** quando a animação acaba.
 - `forwards`: o último quadro **fica**. É o que você quer em animações de entrada.
@@ -362,7 +362,7 @@ Para desenhar um quadro, o navegador percorre um pipeline:
 - Animar `background-color`, `box-shadow`, `border-radius` ou `fill` dispara **Paint → Composite**.
 - Animar `transform` e `opacity` dispara **só Composite** — e o compositor roda em outra thread, muitas vezes na GPU.
 
-Daí a regra prática: **anime `transform` e `opacity`; tudo o mais, com parcimônia**. Um `box-shadow` que muda em um botão é irrelevante; o mesmo `box-shadow` mudando em 40 cards ao mesmo tempo trava o celular do seu colega.
+Daí a regra prática: **anime `transform` e `opacity`; tudo o mais, com parcimônia**. Um `box-shadow` que muda em um botão é irrelevante; o mesmo `box-shadow` mudando em 40 cards ao mesmo tempo trava o celular de quem está vendo.
 
 > **🔬 Investigue**
 > Abra o DevTools, pressione <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, digite "Show Rendering" e ative **Paint flashing**. Volte ao Café Cerrado e passe o mouse sobre os cards: as áreas repintadas piscam em verde. Agora troque, no painel Styles, o `transform: translateY(-6px)` do `:hover` por `margin-top: -6px` e repita. Compare quanta área verde cada versão produz. Depois ative **Frame Rendering Stats** (na mesma aba) e observe o contador de FPS enquanto rola a página com as duas versões. Anote os dois números — eles são metade da resposta do exercício B7 do Laboratório.
@@ -600,7 +600,7 @@ Três regras:
 | Material Symbols (`fonts.google.com/icons`) | Material Design | Apache 2.0 |
 | Heroicons (`heroicons.com`) | Tailwind | MIT |
 
-Todas permitem copiar o código SVG e colar inline. **Sempre confira a licença** antes de usar em um trabalho publicado, e cite a origem no `README.md`. Ícones baixados de bancos de imagens genéricos costumam vir com termos restritivos — e um trabalho da disciplina fica público no GitHub Pages.
+Todas permitem copiar o código SVG e colar inline. **Sempre confira a licença** antes de usar em um trabalho publicado, e cite a origem no `README.md`. Ícones baixados de bancos de imagens genéricos costumam vir com termos restritivos — e um trabalho desta trilha fica público no GitHub Pages.
 
 Antes de colar, faça uma limpeza: remova `width`/`height` fixos (o CSS cuida disso), remova `<title>` duplicados, troque `fill="#000000"` por `fill="currentColor"` e apague metadados de editor (`<metadata>`, atributos `sodipodi:*` ou `inkscape:*`). O site `svgomg.net` faz isso automaticamente e costuma cortar mais da metade do peso.
 
@@ -628,7 +628,7 @@ Abra o `css/estilo.css` e **acrescente** ao `:root` que já existe (Aulas 02 e 0
 }
 ```
 
-A partir daqui **nenhuma duração solta** aparece no arquivo: toda transição usa uma dessas variáveis. Quando o professor pedir "deixe tudo 30 % mais rápido", você muda três linhas. E, como na Aula 02, **nenhuma cor literal fora do `:root`**: todo o CSS de hoje usa `var(--cor-*)`.
+A partir daqui **nenhuma duração solta** aparece no arquivo: toda transição usa uma dessas variáveis. Quando pedirem "deixe tudo 30 % mais rápido", você muda três linhas. E, como na Aula 02, **nenhuma cor literal fora do `:root`**: todo o CSS de hoje usa `var(--cor-*)`.
 
 ### Passo 2 — microinterações nos elementos clicáveis
 
@@ -1191,7 +1191,7 @@ No painel Performance, use o botão de gravar, dispare a animação, pare e olhe
 
 ### Nível C — Desafio
 
-**C1.** **Cartaz animado do Café Cerrado.** Construa, em um arquivo novo `promocao.html`, um cartaz de página inteira para a promoção "Hora do café — 15 h às 17 h", com: fundo em gradiente que se desloca lentamente; título entrando escalonado letra a letra ou palavra a palavra; um relógio em SVG desenhado por você, com o ponteiro girando uma volta completa em 6 s; três cards de produto entrando em cascata; e um botão de chamada que pulsa três vezes e para. Requisitos técnicos: nenhuma animação de propriedade de layout; toda animação com propósito declarado em comentário; `prefers-reduced-motion` respeitado; o cartaz continua legível e navegável por teclado com o movimento desligado. Comece em sala pelo relógio e pelo título; o resto pode ser terminado em casa.
+**C1.** **Cartaz animado do Café Cerrado.** Construa, em um arquivo novo `promocao.html`, um cartaz de página inteira para a promoção "Hora do café — 15 h às 17 h", com: fundo em gradiente que se desloca lentamente; título entrando escalonado letra a letra ou palavra a palavra; um relógio em SVG desenhado por você, com o ponteiro girando uma volta completa em 6 s; três cards de produto entrando em cascata; e um botão de chamada que pulsa três vezes e para. Requisitos técnicos: nenhuma animação de propriedade de layout; toda animação com propósito declarado em comentário; `prefers-reduced-motion` respeitado; o cartaz continua legível e navegável por teclado com o movimento desligado. Comece pelo relógio e pelo título; o resto pode ser terminado depois.
 
 <details><summary>Dica</summary>
 
@@ -1281,7 +1281,7 @@ Um colega mandou o CSS abaixo dizendo "não anima nada, o navegador deve estar b
 
 Tags: svg, css, projeto, acessibilidade
 
-Todo projeto autoral desta disciplina precisa de uma marca. A maioria da turma vai baixar um PNG genérico de 80 KB que fica borrado na tela do celular. Você vai desenhar a sua — no código, com formas geométricas — e ela vai pesar menos que uma linha de texto desta apostila.
+Todo projeto autoral desta trilha precisa de uma marca. É tentador baixar um PNG genérico de 80 KB que fica borrado na tela do celular. Você vai desenhar a sua — no código, com formas geométricas — e ela vai pesar menos que uma linha de texto desta apostila.
 
 **Critérios de pronto**
 
@@ -1390,7 +1390,7 @@ A página inicial do Café Cerrado vai ganhar uma seção "O café em números" 
 
 **Critério de pronto:** os seis itens presentes; emular `prefers-reduced-motion: reduce` no DevTools não esconde nem quebra nada; nenhuma animação de `width`, `height`, `top`, `left` ou `margin`; nenhum `transition: all`; o site continua funcionando publicado no GitHub Pages.
 
-**Parte 3 — Animação que ajuda e animação que atrapalha (5 min).** Em `docs/animacao.md`, anote o endereço de um site com movimento bem empregado e de outro com movimento excessivo, explicando tecnicamente a diferença: o que cada animação comunica, a duração aproximada e a propriedade animada (verifique no DevTools). Se puder, compare com um colega.
+**Parte 3 — Animação que ajuda e animação que atrapalha (5 min).** Em `docs/animacao.md`, anote o endereço de um site com movimento bem empregado e de outro com movimento excessivo, explicando tecnicamente a diferença: o que cada animação comunica, a duração aproximada e a propriedade animada (verifique no DevTools). Se puder, compare com outra pessoa que esteja estudando.
 
 **Guarde no seu repositório:** commit + push.
 

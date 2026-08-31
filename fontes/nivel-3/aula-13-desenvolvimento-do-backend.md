@@ -542,7 +542,7 @@ export function criarApp({ eventosRepository } = {}) {
 > **🔬 Investigue**
 > Com a API rodando, execute `curl -i http://localhost:3000/health` e conte os cabeçalhos da resposta. Comente a linha `app.use(cabecalhosDeSeguranca)`, reinicie e rode de novo: quantos sumiram? Procure `X-Powered-By: Express` (o helmet o remove — é uma pista de graça para quem ataca), `X-Content-Type-Options: nosniff` e `Content-Security-Policy`. Depois descomente e teste o limitador: `for i in $(seq 1 101); do curl -s -o /dev/null -w "%{http_code} " http://localhost:3000/health; done` — o último número deve ser `429`, e um `curl -i` na sequência mostra `RateLimit-Remaining: 0`.
 
-### 5.1 Checklist OWASP Top 10 aplicado a esta disciplina
+### 5.1 Checklist OWASP Top 10 aplicado a esta trilha
 
 | Categoria OWASP | O que fazemos no UniEventos |
 |---|---|
@@ -1512,10 +1512,10 @@ Rode `npm test` antes de mexer em qualquer coisa: os testes já contam a histór
 3. O `limitadorDeTaxa` depois das rotas nunca é alcançado por uma requisição que já foi respondida — confira com `curl -i` que o cabeçalho `RateLimit-Limit` sumiu.
 </details>
 
-### ⭐⭐ Rate limit que não pune a turma inteira
+### ⭐⭐ Rate limit que não pune todo mundo por igual
 Tags: express, middleware, seguranca, testes
 
-No laboratório da faculdade todo mundo sai para a internet pelo mesmo IP. Com `limit: 100` por IP a cada 15 minutos, bastam quatro colegas testando a mesma API publicada para o quinto receber `429` sem ter feito nada. Meça o problema e depois redesenhe o limitador para punir quem abusa — não quem compartilha a rede.
+Em uma rede compartilhada — um laboratório, um escritório, ou até um provedor com NAT/CGNAT — várias pessoas saem para a internet pelo mesmo IP. Com `limit: 100` por IP a cada 15 minutos, bastam quatro pessoas testando a mesma API publicada para a quinta receber `429` sem ter feito nada. Meça o problema e depois redesenhe o limitador para punir quem abusa — não quem compartilha a rede.
 
 **Critérios de pronto**
 

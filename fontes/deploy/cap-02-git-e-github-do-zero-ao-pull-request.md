@@ -36,7 +36,7 @@ Ao final deste capítulo você será capaz de:
 
 ## 1. Por que versionar
 
-Abra a pasta de trabalhos da faculdade de qualquer colega e você encontra alguma variação disto:
+Abra a pasta de projetos antigos de qualquer colega e você encontra alguma variação disto:
 
 ```text
 site-final.zip   site-final-2.zip   site-final-agora-vai.zip
@@ -66,7 +66,7 @@ A maioria dos sistemas antigos guardava, para cada arquivo, a **lista de diferen
 
 Cada commit é um objeto com o conteúdo de todos os arquivos naquele instante, o autor, o e-mail e o instante da gravação, a mensagem que você escreveu e o **hash do commit anterior** (o "pai").
 
-É esse último campo que forma a corrente: cada commit aponta para o anterior, e o histórico é a corrente inteira. O identificador de um commit é um hash de 40 caracteres hexadecimais, mas na prática você usa os 7 primeiros (`a3f9c21`), que já são únicos em um projeto de disciplina.
+É esse último campo que forma a corrente: cada commit aponta para o anterior, e o histórico é a corrente inteira. O identificador de um commit é um hash de 40 caracteres hexadecimais, mas na prática você usa os 7 primeiros (`a3f9c21`), que já são únicos em um projeto de porte comum.
 
 ### 2.2 As três áreas
 
@@ -271,7 +271,7 @@ A sintaxe é simples: uma linha por padrão e `#` para comentário; barra no fim
 
 ### 5.2 `README.md`: a capa do projeto
 
-O GitHub renderiza o `README.md` na página inicial do repositório. É a primeira coisa que o professor, o colega e o recrutador leem. Cinco seções bastam: **o que é**, **como rodar**, **estrutura**, **estado atual** e **autoria**.
+O GitHub renderiza o `README.md` na página inicial do repositório. É a primeira coisa que quem avalia o projeto, um colega ou um recrutador vai ler. Cinco seções bastam: **o que é**, **como rodar**, **estrutura**, **estado atual** e **autoria**.
 
 `README.md`
 
@@ -591,7 +591,7 @@ O `git reflog` é a rede de segurança: mesmo depois de um `git reset --hard` in
 
 ## 11. Trabalhando em dupla
 
-O trabalho em dupla da disciplina (e qualquer projeto real) segue sempre o mesmo ciclo:
+O trabalho em dupla (nesta trilha ou em qualquer projeto real) segue sempre o mesmo ciclo:
 
 1. **Antes de começar a trabalhar**, atualize: `git switch main && git pull`.
 2. **Crie uma branch por tarefa** (`git switch -c inscricao-validacao`) e faça **commits pequenos e frequentes**, um assunto por commit.

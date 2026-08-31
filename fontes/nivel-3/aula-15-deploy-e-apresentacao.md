@@ -39,7 +39,7 @@ Checklist antes de começar:
 |---|---|---|
 | 1 | 50 min | Build de produção, deploy do front e do back, Docker, CORS em produção |
 | 2 | 50 min | CI/CD com GitHub Actions, retrospectiva de padrões de projeto, teste seu domínio dos padrões |
-| 3 | 50 min | Marco 3 do projeto, formato da apresentação final, encerramento do curso |
+| 3 | 50 min | Marco 3 do projeto, formato da apresentação final, encerramento da trilha |
 
 ## 1. Build de produção do front-end
 
@@ -102,7 +102,7 @@ export default http
 ```
 
 > **⚠️ Atenção**
-> `VITE_API_URL` inclui o sufixo `/api` — é o prefixo em que a `unieventos-api` monta suas rotas desde a Aula 07. Os services chamam `http.get('/eventos')`, e a URL final vira `.../api/eventos`. Esquecer o `/api` aqui é o erro pós-deploy mais comum da turma: tudo compila, tudo publica, e toda requisição volta `404` porque foi para `.../eventos`.
+> `VITE_API_URL` inclui o sufixo `/api` — é o prefixo em que a `unieventos-api` monta suas rotas desde a Aula 07. Os services chamam `http.get('/eventos')`, e a URL final vira `.../api/eventos`. Esquecer o `/api` aqui é o erro pós-deploy mais comum: tudo compila, tudo publica, e toda requisição volta `404` porque foi para `.../eventos`.
 
 > **⚠️ Atenção**
 > `import.meta.env.VITE_*` só existe em tempo de **build** — o Vite substitui essas referências por valores literais no JavaScript final. Trocar a variável depois do build (por exemplo, direto no painel do serviço de hospedagem, sem rebuildar) **não tem efeito nenhum**: você precisa gerar um novo build para que um novo valor de `VITE_API_URL` entre no bundle. Serviços como Vercel fazem isso automaticamente a cada push, rodando `npm run build` de novo.
@@ -175,7 +175,7 @@ A solução é configurar o servidor para, em qualquer caminho que não seja um 
 6. A cada `git push` na branch `main`, a Vercel refaz o deploy automaticamente.
 
 > **💡 Dica**
-> A Vercel também cria um **preview deploy** automático para cada Pull Request, com URL própria — ótimo para revisar uma feature antes de mesclar em `main`, mas não obrigatório nesta disciplina.
+> A Vercel também cria um **preview deploy** automático para cada Pull Request, com URL própria — ótimo para revisar uma feature antes de mesclar em `main`, mas não obrigatório nesta trilha.
 
 ### 2.2 Alternativa: Firebase Hosting
 
@@ -464,7 +464,7 @@ Para a Vercel (front-end), normalmente **não é preciso** workflow de deploy pr
 > **💡 Dica**
 > Um erro comum de quem está aprendendo CI/CD é tratar o pipeline como "burocracia extra". Na prática, ele é o que permite a um time (ou a você sozinho, meses depois) fazer mudanças com confiança: se o CI ficou verde, você sabe que não quebrou nada que já estava coberto por teste — sem isso, cada mudança pequena vira um momento de ansiedade.
 
-## 6. Retrospectiva da disciplina
+## 6. Retrospectiva da trilha
 
 ### 6.1 Mapa mental textual do que foi construído
 
@@ -493,9 +493,9 @@ UniEventos
 └─ Padrões de projeto (GoF) — ver tabela consolidada abaixo
 ```
 
-### 🧩 Todos os padrões de projeto usados no semestre
+### 🧩 Todos os padrões de projeto usados nesta trilha
 
-A ementa exige explicitamente padrões **criacionais, estruturais e comportamentais**. Aqui está a lista completa, com onde cada um apareceu de verdade no UniEventos.
+Esta trilha cobre explicitamente padrões **criacionais, estruturais e comportamentais**. Aqui está a lista completa, com onde cada um apareceu de verdade no UniEventos.
 
 **Criacionais**
 
@@ -526,11 +526,11 @@ A ementa exige explicitamente padrões **criacionais, estruturais e comportament
 | Template Method | Componentes de layout com slots definindo um "esqueleto" fixo e pontos variáveis preenchidos por quem usa o componente | 05 |
 
 > **📌 Vale gravar**
-> Dominar de verdade os padrões de projeto do semestre exige duas coisas: saber a definição de cada padrão **e** conseguir apontar um exemplo concreto de onde ele apareceu — não basta decorar o nome, é preciso reconhecer o padrão dentro de um trecho de código real.
+> Dominar de verdade os padrões de projeto desta trilha exige duas coisas: saber a definição de cada padrão **e** conseguir apontar um exemplo concreto de onde ele apareceu — não basta decorar o nome, é preciso reconhecer o padrão dentro de um trecho de código real.
 
-## 7. Teste seu domínio: padrões de projeto e arquitetura do semestre
+## 7. Teste seu domínio: padrões de projeto e arquitetura de toda a trilha
 
-Esta seção é uma autoavaliação, cobrindo as três unidades do curso. O objetivo não é "rodar código" — é entender o porquê de cada decisão técnica, não só a sintaxe. Use as perguntas para descobrir sozinho o que você já domina e o que vale revisar antes de fechar o projeto (ou de explicar seu código na apresentação).
+Esta seção é uma autoavaliação, cobrindo as três unidades desta trilha. O objetivo não é "rodar código" — é entender o porquê de cada decisão técnica, não só a sintaxe. Use as perguntas para descobrir sozinho o que você já domina e o que vale revisar antes de fechar o projeto (ou de explicar seu código na apresentação).
 
 ### 7.1 Lista de 25 a 30 perguntas para se testar
 
@@ -627,7 +627,7 @@ Esta seção é uma autoavaliação, cobrindo as três unidades do curso. O obje
 **Resposta: B.** Chain of Responsibility: uma cadeia de handlers, cada um com a chance de tratar a requisição ou repassá-la ao próximo. É exatamente o comportamento de `app.use(middleware1, middleware2, ...)`. Ver Aula 07–08.
 </details>
 
-**5.** Sobre `swagger-jsdoc` na versão 6.x usada nesta disciplina, a chave correta dentro das opções para declarar `openapi`, `info` e `components` é:
+**5.** Sobre `swagger-jsdoc` na versão 6.x usada nesta trilha, a chave correta dentro das opções para declarar `openapi`, `info` e `components` é:
 
 (A) `swaggerDefinition`
 (B) `spec`
@@ -676,7 +676,7 @@ Esta seção é uma autoavaliação, cobrindo as três unidades do curso. O obje
 <details markdown="1">
 <summary>Gabarito comentado</summary>
 
-**Resposta: C.** No Vuetify 4 o padrão mudou de `'light'` (v3) para `'system'`. Por isso a disciplina sempre declara explicitamente `defaultTheme: 'light'` na criação da instância, para manter consistência visual em sala. Ver especificação da Aula 04/05.
+**Resposta: C.** No Vuetify 4 o padrão mudou de `'light'` (v3) para `'system'`. Por isso este material sempre declara explicitamente `defaultTheme: 'light'` na criação da instância, para manter a interface consistente com as capturas de tela e exemplos do material. Ver especificação da Aula 04/05.
 </details>
 
 ## 8. Apresentação dos resultados
@@ -707,11 +707,11 @@ Use esta tabela para se autoavaliar — ou peça a um colega que assista e apont
 
 ### 8.3 Quando apresentar
 
-Quem cursa a disciplina em sala apresenta na ordem e no dia combinados com o professor, dentro do tempo do encontro. Quem estuda por conta própria pode gravar a apresentação e revê-la sozinho no dia seguinte, ou apresentá-la a um colega — o exercício de explicar o próprio projeto em voz alta, dentro de um tempo limitado, é o que importa.
+Se você está seguindo esta trilha em uma turma com professor, apresente na ordem e no dia combinados por ele, dentro do tempo do encontro. Se está estudando por conta própria, grave a apresentação e revise-a no dia seguinte, ou apresente-a para outra pessoa — um colega de estudo, alguém da família, ou uma chamada rápida com alguém da comunidade. O que importa é o exercício em si: explicar o próprio projeto em voz alta, dentro de um tempo limitado.
 
-## 9. Encerramento: caminhos depois da disciplina
+## 9. Encerramento: caminhos depois desta trilha
 
-O que foi construído nesta disciplina é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
+O que foi construído nesta trilha é uma base real de desenvolvimento full stack moderno — mas é só o começo. Caminhos naturais de continuidade:
 
 - **Nuxt** — framework full stack sobre o Vue, com SSR (Server-Side Rendering) e SSG (Static Site Generation) nativos, útil quando SEO ou performance de primeira carga importam mais do que em uma SPA pura.
 - **TypeScript** — adicionar tipagem estática ao que hoje é JavaScript puro; o Vue 3 e o Vuetify 4 têm suporte de primeira classe a TS, e o ganho em projetos maiores (detecção de erro em tempo de escrita, autocomplete mais forte) é significativo.
@@ -720,7 +720,7 @@ O que foi construído nesta disciplina é uma base real de desenvolvimento full 
 - **Mobile com Capacitor/Ionic** — reaproveitar o conhecimento de Vue para publicar o mesmo código (ou uma variação) como app nativo Android/iOS.
 - **Back-end com NestJS** — um framework Node.js opinativo, construído sobre Express (ou Fastify), que formaliza com decorators e módulos exatamente a arquitetura em camadas que construímos manualmente na Aula 13.
 
-### 9.1 Como montar um portfólio a partir desta disciplina
+### 9.1 Como montar um portfólio a partir desta trilha
 
 - Deixe o projeto autoral **publicado e funcionando** — um link ao vivo vale mais, para quem recruta, do que um repositório que só roda localmente.
 - Escreva um README que conte a história do projeto: problema, decisões técnicas, dificuldades reais (os ADRs da Aula 14 são ótimo material bruto para isso).
@@ -729,11 +729,11 @@ O que foi construído nesta disciplina é uma base real de desenvolvimento full 
 
 ### 9.2 Convite para iniciação científica e extensão
 
-Muitos dos temas tocados de leve nesta disciplina — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do conteúdo de uma aula, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
+Muitos dos temas tocados de leve nesta trilha — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET, a instituição de origem deste material. Se você está cursando esta trilha por lá e algum tópico despertou curiosidade além do conteúdo de uma aula, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados. Se você chegou até aqui por conta própria, esses mesmos temas são bons pontos de partida para aprofundar — grupos de pesquisa, comunidades on-line e cursos avançados costumam orbitar exatamente esses assuntos.
 
 ## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
 
-Duas decisões de arquitetura tomadas ao longo do semestre ficam evidentes só agora, no momento de publicar de verdade.
+Duas decisões de arquitetura tomadas ao longo desta trilha ficam evidentes só agora, no momento de publicar de verdade.
 
 **Configuração externa por variáveis de ambiente.** Desde a Aula 13, o `unieventos-api` lê `PORT`, `DB_HOST`, `CORS_ORIGEM_PERMITIDA` etc. de `process.env`, nunca de um valor fixo no código (Seção 3.1). Isso não é só "boa prática" abstrata: é o que permite o **mesmo código-fonte**, sem alterar uma linha, rodar em três ambientes diferentes — seu notebook (`.env` local), o CI (variáveis do GitHub Actions) e a nuvem (secrets da Render) — só trocando o que fica fora do código. O manifesto *The Twelve-Factor App* formalizou esse princípio (fator III, "Config") como um dos doze fatores de aplicações que escalam bem em nuvem; é o mesmo raciocínio por trás de `VITE_API_URL` no front (Seção 1.2).
 
@@ -969,7 +969,7 @@ Hoje, se um deploy quebrar (uma variável de ambiente errada, uma migration esqu
 ### 🔥 Boss — Seu projeto autoral, no ar e à prova de F5
 Tags: deploy, ci-cd, projeto, testes
 
-Chegamos ao fim das três unidades. Este é o desafio que fecha o curso: seu projeto autoral publicado, de ponta a ponta, com todas as camadas construídas ao longo das aulas funcionando juntas em produção — e não só "funcionando", mas resistindo aos testes que costumam derrubar um projeto assim que alguém de fora tenta usá-lo.
+Chegamos ao fim das três unidades. Este é o desafio que fecha a trilha: seu projeto autoral publicado, de ponta a ponta, com todas as camadas construídas ao longo das aulas funcionando juntas em produção — e não só "funcionando", mas resistindo aos testes que costumam derrubar um projeto assim que alguém de fora tenta usá-lo.
 
 **Critérios de pronto**
 
@@ -978,7 +978,7 @@ Chegamos ao fim das três unidades. Este é o desafio que fecha o curso: seu pro
 - `/api-docs` acessível publicamente, com todos os endpoints documentados e o botão "Authorize" funcionando com um token real, obtido do seu Firebase de produção.
 - Um script `scripts/smoke-test.sh` (do desafio ⭐⭐⭐, ou um novo) que roda depois do deploy, incluído como último passo do workflow de CI/CD.
 - F5 em pelo menos três rotas internas diferentes, na aplicação publicada, não produz `404` em nenhuma delas.
-- Um parágrafo no README relaciona, para cada uma das três unidades da disciplina, um padrão de projeto (da tabela consolidada da Seção 6) que sobrevive intacto na versão publicada — com o nome do arquivo e a linha onde ele aparece.
+- Um parágrafo no README relaciona, para cada uma das três unidades desta trilha, um padrão de projeto (da tabela consolidada da Seção 6) que sobrevive intacto na versão publicada — com o nome do arquivo e a linha onde ele aparece.
 
 <details markdown="1">
 <summary>Pistas</summary>
@@ -1022,7 +1022,7 @@ Ao final desta aula, seu projeto deve ter:
 
 ## 🎓 Marco do projeto — Unidade 3
 
-O Marco 3 fecha o curso: uma aplicação full stack completa, construída sobre o projeto autoral definido na Aula 01 e evoluído ao longo de todas as aulas.
+O Marco 3 fecha esta trilha: uma aplicação full stack completa, construída sobre o projeto autoral definido na Aula 01 e evoluído ao longo de todas as aulas.
 
 ### Requisitos
 
@@ -1070,4 +1070,4 @@ O que separa um projeto pronto de um feito às pressas na véspera:
 
 ---
 
-**Fim do curso.** Obrigado pelo empenho nas 15 aulas — do primeiro `console.log` da Aula 01 até uma aplicação full stack publicada, com autenticação, banco de dados e documentação. Se você quer testar o quanto absorveu, revise as questões da Seção 7 com calma, não na véspera da apresentação. Bom estudo, e bom portfólio.
+**Fim da trilha.** Obrigado pelo empenho nas 15 aulas — do primeiro `console.log` da Aula 01 até uma aplicação full stack publicada, com autenticação, banco de dados e documentação. Se você quer testar o quanto absorveu, revise as questões da Seção 7 com calma, não na véspera da apresentação. Bom estudo, e bom portfólio.

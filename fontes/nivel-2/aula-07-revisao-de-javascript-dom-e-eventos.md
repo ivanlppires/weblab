@@ -141,7 +141,7 @@ null == undefined;   // true
 null === undefined;  // false
 ```
 
-Use `===` e `!==` sempre. A única exceção defensável é `valor == null`, que testa `null` **ou** `undefined` de uma vez — e mesmo essa é melhor escrita como `valor === null || valor === undefined` enquanto a turma inteira ainda está construindo o hábito.
+Use `===` e `!==` sempre. A única exceção defensável é `valor == null`, que testa `null` **ou** `undefined` de uma vez — e mesmo essa é melhor escrita como `valor === null || valor === undefined` enquanto você ainda está construindo o hábito.
 
 ### 2.3 Template literals
 
@@ -330,7 +330,7 @@ for (const [indice, nota] of notas.entries()) {
 
 ### 4.1 Decidindo os campos antes de escrever o array
 
-Antes de digitar o cardápio em JavaScript, decida o **formato** de um item. Essa decisão vai atravessar toda a disciplina: a mesma estrutura vira JSON na Aula 10, corpo de requisição na Aula 13 e linha de banco no Nível 3. Para o Café Cerrado:
+Antes de digitar o cardápio em JavaScript, decida o **formato** de um item. Essa decisão vai atravessar toda esta trilha: a mesma estrutura vira JSON na Aula 10, corpo de requisição na Aula 13 e linha de banco no Nível 3. Para o Café Cerrado:
 
 | Campo | Tipo | Por que existe |
 |---|---|---|

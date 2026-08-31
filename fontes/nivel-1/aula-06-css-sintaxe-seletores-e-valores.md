@@ -52,7 +52,7 @@ p           { }   /* tipo (ou elemento): todos os <p> */
 - **`id`** identifica um elemento único na página. Para estilo, evite: ele tem especificidade altíssima e não é reutilizável.
 
 > **💡 Dica**
-> A regra da disciplina, que você já conhece desde a Aula 05: **estilize com classes**; reserve `id` para âncoras (`#topo`), para o atributo `for` dos rótulos e para o JavaScript da Unidade 3. Se um estilo aparece uma vez hoje, quase certamente vai aparecer duas amanhã — e uma classe já estará pronta.
+> A regra desta trilha, que você já conhece desde a Aula 05: **estilize com classes**; reserve `id` para âncoras (`#topo`), para o atributo `for` dos rótulos e para o JavaScript da Unidade 3. Se um estilo aparece uma vez hoje, quase certamente vai aparecer duas amanhã — e uma classe já estará pronta.
 
 ### 1.2 Agrupamento
 
@@ -179,7 +179,7 @@ p:not(.destaque)    { }   /* todos os <p> que NÃO têm a classe destaque */
 `:nth-child(even)` é o que dá as **linhas alternadas** de uma tabela — o famoso "zebrado" que você vai aplicar na programação do evento. Já `:not()` evita regras duplicadas: em vez de escrever um estilo para todos os parágrafos e depois desfazê-lo em alguns, você exclui de uma vez.
 
 > **📌 Vale gravar**
-> `:nth-child(n)` conta **todos os irmãos**, não só os do mesmo tipo. Em `<div><h2></h2><p>A</p><p>B</p></div>`, o parágrafo A é o **segundo** filho — `p:nth-child(1)` não pega nada. Quando você quer contar só os do mesmo tipo, existe `:nth-of-type(n)`. Essa diferença é pergunta certa de prova e bug certo na vida real.
+> `:nth-child(n)` conta **todos os irmãos**, não só os do mesmo tipo. Em `<div><h2></h2><p>A</p><p>B</p></div>`, o parágrafo A é o **segundo** filho — `p:nth-child(1)` não pega nada. Quando você quer contar só os do mesmo tipo, existe `:nth-of-type(n)`. Essa diferença é pegadinha clássica de entrevista e bug certo na vida real.
 
 ### 1.8 Pseudoelementos: partes que não existem no HTML
 
@@ -221,7 +221,7 @@ Da menor para a maior prioridade:
 Repare na inversão do topo: o `!important` do usuário vence o do autor. Isso é proposital. Alguém que precisa de fonte gigante ou de altíssimo contraste para conseguir ler tem prioridade sobre o seu design.
 
 > **⚠️ Atenção**
-> `!important` resolve o conflito de agora e cria um problema permanente: para sobrescrevê-lo, só com outro `!important` mais específico — e a folha vira uma escada de gritos. **Regra da disciplina: `!important` é proibido nos trabalhos**, salvo justificativa escrita (a única exceção que você vai encontrar é dentro do bloco `prefers-reduced-motion` da Aula 09). Se precisou dele, o problema é de arquitetura, e o remédio é reorganizar os seletores.
+> `!important` resolve o conflito de agora e cria um problema permanente: para sobrescrevê-lo, só com outro `!important` mais específico — e a folha vira uma escada de gritos. **Regra desta trilha: `!important` é proibido nos trabalhos**, salvo justificativa escrita (a única exceção que você vai encontrar é dentro do bloco `prefers-reduced-motion` da Aula 09). Se precisou dele, o problema é de arquitetura, e o remédio é reorganizar os seletores.
 
 ### 2.2 Etapa 2 — especificidade
 
@@ -348,7 +348,7 @@ Cinco tons que combinam entre si, escritos em cinco linhas, sem nenhuma ferramen
 > **💡 Dica**
 > No DevTools, clique no quadradinho de cor ao lado de qualquer declaração de `color` ou `background`: abre o seletor de cores. Clique no rótulo do formato (embaixo, à direita do valor) e ele **converte** entre hex, `rgb` e `hsl` na hora. É a maneira mais rápida de descobrir o `hsl()` equivalente a um hexadecimal que veio de um layout.
 
-**E o `oklch()`?** Existe uma notação mais nova, `oklch(luminosidade croma matiz)` — por exemplo, `oklch(45% 0.09 240)`. Ela resolve um defeito do HSL: dois tons com o mesmo `L` em HSL podem parecer bem diferentes em brilho para o olho humano (compare um amarelo e um azul com `L: 50%`). O `oklch` é perceptualmente uniforme, ou seja, mesma luminosidade significa mesmo brilho aparente. Já funciona em todos os navegadores atuais e vale conhecer; nesta disciplina continuamos com `hsl()` e hexadecimal, que é o que você vai encontrar em 99% do código existente.
+**E o `oklch()`?** Existe uma notação mais nova, `oklch(luminosidade croma matiz)` — por exemplo, `oklch(45% 0.09 240)`. Ela resolve um defeito do HSL: dois tons com o mesmo `L` em HSL podem parecer bem diferentes em brilho para o olho humano (compare um amarelo e um azul com `L: 50%`). O `oklch` é perceptualmente uniforme, ou seja, mesma luminosidade significa mesmo brilho aparente. Já funciona em todos os navegadores atuais e vale conhecer; nesta trilha continuamos com `hsl()` e hexadecimal, que é o que você vai encontrar em 99% do código existente.
 
 ### 3.3 Fundos
 
@@ -420,7 +420,7 @@ small { font-size: 0.875rem; }    /* 14px */
 > **A armadilha do `em`.** Se `.pai { font-size: 1.5em }` e, dentro dele, `.filho { font-size: 1.5em }`, o filho fica com 2,25× o tamanho base. Em três níveis, 3,4×. Com `rem` isso não acontece, porque a referência é sempre a raiz — a fonte de um item de menu não muda porque alguém aninhou mais uma `<div>`. Use `rem` para tipografia e `em` só quando **quiser** essa proporcionalidade local (o padding de um botão que cresce junto com o texto dele, por exemplo).
 
 > **🧠 Você sabia?**
-> Nunca escreva `html { font-size: 14px }` para "deixar tudo menor". Essa linha é uma das piores coisas que se pode fazer com acessibilidade: uma pessoa com baixa visão que configurou o navegador para fonte 20 px acabou de ter a escolha dela anulada — e não faz ideia do porquê. Todo o valor do `rem` está em ele ser relativo a uma raiz que o **usuário** controla. Se você precisa de tudo menor, reduza os valores em `rem` das suas regras, não a raiz. `html { font-size: 100% }` é a única declaração de tamanho de raiz aceitável nesta disciplina.
+> Nunca escreva `html { font-size: 14px }` para "deixar tudo menor". Essa linha é uma das piores coisas que se pode fazer com acessibilidade: uma pessoa com baixa visão que configurou o navegador para fonte 20 px acabou de ter a escolha dela anulada — e não faz ideia do porquê. Todo o valor do `rem` está em ele ser relativo a uma raiz que o **usuário** controla. Se você precisa de tudo menor, reduza os valores em `rem` das suas regras, não a raiz. `html { font-size: 100% }` é a única declaração de tamanho de raiz aceitável nesta trilha.
 
 ### 4.3 Fazendo contas: `calc()`, `min()`, `max()` e `clamp()`
 
@@ -610,7 +610,7 @@ O nome da classe deve descrever a **função**, não a aparência:
 | `.f18b` | `.titulo-secao` | Legibilidade para quem lê depois (inclusive você) |
 | `.azul-grande` | `.botao--primario` | Descreve o papel, não os pixels |
 
-O padrão `bloco__elemento--modificador` (`.cartao`, `.cartao__titulo`, `.cartao--destaque`) tem nome: **BEM**. Você não é obrigado a segui-lo à risca nesta disciplina, mas vai encontrá-lo na Aula 07 e em quase todo projeto profissional — e ele resolve um problema real: um nome de classe longo e específico nunca colide com o de outro componente.
+O padrão `bloco__elemento--modificador` (`.cartao`, `.cartao__titulo`, `.cartao--destaque`) tem nome: **BEM**. Você não é obrigado a segui-lo à risca nesta trilha, mas vai encontrá-lo na Aula 07 e em quase todo projeto profissional — e ele resolve um problema real: um nome de classe longo e específico nunca colide com o de outro componente.
 
 ## 💻 Mão na massa — O sistema de design do site do evento
 
@@ -1127,7 +1127,7 @@ Resultado esperado: a versão refatorada tem menos da metade das linhas, nenhuma
 
 <details markdown="1"><summary>Dica</summary>
 
-Construa a página como um catálogo: uma seção por família de componente, com o exemplo visual à esquerda e o código que o produz à direita (dentro de `<pre><code>`). Essa página é o seu material de consulta pelo resto da disciplina e entra bem no Marco 2 — e é exatamente assim que sistemas de design profissionais são documentados.
+Construa a página como um catálogo: uma seção por família de componente, com o exemplo visual à esquerda e o código que o produz à direita (dentro de `<pre><code>`). Essa página é o seu material de consulta pelo resto da trilha e entra bem no Marco 2 — e é exatamente assim que sistemas de design profissionais são documentados.
 </details>
 
 ## 🏆 Desafios
@@ -1254,7 +1254,7 @@ Escolha a página inicial de um site cuja identidade visual você admira e repro
 
 **Parte 2 — Produção (30 min).** Hoje fecha o **Marco 1** (instruções completas logo abaixo). Além dele, produza o exercício **B5** (refatoração com variáveis) aplicado ao **seu projeto autoral**: o bloco `:root` completo do seu sistema de design, com no mínimo dez variáveis, e a folha de estilo reorganizada nas sete seções.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um conflito de estilo real que você enfrentou (no site do evento ou no seu projeto), o cálculo de especificidade dos seletores envolvidos e como resolveu **sem** `!important`. Se puder, compare a solução com a de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: traga um conflito de estilo real que você enfrentou (no site do evento ou no seu projeto), o cálculo de especificidade dos seletores envolvidos e como resolveu **sem** `!important`. Se puder, compare a solução com a de outra pessoa.
 
 **Critério de pronto:** o `css/estilo.css` do seu projeto abre com o comentário das sete seções, tem um `:root` com dez ou mais variáveis, nenhum valor de cor escrito solto fora do `:root`, nenhum `!important` e nenhum `id` usado como seletor de estilo.
 

@@ -115,7 +115,7 @@ app.use('/api/v2/eventos', eventosRoutesV2)
 ```
 
 > **🧠 Você sabia?**
-> Versionar por caminho (`/api/v1`) é a forma mais comum, mas não a única: há APIs que versionam por cabeçalho (`Accept: application/vnd.unieventos.v2+json`) ou por parâmetro de query (`?versao=2`). O trade-off é sempre o mesmo — caminho é explícito e fácil de testar no navegador; cabeçalho mantém a URL do recurso estável, que é o argumento "REST puro". **Nesta disciplina usamos `/api` sem versão**, porque o `unieventos-api` tem um único cliente (o nosso front) e nenhuma versão antiga para preservar; carregar um `v1` que nunca vira `v2` só adiciona ruído. Quando você publicar uma API com clientes de terceiros, aí sim escolha e documente uma estratégia de versionamento.
+> Versionar por caminho (`/api/v1`) é a forma mais comum, mas não a única: há APIs que versionam por cabeçalho (`Accept: application/vnd.unieventos.v2+json`) ou por parâmetro de query (`?versao=2`). O trade-off é sempre o mesmo — caminho é explícito e fácil de testar no navegador; cabeçalho mantém a URL do recurso estável, que é o argumento "REST puro". **Nesta trilha usamos `/api` sem versão**, porque o `unieventos-api` tem um único cliente (o nosso front) e nenhuma versão antiga para preservar; carregar um `v1` que nunca vira `v2` só adiciona ruído. Quando você publicar uma API com clientes de terceiros, aí sim escolha e documente uma estratégia de versionamento.
 
 O prefixo da `unieventos-api`, portanto, continua sendo o mesmo da Aula 07:
 
@@ -1110,7 +1110,7 @@ O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto a
 | Tratador de erros nunca é chamado | ele foi registrado antes das rotas, ou tem menos de 4 parâmetros | mova `app.use(tratadorDeErros)` para o fim; confira a assinatura `(err, req, res, next)` |
 | `422` não aparece, servidor retorna `500` | schema Zod não corresponde ao formato de `req.body`, gerando erro diferente do esperado | confira o schema campo a campo; teste isoladamente com `schema.safeParse(objetoDeTeste)` |
 | `POST` retorna `201` mas sem `Location` no cabeçalho | esqueceu `.location(...)` antes de `.json(...)` | encadeie `res.status(201).location(url).json(dados)` |
-| `express-rate-limit` bloqueia até requisições legítimas em sala | `max` configurado baixo demais para uma turma toda testando do mesmo IP/rede | aumente `max` durante a aula, ou aplique o limitador só em rotas de escrita |
+| `express-rate-limit` bloqueia até requisições legítimas de um grupo | `max` configurado baixo demais para várias pessoas testando a mesma API a partir do mesmo IP/rede (ex.: uma rede local, um grupo de estudos) | aumente `max`, ou aplique o limitador só em rotas de escrita |
 | `zod`: erro `Cannot read properties of undefined (reading 'issues')` | `schema.safeParse` não foi usado (usou `schema.parse`, que lança exceção em vez de devolver objeto) | use sempre `safeParse` no middleware `validar`, para tratar o erro manualmente |
 | `DELETE` retorna `204` mas o corpo aparece vazio "errado" no REST Client | comportamento esperado — `204 No Content` nunca deve ter corpo | confirme com `res.status(204).send()` sem argumento; não chame `.json()` depois de `204` |
 | Duas rotas parecem casar com a mesma URL, só a primeira responde | ordem de registro determina qual middleware/rota atende primeiro | reordene: rotas mais específicas antes das mais genéricas |
@@ -1138,7 +1138,7 @@ Além de fechar o Marco 2, use esta hora para:
 
 ## 🎓 Marco do projeto — Unidade 2
 
-O Marco 2 fecha com uma aplicação **Vue 3** completa, consumindo uma API (a sua, em memória ou já com Firestore — MySQL só é exigido a partir da Aula 09), sobre o **projeto autoral** de cada estudante (não o UniEventos, que é o exemplo do curso).
+O Marco 2 fecha com uma aplicação **Vue 3** completa, consumindo uma API (a sua, em memória ou já com Firestore — MySQL só é exigido a partir da Aula 09), sobre o **projeto autoral** de cada um (não o UniEventos, que é a aplicação de referência desta trilha).
 
 ### Requisitos
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 07 — Personalizar sem brigar: as variáveis --bs-*</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <style>
+    /* ---------- Nível GLOBAL: :root ---------- */
+    :root {
+      --bs-body-bg: #fdfaf6;
+      --bs-body-color: #2b2118;
+      --bs-link-color-rgb: 111, 78, 55;      /* TRÊS NÚMEROS, não hexadecimal */
+      --bs-link-hover-color-rgb: 74, 51, 37;
+    }
+
+    /* ---------- Nível COMPONENTE: a classe ---------- */
+    .btn-cafe {
+      --bs-btn-bg: #6f4e37;
+      --bs-btn-border-color: #6f4e37;
+      --bs-btn-color: #fff;
+      --bs-btn-hover-bg: #4a3325;
+      --bs-btn-hover-border-color: #4a3325;
+      --bs-btn-hover-color: #fff;
+      --bs-btn-active-bg: #4a3325;
+      --bs-btn-active-border-color: #4a3325;
+      --bs-btn-active-color: #fff;
+      --bs-btn-disabled-bg: #6f4e37;
+      --bs-btn-disabled-border-color: #6f4e37;
+      --bs-btn-disabled-color: #fff;
+      --bs-btn-focus-shadow-rgb: 111, 78, 55;
+    }
+
+    /* O caminho ERRADO, mostrado de propósito para comparar. */
+    .btn-na-marra {
+      background-color: #6f4e37 !important;
+      border-color: #6f4e37 !important;
+      color: #fff !important;
+      /* E agora: qual é a cor no :hover? E no :active? E no :disabled?
+         E o anel de foco continua azul. Cada estado vira uma regra nova. */
+    }
+
+    /* O erro do link preto: hexadecimal onde o Bootstrap espera três números. */
+    .link-quebrado { --bs-link-color-rgb: #6f4e37; }
+
+    body { background: var(--bs-body-bg); }
+    .aula { background: #2b2118; color: #fdfaf6; }
+    .aula code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+    .quadro { border: 1px solid rgba(111,78,55,.2); border-radius: .75rem; padding: 1rem; background: #fff; height: 100%; }
+  </style>
+</head>
+<body>
+
+<header class="aula p-4">
+  <div class="container">
+    <h1 class="h5">Demo 07 — §4.6. A parte que separa quem usa Bootstrap de quem apanha do Bootstrap</h1>
+    <p class="mb-0">
+      Na 5.3 quase tudo é variável CSS, em dois níveis: <b>global</b> no <code>:root</code> e
+      <b>de componente</b> na classe. Abra o painel <b>Computed</b> do DevTools em cada botão
+      e procure por <code>--bs-btn-</code> enquanto explica.
+    </p>
+  </div>
+</header>
+
+<main class="container py-4">
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">1. Criar uma variante × brigar com o framework</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6">
+        <div class="quadro">
+          <p class="fw-bold"><span class="badge text-bg-success">jeito certo</span> <code>.btn-cafe</code></p>
+          <p><button class="btn btn-cafe">Enviar</button>
+             <button class="btn btn-cafe btn-sm">Pequeno</button>
+             <button class="btn btn-cafe" disabled>Desabilitado</button></p>
+          <p class="mb-0 text-body-secondary small">
+            Passe o mouse, clique e segure, navegue por <kbd>Tab</kbd>: hover, active, disabled e
+            anel de foco, todos na cor da marca. Combina com <code>btn-lg</code> e <code>btn-sm</code>
+            porque é uma variante de verdade — nasceu do mesmo jeito que o <code>btn-primary</code>.
+            <b>13 variáveis, zero propriedades CSS.</b>
+          </p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="quadro">
+          <p class="fw-bold"><span class="badge text-bg-danger">jeito errado</span> <code>.btn-na-marra</code></p>
+          <p><button class="btn btn-na-marra">Enviar</button>
+             <button class="btn btn-na-marra btn-sm">Pequeno</button>
+             <button class="btn btn-na-marra" disabled>Desabilitado</button></p>
+          <p class="mb-0 text-body-secondary small">
+            Passe o mouse: <b>não muda nada</b>. Navegue por <kbd>Tab</kbd>: o anel de foco continua
+            <b>azul</b>. O <code>!important</code> só resolveu o estado normal — cada um dos outros
+            estados vira uma regra nova, e o azul do framework volta pelas beiradas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="h5 mb-3">2. O mito do <code>--bs-primary</code></h2>
+    <div class="alert alert-warning">
+      Um colega escreve <code>:root { --bs-primary: #6f4e37 }</code> e reclama que os botões
+      continuam azuis. Nesta página o <code>--bs-primary</code> <b>não</b> foi tocado — e o resultado
+      seria idêntico se tivesse sido:
+    </div>
+    <p>
+      <button class="btn btn-primary">btn-primary — lê <code>--bs-btn-bg</code>, continua azul</button>
+      <span class="badge text-bg-primary ms-2">badge</span>
+      <span class="text-primary ms-2">.text-primary</span>
+    </p>
+    <p class="mb-0">
+      Cada componente tem o seu prefixo: <code>--bs-btn-*</code>, <code>--bs-card-*</code>,
+      <code>--bs-navbar-*</code>, <code>--bs-nav-*</code>. O <code>--bs-primary</code> (e o
+      <code>--bs-primary-rgb</code>) alimenta os <b>utilitários</b> de cor, como
+      <code>.text-primary</code> e <code>.bg-primary</code>.
+    </p>
+  </section>
+
+  <section class="mb-5" id="cor-do-link">
+    <h2 class="h5 mb-3">3. Por que a cor do link é escrita em três números</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-6">
+        <div class="quadro">
+          <p class="fw-bold"><span class="badge text-bg-success">certo</span></p>
+<pre class="small mb-2"><code>--bs-link-color-rgb: 111, 78, 55;</code></pre>
+          <p class="mb-0"><a href="#cor-do-link">Este link está na cor da marca</a></p>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="quadro link-quebrado">
+          <p class="fw-bold"><span class="badge text-bg-danger">errado</span></p>
+<pre class="small mb-2"><code>--bs-link-color-rgb: #6f4e37;</code></pre>
+          <p class="mb-0"><a href="#cor-do-link">Este link ficou preto</a></p>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 mb-0">
+      Motivo: o Bootstrap monta
+      <code>rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1))</code> para poder oferecer
+      utilitários de opacidade (<code>link-opacity-50</code>). Com um hexadecimal no meio,
+      a função <code>rgba()</code> recebe lixo e o navegador cai na cor padrão.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="h5 mb-3">4. <code>data-bs-theme</code> — trocar a paleta de qualquer subárvore</h2>
+    <p>
+      Funciona em qualquer elemento, não só no <code>&lt;body&gt;</code>. Aqui está um card escuro
+      dentro de uma página clara, <b>sem uma linha de CSS</b>:
+    </p>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="h6 card-title">Card normal</h3>
+            <p class="card-text">Herda o tema claro da página.</p>
+            <button class="btn btn-primary btn-sm">Botão</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card" data-bs-theme="dark">
+          <div class="card-body">
+            <h3 class="h6 card-title">Card com <code>data-bs-theme="dark"</code></h3>
+            <p class="card-text">Fundo, texto, borda e botão trocaram juntos.</p>
+            <button class="btn btn-primary btn-sm">Botão</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 mb-0 text-body-secondary">
+      Mostre no DevTools: acrescente <code>data-bs-theme="dark"</code> na tag
+      <code>&lt;body&gt;</code> ao vivo e a página inteira vira noturna. É o mesmo mecanismo,
+      aplicado à raiz.
+    </p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -168,7 +168,7 @@ Crie esse arquivo **sempre**. Ele não atrapalha nada e evita uma tarde de depur
 
 **O `index.html` manda.** Se não existe `index.html` na pasta publicada, o Pages mostra o `README.md` renderizado — e o estudante jura que "publicou errado". Não publicou: publicou uma pasta sem página inicial.
 
-**Existem limites, e eles são suaves.** O site publicado deve ficar abaixo de 1 GB, a banda mensal recomendada é de 100 GB e há um limite de dez construções por hora. Nenhum projeto de disciplina chega perto disso, mas vale saber que existe — e que a documentação oficial é a fonte a conferir, porque os números mudam.
+**Existem limites, e eles são suaves.** O site publicado deve ficar abaixo de 1 GB, a banda mensal recomendada é de 100 GB e há um limite de dez construções por hora. Nenhum projeto de estudo chega perto disso, mas vale saber que existe — e que a documentação oficial é a fonte a conferir, porque os números mudam.
 
 > **📌 Vale gravar**
 > "Um site estático pode ter formulário de login?" Não com validação de verdade: qualquer verificação feita em JavaScript no navegador é lida e burlada por quem abre o DevTools. Autenticação exige servidor. Um site estático pode ter o **formulário**; a verificação precisa acontecer do outro lado.
@@ -522,7 +522,7 @@ As quatro plataformas fazem a mesma coisa básica. As diferenças aparecem no qu
 
 | Plataforma | Ponto forte | Quando escolher |
 |---|---|---|
-| GitHub Pages | Já está onde o código está; zero configuração | Sites simples e trabalhos da disciplina |
+| GitHub Pages | Já está onde o código está; zero configuração | Sites simples e projetos de estudo |
 | Netlify | Redirecionamentos, cabeçalhos, previews de PR, formulários | Projeto de equipe, SPA, site com regras |
 | Vercel | Melhor integração com Next.js; build muito rápido | Projeto React/Next |
 | Cloudflare Pages | Rede enorme, banda sem limite declarado | Site com muito acesso ou muita imagem |
@@ -567,7 +567,7 @@ npx --yes wrangler pages deploy . --project-name=site-evento
 
 Ela lê os mesmos arquivos `_redirects` e `_headers` da Netlify, o que torna a migração entre as duas quase indolor.
 
-Para os trabalhos da disciplina, a recomendação é simples: **GitHub Pages para o `site-evento`** (é onde o código já está) e **Netlify para o `cafe-cerrado`** (você vai precisar de redirecionamento e de cabeçalhos). Publicar o mesmo site em mais de uma plataforma, para comparar de verdade, é um ótimo exercício — e é o desafio ⭐⭐.
+Para os projetos usados nesta trilha, a recomendação é simples: **GitHub Pages para o `site-evento`** (é onde o código já está) e **Netlify para o `cafe-cerrado`** (você vai precisar de redirecionamento e de cabeçalhos). Publicar o mesmo site em mais de uma plataforma, para comparar de verdade, é um ótimo exercício — e é o desafio ⭐⭐.
 
 ## 8. Cache: por que o site velho insiste em aparecer
 
@@ -639,7 +639,7 @@ npx --yes lighthouse https://ana-souza.github.io/site-evento/ \
 
 O `--view` abre o relatório no navegador ao terminar. Para simular desktop em vez de celular, acrescente `--preset=desktop`. Uma terceira via, sem instalar nada, é o <https://pagespeed.web.dev>: ele roda o mesmo Lighthouse nos servidores do Google.
 
-As correções que mais rendem em um site estático de disciplina, em ordem de retorno:
+As correções que mais rendem em um site estático típico de estudo, em ordem de retorno:
 
 | Problema apontado | Correção |
 |---|---|
@@ -733,7 +733,7 @@ Se aparecer linha vermelha, clique nela e leia a **Request URL** completa. Prati
 
 ### Passo 7 — Café Cerrado na Netlify, versão descartável
 
-Abra <https://app.netlify.com/drop> e arraste a pasta `cafe-cerrado` inteira. Anote a URL sorteada e abra o site. Isso leva menos de um minuto e serve para você **ver a diferença** para o passo seguinte — não é a forma que você vai usar no semestre.
+Abra <https://app.netlify.com/drop> e arraste a pasta `cafe-cerrado` inteira. Anote a URL sorteada e abra o site. Isso leva menos de um minuto e serve para você **ver a diferença** para o passo seguinte — não é a forma que você vai usar daqui para a frente.
 
 ### Passo 8 — Café Cerrado na Netlify, a partir do Git
 
@@ -860,7 +860,7 @@ Resultado esperado: uma tabela em `comparacao.md` com quatro linhas (URL, `serve
 ### ⭐ A autópsia do site quebrado
 Tags: deploy, github, investigacao
 
-Todo semestre alguém publica o site e recebe de volta uma página de texto sem estilo, sem imagem e sem menu — e conclui que "o GitHub Pages não funciona". Ele funciona. O que não funciona é um caminho que começa com barra. Hoje você faz a autópsia desse caso e escreve o laudo que vai economizar horas dos seus colegas.
+É comum alguém publicar o site e receber de volta uma página de texto sem estilo, sem imagem e sem menu — e concluir que "o GitHub Pages não funciona". Ele funciona. O que não funciona é um caminho que começa com barra. Hoje você faz a autópsia desse caso e escreve o laudo que vai economizar horas de quem passar pelo mesmo problema.
 
 **Critérios de pronto**
 
@@ -891,7 +891,7 @@ As quatro plataformas deste capítulo prometem a mesma coisa: seu site no ar, de
 - Um `benchmark.md` com uma tabela de quatro colunas comparando, para cada plataforma: tempo total de resposta do HTML, cabeçalho `cache-control` do HTML e cabeçalho `cache-control` de uma imagem.
 - Uma segunda tabela com as quatro notas do Lighthouse em cada plataforma, todas medidas em janela anônima, com o mesmo dispositivo simulado.
 - Três medições de cada tempo, com a mediana registrada — uma medição só não é medição.
-- Um veredicto de dez linhas: qual você escolheria para um site de portfólio, qual para um site com muitas imagens, qual para um trabalho de disciplina, e o que te faria mudar de ideia.
+- Um veredicto de dez linhas: qual você escolheria para um site de portfólio, qual para um site com muitas imagens, qual para um projeto de estudo, e o que te faria mudar de ideia.
 - Uma seção "o que eu não consegui medir" listando pelo menos duas diferenças relevantes que os seus testes não capturam.
 
 <details><summary>Pistas</summary>
@@ -919,7 +919,7 @@ Nota de Lighthouse é fácil de melhorar quando você sabe o que ela mede — e 
 
 <details><summary>Pistas</summary>
 
-1. Comece pelas imagens: em quase todo site de disciplina elas são mais de 80% do peso. `magick foto.jpg -resize 1200x -quality 82 foto.webp` costuma cortar 90%.
+1. Comece pelas imagens: em quase todo site de estudo elas são mais de 80% do peso. `magick foto.jpg -resize 1200x -quality 82 foto.webp` costuma cortar 90%.
 2. `width` e `height` no `<img>` não mudam o peso, mas eliminam o deslocamento de layout — é a métrica CLS, e ela vale pontos.
 3. Fonte do Google Fonts: cada peso extra é um arquivo. Dois pesos bastam. `font-display: swap` evita texto invisível enquanto a fonte carrega.
 4. Cabeçalho de cache não muda a nota da primeira visita (o Lighthouse simula visitante novo) — esse é um bom candidato à "otimização que não mudou nada", e a explicação é o que vale.

@@ -52,7 +52,7 @@ Um endpoint sem documentação obriga quem for consumi-lo a ler o código-fonte 
 
 ### 1.1 OpenAPI vs. Swagger — não são sinônimos
 
-- **OpenAPI** é a **especificação**: um formato (YAML ou JSON) que descreve endpoints, parâmetros, corpos de requisição, respostas e esquemas de segurança de uma API REST, de forma independente de linguagem. A versão usada nesta disciplina é a **OpenAPI 3.0**.
+- **OpenAPI** é a **especificação**: um formato (YAML ou JSON) que descreve endpoints, parâmetros, corpos de requisição, respostas e esquemas de segurança de uma API REST, de forma independente de linguagem. A versão usada nesta trilha é a **OpenAPI 3.0**.
 - **Swagger** é o **conjunto de ferramentas** (hoje mantido pela SmartBear) construído em torno da especificação OpenAPI — o nome "Swagger" é anterior ao nome "OpenAPI" (a especificação se chamava Swagger Specification até a versão 2.0; a partir da 3.0 passou a se chamar OpenAPI, mas o ecossistema de ferramentas manteve o nome Swagger).
 
 Duas ferramentas do ecossistema Swagger que usaremos hoje:
@@ -146,7 +146,7 @@ const documentoOpenApi = yaml.parse(readFileSync('./openapi.yaml', 'utf-8'))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(documentoOpenApi))
 ```
 
-Vantagem: controle total do texto, sem depender de comentário no meio do código. Desvantagem: fica fácil o YAML "descolar" do código real, porque nada obriga a atualizá-lo junto com a rota. Por isso, nesta disciplina, a abordagem oficial é a (a) — anotações junto ao código, sempre atualizadas na mesma revisão.
+Vantagem: controle total do texto, sem depender de comentário no meio do código. Desvantagem: fica fácil o YAML "descolar" do código real, porque nada obriga a atualizá-lo junto com a rota. Por isso, nesta trilha, a abordagem oficial é a (a) — anotações junto ao código, sempre atualizadas na mesma revisão.
 
 ## 4. Além do Swagger: documentação completa do projeto
 
@@ -391,7 +391,7 @@ export const swaggerSpec = swaggerJsdoc(opcoes)
 ```
 
 > **⚠️ Atenção**
-> Repare na chave `definition` dentro de `opcoes`. Em versões antigas do `swagger-jsdoc` (2.x/3.x) essa chave se chamava `swaggerDefinition`. Nesta disciplina usamos `swagger-jsdoc@6.3.0`, que exige `definition`. Se você copiar um tutorial antigo da internet com `swaggerDefinition`, a spec gerada fica com `paths: {}` vazio e nenhum erro é lançado — o bug é silencioso.
+> Repare na chave `definition` dentro de `opcoes`. Em versões antigas do `swagger-jsdoc` (2.x/3.x) essa chave se chamava `swaggerDefinition`. Nesta trilha usamos `swagger-jsdoc@6.3.0`, que exige `definition`. Se você copiar um tutorial antigo da internet com `swaggerDefinition`, a spec gerada fica com `paths: {}` vazio e nenhum erro é lançado — o bug é silencioso.
 
 ### Passo 2 — Servir a documentação com `swagger-ui-express`
 
@@ -1150,4 +1150,4 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 - [Keep a README — checklist do que compõe um bom README](https://www.makeareadme.com/)
 - Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre documentação de APIs REST e contratos de serviço.
 
-**Na Aula 15** fechamos o curso com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, perguntas para testar seu domínio e os requisitos completos do Marco 3. Traga a API documentada e pronta para publicar.
+**Na Aula 15** fechamos esta trilha com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, perguntas para testar seu domínio e os requisitos completos do Marco 3. Traga a API documentada e pronta para publicar.

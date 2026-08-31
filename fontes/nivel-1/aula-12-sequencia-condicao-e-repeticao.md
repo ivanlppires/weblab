@@ -1445,7 +1445,7 @@ Você já agrupou atividades por dia e contou por área. Agora repare: os dois c
 
 **Critério de pronto:** o `dados.js` do projeto autoral carrega em todas as páginas sem erro e imprime, na primeira linha do Console, a contagem de registros; os seis relatórios rodam sem nenhuma linha vermelha; nenhum relatório altera a ordem original do array de dados; nenhum dado do domínio continua digitado à mão no HTML das páginas que serão renderizadas na próxima aula.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): discuta quando o `for` clássico ainda é preferível a `map`/`filter`/`reduce`, com um exemplo concreto de cada situação (um em que o laço vence, um em que o método vence).
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: discuta quando o `for` clássico ainda é preferível a `map`/`filter`/`reduce`, com um exemplo concreto de cada situação (um em que o laço vence, um em que o método vence).
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

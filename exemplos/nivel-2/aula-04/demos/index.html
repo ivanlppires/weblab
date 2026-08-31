@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de demos — Aula 04, Frameworks CSS</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+  <style>
+    :root { --bs-body-bg: #fdfaf6; --bs-link-color-rgb: 111, 78, 55; --bs-link-hover-color-rgb: 74, 51, 37; }
+    .capa { background: #2b2118; color: #fdfaf6; }
+    .capa code { background: rgba(255,255,255,.14); padding: .1em .35em; border-radius: .25em; }
+    .bloco-cabecalho { background: #6f4e37; color: #fff; }
+    .item { border-left: .35rem solid #c2703d; }
+    .item h3 { font-size: 1rem; margin-bottom: .25rem; }
+    .secao-ref { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8rem; }
+  </style>
+</head>
+<body>
+
+<header class="capa py-5">
+  <div class="container">
+    <p class="mb-1 text-uppercase small opacity-75">WebLab · Nível 2 · Unidade 1</p>
+    <h1 class="h3">Aula 04 — Frameworks CSS: Bootstrap, Tailwind e Material</h1>
+    <p class="mb-3">
+      Código real, rodando, para projetar em aula. Cada demo corresponde a uma seção da apostila.
+      Deixe o DevTools (<kbd>F12</kbd>) aberto o tempo inteiro.
+    </p>
+    <p class="mb-0">
+      <a class="btn btn-light btn-sm" href="../cafe-cerrado/index.html">Abrir o Café Cerrado pronto ↗</a>
+      <a class="btn btn-outline-light btn-sm" href="https://weblab.ivanpires.dev/nivel-2/aula-04.html" target="_blank" rel="noopener">Aula no site ↗</a>
+    </p>
+  </div>
+</header>
+
+<main class="container py-5">
+
+  <!-- BLOCO 1 -->
+  <div class="card mb-4">
+    <div class="card-header bloco-cabecalho">
+      <h2 class="h6 mb-0"><b>Bloco 1 · 50 min</b> — por que frameworks existem, as duas filosofias, CDN e SRI, o grid</h2>
+    </div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action item" href="01-duas-filosofias.html">
+        <h3>01 · As duas filosofias lado a lado</h3>
+        <p class="mb-1">O mesmo card em Bootstrap e em Tailwind, em <code>iframe</code>s independentes. Conte as classes: 9 contra 31.</p>
+        <span class="secao-ref text-body-secondary">§1 e §2 · componentes prontos × utility-first</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="02-cdn-e-sri.html">
+        <h3>02 · CDN, versão fixa e <code>integrity</code></h3>
+        <p class="mb-1">Versão flutuante × fixa; a hash calculada no terminal; e a página perdendo todo o estilo quando um caractere da hash muda.</p>
+        <span class="secao-ref text-body-secondary">§3.1 a §3.3 · use junto com <code>ferramentas/verificar-sri.sh</code></span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="03-ordem-no-head.html">
+        <h3>03 · A ordem no <code>&lt;head&gt;</code> decide quem vence</h3>
+        <p class="mb-1">Duas páginas idênticas, uma linha trocada de lugar. Mais a tabela de especificidade para quando a ordem não basta.</p>
+        <span class="secao-ref text-body-secondary">§3.4 · o bug nº 1 da aula</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="04-grid-e-breakpoints.html">
+        <h3>04 · Grid de 12 colunas e breakpoints</h3>
+        <p class="mb-1">Régua de breakpoint presa no rodapé (feita só com utilitários de display), as 12 colunas visíveis e o CSS real por baixo do capô.</p>
+        <span class="secao-ref text-body-secondary">§4.2 e §4.3 · arraste a janela devagar</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 -->
+  <div class="card mb-4">
+    <div class="card-header bloco-cabecalho">
+      <h2 class="h6 mb-0"><b>Bloco 2 · 50 min</b> — utilitários, componentes, variáveis <code>--bs-*</code>, Tailwind, Material, comparativo</h2>
+    </div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action item" href="05-utilitarios.html">
+        <h3>05 · Os utilitários do dia a dia</h3>
+        <p class="mb-1">Escala de espaçamento com o <i>padding</i> visível, <code>ms-auto</code>, flexbox pronto e a prova do <code>img-fluid</code>.</p>
+        <span class="secao-ref text-body-secondary">§4.4</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="06-componentes.html">
+        <h3>06 · Navbar, card e formulário</h3>
+        <p class="mb-1">Hambúrguer funcionando, a diferença que o <code>h-100</code> faz e o realce de campo inválido com <code>:user-invalid</code>.</p>
+        <span class="secao-ref text-body-secondary">§4.5</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="07-variaveis-bootstrap.html">
+        <h3>07 · Personalizar sem brigar: <code>--bs-*</code></h3>
+        <p class="mb-1">Variante de botão × <code>!important</code>; o mito do <code>--bs-primary</code>; o link preto; e <code>data-bs-theme</code>.</p>
+        <span class="secao-ref text-body-secondary">§4.6 · a seção que separa quem usa de quem apanha</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="08-tailwind.html">
+        <h3>08 · Experimento com Tailwind 4</h3>
+        <p class="mb-1">O arquivo da apostila, linha por linha, rodando pelo Play CDN.</p>
+        <span class="secao-ref text-body-secondary">§5.1</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="09-tailwind-responsivo-e-tema.html">
+        <h3>09 · Tailwind: prefixos e <code>@theme</code></h3>
+        <p class="mb-1">Responsividade e estados por prefixo, os breakpoints diferentes dos do Bootstrap, e a configuração dentro do CSS.</p>
+        <span class="secao-ref text-body-secondary">§5.2 e §5.3</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="10-material-web.html">
+        <h3>10 · Experimento com Material Web</h3>
+        <p class="mb-1">Importmap, módulo ES, shadow DOM e o teste que fecha a §6.3: desligue o JavaScript e a interface some.</p>
+        <span class="secao-ref text-body-secondary">§6.2 e §6.3</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="11-comparativo-medido.html">
+        <h3>11 · O mesmo componente, três vezes, com números</h3>
+        <p class="mb-1">Seis cards idênticos nos três frameworks, a tabela de medição e a pergunta de manutenção.</p>
+        <span class="secao-ref text-body-secondary">§7.1 e §7.2 · bancada do desafio ⭐⭐</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- BLOCO 3 -->
+  <div class="card mb-4">
+    <div class="card-header bloco-cabecalho">
+      <h2 class="h6 mb-0"><b>Bloco 3 · 50 min</b> — mão na massa, erros comuns e laboratório</h2>
+    </div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action item" href="../cafe-cerrado/index.html">
+        <h3>Café Cerrado pronto — as três páginas</h3>
+        <p class="mb-1">O resultado dos nove passos: navbar responsiva, cardápio em grid, formulário em duas colunas, paleta da marca e <code>css/estilo.css</code> com 128 linhas e zero <code>!important</code>.</p>
+        <span class="secao-ref text-body-secondary">💻 Mão na massa · Passos 1 a 9</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="12-erros-comuns.html">
+        <h3>12 · Os erros comuns, reproduzidos ao vivo</h3>
+        <p class="mb-1">Onze sintomas da tabela 🐛, cada um com o erro e o conserto lado a lado. Mostre o erro antes da regra.</p>
+        <span class="secao-ref text-body-secondary">🐛 Erros comuns</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="../gabaritos/b1-grid.html">
+        <h3>Gabarito B1 · seis blocos, quatro arranjos</h3>
+        <p class="mb-1">1 / 2 / 3 / 6 colunas sem escrever uma media query.</p>
+        <span class="secao-ref text-body-secondary">🧪 Laboratório · Nível B</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="../gabaritos/b2-botao-cerrado-verde.html">
+        <h3>Gabarito B2 · <code>.btn-cerrado-verde</code></h3>
+        <p class="mb-1">Uma variante nova com 16 variáveis e nenhuma propriedade CSS comum.</p>
+        <span class="secao-ref text-body-secondary">🧪 Laboratório · Nível B</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="../gabaritos/b3-tailwind-card.html">
+        <h3>Gabarito B3 · o card em Tailwind</h3>
+        <p class="mb-1">Mesma altura, mesma proporção de imagem, rodapé no lugar — sem CSS fora das classes.</p>
+        <span class="secao-ref text-body-secondary">🧪 Laboratório · Nível B</span>
+      </a>
+      <a class="list-group-item list-group-item-action item" href="../gabaritos/micro-framework/mini.html">
+        <h3>Bônus ⭐⭐⭐ · o Café Cerrado com <code>mini.css</code></h3>
+        <p class="mb-1">146 linhas de CSS, 2,5 KB comprimidos, zero dependências — e a lista honesta do que ele não faz.</p>
+        <span class="secao-ref text-body-secondary">🏆 Desafios · mostre só depois que a turma tentar</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="alert alert-warning">
+    <b>Precisa de internet.</b> Todas as demos carregam os frameworks por CDN — é o tema da aula.
+    Se o Wi-Fi da sala for duvidoso, rode <code>./ferramentas/preparar-offline.sh --aplicar</code>
+    antes da aula e <code>--reverter</code> depois.
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

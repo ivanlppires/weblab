@@ -8,6 +8,15 @@
   <!-- Play CDN do Tailwind 4: o compilador roda no navegador. Só para estudo. -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+  <!-- NOTA para a aula: o validador do W3C acusa DOIS erros neste arquivo —
+       'The only allowed value for the type attribute for the style element is text/css'
+       e 'CSS: Unrecognized at-rule @theme'. Os dois são inerentes ao Play CDN: o
+       type="text/tailwindcss" é o gancho que o compilador procura no navegador, e
+       @theme é sintaxe do Tailwind, não do CSS. Em um projeto com build isso some
+       (a configuração fica em um arquivo .css que nunca chega ao navegador).
+       É mais um motivo pelo qual o Play CDN é experimento, e não produção — e por
+       isso o checkpoint de "zero erros no W3C" vale para as páginas do projeto,
+       que usam Bootstrap. -->
   <style type="text/tailwindcss">
     /* §5.3 — a configuração mora no CSS. Declarar um token cria as classes
        bg-cafe, text-cafe, border-cafe e todas as variantes. */

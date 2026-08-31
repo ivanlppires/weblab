@@ -504,7 +504,7 @@ Para usar Material Design em HTML puro existem dois caminhos, e é importante n�
 | Materialize | Framework de componentes de terceiros, estilo Bootstrap | Última versão estável de 2018, implementa o Material 1 |
 | Material Web | Implementação **oficial** do Google em Web Components | Material 3; em modo de manutenção desde 2024 |
 
-Muito material de aula ainda ensina o Materialize porque ele se parece com o Bootstrap. Nesta disciplina usamos o **Material Web**, porque ele mostra uma terceira ideia que os outros dois frameworks não mostram: componentes como **elementos HTML próprios**.
+Muito material de aula ainda ensina o Materialize porque ele se parece com o Bootstrap. Nesta trilha usamos o **Material Web**, porque ele mostra uma terceira ideia que os outros dois frameworks não mostram: componentes como **elementos HTML próprios**.
 
 ### 6.2 Web Components: tags que não existem no HTML
 
@@ -1228,7 +1228,7 @@ Os rádios ganharam `id` e `label for`. Na Aula 03 eles estavam envolvidos pelo 
         <h2 class="h5">Café Cerrado</h2>
         <p class="mb-0">
           Torrefação artesanal de grãos do Cerrado mato-grossense. Projeto fictício
-          usado como estudo de caso da disciplina de Desenvolvimento Web.
+          usado como estudo de caso do Nível 2 do WebLab (Desenvolvimento Web).
         </p>
       </section>
 
@@ -1521,7 +1521,7 @@ A coluna **Transferred** é o que veio pela rede (comprimido); a coluna **Size**
 
 ### Nível C — Desafio
 
-**C1.** Aplique o framework escolhido ao **seu projeto autoral** inteiro, nas três páginas, com os mesmos requisitos do Café Cerrado: menu responsivo que colapsa, grid com no mínimo três cards que viram uma coluna no celular, formulário estilizado, paleta própria aplicada por variáveis do framework (não por `!important`), estrutura semântica da Aula 03 intacta e a justificativa no `README.md`. Publique no GitHub Pages e abra o endereço no celular de um colega.
+**C1.** Aplique o framework escolhido ao **seu projeto autoral** inteiro, nas três páginas, com os mesmos requisitos do Café Cerrado: menu responsivo que colapsa, grid com no mínimo três cards que viram uma coluna no celular, formulário estilizado, paleta própria aplicada por variáveis do framework (não por `!important`), estrutura semântica da Aula 03 intacta e a justificativa no `README.md`. Publique no GitHub Pages e abra o endereço no celular de outra pessoa (ou em outro aparelho seu).
 
 <details markdown="1"><summary>Dica</summary>
 
@@ -1592,7 +1592,7 @@ Existe um jogo cruel entre desenvolvedores: abrir um site e adivinhar o framewor
 - Tipografia própria: uma fonte de título diferente da fonte de corpo, carregada de forma que não bloqueie a renderização.
 - Raios de borda, sombras e escala de espaçamento ajustados por variáveis, não por regras novas.
 - Um arquivo `docs/tema.md` listando cada variável `--bs-*` que você sobrescreveu e o que ela controla.
-- Prova final: mostre a página para três colegas e registre quantos acertaram o framework. Se algum acertar, pergunte pelo quê — e conserte.
+- Prova final: mostre a página para três pessoas quaisquer — colegas de estudo, amigos, familiares — e registre quantos acertaram o framework. Se alguém acertar, pergunte pelo quê — e conserte.
 
 <details markdown="1"><summary>Pistas</summary>
 
@@ -1655,7 +1655,7 @@ A melhor forma de entender um framework é escrever um. Não um clone do Bootstr
 3. `docs/peso.md` com a auditoria do exercício **B4**.
 4. Nenhum `!important` no seu CSS — fora do bloco `prefers-reduced-motion` da Aula 05, onde ele é a forma correta. Se houver algum, troque por variável do framework ou por um seletor honesto, e registre a troca no `README.md`.
 
-**Parte 3 — Argumento contrário (10 min).** Em `docs/framework.md`, anote o framework escolhido e **um** argumento contra a sua própria escolha (todo framework tem um). Se puder, compare com um colega que escolheu diferente e anote uma situação concreta em que a escolha dele seria melhor que a sua.
+**Parte 3 — Argumento contrário (10 min).** Em `docs/framework.md`, anote o framework escolhido e **um** argumento contra a sua própria escolha (todo framework tem um). Se puder, compare com outra pessoa que tenha feito uma escolha diferente e anote uma situação concreta em que a escolha dela seria melhor que a sua.
 
 **Critério de pronto:** o site do projeto autoral abre pelo endereço do GitHub Pages; em 360 px de largura não há rolagem horizontal e o menu colapsa; em 1200 px os cards ficam lado a lado; a paleta é a da sua marca, não a padrão do framework; e o `README.md` justifica a escolha em texto próprio.
 

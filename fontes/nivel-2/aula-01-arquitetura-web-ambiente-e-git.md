@@ -4,13 +4,13 @@
 > WebLab · UNEMAT — Campus Sinop
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
-Esta é a primeira aula do Nível 2. Ao final dela você terá um repositório Git publicado na internet, o ambiente de trabalho do semestre inteiro montado e uma ideia clara de onde a disciplina vai chegar: uma aplicação full-stack com API própria, login do Google e CRUD persistido.
+Esta é a primeira aula do Nível 2. Ao final dela você terá um repositório Git publicado na internet, o ambiente de trabalho do semestre inteiro montado e uma ideia clara de onde o Nível 2 vai chegar: uma aplicação full-stack com API própria, login do Google e CRUD persistido.
 
 ## 🎯 Objetivos de aprendizagem
 
 Ao final desta aula você será capaz de:
 
-- Explicar como a disciplina funciona: três unidades, três marcos do projeto, projeto fio-condutor e projeto autoral.
+- Explicar como esta trilha funciona: três unidades, três marcos do projeto, projeto fio-condutor e projeto autoral.
 - Descrever o modelo cliente-servidor e narrar, passo a passo, o que acontece entre digitar uma URL e ver a página na tela.
 - Identificar os métodos e os códigos de status HTTP mais usados e decompor uma URL em suas partes.
 - Distinguir front-end, back-end e banco de dados, e classificar uma aplicação como estática ou dinâmica.
@@ -35,23 +35,23 @@ Você **não** precisa saber Git, terminal ou Node.js. Tudo isso começa do zero
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Como a disciplina funciona; a sequência das aulas e os marcos do projeto; Café Cerrado e o projeto autoral; modelo cliente-servidor |
+| 1 | 50 min | Como esta trilha funciona; a sequência das aulas e os marcos do projeto; Café Cerrado e o projeto autoral; modelo cliente-servidor |
 | 2 | 50 min | HTTP na prática (métodos, status, URL, cabeçalhos); as três camadas; quem consome a web hoje; IA no fluxo de trabalho; ambiente de desenvolvimento |
 | 3 | 50 min | Git do zero: ciclo básico, GitHub e GitHub Pages — o repositório `cafe-cerrado` no ar; laboratório |
 
-## 1. Como esta disciplina funciona
+## 1. Como esta trilha funciona
 
-### 1.1 Ementa e objetivo
+### 1.1 O que esta trilha cobre
 
-**Ementa oficial (FACET-SNP-307):** arquitetura de uma aplicação web; tecnologias de back-end; tecnologias de front-end; bancos de dados para web.
+**O que esta trilha cobre** (a mesma ementa da disciplina de origem, Desenvolvimento Web — FACET-SNP-307, UNEMAT Campus Sinop): arquitetura de uma aplicação web; tecnologias de back-end; tecnologias de front-end; bancos de dados para web.
 
-**Objetivo geral:** ao final do semestre você projeta, implementa e publica uma aplicação web completa — interface acessível e responsiva, comportamento dinâmico em JavaScript, API própria em Node.js/Express, autenticação com conta Google e operações de CRUD com persistência.
+**Objetivo geral:** ao concluir esta trilha você projeta, implementa e publica uma aplicação web completa — interface acessível e responsiva, comportamento dinâmico em JavaScript, API própria em Node.js/Express, autenticação com conta Google e operações de CRUD com persistência.
 
 A palavra que resume o Nível 2 é **profundidade**. No Nível 1 você aprendeu as três linguagens da plataforma. Aqui você aprende a *arquitetura* em que elas vivem: como um site é servido, como duas máquinas conversam por HTTP, como o código sai da sua pasta e vai parar em um endereço público, e como o servidor deixa de ser um mistério e passa a ser código seu.
 
 ### 1.2 Três unidades, três camadas
 
-A disciplina adota **aprendizagem baseada em projeto**: um único aplicativo, construído de forma incremental, ganhando uma camada por unidade.
+Esta trilha adota **aprendizagem baseada em projeto**: um único aplicativo, construído de forma incremental, ganhando uma camada por unidade.
 
 | Unidade | Camada | Conteúdo |
 |---|---|---|
@@ -82,7 +82,7 @@ Repare que as unidades são cumulativas: o HTML da Unidade 1 continua lá na Uni
 | 15 | CRUD com front-end assíncrono (AJAX/SPA) |
 | 16 | CRUD completo com autenticação Google |
 
-As datas dos encontros de cada turma ficam no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre, e serve igualmente a quem estuda por conta própria, sem turma.
+O conteúdo abaixo é o mesmo em qualquer turma ou semestre, e serve igualmente a quem estuda por conta própria, sem vínculo com nenhuma turma.
 
 > **⚠️ Atenção**
 > Se você depende da rede do laboratório para subir seu trabalho, não deixe para o último minuto: ela tende a cair justamente quando mais gente está enviando ao mesmo tempo. Rode `git push` assim que terminar cada parte, não só no fim da aula.
@@ -97,23 +97,17 @@ As datas dos encontros de cada turma ficam no índice desta trilha — o conteú
 
 Os três marcos são **individuais**, **práticos** e recaem sobre o **mesmo projeto autoral**. Cada um vive no mesmo repositório público do GitHub — não `.zip`, não pasta no Drive, não print de tela. O repositório *é* o produto, e o histórico de commits faz parte dele.
 
-| Modalidade | Horas | Como acontece |
-|---|---|---|
-| Síncrona presencial | 45 h | 16 encontros de três aulas de 50 min, com construção guiada do projeto |
-| Assíncrona a distância | 15 h | 16 atividades de aproximadamente 1 h, ligadas ao projeto autoral |
-| Total | 60 h | |
+Esta trilha soma cerca de **60 h de estudo**: aproximadamente 45 h acompanhando as 16 aulas — a construção guiada do projeto fio-condutor — e 15 h de prática independente ligada ao projeto autoral, em atividades de cerca de 1 h por aula.
 
 > **⚠️ Atenção**
-> A carga assíncrona não é bônus. Ela é parte da carga horária oficial e prepara direto o marco da unidade: quem pula a atividade da semana chega na aula seguinte sem o pré-requisito, porque cada aula assume que a anterior foi concluída.
-
-**Atendimento:** segundas-feiras, das 18h às 19h, com agendamento por e-mail ([ivanpires@unemat.br](mailto:ivanpires@unemat.br)).
+> A prática independente não é bônus: ela prepara direto o marco da unidade. Quem pula a atividade de uma aula chega na seguinte sem o pré-requisito, porque cada aula assume que a anterior foi concluída.
 
 ### 1.5 O projeto fio-condutor e o projeto autoral
 
 A regra pedagógica do WebLab tem duas metades:
 
-1. **Em sala, construímos juntos o projeto fio-condutor: o Café Cerrado.** É uma cafeteria fictícia de Sinop/MT, que torra grãos do cerrado mato-grossense. Na Unidade 1 ela é um site estático publicado no GitHub Pages; na Unidade 2 ganha cardápio dinâmico, busca, filtros e navegação SPA; na Unidade 3 ganha uma API em Express, login com conta Google e um CRUD de produtos com persistência. Todo mundo digita junto.
-2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** e um **domínio diferente**. Os marcos são sobre o projeto autoral.
+1. **O projeto fio-condutor é o Café Cerrado, construído passo a passo ao longo das aulas.** É uma cafeteria fictícia de Sinop/MT, que torra grãos do cerrado mato-grossense. Na Unidade 1 ela é um site estático publicado no GitHub Pages; na Unidade 2 ganha cardápio dinâmico, busca, filtros e navegação SPA; na Unidade 3 ganha uma API em Express, login com conta Google e um CRUD de produtos com persistência. Digite o código você mesmo — não copie e cole.
+2. **Em paralelo, você desenvolve um projeto autoral** com a **mesma arquitetura** e um **domínio diferente**. Os marcos são sobre o projeto autoral.
 
 Exemplos de temas que funcionam: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios do curso, brechó, controle de pescarias no Teles Pires, loja de peças de bicicleta, biblioteca de uma escola, feira de produtores locais.
 
@@ -127,7 +121,7 @@ O critério para saber se um tema serve é objetivo: **ele tem uma lista de cois
 Cada aula do WebLab tem, sempre nesta ordem:
 
 1. **💻 Mão na massa** — passo a passo guiado no Café Cerrado. Todo mundo faz junto, digitando (não colando).
-2. **🧪 Laboratório** — exercícios em sala em três níveis: **A** (fixação), **B** (aplicação) e **C** (desafio para quem termina antes).
+2. **🧪 Laboratório** — exercícios práticos em três níveis: **A** (fixação), **B** (aplicação) e **C** (desafio para quem termina antes).
 3. **🏆 Desafios** — extras opcionais, com estrelas de dificuldade: ⭐ (1–2 h), ⭐⭐ (uma tarde), ⭐⭐⭐ (um fim de semana). Não são obrigatórios, mas aprofundam a aula e ficam bem no portfólio.
 4. **🏠 Atividade assíncrona (1 h)** — a tarefa da semana, ligada ao projeto autoral.
 
@@ -135,7 +129,7 @@ Uma rotina que funciona: leia os objetivos antes da aula; digite o código duran
 
 ### 1.7 Uma palavra sobre o formato das entregas
 
-Toda entrega desta disciplina é um **link de repositório público no GitHub**. Isso não é burocracia: é a forma como software é entregue no mercado. Um repositório bem cuidado — com `README.md` que explica o projeto, commits com mensagens legíveis e o site publicado — é a peça de portfólio mais barata que existe. Você vai terminar o semestre com duas: o Café Cerrado e o seu projeto autoral.
+Toda entrega desta trilha é um **link de repositório público no GitHub**. Isso não é burocracia: é a forma como software é entregue no mercado. Um repositório bem cuidado — com `README.md` que explica o projeto, commits com mensagens legíveis e o site publicado — é a peça de portfólio mais barata que existe. Você vai terminar esta trilha com duas: o Café Cerrado e o seu projeto autoral.
 
 ## 2. Arquitetura de uma aplicação web
 
@@ -248,7 +242,7 @@ Essas quatro operações são exatamente o **CRUD** (*Create, Read, Update, Dele
 | `4xx` | Erro do cliente | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found` |
 | `5xx` | Erro do servidor | `500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable` |
 
-Os que você mais vai usar (e devolver) nesta disciplina:
+Os que você mais vai usar (e devolver) ao longo desta trilha:
 
 | Código | Quando aparece | O que fazer |
 |---|---|---|
@@ -293,7 +287,7 @@ Login, carrinho e sessão são construídos **por cima** disso: o cliente reenvi
 
 ## 4. Front-end, back-end e banco de dados
 
-Uma aplicação web moderna se organiza em três camadas — que são, não por acaso, as três unidades desta disciplina.
+Uma aplicação web moderna se organiza em três camadas — que são, não por acaso, as três unidades desta trilha.
 
 | Camada | Onde executa | Responsabilidade | Unidade |
 |---|---|---|---|
@@ -339,7 +333,7 @@ E essas máquinas já são clientes que pagam:
 > **🧠 Você sabia?**
 > O código `402 Payment Required` está na especificação do HTTP desde 1997 marcado como "reservado para uso futuro". Ficou quase três décadas sem uso prático — um número guardado à espera de um caso que só apareceu quando as máquinas viraram compradoras. Vale como lembrete de que o HTTP que você está aprendendo é um protocolo vivo: os mesmos verbos e os mesmos códigos de 1997 continuam sustentando o que se inventa hoje.
 
-**Por que isso importa para esta disciplina?** Porque muda o que é "a fachada" de um sistema. O agente não quer o botão azul: ele quer o dado, em JSON, por uma API previsível e documentada. A interface humana continua importando — mas ela passa a ser *uma* das saídas, não a única.
+**Por que isso importa para o que você vai construir aqui?** Porque muda o que é "a fachada" de um sistema. O agente não quer o botão azul: ele quer o dado, em JSON, por uma API previsível e documentada. A interface humana continua importando — mas ela passa a ser *uma* das saídas, não a única.
 
 A boa notícia é que tudo que você vai aprender aqui serve aos dois públicos. HTML semântico (Aula 03) é o que permite a uma máquina entender a estrutura da página. HTTP bem usado (§3) é o que torna a API previsível. JSON (Aula 10) é o formato que os dois lados falam. Express e rotas REST (Unidade 3) são a porta de entrada. Ninguém precisa mudar de assunto: precisa aprender o assunto direito.
 
@@ -369,7 +363,7 @@ A pergunta não é "pode usar IA?". Pode. A pergunta é "como usar bem?".
 | Node.js 22 LTS | Executar JavaScript fora do navegador (ferramentas agora; servidor na Unidade 3) | <https://nodejs.org/> |
 | Git | Controle de versão | <https://git-scm.com/> |
 
-Sobre o Node.js: baixe sempre a versão marcada como **LTS** (*Long Term Support*). LTS significa suporte prolongado e estabilidade — é a versão que se usa em produção. Nesta disciplina usamos o **Node.js 22 LTS**.
+Sobre o Node.js: baixe sempre a versão marcada como **LTS** (*Long Term Support*). LTS significa suporte prolongado e estabilidade — é a versão que se usa em produção. Nesta trilha usamos o **Node.js 22 LTS**.
 
 ### 7.2 Verificando as instalações pelo terminal
 
@@ -552,7 +546,7 @@ Duas dessas linhas evitam desastres reais. `node_modules/` costuma ter dezenas d
 
 ### 8.7 Repositório remoto: GitHub
 
-O Git é a ferramenta; o **GitHub** é um serviço que hospeda repositórios Git na internet. Ele dá três coisas ao mesmo tempo: backup, portfólio público e o canal de entrega desta disciplina.
+O Git é a ferramenta; o **GitHub** é um serviço que hospeda repositórios Git na internet. Ele dá três coisas ao mesmo tempo: backup, portfólio público e o canal de entrega desta trilha.
 
 ```bash
 # conectar o repositório local ao remoto criado no GitHub
@@ -599,7 +593,7 @@ Crie, em um lugar que você encontre depois (por exemplo `Documentos/dev-web/`),
 
 ```text
 dev-web/
-├── cafe-cerrado/        ← projeto fio-condutor (construído em sala)
+├── cafe-cerrado/        ← projeto fio-condutor (construído ao longo das aulas)
 └── meu-projeto/         ← projeto autoral (tema seu, mesma arquitetura)
 ```
 
@@ -623,7 +617,7 @@ Crie o arquivo `index.html` na raiz da pasta. Digite (não cole):
 <body>
   <h1>Café Cerrado</h1>
   <p>Cafeteria de grãos torrados do cerrado mato-grossense, em Sinop/MT.</p>
-  <p>Site em construção na disciplina Desenvolvimento Web da UNEMAT Campus Sinop.</p>
+  <p>Site em construção no Nível 2 do WebLab (Desenvolvimento Web — UNEMAT Campus Sinop).</p>
 </body>
 </html>
 ```
@@ -642,7 +636,7 @@ O `README.md` é a primeira coisa que o GitHub mostra a quem abre o repositório
 # Café Cerrado
 
 Site da cafeteria fictícia **Café Cerrado** (Sinop/MT), construído aula a aula
-na disciplina Desenvolvimento Web (FACET-SNP-307) — UNEMAT Campus Sinop.
+no Nível 2 do WebLab (Desenvolvimento Web — FACET-SNP-307, UNEMAT Campus Sinop).
 
 ## O projeto
 
@@ -758,7 +752,7 @@ Espere um minuto e recarregue o site publicado. Ele mudou sozinho: você acabou 
 
 Repita os passos 1 a 7 na pasta `meu-projeto`, com o **seu** tema: nome do projeto no `<title>` e no `<h1>`, um parágrafo dizendo o que é e para quem é, um `README.md` com o tema e as páginas que você pretende ter. Repositório público, GitHub Pages ligado.
 
-A partir de hoje a regra é: **o que o Café Cerrado ganha em sala, o seu projeto ganha em casa.**
+A partir de hoje a regra é: **o que o Café Cerrado ganha em aula, o seu projeto ganha em paralelo.**
 
 ### Como testar
 
@@ -904,7 +898,7 @@ O navegador esconde tudo o que a §2.2 descreve. Hoje você faz o trabalho dele 
 - A saída de `curl -I` no mesmo endereço, com a explicação, em uma linha cada, de pelo menos cinco cabeçalhos de resposta.
 - Uma requisição a um caminho inexistente do seu site e a interpretação do status recebido, comparada com o que o navegador mostra na mesma situação.
 - Uma comparação entre `curl --http1.1 -I` e `curl --http2 -I` no mesmo endereço: qual versão o servidor aceitou e como você sabe.
-- Um texto de dez linhas ligando cada evidência ao passo correspondente da §2.2, escrito como se você fosse explicar a um colega que faltou.
+- Um texto de dez linhas ligando cada evidência ao passo correspondente da §2.2, escrito como se você fosse explicar o processo para outra pessoa que não acompanhou este trecho.
 
 <details markdown="1">
 <summary>Pistas</summary>

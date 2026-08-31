@@ -139,7 +139,7 @@ ALTER TABLE inscricoes ADD CONSTRAINT uq_inscricao UNIQUE (evento_id, usuario_ui
 ```
 
 > **⚠️ Atenção**
-> Rode o passo 1 **antes** de qualquer coisa e só uma vez: rodar duas vezes soma os inscritos de novo e infla a capacidade. Se o seu banco de desenvolvimento estiver vazio de inscrições, os dois números coincidem e nada muda — o que é o caso mais provável em sala.
+> Rode o passo 1 **antes** de qualquer coisa e só uma vez: rodar duas vezes soma os inscritos de novo e infla a capacidade. Se o seu banco de desenvolvimento estiver vazio de inscrições, os dois números coincidem e nada muda — o que é o caso mais provável logo após subir o ambiente.
 
 ```js
 // unieventos-api/src/repositories/eventosRepository.js
@@ -639,7 +639,7 @@ Duas estratégias para refletir uma mudança na interface depois de uma ação d
 A store acima implementa a **pessimista** de propósito: cada ação (`criar`, `atualizar`, `remover`) só atualiza `lista.value` depois do `await` na chamada de serviço resolver com sucesso. Para um CRUD acadêmico, essa é a escolha mais segura — evita o cenário em que o aluno vê "Evento criado!" na tela, mas na verdade a validação do back-end rejeitou e nada foi salvo.
 
 > **📌 Vale gravar**
-> Otimista = muda a tela antes de saber o resultado (rápido, mas exige lógica de desfazer). Pessimista = muda a tela só após confirmação do servidor (mais lento, mais seguro). Nesta disciplina, sempre pessimista.
+> Otimista = muda a tela antes de saber o resultado (rápido, mas exige lógica de desfazer). Pessimista = muda a tela só após confirmação do servidor (mais lento, mais seguro). Nesta trilha, sempre pessimista.
 
 ## 6. Upload de imagem do evento com Firebase Storage
 

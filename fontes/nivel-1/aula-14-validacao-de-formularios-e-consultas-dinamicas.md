@@ -123,7 +123,7 @@ const comprovante = document.querySelector("#comprovante").files[0];
 ```
 
 > **⚠️ Atenção**
-> O erro que aparece em toda turma: `input.value` de um `type="number"` retorna a **string** `"25"`, não o número `25`. Fazer `idade + 1` produz `"251"`. Converta sempre com `Number()` — e lembre-se, da Aula 11, de que `Number("")` é `0`, então teste o campo vazio **antes** de converter.
+> O erro clássico, que aparece o tempo todo: `input.value` de um `type="number"` retorna a **string** `"25"`, não o número `25`. Fazer `idade + 1` produz `"251"`. Converta sempre com `Number()` — e lembre-se, da Aula 11, de que `Number("")` é `0`, então teste o campo vazio **antes** de converter.
 
 O `?.` no radio (encadeamento opcional, Aula 11) evita o clássico `Cannot read properties of null (reading 'value')` quando nenhuma opção está marcada; o `??` completa com uma string vazia.
 
@@ -1941,7 +1941,7 @@ O `validarCampo` da Mão na massa tem um `switch` com sete casos. Funciona, mas 
 4. Compare o resultado com o `criarValidador` do exercício C1: você acabou de construir metade dele.
 </details>
 
-### ⭐⭐⭐ O formulário mais acessível da turma
+### ⭐⭐⭐ O formulário mais acessível que você já fez
 Tags: acessibilidade, formularios, investigacao, projeto
 
 Um formulário pode passar em todos os testes automáticos e ainda ser impossível de preencher sem o mouse. Nesta missão você vai auditar o formulário do **seu projeto autoral** como um usuário que não enxerga a tela, corrigir o que encontrar e provar o resultado. Isso entra bem no Marco 3 da unidade.
@@ -1997,7 +1997,7 @@ Um formulário pode passar em todos os testes automáticos e ainda ser impossív
 
 **Critério de pronto:** enviar o formulário vazio destaca todos os campos com erro, leva o foco ao primeiro e não recarrega a página; digitar um termo sem acento encontra o item acentuado; o console fica limpo em todas as páginas.
 
-**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga uma expressão regular sua que falhou em um caso que você não tinha previsto, explique por que falhou e mostre a correção.
+**Parte 3 — Discussão (5 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: traga uma expressão regular sua que falhou em um caso que você não tinha previsto, explique por que falhou e mostre a correção.
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

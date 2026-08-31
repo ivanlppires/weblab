@@ -71,7 +71,7 @@ A confusão é antiga e o nome foi a causa. Em 1995, a Netscape lançou a lingua
 | ES6 / ES2015 | 2015 | `let`, `const`, arrow functions, classes, template literals, módulos, Promises |
 | ES2016 em diante | anual | pequenas adições por ano: `**`, `includes`, `async/await`, `?.`, `??`, `at()` |
 
-Desde 2015 sai uma versão por ano, com o nome do ano. Nesta disciplina você escreve **JavaScript moderno (ES2015+)**: `const` e `let` em vez de `var`, template literals em vez de concatenação, e os métodos de array que você vai conhecer na Aula 12.
+Desde 2015 sai uma versão por ano, com o nome do ano. Nesta trilha você escreve **JavaScript moderno (ES2015+)**: `const` e `let` em vez de `var`, template literals em vez de concatenação, e os métodos de array que você vai conhecer na Aula 12.
 
 > **🧠 Você sabia?**
 > A primeira versão do JavaScript foi escrita por Brendan Eich em **dez dias**, em maio de 1995, sob pressão para que o Netscape Navigator 2 saísse com uma linguagem de script. O nome interno era "Mocha". Várias decisões tomadas às pressas naquelas semanas — como o comportamento estranho de `==` e o resultado de `typeof null` — continuam na linguagem até hoje, porque corrigi-las quebraria milhões de sites.
@@ -124,7 +124,7 @@ O navegador lê o HTML de cima para baixo e vai construindo a árvore de element
 | `defer` | em paralelo com a leitura do HTML | depois que todo o HTML foi lido, **na ordem em que foram declarados** | sempre — é a melhor opção |
 | `async` | em paralelo com a leitura do HTML | assim que terminar de baixar, **fora de ordem** | só para scripts independentes, como analytics |
 
-A regra desta disciplina: `<script src="…" defer>` no `<head>`. Você ganha o download em paralelo, a garantia de que o HTML inteiro já foi lido e a ordem previsível entre vários scripts — o que vai importar na Aula 12, quando um arquivo de dados precisar ser carregado antes do arquivo que o usa.
+A regra desta trilha: `<script src="…" defer>` no `<head>`. Você ganha o download em paralelo, a garantia de que o HTML inteiro já foi lido e a ordem previsível entre vários scripts — o que vai importar na Aula 12, quando um arquivo de dados precisar ser carregado antes do arquivo que o usa.
 
 > **🔎 Por baixo do capô**
 > O `defer` só faz sentido com `src`. Em um script interno (sem `src`), o atributo é ignorado e o código roda na hora. Se você precisa de um script interno que espere o HTML, coloque-o antes de `</body>` — ou, melhor, mova o código para um arquivo externo.
@@ -894,7 +894,7 @@ Chame `console.time("diagnostico")` na primeira linha e `console.timeEnd("diagno
 ### ⭐ Adivinhe a saída: a coerção posta à prova
 Tags: javascript, investigacao
 
-Você acabou de ver que `"5" + 3` é `"53"` e `"5" - 3` é `2`. Um colega afirma que "com prática dá para prever qualquer coerção sem testar". Vamos ver. Abaixo estão doze expressões; escreva a sua previsão para cada uma **antes** de digitar no Console, depois confira e conte os acertos. Cada erro é uma regra que você ainda não internalizou — anote-a.
+Você acabou de ver que `"5" + 3` é `"53"` e `"5" - 3` é `2`. Alguém afirma que "com prática dá para prever qualquer coerção sem testar". Vamos ver. Abaixo estão doze expressões; escreva a sua previsão para cada uma **antes** de digitar no Console, depois confira e conte os acertos. Cada erro é uma regra que você ainda não internalizou — anote-a.
 
 ```js
 [] + [];
@@ -1029,7 +1029,7 @@ Um sistema de inscrição cobra R$ 0,10 de taxa por SMS e envia três. No Consol
 
 **Critério de pronto:** todas as páginas do projeto autoral carregam `js/app.js` sem erro no Console; uma página exibe um valor calculado por JavaScript no lugar de um número digitado no HTML; o `conversao.js` roda sem erros e mostra os cinco casos.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um resultado surpreendente de comparação ou de operação em JavaScript (diferente dos que apareceram nesta aula), explique tecnicamente por que ele ocorre e como evitá-lo.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: traga um resultado surpreendente de comparação ou de operação em JavaScript (diferente dos que apareceram nesta aula), explique tecnicamente por que ele ocorre e como evitá-lo.
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

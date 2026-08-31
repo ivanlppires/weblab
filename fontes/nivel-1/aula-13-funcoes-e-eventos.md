@@ -1545,7 +1545,7 @@ Cada cartão tem `draggable="true"` e `data-id`. No `dragstart`, guarde o id em 
 ### ⭐ O botão que só funciona uma vez
 Tags: javascript, eventos, bug, devtools
 
-Um colega enviou o código abaixo dizendo que "o contador funciona uma vez e depois para, e às vezes nem começa". Rode-o, reproduza os dois sintomas e encontre os **quatro** bugs plantados — sem reescrever do zero. Cada um é um erro clássico visto nesta aula.
+Alguém enviou o código abaixo dizendo que "o contador funciona uma vez e depois para, e às vezes nem começa". Rode-o, reproduza os dois sintomas e encontre os **quatro** bugs plantados — sem reescrever do zero. Cada um é um erro clássico visto nesta aula.
 
 ```html
 <!-- bug-contador.html -->
@@ -1680,7 +1680,7 @@ Sites de evento costumam ter um "quiz de conhecimentos" para engajar quem se ins
 
 **Critério de pronto:** nenhuma página do projeto mostra erro no Console; a listagem some do "Exibir código-fonte" e aparece na aba Elements; o menu abre e fecha só com o teclado.
 
-**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): explique, com um trecho do seu projeto, um problema que só a delegação de eventos resolve bem — e o que aconteceria sem ela.
+**Parte 3 — Discussão (5 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: explique, com um trecho do seu projeto, um problema que só a delegação de eventos resolve bem — e o que aconteceria sem ela.
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

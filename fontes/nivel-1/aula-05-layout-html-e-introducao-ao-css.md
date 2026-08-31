@@ -11,7 +11,7 @@ Ao final desta aula você será capaz de:
 - Estruturar uma página com os elementos de seccionamento do HTML5 (`header`, `nav`, `main`, `section`, `article`, `aside`, `footer`) e decidir quando `div` é a escolha certa.
 - Aplicar o padrão de contêiner centralizado que sustenta praticamente todo site profissional.
 - Explicar o que é CSS, como o navegador o aplica e o que são seletor, declaração e regra.
-- Usar as três formas de aplicação de estilo e justificar por que o CSS externo é a única aceita nos trabalhos da disciplina.
+- Usar as três formas de aplicação de estilo e justificar por que o CSS externo é a única aceita nos trabalhos desta trilha.
 - Calcular o tamanho de uma caixa no modelo de caixa e explicar por que todo projeto começa com `box-sizing: border-box`.
 - Diferenciar os valores de `display` (`block`, `inline`, `inline-block`, `none`) e seu efeito no fluxo do documento.
 - Reconhecer o colapso de margens e prever o espaço real entre dois elementos.
@@ -325,7 +325,7 @@ Vantagens:
 - **Separação de responsabilidades.** HTML descreve; CSS apresenta; na Unidade 3, JavaScript comporta.
 - **Trabalho em equipe.** Uma pessoa mexe no conteúdo enquanto outra mexe no estilo, sem conflito.
 
-Todos os trabalhos desta disciplina usam CSS externo. O `href` segue as mesmas regras de caminho relativo dos links e imagens (Aula 02): `css/estilo.css` está na pasta `css`, ao lado do HTML.
+Todos os trabalhos desta trilha usam CSS externo. O `href` segue as mesmas regras de caminho relativo dos links e imagens (Aula 02): `css/estilo.css` está na pasta `css`, ao lado do HTML.
 
 > **⚠️ Atenção**
 > Uma página pode ter vários `<link rel="stylesheet">`. Eles são aplicados **na ordem em que aparecem**: quando duas regras iguais conflitam, a do arquivo que veio por último vence. Guarde isso — é a terceira etapa da cascata, que você formaliza na Aula 06.
@@ -380,7 +380,7 @@ Com o comportamento padrão, chamado `content-box`, `width` define só o **conte
 
 Você pediu 300 px e recebeu 350. Em um layout de duas colunas de `50%` cada, basta um padding para a segunda coluna não caber e cair para a linha de baixo. Isso quebra layouts em porcentagem **constantemente**.
 
-Com `border-box`, `width` passa a incluir padding e borda: a caixa ocupa exatamente 300 px, e o conteúdo fica com o que sobra (250 px). É como você pensa intuitivamente — "quero uma caixa de 300" — e é assim que todo projeto profissional trabalha. Por isso todo CSS desta disciplina começa com este reset:
+Com `border-box`, `width` passa a incluir padding e borda: a caixa ocupa exatamente 300 px, e o conteúdo fica com o que sobra (250 px). É como você pensa intuitivamente — "quero uma caixa de 300" — e é assim que todo projeto profissional trabalha. Por isso todo CSS desta trilha começa com este reset:
 
 **`css/estilo.css` (topo do arquivo)**
 
@@ -576,7 +576,7 @@ Em vez de repetir `#0b3d5c` em vinte lugares, declare uma vez e reutilize:
 
 ### 6.4 Por que `id` não é para estilo e `!important` não é solução
 
-Você verá na Aula 06 que o navegador decide conflitos entre regras por **especificidade**: um `#id` vence qualquer quantidade de `.classes`, e `!important` vence tudo. Parece prático — até que você precisa sobrescrever e não consegue. Regras da disciplina desde hoje: estilize com **classes** (reutilizáveis e fáceis de sobrescrever), reserve `id` para âncoras e JavaScript, e não use `!important` — se precisou dele, há um problema de organização no CSS, e o remédio é reorganizar, não escalar a guerra.
+Você verá na Aula 06 que o navegador decide conflitos entre regras por **especificidade**: um `#id` vence qualquer quantidade de `.classes`, e `!important` vence tudo. Parece prático — até que você precisa sobrescrever e não consegue. Regra desta trilha desde hoje: estilize com **classes** (reutilizáveis e fáceis de sobrescrever), reserve `id` para âncoras e JavaScript, e não use `!important` — se precisou dele, há um problema de organização no CSS, e o remédio é reorganizar, não escalar a guerra.
 
 ## 💻 Mão na massa — Esqueleto semântico das cinco páginas e a primeira folha de estilo
 
@@ -1124,7 +1124,7 @@ No console, `document.querySelectorAll("div").length` conta as `div`; troque por
 ### ⭐ A folha de estilo que não funciona
 Tags: css, bug, devtools
 
-Um colega passou uma hora tentando descobrir por que "o CSS não pega". O arquivo está abaixo, e o HTML o referencia com `<link rel="stylesheet" href="estilo.css">` — mas o arquivo está salvo em `css/estilo.css`. Além desse, há **seis** erros no CSS. Encontre todos os sete usando só o DevTools (painel Styles mostra declarações inválidas riscadas; a aba Network mostra o 404) antes de recorrer a qualquer validador.
+Alguém passou uma hora tentando descobrir por que "o CSS não pega". O arquivo está abaixo, e o HTML o referencia com `<link rel="stylesheet" href="estilo.css">` — mas o arquivo está salvo em `css/estilo.css`. Além desse, há **seis** erros no CSS. Encontre todos os sete usando só o DevTools (painel Styles mostra declarações inválidas riscadas; a aba Network mostra o 404) antes de recorrer a qualquer validador.
 
 ```css
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1201,14 +1201,14 @@ Abra o perfil de qualquer pessoa no GitHub e olhe os cartões de "repositórios 
 ### ⭐⭐⭐ Laboratório interativo do box model
 Tags: css, layout, devtools, investigacao
 
-Explicar o box model para um colega é a melhor forma de descobrir se você entendeu. Construa uma página didática, `box-model.html`, que **demonstre visualmente** cada conceito desta aula com exemplos vivos: a mesma caixa em `content-box` e `border-box` lado a lado, com as medidas escritas; três casos de colapso de margem (irmãos, pai e filho, sem colapso dentro de um elemento com padding); `block`, `inline` e `inline-block` recebendo a mesma `width` e reagindo de formas diferentes; e as três formas de esconder (`display: none`, `visibility: hidden`, `opacity: 0`) com um botão em cada uma para o leitor testar o clique. Tudo com HTML semântico e CSS externo — nada de JavaScript.
+Explicar o box model para outra pessoa é a melhor forma de descobrir se você entendeu. Construa uma página didática, `box-model.html`, que **demonstre visualmente** cada conceito desta aula com exemplos vivos: a mesma caixa em `content-box` e `border-box` lado a lado, com as medidas escritas; três casos de colapso de margem (irmãos, pai e filho, sem colapso dentro de um elemento com padding); `block`, `inline` e `inline-block` recebendo a mesma `width` e reagindo de formas diferentes; e as três formas de esconder (`display: none`, `visibility: hidden`, `opacity: 0`) com um botão em cada uma para o leitor testar o clique. Tudo com HTML semântico e CSS externo — nada de JavaScript.
 
 **Critérios de pronto**
 
 - Cada demonstração é uma `<section>` com título, um parágrafo explicando o que observar e o exemplo vivo ao lado do código-fonte correspondente em `<pre><code>`.
 - As medidas reais de cada caixa (largura ocupada, espaço entre elementos) aparecem escritas na página e conferem com o que o DevTools mostra.
 - As caixas usam cores diferentes para content, padding e border, visíveis a olho nu.
-- Um colega que nunca viu CSS consegue, lendo só a página, responder às questões A3, A4, A5 e A13 deste Laboratório — teste com alguém de fora da turma e registre as respostas.
+- Alguém que nunca viu CSS consegue, lendo só a página, responder às questões A3, A4, A5 e A13 deste Laboratório — teste com uma pessoa nessas condições e registre as respostas.
 - A página valida no W3C e usa o padrão de contêiner centralizado.
 
 <details><summary>Pistas</summary>
@@ -1219,7 +1219,7 @@ Explicar o box model para um colega é a melhor forma de descobrir se você ente
 4. Para os botões de "esconder", coloque três `<a href="#clicou">` com cada técnica e peça ao leitor para tentar clicar e usar <kbd>Tab</kbd>: só o de `opacity: 0` responde.
 </details>
 
-**Para ir além:** publique a página (Aula 15 ou trilha Deploy) e use-a como material de estudo para a prova.
+**Para ir além:** publique a página (Aula 15 ou trilha Deploy) e use-a como material de revisão sempre que precisar retomar o assunto.
 
 ### 🔥 Boss — Auditoria e reconstrução de um site real
 Tags: html, acessibilidade, projeto, investigacao
@@ -1272,7 +1272,7 @@ Sites institucionais brasileiros — de prefeituras, secretarias, campi — cost
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto, se ainda não usa Git).
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): publique o tema do seu projeto e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. **Os três marcos da trilha acompanham este mesmo projeto**, cada um acrescentando uma camada (HTML no Marco 1, CSS no Marco 2, JavaScript no Marco 3). Se puder, compare o wireframe com o de um colega, apontando um problema de hierarquia visual.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: publique o tema do seu projeto e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. **Os três marcos da trilha acompanham este mesmo projeto**, cada um acrescentando uma camada (HTML no Marco 1, CSS no Marco 2, JavaScript no Marco 3). Se puder, compare o wireframe com o de outra pessoa, apontando um problema de hierarquia visual.
 
 ## ✅ Checkpoint do projeto
 

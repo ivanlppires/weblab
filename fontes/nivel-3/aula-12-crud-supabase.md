@@ -534,7 +534,7 @@ onUnmounted(() => {
 })
 ```
 
-Abra o UniEventos em duas abas lado a lado. Crie um evento em uma; a lista da outra atualiza sozinha, sem F5. É o momento em que a turma costuma reagir — vale demonstrar ao vivo antes de explicar o código.
+Abra o UniEventos em duas abas lado a lado. Crie um evento em uma; a lista da outra atualiza sozinha, sem F5. É o tipo de momento que mais impressiona quando demonstrado ao vivo — vale ver isso funcionando antes de explicar o código.
 
 > **🔎 Por baixo do capô**
 > Realtime do Supabase se apoia na replicação lógica do Postgres (`logical replication`): o banco publica um fluxo de mudanças (`postgres_changes`), e o `supabase-js` mantém um WebSocket assinando esse fluxo filtrado pela tabela/evento que você configurou. Não é polling — é o próprio banco avisando o cliente quando algo muda.

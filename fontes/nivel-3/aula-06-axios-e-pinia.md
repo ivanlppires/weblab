@@ -104,7 +104,7 @@ O ponto mais importante da tabela é o segundo: com `fetch`, uma resposta `404` 
 npm install axios
 ```
 
-Versão usada nesta disciplina: **axios 1.19.0**.
+Versão usada nesta trilha: **axios 1.19.0**.
 
 ### Instância dedicada
 
@@ -363,12 +363,12 @@ app.use(createPinia())
 
 ### `defineStore`: dois estilos
 
-Pinia suporta dois estilos de declaração de store. **Esta disciplina usa o setup store** — mas você precisa reconhecer os dois, porque o estilo options ainda aparece bastante em projetos e tutoriais existentes.
+Pinia suporta dois estilos de declaração de store. **Esta trilha usa o setup store** — mas você precisa reconhecer os dois, porque o estilo options ainda aparece bastante em projetos e tutoriais existentes.
 
 **Options store** (parecido com a Options API do Vue 2):
 
 ```js
-// exemplo — NÃO é o estilo usado nesta disciplina, mas você deve reconhecê-lo
+// exemplo — NÃO é o estilo usado nesta trilha, mas você deve reconhecê-lo
 import { defineStore } from 'pinia'
 
 export const useContadorStore = defineStore('contador', {
@@ -387,7 +387,7 @@ export const useContadorStore = defineStore('contador', {
 **Setup store** (usa a Composition API — `ref`, `computed`, funções comuns):
 
 ```js
-// src/stores/contadorStore.js — estilo usado nesta disciplina
+// src/stores/contadorStore.js — estilo usado nesta trilha
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
@@ -630,7 +630,7 @@ inscricoesStore.$subscribe((mutation, state) => {
 })
 ```
 
-Ambas as abordagens são válidas; a primeira (persistir dentro da própria ação) é mais explícita e fácil de acompanhar em uma disciplina introdutória — é a que vamos usar no Mão na massa.
+Ambas as abordagens são válidas; a primeira (persistir dentro da própria ação) é mais explícita e fácil de acompanhar para quem está começando — é a que vamos usar no Mão na massa.
 
 ### Vue DevTools inspecionando a store
 

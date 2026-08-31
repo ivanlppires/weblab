@@ -1351,7 +1351,7 @@ Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha
 2. O layout principal do projeto construído com Grid e áreas nomeadas em pelo menos uma página (a mais complexa), com Flexbox no interior dos componentes.
 3. O menu de navegação completo em **todas** as páginas: lista semântica, `nav aria-label`, `aria-current` na página atual, `:focus-visible` em todos os links e link de salto funcionando.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um componente do seu projeto (um trecho de HTML + CSS), diga qual dos dois você usou (Grid ou Flexbox) e justifique tecnicamente com base na tabela da seção 4. Se puder, compare a escolha com a de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: traga um componente do seu projeto (um trecho de HTML + CSS), diga qual dos dois você usou (Grid ou Flexbox) e justifique tecnicamente com base na tabela da seção 4. Se puder, compare a escolha com a de outra pessoa.
 
 **Critério de pronto:** ao pressionar <kbd>Tab</kbd> na primeira página do seu projeto, o link de salto aparece; ao pressionar <kbd>Enter</kbd>, o foco vai para o conteúdo; navegando pelo menu, cada link mostra foco visível e a página atual está marcada com `aria-current`; ao abrir a página mais curta, o rodapé está no fim da janela; ao clicar nos selos **grid**/**flex** do DevTools, a estrutura desenhada é a que você planejou.
 

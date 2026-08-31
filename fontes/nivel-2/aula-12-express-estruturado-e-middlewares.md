@@ -938,7 +938,7 @@ Duas pessoas abrem o cardápio ao mesmo tempo e o seu terminal cospe seis linhas
 ### ⭐⭐ O `next()` que ninguém chamou
 Tags: express, middleware, bug, devtools
 
-Um colega mexeu no `server.js` durante o intervalo e agora o site "não abre mais": a aba do navegador fica girando indefinidamente, o terminal não mostra erro nenhum e o processo Node continua vivo, sem consumir CPU. O `curl` também fica pendurado. Nenhum `console.log` que você acrescentar no handler da rota aparece. Este é o trecho alterado:
+Um colega mexeu no `server.js` sem avisar e agora o site "não abre mais": a aba do navegador fica girando indefinidamente, o terminal não mostra erro nenhum e o processo Node continua vivo, sem consumir CPU. O `curl` também fica pendurado. Nenhum `console.log` que você acrescentar no handler da rota aparece. Este é o trecho alterado:
 
 ```js
 app.use((req, res, next) => {

@@ -46,7 +46,7 @@ Isso faz do formulário o elemento com maior consequência de todo o HTML. Uma t
 - **Exclui pessoas.** Um campo sem `<label>` é, para quem usa leitor de tela, apenas "campo de edição, em branco". Sem rótulo, não há como saber o que digitar.
 - **Cria retrabalho.** Todo dado que não foi validado na entrada vira, depois, uma planilha de correção manual.
 
-Nesta aula você constrói a **estrutura**. Na Aula 04 fecha o ciclo com campos avançados e upload de arquivos. Na Aula 06 estiliza o formulário com CSS. Na Aula 14 acrescenta validação em JavaScript, com expressões regulares e mensagens acessíveis. O formulário de inscrição do evento vai atravessar a disciplina inteira.
+Nesta aula você constrói a **estrutura**. Na Aula 04 fecha o ciclo com campos avançados e upload de arquivos. Na Aula 06 estiliza o formulário com CSS. Na Aula 14 acrescenta validação em JavaScript, com expressões regulares e mensagens acessíveis. O formulário de inscrição do evento vai atravessar toda a trilha.
 
 ### 1.2 O que acontece quando você clica em "Enviar"
 
@@ -97,7 +97,7 @@ Três linhas de conteúdo, e já temos um sistema: um rótulo, um campo e um bot
 | `target` | Onde exibir a resposta: `_self` (padrão) ou `_blank` (nova aba) |
 | `name` | Nome do formulário; usado por JavaScript e por scripts antigos |
 
-Nesta disciplina você ainda não tem um servidor para receber os dados — isso é assunto do Nível 2. Por enquanto, o `action` aponta para um endereço fictício (`/inscrever`), e o que interessa é **observar a requisição sendo montada** no DevTools. O servidor do Live Server vai responder `404 Not Found`, e está tudo bem: os dados foram enviados, e é isso que vamos inspecionar.
+Nesta trilha você ainda não tem um servidor para receber os dados — isso é assunto do Nível 2. Por enquanto, o `action` aponta para um endereço fictício (`/inscrever`), e o que interessa é **observar a requisição sendo montada** no DevTools. O servidor do Live Server vai responder `404 Not Found`, e está tudo bem: os dados foram enviados, e é isso que vamos inspecionar.
 
 ### 2.2 GET × POST
 
@@ -114,7 +114,7 @@ Essa é a decisão mais importante do `<form>` — e a que mais confunde quem es
 
 A regra prática: **`GET` para ler, `POST` para alterar.**
 
-Se a operação apenas consulta informação e poderia ser repetida cem vezes sem consequência, use `GET`. É por isso que a URL de uma busca é compartilhável: `programacao.html?dia=2&trilha=web` descreve exatamente o que você está vendo, e mandar esse link para um colega mostra a ele a mesma tela. Essa propriedade — repetir sem mudar nada — chama-se **idempotência**.
+Se a operação apenas consulta informação e poderia ser repetida cem vezes sem consequência, use `GET`. É por isso que a URL de uma busca é compartilhável: `programacao.html?dia=2&trilha=web` descreve exatamente o que você está vendo, e mandar esse link para outra pessoa mostra a ela a mesma tela. Essa propriedade — repetir sem mudar nada — chama-se **idempotência**.
 
 Se a operação **cria, altera ou apaga** alguma coisa, use `POST`. Uma inscrição feita duas vezes por engano vira duas inscrições. Por isso o navegador avisa antes de reenviar um `POST` quando você aperta <kbd>F5</kbd>.
 
@@ -140,7 +140,7 @@ Caracteres especiais são codificados: um espaço vira `+` ou `%20`, o `@` vira 
 
 ### 2.3 Vendo os dados viajarem
 
-Este é o experimento central da aula. Faça com o professor, e depois refaça sozinho.
+Este é o experimento central da aula. Faça uma vez acompanhando o texto e depois refaça sozinho, sem consultar.
 
 > **🔬 Investigue**
 > Crie um arquivo `exemplos/get-vs-post.html` com dois formulários idênticos — um com `method="get"` e outro com `method="post"`, ambos com `action="recebe.html"` e dois campos (`name="usuario"` e `name="mensagem"`). Abra com o Live Server, abra o DevTools na aba **Network** e marque "Preserve log". Preencha e envie o primeiro: na lista de requisições aparece `recebe.html?usuario=maria&mensagem=oi` — os dados estão na própria URL, e você os vê também na barra de endereço. Agora envie o segundo: a URL fica limpa; clique na requisição, vá em **Payload** (ou **Requisição**, no Firefox) e veja `usuario: maria` e `mensagem: oi`. Repita o `POST` e aperte <kbd>F5</kbd>: o navegador pergunta se você quer reenviar os dados. Agora **apague o atributo `name`** de um dos campos e envie de novo: o campo some da requisição, mesmo estando preenchido na tela. Esse é o bug mais silencioso dos formulários.
@@ -529,13 +529,13 @@ Você **não controla** esse texto no HTML puro (na Aula 14 vai controlar, com a
 ### 7.4 Validação no cliente não é segurança
 
 > **⚠️ Atenção**
-> Toda a validação desta seção pode ser desligada em cinco segundos: basta abrir o DevTools e apagar o atributo `required`, ou acrescentar `novalidate` ao `<form>`, ou enviar a requisição por fora do navegador com uma ferramenta de linha de comando. **Validação no cliente é usabilidade; validação no servidor é segurança.** O servidor precisa revalidar absolutamente tudo — e isso vale para o resto da sua carreira, não só para esta disciplina. Você vai implementar essa segunda camada no Nível 2, com Express.
+> Toda a validação desta seção pode ser desligada em cinco segundos: basta abrir o DevTools e apagar o atributo `required`, ou acrescentar `novalidate` ao `<form>`, ou enviar a requisição por fora do navegador com uma ferramenta de linha de comando. **Validação no cliente é usabilidade; validação no servidor é segurança.** O servidor precisa revalidar absolutamente tudo — e isso vale para o resto da sua carreira, não só para esta trilha. Você vai implementar essa segunda camada no Nível 2, com Express.
 
 O atributo `novalidate` no `<form>` desliga a validação nativa da página inteira. Ele parece um tiro no pé, mas tem uso legítimo: quando o formulário passa a ter validação em JavaScript, com mensagens próprias e acessíveis, você desliga a nativa para não ter duas mensagens competindo. É exatamente o que a Aula 14 faz.
 
 ## 8. Acessibilidade em formulários — checklist
 
-Passe esta lista em todo formulário que você entregar nesta disciplina. Ela também é a base do desafio ⭐⭐ de hoje.
+Passe esta lista em todo formulário que você construir nesta trilha. Ela também é a base do desafio ⭐⭐ de hoje.
 
 - [ ] Todo campo tem `<label>` associado por `for`/`id` (ou envolvente). Nenhum rótulo é só `placeholder`.
 - [ ] Grupos de rádio e de caixas de seleção estão dentro de `<fieldset>` com `<legend>`.
@@ -1026,7 +1026,7 @@ Todo mundo já desistiu de preencher um cadastro. Qual é o menor formulário ca
 - Um arquivo `inscricao-minima.html` com exatamente três campos visíveis, todos com `<label>`, `autocomplete` e validação nativa.
 - Um arquivo `cortes.md` listando cada campo removido da versão completa e a justificativa em uma linha.
 - Pelo menos dois campos removidos com a justificativa "pode ser perguntado depois" e a explicação de quando seria o momento certo de perguntar.
-- Uma medição honesta: cronometre o preenchimento das duas versões (a completa e a mínima) por um colega e registre os dois tempos.
+- Uma medição honesta: cronometre o preenchimento das duas versões (a completa e a mínima) por outra pessoa e registre os dois tempos.
 
 <details markdown="1"><summary>Pistas</summary>
 
@@ -1123,7 +1123,7 @@ Formulários longos assustam. A solução clássica é dividir em etapas ("Etapa
 
 **Parte 2 — Produção (30 min).** Exercícios **B2** (matrícula em disciplinas) e **B4** (caça aos problemas), em arquivos `.html` comentados dentro de `exercicios/aula03/`. Para o B4, produza também o documento listando cada problema identificado, a correção aplicada e a justificativa.
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): em 10 a 15 linhas, explique como a escolha do tipo de campo e das restrições de validação influencia a qualidade do que chega ao banco de dados. Traga um exemplo concreto de dado sujo que você já viu (um telefone impossível, um nome em caixa alta, uma data no futuro) e diga qual atributo desta aula teria evitado.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: em 10 a 15 linhas, explique como a escolha do tipo de campo e das restrições de validação influencia a qualidade do que chega ao banco de dados. Traga um exemplo concreto de dado sujo que você já viu (um telefone impossível, um nome em caixa alta, uma data no futuro) e diga qual atributo desta aula teria evitado.
 
 **Critério de pronto:** os dois arquivos abrem no navegador, validam sem erros no W3C, permitem envio apenas com os campos obrigatórios preenchidos e podem ser percorridos inteiramente pelo teclado, com o rótulo de cada campo funcionando ao clique.
 

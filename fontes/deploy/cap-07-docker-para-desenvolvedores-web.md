@@ -35,7 +35,7 @@ Ao final deste capítulo você será capaz de:
 
 ## 1. O problema que o Docker resolve
 
-A frase mais cara da história do software é "**na minha máquina funciona**". Ela custa caro porque é verdadeira: o código é o mesmo, mas o *ambiente* não é. Alguns exemplos que você provavelmente já viveu na disciplina:
+A frase mais cara da história do software é "**na minha máquina funciona**". Ela custa caro porque é verdadeira: o código é o mesmo, mas o *ambiente* não é. Alguns exemplos que você provavelmente já viveu:
 
 - O colega tem Node 18, você tem Node 22 — e `--env-file` não existe no dele.
 - O MySQL do laboratório está em 8.0, o seu em 8.4 — e o plugin de autenticação padrão mudou.

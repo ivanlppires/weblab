@@ -985,7 +985,7 @@ O `<output>` fica parado em "R$ 30" por enquanto: sem JavaScript ele não calcul
 
 **A7.** Quando usar `<ul>`, `<ol>` e `<dl>`? Dê um exemplo real de cada, retirado do site do evento.
 
-**A8.** Escreva uma lista de definição com três termos técnicos desta disciplina (por exemplo: `alt`, `srcset`, WebVTT) e suas definições.
+**A8.** Escreva uma lista de definição com três termos técnicos desta trilha (por exemplo: `alt`, `srcset`, WebVTT) e suas definições.
 
 **A9.** Como se representa uma lista aninhada corretamente? Escreva o HTML de dois níveis e explique qual erro o validador do W3C acusa quando o aninhamento está errado.
 
@@ -1056,7 +1056,7 @@ O vídeo de fundo só toca sozinho se tiver `muted` — sem isso, o navegador bl
 ### ⭐ Caça aos bugs na galeria
 Tags: html, acessibilidade, bug
 
-Um colega entregou a galeria abaixo dizendo que "abre normal no navegador". Abre — mas o validador do W3C acusa erros, o leitor de tela lê nomes de arquivo e o vídeo nunca mostra legenda. Há **oito** problemas no trecho. Encontre todos sem rodar o validador primeiro; depois use o validador para conferir quantos você achou sozinho.
+Alguém entregou a galeria abaixo dizendo que "abre normal no navegador". Abre — mas o validador do W3C acusa erros, o leitor de tela lê nomes de arquivo e o vídeo nunca mostra legenda. Há **oito** problemas no trecho. Encontre todos sem rodar o validador primeiro; depois use o validador para conferir quantos você achou sozinho.
 
 ```html
 <section>
@@ -1167,7 +1167,7 @@ A WCAG exige, para vídeo pré-gravado: legendas (critério 1.2.2), audiodescri�
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto, se você ainda não estiver usando Git).
 
-**Parte 3 — Fórum (10 min).** No fórum "Descrever imagens", escreva o `alt` de três imagens do seu próprio projeto — uma informativa, uma decorativa e uma dentro de link — e justifique cada escolha em duas linhas. Comente o `alt` de dois colegas: ele entrega a mesma informação que a imagem entrega para quem vê?
+**Parte 3 — Registro (10 min).** Em texto próprio (ou no fórum da turma, se houver), sob o título "Descrever imagens", escreva o `alt` de três imagens do seu próprio projeto — uma informativa, uma decorativa e uma dentro de link — e justifique cada escolha em duas linhas. Se puder, compare com o `alt` que outras pessoas escreveriam: ele entrega a mesma informação que a imagem entrega para quem vê?
 
 ## ✅ Checkpoint do projeto
 

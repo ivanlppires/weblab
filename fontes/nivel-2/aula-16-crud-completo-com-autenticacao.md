@@ -4,7 +4,7 @@
 > WebLab · UNEMAT — Campus Sinop
 > **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
-Última aula da disciplina. As duas metades do sistema já existem: o CRUD com persistência e o login do Google. Hoje elas se encontram no detalhe que separa um projeto de aula de um sistema de verdade — **saber de quem é cada registro**. Ao fim destes 150 minutos, a sua aplicação vai recusar com `401` quem não está logado, recusar com `403` quem está logado mas mexe no que não é seu, e rodar do zero numa pasta limpa com dois comandos. É também o dia do Marco 3, o fechamento do semestre e a hora de olhar para o que vem depois.
+Última aula desta trilha. As duas metades do sistema já existem: o CRUD com persistência e o login do Google. Hoje elas se encontram no detalhe que separa um projeto de aula de um sistema de verdade — **saber de quem é cada registro**. Ao fim destes 150 minutos, a sua aplicação vai recusar com `401` quem não está logado, recusar com `403` quem está logado mas mexe no que não é seu, e rodar do zero numa pasta limpa com dois comandos. É também o dia do Marco 3, o fechamento do semestre e a hora de olhar para o que vem depois.
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -24,9 +24,9 @@ Ao final desta aula você será capaz de:
 - [ ] Front consumindo a própria API por `public/js/api.js`, com formulário de criar/editar e exclusão funcionando (Aula 15).
 - [ ] Login Google operante, `.env` com `GOOGLE_CLIENT_ID` fora do Git e o middleware `exigirLogin` nas rotas de escrita (Aula 14).
 - [ ] `testes.http` versionado, com pelo menos um cenário de cada status (`200`, `201`, `204`, `400`, `401`, `404`).
-- [ ] Uma segunda conta Google disponível (a sua institucional, por exemplo) ou um colega ao lado — hoje vamos precisar de duas identidades.
+- [ ] Uma segunda conta Google disponível (uma pessoal e outra de trabalho/estudo, por exemplo) ou peça a outra pessoa para logar com a conta dela por um minuto — hoje vamos precisar de duas identidades diferentes.
 
-> Na aula passada a interface ganhou o CRUD inteiro: formulário único para criar e editar, exclusão com confirmação, feedback anunciado por `aria-live` e dados sobrevivendo ao reinício do servidor. Ficou uma brecha, e ela é grave: qualquer pessoa logada — com qualquer conta Google do planeta — pode editar e excluir os produtos cadastrados por qualquer outra. Hoje fechamos essa brecha, rodamos o roteiro de auto-teste da entrega e encerramos a disciplina.
+> Na aula passada a interface ganhou o CRUD inteiro: formulário único para criar e editar, exclusão com confirmação, feedback anunciado por `aria-live` e dados sobrevivendo ao reinício do servidor. Ficou uma brecha, e ela é grave: qualquer pessoa logada — com qualquer conta Google do planeta — pode editar e excluir os produtos cadastrados por qualquer outra. Hoje fechamos essa brecha, rodamos o roteiro de auto-teste da entrega e encerramos esta trilha.
 
 ## 🗺️ Roteiro
 
@@ -34,7 +34,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | `401` × `403`; campo `dono` vindo do token; regras de autorização no servidor; migração dos registros antigos |
 | 2 | 50 min | Interface reagindo ao dono; roteiro de auto-teste com duas contas; README e teste da pasta limpa |
-| 3 | 50 min | Laboratório, tira-dúvidas do Marco 3 e encerramento da disciplina |
+| 3 | 50 min | Laboratório, tira-dúvidas do Marco 3 e encerramento desta trilha |
 
 ## 1. Autenticação e autorização: duas perguntas diferentes
 
@@ -406,7 +406,7 @@ Se você adotar o middleware, os controladores `atualizar` e `remover` passam a 
 
 ### 3.3 Provando pelo `testes.http`
 
-Antes de tocar na interface, prove a regra com requisições cruas. Você vai precisar de dois **tokens de sessão**: um seu e um de uma segunda conta (a institucional, ou a do colega ao lado). Cada um se obtém do mesmo jeito da Aula 14: faça login com a conta, abra o console do navegador e rode `JSON.parse(sessionStorage.getItem("cafe-cerrado-sessao")).token`. Não use o ID token do Google — o `exigirLogin` confere a assinatura HMAC da sua própria API e recusaria qualquer outra coisa com `401`.
+Antes de tocar na interface, prove a regra com requisições cruas. Você vai precisar de dois **tokens de sessão**: um seu e um de uma segunda conta (uma alternativa sua, ou a de outra pessoa que te empreste o login por um minuto). Cada um se obtém do mesmo jeito da Aula 14: faça login com a conta, abra o console do navegador e rode `JSON.parse(sessionStorage.getItem("cafe-cerrado-sessao")).token`. Não use o ID token do Google — o `exigirLogin` confere a assinatura HMAC da sua própria API e recusaria qualquer outra coisa com `401`.
 
 `cafe-cerrado-api/testes.http`
 
@@ -562,7 +562,7 @@ Antes de considerar o projeto pronto, faça o que uma revisão rigorosa faria. C
 10. **Higiene.** `git status` limpo, `node_modules/` e `.env` fora do Git, e o teste da pasta limpa da seção 6 passando.
 
 > **📌 Vale gravar**
-> Este roteiro é um bom resumo de como o back-end da Unidade 3 funciona: qual status cada situação produz, quem valida o quê, em que ordem os middlewares rodam e por que a proteção do cliente não substitui a do servidor. Se você consegue explicar cada um dos dez passos para um colega, você domina a parte de back-end desta unidade.
+> Este roteiro é um bom resumo de como o back-end da Unidade 3 funciona: qual status cada situação produz, quem valida o quê, em que ordem os middlewares rodam e por que a proteção do cliente não substitui a do servidor. Se você consegue explicar cada um dos dez passos para outra pessoa, você domina a parte de back-end desta unidade.
 
 ## 6. Higiene do repositório e o teste da pasta limpa
 
@@ -633,7 +633,7 @@ Um repositório sem README é um projeto que só funciona para quem o escreveu. 
 # Café Cerrado — API e site
 
 Aplicação full-stack da cafeteria fictícia Café Cerrado, desenvolvida na
-disciplina Desenvolvimento Web (FACET-SNP-307) da UNEMAT Sinop.
+no Nível 2 do WebLab (Desenvolvimento Web — FACET-SNP-307, UNEMAT Sinop).
 Site estático servido pelo Express, API REST com CRUD de produtos,
 login com Google e persistência em arquivo JSON.
 
@@ -708,12 +708,12 @@ Status possíveis: 200, 201, 204, 400, 401, 403, 404 e 500.
 
 ## Autor
 
-Seu Nome — disciplina Desenvolvimento Web, UNEMAT Sinop.
+Seu Nome — Nível 2 do WebLab, UNEMAT Sinop.
 ```
 
 Os blocos de comando dentro do README acima estão recuados em oito espaços: dentro de um bloco de código Markdown, essa é a forma de mostrar código sem abrir outra cerca. No seu README de verdade, use cercas normais com três crases.
 
-## 7. O que você construiu nesta disciplina
+## 7. O que você construiu nesta trilha
 
 Em dezesseis encontros, o mesmo projeto atravessou a pilha inteira de uma aplicação web profissional:
 
@@ -816,9 +816,9 @@ Calcule a diferença em milissegundos (`Date.now() - new Date(produto.criadoEm)`
 A rota `GET /api/produtos` é pública, então ela não pode exigir login — mas pode **aceitar** um token quando ele vier. Crie um middleware `identificarOpcional` que tenta verificar o token e, se falhar, apenas segue sem `req.usuario`. No controlador, `if (req.query.meus === "1" && req.usuario)` filtra por `dono`.
 </details>
 
-**B3.** Escreva o `README.md` completo do seu projeto autoral, seguindo a estrutura da seção 6.3, e valide-o com o teste da pasta limpa. Peça a um colega para seguir só o README, sem falar com você, e anote onde ele travou.
+**B3.** Escreva o `README.md` completo do seu projeto autoral, seguindo a estrutura da seção 6.3, e valide-o com o teste da pasta limpa. Peça a outra pessoa — colega de estudos, amigo, alguém de uma comunidade online — para seguir só o README, sem falar com você, e anote onde ela travou. Sem ninguém disponível? Feche o projeto, espere um dia, e siga seu próprio README do zero como se fosse a primeira vez.
 
-**Resultado esperado:** um colega consegue clonar, instalar, configurar o Client ID e ver a aplicação funcionando sem fazer nenhuma pergunta. Cada pergunta que ele precisou fazer vira uma linha nova no README.
+**Resultado esperado:** outra pessoa (ou você mesmo, em outro dia, seguindo só o texto) consegue clonar, instalar, configurar o Client ID e ver a aplicação funcionando sem fazer nenhuma pergunta. Cada pergunta que precisou ser feita vira uma linha nova no README.
 
 <details markdown="1">
 <summary>Dica</summary>
@@ -1000,7 +1000,7 @@ Ao final desta aula, o seu repositório precisa ter:
 
 ## 🎓 Marco do projeto — Unidade 3
 
-**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o Marco 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Este é o marco final da disciplina — reúne tudo o que o projeto acumulou desde a Aula 01.
+**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o Marco 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Este é o marco final desta trilha — reúne tudo o que o projeto acumulou desde a Aula 01.
 
 **Requisitos.**
 
@@ -1046,13 +1046,13 @@ Um critério "pela metade" costuma significar que ele funciona no caminho feliz 
 
 ## 8. Depois daqui: para onde ir agora
 
-Você entra nesta disciplina sabendo HTML e CSS e sai com uma aplicação full-stack autenticada. O próximo passo depende do que despertou mais curiosidade ao longo do curso — e há dois caminhos naturais dentro do próprio WebLab.
+Você entra nesta trilha sabendo HTML e CSS e sai com uma aplicação full-stack autenticada. O próximo passo depende do que despertou mais curiosidade ao longo do caminho — e há dois caminhos naturais dentro do próprio WebLab.
 
 ### 8.1 Nível 3 — Frameworks Modernos
 
-O [Nível 3 — Frameworks Modernos](../nivel-3/) (FACET-SNP-310) é a continuação direta desta disciplina. Lá, o ciclo estado → render que você implementou à mão na Aula 15 vira **reatividade automática** com o Vue 3; o `criarCard` com `document.createElement` vira um componente declarativo; a fachada `api.js` vira uma instância do Axios com interceptadores; o estado que você guardou em variáveis de módulo vira uma store do Pinia. No back, o Express que você já conhece ganha um banco de dados de verdade (MySQL e Supabase), autenticação com Firebase e documentação com Swagger.
+O [Nível 3 — Frameworks Modernos](../nivel-3/) (FACET-SNP-310) é a continuação direta desta trilha. Lá, o ciclo estado → render que você implementou à mão na Aula 15 vira **reatividade automática** com o Vue 3; o `criarCard` com `document.createElement` vira um componente declarativo; a fachada `api.js` vira uma instância do Axios com interceptadores; o estado que você guardou em variáveis de módulo vira uma store do Pinia. No back, o Express que você já conhece ganha um banco de dados de verdade (MySQL e Supabase), autenticação com Firebase e documentação com Swagger.
 
-O mais importante: você vai reconhecer cada ferramenta como a automação de algo que **já entendeu**. Quem chega ao Vue sem ter escrito um render à mão aprende a sintaxe; quem chega depois desta disciplina entende o mecanismo. É uma diferença que aparece na primeira vez que algo dá errado.
+O mais importante: você vai reconhecer cada ferramenta como a automação de algo que **já entendeu**. Quem chega ao Vue sem ter escrito um render à mão aprende a sintaxe; quem chega depois desta trilha entende o mecanismo. É uma diferença que aparece na primeira vez que algo dá errado.
 
 ### 8.2 Trilha Deploy — tirar o projeto do `localhost`
 

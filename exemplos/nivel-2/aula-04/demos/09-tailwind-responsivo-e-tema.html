@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo 09 — Tailwind: prefixos e @theme (§5.2 e §5.3)</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- NOTA para a aula: o validador do W3C acusa DOIS erros neste arquivo —
+       'The only allowed value for the type attribute for the style element is text/css'
+       e 'CSS: Unrecognized at-rule @theme'. Os dois são inerentes ao Play CDN: o
+       type="text/tailwindcss" é o gancho que o compilador procura no navegador, e
+       @theme é sintaxe do Tailwind, não do CSS. Em um projeto com build isso some
+       (a configuração fica em um arquivo .css que nunca chega ao navegador).
+       É mais um motivo pelo qual o Play CDN é experimento, e não produção — e por
+       isso o checkpoint de "zero erros no W3C" vale para as páginas do projeto,
+       que usam Bootstrap. -->
+  <style type="text/tailwindcss">
+    /* §5.3 — no Tailwind 4 a configuração mora no CSS.
+       O antigo tailwind.config.js deu lugar a este bloco.
+       Declarar --color-cafe cria bg-cafe, text-cafe, border-cafe e todas as variantes. */
+    @theme {
+      --color-cafe: #6f4e37;
+      --color-cafe-escuro: #4a3325;
+      --color-creme: #fdfaf6;
+    }
+  </style>
+</head>
+<body class="bg-creme p-6 md:p-8">
+
+  <header class="mb-8 rounded-xl bg-stone-900 p-5 text-stone-100">
+    <h1 class="mb-1 text-lg font-bold">Demo 09 — no Tailwind não existe media query no seu código: existe prefixo</h1>
+    <p class="max-w-3xl text-sm text-stone-300">
+      Mesma lógica mobile-first do Bootstrap, sintaxe diferente.
+      <code class="rounded bg-stone-700 px-1">md:grid-cols-2</code> é
+      "duas colunas <b>a partir de</b> 768&nbsp;px".
+    </p>
+  </header>
+
+  <section class="mb-10">
+    <h2 class="mb-3 text-base font-bold text-stone-800">1. Responsividade por prefixo</h2>
+    <p class="mb-3 text-sm text-stone-600">
+      <code class="rounded bg-stone-200 px-1">grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3</code>
+      — arraste a janela.
+    </p>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div class="rounded-lg bg-white p-4 shadow-sm">Card 1</div>
+      <div class="rounded-lg bg-white p-4 shadow-sm">Card 2</div>
+      <div class="rounded-lg bg-white p-4 shadow-sm">Card 3</div>
+    </div>
+
+    <!-- A mesma régua de breakpoint da Demo 04, agora em sintaxe Tailwind. -->
+    <p class="mt-4 rounded-lg bg-stone-900 p-3 text-center font-mono text-sm text-stone-100">
+      breakpoint ativo:
+      <b class="inline sm:hidden text-amber-300">base — abaixo de 640 px</b>
+      <b class="hidden sm:inline md:hidden text-amber-300">sm — a partir de 640 px</b>
+      <b class="hidden md:inline lg:hidden text-amber-300">md — a partir de 768 px</b>
+      <b class="hidden lg:inline xl:hidden text-amber-300">lg — a partir de 1024 px</b>
+      <b class="hidden xl:inline text-amber-300">xl — a partir de 1280 px</b>
+    </p>
+    <p class="mt-2 text-sm text-stone-600">
+      <b>Repare:</b> os pontos de quebra <b>não são os mesmos</b> do Bootstrap
+      (576 / 768 / 992 / 1200). Aqui são 640 / 768 / 1024 / 1280.
+      Trocar de framework significa trocar de régua — mais um argumento para não misturar dois.
+    </p>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-3 text-base font-bold text-stone-800">2. Estados também são prefixos — e eles se combinam</h2>
+    <div class="flex flex-wrap items-center gap-3">
+      <button class="rounded-lg bg-cafe px-4 py-2 font-semibold text-white hover:bg-cafe-escuro">
+        hover:
+      </button>
+      <button class="rounded-lg bg-cafe px-4 py-2 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cafe">
+        focus-visible: (chegue por Tab)
+      </button>
+      <button class="rounded-lg bg-cafe px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-400" disabled>
+        disabled:
+      </button>
+      <button class="rounded-lg bg-cafe px-4 py-2 font-semibold text-white md:hover:bg-red-700">
+        md:hover: — só escurece em vermelho a partir de 768 px
+      </button>
+    </div>
+    <p class="mt-3 text-sm text-stone-600">
+      <code class="rounded bg-stone-200 px-1">hover:</code>,
+      <code class="rounded bg-stone-200 px-1">focus-visible:</code>,
+      <code class="rounded bg-stone-200 px-1">disabled:</code>,
+      <code class="rounded bg-stone-200 px-1">dark:</code>,
+      <code class="rounded bg-stone-200 px-1">motion-reduce:</code> — é essa composição que torna o
+      Tailwind poderoso e o HTML comprido ao mesmo tempo.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="mb-3 text-base font-bold text-stone-800">3. <code>@theme</code>: o outro lado da mesma moeda</h2>
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div class="rounded-lg border border-cafe/20 bg-white p-4">
+        <p class="mb-2 font-bold text-stone-800">Bootstrap</p>
+        <p class="text-sm text-stone-600">
+          Você <b>sobrescreve</b> os tokens de um design pronto:
+          <code class="rounded bg-stone-200 px-1">--bs-btn-bg: #6f4e37</code>.
+        </p>
+      </div>
+      <div class="rounded-lg border border-cafe/20 bg-white p-4">
+        <p class="mb-2 font-bold text-stone-800">Tailwind</p>
+        <p class="text-sm text-stone-600">
+          Você <b>declara</b> os tokens do seu design e o framework gera as classes:
+          <code class="rounded bg-stone-200 px-1">@theme { --color-cafe: #6f4e37 }</code>
+          → nascem <code>bg-cafe</code>, <code>text-cafe</code>, <code>border-cafe</code>.
+        </p>
+      </div>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <span class="rounded bg-cafe px-3 py-1 text-white">bg-cafe</span>
+      <span class="rounded bg-cafe-escuro px-3 py-1 text-white">bg-cafe-escuro</span>
+      <span class="rounded border-2 border-cafe px-3 py-1 text-cafe">border-cafe · text-cafe</span>
+      <span class="rounded bg-cafe/20 px-3 py-1 text-cafe">bg-cafe/20 — opacidade sai de graça</span>
+    </div>
+    <p class="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-stone-700">
+      <b>Prova ao vivo:</b> troque <code>--color-cafe</code> para <code>#1d4ed8</code> na tag
+      <code>&lt;style type="text/tailwindcss"&gt;</code> e recarregue: <b>tudo</b> nesta página muda
+      de cor, com uma linha editada. Sem o <code>@theme</code>, você teria que caçar cada
+      <code>bg-amber-800</code> no HTML — é essa a pergunta de manutenção do desafio ⭐⭐.
+    </p>
+  </section>
+
+</body>
+</html>

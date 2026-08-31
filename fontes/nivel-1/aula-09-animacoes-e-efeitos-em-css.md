@@ -160,7 +160,7 @@ A solução clássica combina `opacity` (que interpola) com `visibility` (que ti
 Repare no truque do `visibility`. Ao **esconder**, `visibility 0s 300ms` espera os 300 ms do fade terminar e só então vira `hidden` — senão o painel sumiria instantaneamente antes de desvanecer. Ao **mostrar**, `visibility 0s` (sem atraso) torna o elemento visível na hora, e o `opacity` faz o fade de entrada.
 
 > **🔎 Por baixo do capô**
-> Por que `opacity: 0` sozinho não basta? Porque um elemento transparente **continua no fluxo e continua focável**: quem navega por <kbd>Tab</kbd> cai em links invisíveis, e o leitor de tela lê o conteúdo de um painel que "não está lá". `visibility: hidden` resolve os dois problemas. Navegadores recentes começam a aceitar `transition-behavior: allow-discrete` junto com `@starting-style` para animar até `display`, mas a dupla `opacity` + `visibility` funciona em todos e é o que você vai usar nesta disciplina.
+> Por que `opacity: 0` sozinho não basta? Porque um elemento transparente **continua no fluxo e continua focável**: quem navega por <kbd>Tab</kbd> cai em links invisíveis, e o leitor de tela lê o conteúdo de um painel que "não está lá". `visibility: hidden` resolve os dois problemas. Navegadores recentes começam a aceitar `transition-behavior: allow-discrete` junto com `@starting-style` para animar até `display`, mas a dupla `opacity` + `visibility` funciona em todos e é o que você vai usar nesta trilha.
 
 ## 3. Transformações
 
@@ -505,7 +505,7 @@ Movimento excessivo causa náusea, tontura e desorientação em pessoas com dist
 }
 ```
 
-Este bloco é uma das poucas situações em que `!important` é justificado: ele precisa vencer **qualquer** regra do projeto, inclusive as mais específicas, e ninguém deve conseguir sobrescrevê-lo por acidente. Cole-o no fim de toda folha de estilo desta disciplina.
+Este bloco é uma das poucas situações em que `!important` é justificado: ele precisa vencer **qualquer** regra do projeto, inclusive as mais específicas, e ninguém deve conseguir sobrescrevê-lo por acidente. Cole-o no fim de toda folha de estilo desta trilha.
 
 Dois detalhes que costumam gerar dúvida:
 
@@ -1279,7 +1279,7 @@ Declare a `transition` no estado base. Para o `:disabled`, use `transition: none
 `perspective` no pai, `transform-style: preserve-3d` no elemento que gira, `backface-visibility: hidden` nas duas faces, e o verso começa com `rotateY(180deg)`. Use `:focus-within` no pai para o giro por teclado. O exemplo completo está na §3.
 </details>
 
-**B3.** Crie um spinner e um esqueleto de carregamento para uma listagem de 6 cartões. Simule o carregamento com um `setTimeout` de 2 segundos (o professor fornece o trecho de JavaScript de 4 linhas) e faça a transição do esqueleto para o conteúdo real.
+**B3.** Crie um spinner e um esqueleto de carregamento para uma listagem de 6 cartões. Simule o carregamento com um `setTimeout` de 2 segundos (o trecho de JavaScript de 4 linhas está na Dica) e faça a transição do esqueleto para o conteúdo real.
 
 **Resultado esperado:** ao abrir a página, seis cartões cinza "brilham" por 2 segundos e então desvanecem, dando lugar aos cartões reais, que surgem com `surgir`.
 
@@ -1288,7 +1288,7 @@ Declare a `transition` no estado base. Para o `:disabled`, use `transition: none
 Tenha os dois conjuntos de cartões no HTML (esqueleto e real), com o real escondido por `opacity: 0; visibility: hidden`. O JavaScript apenas troca uma classe no contêiner após 2 s: `setTimeout(() => lista.classList.add("carregado"), 2000)`. O CSS faz o resto com `.carregado .esqueleto` e `.carregado .cartao`.
 </details>
 
-**B4.** Implemente um menu lateral (drawer) que entra da esquerda animando apenas `transform`, com sobreposição escura em `opacity`, fechamento pelo <kbd>Esc</kbd>, pelo clique fora e por botão, e com o foco preso dentro dele enquanto estiver aberto (o professor fornece o esqueleto do JavaScript; você faz todo o CSS).
+**B4.** Implemente um menu lateral (drawer) que entra da esquerda animando apenas `transform`, com sobreposição escura em `opacity`, fechamento pelo <kbd>Esc</kbd>, pelo clique fora e por botão, e com o foco preso dentro dele enquanto estiver aberto (o esqueleto de JavaScript para abrir/fechar e prender o foco costuma ser fornecido pronto nesta altura do curso; se você ainda não estudou JavaScript, adie essa parte para depois da Aula 13 e volte para terminá-la — o CSS já pode ser feito agora).
 
 **Resultado esperado:** o painel desliza em 300 ms; o fundo escurece junto; nenhuma barra de Layout aparece no painel Performance durante a abertura; com o painel fechado, seus links não recebem foco.
 
@@ -1321,7 +1321,7 @@ Moldura com `position: relative; overflow: hidden`. Legenda `position: absolute;
 
 <details><summary>Dica</summary>
 
-A barra é um `transform: scaleX(0)` com `transform-origin: left` que vai a `scaleX(var(--progresso))` quando ganha a classe `visivel` — é `transform`, portanto barato. O número contando é a única parte que precisa de JavaScript (um `setInterval` curto ou `requestAnimationFrame`); o professor fornece o trecho.
+A barra é um `transform: scaleX(0)` com `transform-origin: left` que vai a `scaleX(var(--progresso))` quando ganha a classe `visivel` — é `transform`, portanto barato. O número contando é a única parte que precisa de JavaScript (um `setInterval` curto ou `requestAnimationFrame`) — se você ainda não chegou na Aula 13, um trecho pronto costuma ser fornecido para focar no CSS; senão, é um bom exercício escrevê-lo você mesmo.
 </details>
 
 **B8.** Crie um conjunto de notificações (toasts) que entram deslizando pela direita, empilham-se, somem automaticamente após 4 segundos com animação de saída e podem ser fechadas manualmente.
@@ -1348,12 +1348,12 @@ Use a animação `tremer` da §5. Para não tremer antes de o usuário digitar, 
 
 <details><summary>Dica</summary>
 
-Faça a versão só com CSS primeiro: uma faixa `display: flex` com `transform: translateX(calc(var(--slide) * -100%))` e `transition: transform 500ms`. O avanço automático e o botão de pausa precisam de JavaScript (`setInterval` / `clearInterval` — o professor fornece). O botão de pausa é obrigatório pela WCAG 2.2.2 — sem ele, o exercício não está pronto.
+Faça a versão só com CSS primeiro: uma faixa `display: flex` com `transform: translateX(calc(var(--slide) * -100%))` e `transition: transform 500ms`. O avanço automático e o botão de pausa precisam de JavaScript (`setInterval` / `clearInterval`) — se você ainda não chegou na Aula 13, um trecho pronto costuma ser fornecido para focar no CSS; senão, vale a pena escrevê-lo você mesmo. O botão de pausa é obrigatório pela WCAG 2.2.2 — sem ele, o exercício não está pronto.
 </details>
 
 ### Nível C — Desafio
 
-**C1.** **Página de apresentação animada.** Construa uma landing page de um produto (ou do próprio evento) com: hero com gradiente animado ao fundo e texto que entra escalonado; menu que muda de aparência ao rolar (fica compacto e ganha sombra); seções que se revelam por `IntersectionObserver`; contadores animados; galeria com zoom; depoimentos em carrossel; formulário com validação animada; rodapé com links de sublinhado animado. Requisitos: todas as animações usam apenas `transform` e `opacity` onde for possível, `prefers-reduced-motion` respeitado, e a página mantém 60 fps na gravação do painel Performance com CPU 4×. Comece em sala com o hero e o menu; o restante pode ser terminado em casa e reaproveita os exercícios B6, B7, B9 e B10.
+**C1.** **Página de apresentação animada.** Construa uma landing page de um produto (ou do próprio evento) com: hero com gradiente animado ao fundo e texto que entra escalonado; menu que muda de aparência ao rolar (fica compacto e ganha sombra); seções que se revelam por `IntersectionObserver`; contadores animados; galeria com zoom; depoimentos em carrossel; formulário com validação animada; rodapé com links de sublinhado animado. Requisitos: todas as animações usam apenas `transform` e `opacity` onde for possível, `prefers-reduced-motion` respeitado, e a página mantém 60 fps na gravação do painel Performance com CPU 4×. Comece pelo hero e o menu; o restante pode ser terminado depois e reaproveita os exercícios B6, B7, B9 e B10.
 
 <details><summary>Dica</summary>
 
@@ -1366,7 +1366,7 @@ O gradiente animado ao fundo é um `background-size: 200% 200%` com `@keyframes`
 
 Tags: css, animacao, bug, devtools
 
-Um colega enviou o CSS abaixo dizendo "nada anima, o CSS deve estar bugado". Não está — o navegador está fazendo exatamente o que foi pedido. Há **quatro** erros conceituais, cada um de um tipo diferente visto nesta aula. Encontre e corrija todos sem reescrever do zero: a intenção do colega deve ser preservada.
+Alguém enviou o CSS abaixo dizendo "nada anima, o CSS deve estar bugado". Não está — o navegador está fazendo exatamente o que foi pedido. Há **quatro** erros conceituais, cada um de um tipo diferente visto nesta aula. Encontre e corrija todos sem reescrever do zero: a intenção de quem escreveu deve ser preservada.
 
 ```css
 .botao {
@@ -1470,7 +1470,7 @@ Ative `prefers-reduced-motion: reduce` no sistema (ou emule no DevTools) e abra 
 
 Tags: css, performance, devtools, investigacao
 
-Esta aula afirma que animar `transform` é mais barato que animar `left`. Você vai **provar** isso com números, do jeito que um engenheiro de front-end faz antes de discutir com o colega. Implemente o mesmo painel deslizante de duas formas: uma animando `left` (ou `width`), outra animando `transform`. Meça as duas com o painel Performance do DevTools, capture o número de quadros por segundo e o tempo gasto em Layout, e escreva um relatório de uma página comparando os resultados, com as capturas de tela como evidência. Repita o teste com a CPU limitada em 4× — é aí que a diferença aparece de verdade.
+Esta aula afirma que animar `transform` é mais barato que animar `left`. Você vai **provar** isso com números, do jeito que um engenheiro de front-end faz antes de defender a escolha para outra pessoa. Implemente o mesmo painel deslizante de duas formas: uma animando `left` (ou `width`), outra animando `transform`. Meça as duas com o painel Performance do DevTools, capture o número de quadros por segundo e o tempo gasto em Layout, e escreva um relatório de uma página comparando os resultados, com as capturas de tela como evidência. Repita o teste com a CPU limitada em 4× — é aí que a diferença aparece de verdade.
 
 **Critérios de pronto**
 
@@ -1500,8 +1500,17 @@ Bibliotecas como a Animate.css têm milhões de downloads por semana — e cabem
 - Pelo menos 5 animações por categoria, e as de **atenção** têm `animation-iteration-count` finito por padrão.
 - Todas usam apenas `transform`, `opacity` ou `background-position` — nenhuma anima propriedade de layout.
 - O arquivo termina com o bloco `prefers-reduced-motion` que troca **todas** as entradas/saídas por fade (não por remoção).
-- `demo.html` mostra cada animação com um botão "Reproduzir", o código-fonte ao lado (em `<pre><code>`) e um `<input type="range">` que altera `--duracao` no `:root` ao vivo (o professor fornece as 3 linhas de JavaScript).
+- `demo.html` mostra cada animação com um botão "Reproduzir", o código-fonte ao lado (em `<pre><code>`) e um `<input type="range">` que altera `--duracao` no `:root` ao vivo.
 - Um `README.md` explica como usar a biblioteca em qualquer projeto em 5 linhas.
+
+As 3 linhas de JavaScript do controle deslizante:
+
+```js
+const controle = document.querySelector('input[type="range"]');
+controle.addEventListener('input', () => {
+  document.documentElement.style.setProperty('--duracao', controle.value + 'ms');
+});
+```
 
 <details><summary>Pistas</summary>
 
@@ -1536,7 +1545,7 @@ Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema
 4. Deixe o tema escuro por último e teste-o com o menu aberto, no hero e nos cartões — é onde as cores "fixas" que escaparam das variáveis aparecem.
 </details>
 
-**Para ir além:** peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada ponto anotado é um item do checklist de qualidade do Marco 2 que você acabou de garantir.
+**Para ir além:** peça a alguém que use o seu site **só pelo teclado** por dois minutos e anote onde essa pessoa se perdeu. Cada ponto anotado é um item do checklist de qualidade do Marco 2 que você acabou de garantir.
 
 ## 🐛 Erros comuns
 
@@ -1577,7 +1586,7 @@ Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema
 
 **Critério de pronto:** todos os dez itens presentes; emular `prefers-reduced-motion: reduce` no DevTools não esconde nem quebra nada; desativar o JavaScript não esconde nenhuma seção; a captura do painel Performance está no repositório.
 
-**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um site com movimento bem empregado e outro com movimento excessivo, explicando tecnicamente a diferença (o que cada animação comunica, duração, propriedade animada).
+**Parte 3 — Discussão (5 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —: traga um site com movimento bem empregado e outro com movimento excessivo, explicando tecnicamente a diferença (o que cada animação comunica, duração, propriedade animada).
 
 **Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 

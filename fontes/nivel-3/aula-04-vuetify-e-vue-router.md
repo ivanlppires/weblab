@@ -9,7 +9,7 @@
 Ao final desta aula você será capaz de:
 
 - Explicar o que é um design system e por que um framework de UI acelera (e padroniza) o desenvolvimento de interfaces.
-- Instalar e configurar o Vuetify 4 em um projeto Vite/Vue 3 seguindo exatamente os passos testados nesta disciplina.
+- Instalar e configurar o Vuetify 4 em um projeto Vite/Vue 3 seguindo exatamente os passos testados nesta trilha.
 - Estruturar uma aplicação com `v-app`, `v-app-bar`, `v-navigation-drawer`, `v-main` e o sistema de grid `v-container`/`v-row`/`v-col`.
 - Usar os componentes essenciais do Vuetify (`v-card`, `v-btn`, `v-chip`, `v-icon`, `v-list`, `v-alert`, `v-dialog`, `v-snackbar`, `v-text-field`, `v-select`, `v-img`, `v-progress-circular`) para montar telas reais.
 - Configurar um tema institucional customizado e implementar um alternador de tema claro/escuro.
@@ -61,7 +61,7 @@ O Vuetify 4 implementa o **Material Design 3 (MD3)**, o design system do Google 
 
 ## 2. Instalando o Vuetify 4
 
-Vamos instalar o Vuetify no projeto UniEventos que você já tem. Os comandos abaixo são os mesmos testados no ambiente da disciplina — siga exatamente esta ordem.
+Vamos instalar o Vuetify no projeto UniEventos que você já tem. Os comandos abaixo são os mesmos testados no ambiente desta trilha — siga exatamente esta ordem.
 
 ```bash
 npm install vuetify @mdi/font
@@ -125,7 +125,7 @@ Três importações merecem atenção:
 2. `'vuetify/styles'` — o CSS base do Vuetify (grid, tipografia, reset parcial).
 3. `createVuetify(...)` — cria a instância do Vuetify, análoga ao `createPinia()` ou `createRouter()`: você a registra na aplicação com `app.use(vuetify)`.
 
-> **⚠️ Atenção:** no Vuetify 4, o tema padrão passou a ser `'system'` — ou seja, se você não configurar nada, a aplicação vai seguir a preferência de tema (claro/escuro) do sistema operacional do usuário. Isso é ótimo em produção, mas péssimo para dar aula: metade da turma veria uma tela clara e a outra metade, escura, sem que ninguém tivesse mudado nada. Por isso declaramos `defaultTheme: 'light'` explicitamente — mais adiante, na seção de tema, vamos configurar isso de verdade com cores institucionais.
+> **⚠️ Atenção:** no Vuetify 4, o tema padrão passou a ser `'system'` — ou seja, se você não configurar nada, a aplicação vai seguir a preferência de tema (claro/escuro) do sistema operacional do usuário. Isso é ótimo em produção, mas péssimo para um material escrito com capturas de tela: metade dos leitores veria uma tela clara e a outra metade, escura, sem que ninguém tivesse mudado nada — e as telas deste material deixariam de bater com o que aparece no seu navegador. Por isso declaramos `defaultTheme: 'light'` explicitamente — mais adiante, na seção de tema, vamos configurar isso de verdade com cores institucionais.
 
 > **🔎 Por baixo do capô:** `app.use(vuetify)` funciona exatamente como `app.use(router)` ou `app.use(pinia)` — é o mecanismo de **plugin** do Vue. Um plugin é um objeto com um método `install(app, options)` que o Vue chama internamente. Isso é o mesmo padrão que você vai usar para instalar qualquer biblioteca de terceiros no ecossistema Vue.
 
@@ -1251,7 +1251,7 @@ Ao final desta aula, seu repositório deve ter:
 
 ## 🎓 Marco do projeto — Unidade 1
 
-O Marco 1 fecha a **Unidade 1** inteira: estrutura de um projeto Vue 3 criado com CLI, componentes, diretivas, reatividade, ciclo de vida e — a partir de hoje — Vuetify e Vue Router básico. Ao final deste marco, o seu **projeto autoral** (o que vem evoluindo desde a Aula 01) deve ser uma SPA de verdade, com interface Vuetify e navegação por rotas, aplicada a um domínio de dados **diferente** do UniEventos construído em sala (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, cardápio de restaurante — ou outro tema definido na Aula 01).
+O Marco 1 fecha a **Unidade 1** inteira: estrutura de um projeto Vue 3 criado com CLI, componentes, diretivas, reatividade, ciclo de vida e — a partir de hoje — Vuetify e Vue Router básico. Ao final deste marco, o seu **projeto autoral** (o que vem evoluindo desde a Aula 01) deve ser uma SPA de verdade, com interface Vuetify e navegação por rotas, aplicada a um domínio de dados **diferente** do UniEventos construído ao longo da trilha (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, cardápio de restaurante — ou outro tema definido na Aula 01).
 
 ### Requisitos
 

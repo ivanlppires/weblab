@@ -8,7 +8,7 @@
 
 Ao final desta aula você será capaz de:
 
-- Descrever como a disciplina funciona: unidades, marcos do projeto, projeto fio-condutor e projeto autoral.
+- Descrever como esta trilha funciona: unidades, marcos do projeto, projeto fio-condutor e projeto autoral.
 - Distinguir Internet de World Wide Web e situar os principais marcos da história da Web.
 - Explicar o modelo cliente-servidor e o papel do front-end e do back-end.
 - Descrever, passo a passo, o que acontece entre digitar uma URL e ver a página renderizada.
@@ -20,29 +20,29 @@ Ao final desta aula você será capaz de:
 
 Esta é a primeira aula: não há conteúdo anterior para retomar. Mas há o que trazer:
 
-- [ ] Um notebook (ou acesso ao laboratório) com **Google Chrome** ou **Firefox** atualizado.
+- [ ] Um notebook ou computador com **Google Chrome** ou **Firefox** atualizado.
 - [ ] **Visual Studio Code** instalado (<https://code.visualstudio.com/>). Se ainda não instalou, faremos juntos no Bloco 3.
 - [ ] Extensões do VS Code **Live Server** e **Prettier** (instalação na §1.6 desta aula).
 - [ ] Uma pasta dedicada no computador para guardar os arquivos do curso (o Git chega na Aula 15).
 - [ ] Uma ideia, mesmo vaga, de **tema para o seu projeto autoral** (ver §1.4). Você decide hoje.
 
-Nenhuma experiência prévia com programação é exigida. Se você nunca escreveu uma linha de código, está no lugar certo — a disciplina começa do zero.
+Nenhuma experiência prévia com programação é exigida. Se você nunca escreveu uma linha de código, está no lugar certo — a trilha começa do zero.
 
 ## 🗺️ Roteiro
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Como a disciplina funciona (marcos do projeto, projeto fio-condutor e projeto autoral); Internet × Web; linha do tempo |
+| 1 | 50 min | Como esta trilha funciona (marcos do projeto, projeto fio-condutor e projeto autoral); Internet × Web; linha do tempo |
 | 2 | 50 min | Cliente-servidor; o que acontece ao digitar uma URL; anatomia da URL; renderização; camadas, estático × dinâmico, MPA × SPA, APIs e REST |
 | 3 | 50 min | Mão na massa: ambiente de trabalho, pasta do projeto, primeiro HTML e exploração do DevTools |
 
-## 1. Como funciona esta disciplina
+## 1. Como funciona esta trilha
 
-### 1.1 Ementa e objetivo
+### 1.1 O que esta trilha cobre
 
-**Ementa oficial:** arquiteturas computacionais para Web; criação de páginas web com HTML, CSS e JavaScript.
+**Esta trilha cobre:** arquiteturas computacionais para Web; criação de páginas web com HTML, CSS e JavaScript.
 
-**Objetivo geral:** ao final do semestre, você projeta e desenvolve o **front-end** de aplicações web funcionais, acessíveis e responsivas, dominando as três tecnologias fundamentais da plataforma (HTML, CSS e JavaScript) e entendendo a arquitetura em que elas operam.
+**Objetivo geral:** ao final desta trilha, você projeta e desenvolve o **front-end** de aplicações web funcionais, acessíveis e responsivas, dominando as três tecnologias fundamentais da plataforma (HTML, CSS e JavaScript) e entendendo a arquitetura em que elas operam.
 
 A palavra-chave é *front-end*: tudo que roda no navegador do usuário. Você vai entender o sistema completo (servidor, banco de dados, API), mas vai **construir** a parte que o usuário vê e toca. O back-end é assunto do Nível 2.
 
@@ -54,13 +54,13 @@ A palavra-chave é *front-end*: tudo que roda no navegador do usuário. Você va
 | 2 | CSS: estilo, layout e responsividade | 06 a 09 | Marco 2 |
 | 3 | JavaScript e interatividade | 10 a 15 | Marco 3 |
 
-Os três marcos incidem sobre **o mesmo site**: o Marco 1 constrói a estrutura em HTML, o Marco 2 aplica o design com CSS, o Marco 3 acrescenta o comportamento com JavaScript. Por isso é importante escolher hoje um tema que você aguente desenvolver até o fim do curso.
+Os três marcos incidem sobre **o mesmo site**: o Marco 1 constrói a estrutura em HTML, o Marco 2 aplica o design com CSS, o Marco 3 acrescenta o comportamento com JavaScript. Por isso é importante escolher hoje um tema que você aguente desenvolver até o fim da trilha.
 
 ### 1.3 A sequência das aulas
 
 | Aula | Tema |
 |---|---|
-| 01 | Apresentação da disciplina; tecnologias e arquitetura da Web |
+| 01 | Apresentação da trilha; tecnologias e arquitetura da Web |
 | 02 | Introdução ao HTML: estrutura, textos, links, tabelas |
 | 03 | Introdução ao formulário |
 | 04 | Formulário, mídias e listas |
@@ -76,7 +76,7 @@ Os três marcos incidem sobre **o mesmo site**: o Marco 1 constrói a estrutura 
 | 14 | JavaScript para validação de formulários e consultas dinâmicas |
 | 15 | Publicando seu website na internet — Marco 3 do projeto |
 
-Quem cursa a disciplina recebe o calendário do semestre do professor; o conteúdo abaixo é o mesmo em qualquer oferta e serve igualmente a quem estuda por conta própria, sem data alguma.
+O conteúdo abaixo é o mesmo em qualquer oferta: serve igualmente a quem estuda por conta própria, sem data alguma, e a quem cursa esta trilha em uma turma com professor e calendário próprios — nesse caso, é o professor quem define as datas.
 
 | Marco | Escopo |
 |---|---|
@@ -86,21 +86,17 @@ Quem cursa a disciplina recebe o calendário do semestre do professor; o conteú
 
 Os blocos `📌 Vale gravar` espalhados pelas aulas destacam os pontos que mais reaparecem mais adiante — vale mesmo memorizar.
 
-| Modalidade | Horas | Como acontece |
-|---|---|---|
-| Síncrona presencial | 45 h | 15 encontros de três aulas de 50 min, com construção guiada do projeto |
-| Assíncrona a distância | 15 h | 15 atividades de 1 h, praticadas por conta própria |
-| Total | 60 h | |
+Esta trilha soma aproximadamente **60 h de estudo**: cerca de 45 h acompanhando as 15 aulas (teoria e prática guiada, em três blocos de 50 min cada) e 15 h nas atividades assíncronas — uma por aula, feita por conta própria depois do conteúdo principal.
 
 > **⚠️ Atenção**
-> As atividades assíncronas não são extras opcionais. Elas compõem a prática real do curso e alimentam o Marco do projeto da unidade correspondente. Pule uma e você sente falta dela mais adiante.
+> As atividades assíncronas não são extras opcionais. Elas compõem a prática real da trilha e alimentam o Marco do projeto da unidade correspondente. Pule uma e você sente falta dela mais adiante.
 
 ### 1.4 Projeto fio-condutor e projeto autoral
 
 A regra pedagógica central do WebLab é simples:
 
-1. **Em sala, o professor constrói o projeto fio-condutor** — o **site de um evento acadêmico**, a "Semana Acadêmica de Sistemas de Informação" da UNEMAT Sinop. São cinco páginas: **início**, **programação**, **inscrição**, **palestrantes** e **contato**. Na Unidade 1 elas nascem em HTML puro; na Unidade 2 ganham CSS; na Unidade 3 ganham JavaScript. Todo mundo digita junto.
-2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** (cinco páginas, mesma sequência de tecnologias) e um **domínio diferente**. Os marcos do projeto acompanham o projeto autoral, não o site do evento.
+1. **O projeto fio-condutor** é construído ao longo da trilha — o **site de um evento acadêmico**, a "Semana Acadêmica de Sistemas de Informação" da UNEMAT Sinop. São cinco páginas: **início**, **programação**, **inscrição**, **palestrantes** e **contato**. Na Unidade 1 elas nascem em HTML puro; na Unidade 2 ganham CSS; na Unidade 3 ganham JavaScript. Se você está em aula com um professor, é o projeto que ele constrói com a turma, passo a passo, e todo mundo digita junto; se está estudando sozinho, é o que você constrói acompanhando cada Mão na massa.
+2. **Cada pessoa desenvolve também um projeto autoral** com a **mesma arquitetura** (cinco páginas, mesma sequência de tecnologias) e um **domínio diferente**. Os marcos do projeto acompanham o projeto autoral, não o site do evento.
 
 Exemplos de temas que funcionam bem: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios do curso, brechó de roupas, controle de pescarias no Teles Pires, cardápio de um restaurante, portfólio de um fotógrafo, site de uma ONG de proteção animal. O critério é: você consegue pensar em **cinco páginas com conteúdo real** para esse tema? Se sim, serve.
 
@@ -109,14 +105,14 @@ Exemplos de temas que funcionam bem: catálogo de plantas do Pantanal, agenda de
 
 ### 1.5 Como estudar com este material
 
-Cada aula do WebLab tem quatro camadas de prática, sempre nesta ordem: **💻 Mão na massa** (todo mundo faz junto), **🧪 Laboratório** (exercícios em sala em três níveis), **🏆 Desafios** (extras, opcionais, com estrelas de dificuldade) e **🏠 Para praticar depois da aula** (a tarefa de 1 h ligada ao seu projeto autoral).
+Cada aula do WebLab tem quatro camadas de prática, sempre nesta ordem: **💻 Mão na massa** (o passo a passo guiado, que você acompanha digitando junto — em aula ou sozinho), **🧪 Laboratório** (exercícios em três níveis), **🏆 Desafios** (extras, opcionais, com estrelas de dificuldade) e **🏠 Para praticar depois da aula** (a tarefa de 1 h ligada ao seu projeto autoral).
 
 Uma rotina que funciona:
 
-1. **Antes da aula**, leia os objetivos e passe os olhos no conteúdo. Você aproveita muito mais o encontro sabendo aonde ele vai chegar.
-2. **Durante a aula**, digite o código junto. Copiar e colar não fixa nada; digitar e errar, sim.
-3. **No mesmo dia**, faça o Laboratório Nível A. São perguntas curtas que consolidam o vocabulário.
-4. **Ao longo da semana**, faça o Nível B e a Atividade assíncrona. São eles que constroem habilidade de verdade.
+1. **Antes de estudar cada aula**, leia os objetivos e passe os olhos no conteúdo. Você aproveita muito mais sabendo aonde ela vai chegar.
+2. **Ao acompanhar o conteúdo**, digite o código junto. Copiar e colar não fixa nada; digitar e errar, sim.
+3. **Logo em seguida**, faça o Laboratório Nível A. São perguntas curtas que consolidam o vocabulário.
+4. **Nos dias seguintes**, faça o Nível B e a Atividade assíncrona. São eles que constroem habilidade de verdade.
 5. **Se sobrar tempo e vontade**, encare o Nível C e os Desafios. São do tamanho de um item de portfólio — o tipo de coisa que impressiona em uma entrevista de emprego.
 
 Programação não se aprende lendo. Se você fechar esta página achando que entendeu tudo e não tiver escrito código, não aprendeu. Abra o editor.
@@ -216,11 +212,11 @@ Três características definem esse modelo:
 > **⚠️ Atenção**
 > Consequência de segurança, importante desde já: **todo código front-end é público**. O usuário pode ler seu JavaScript, alterar valores e burlar validações. Validação no cliente é para conforto do usuário; validação no servidor é para segurança. Nunca confie apenas na validação client-side — você vai ver isso na prática na Aula 03 e voltaremos ao tema na Unidade 3.
 
-Nesta disciplina trabalhamos exclusivamente com front-end, mas com consciência do sistema completo.
+Nesta trilha trabalhamos exclusivamente com front-end, mas com consciência do sistema completo.
 
 ## 4. O que acontece quando você digita uma URL
 
-Este é um dos assuntos mais cobrados em entrevistas técnicas e será cobrado no exame. Aprenda a sequência.
+Este é um dos assuntos mais cobrados em entrevistas técnicas. Aprenda a sequência.
 
 **Passo 1 — Análise da URL.** O navegador separa o endereço em partes (§5) e descobre qual protocolo usar e qual servidor contatar.
 
@@ -391,7 +387,7 @@ O cliente é "gordo" (*fat client*): contém a interface **e** as regras de neg�
 
 Vantagens: cada camada pode ser escalada, atualizada e substituída de forma independente; o banco nunca fica exposto ao cliente; as regras existem em um único lugar.
 
-**Esta disciplina inteira vive na camada de apresentação.** O Nível 2 constrói a camada de aplicação (Node.js + Express) e o Nível 3 integra as três.
+**Esta trilha inteira vive na camada de apresentação.** O Nível 2 constrói a camada de aplicação (Node.js + Express) e o Nível 3 integra as três.
 
 ### N camadas e microsserviços
 
@@ -470,12 +466,12 @@ O formato de troca padrão é o **JSON** (JavaScript Object Notation) — texto,
 
 - **Servidor web:** Apache, Nginx, IIS, Node.js. Recebe requisições e devolve recursos.
 - **CDN (Content Delivery Network):** rede de servidores espalhados geograficamente que guardam cópias dos arquivos. Um usuário em Sinop recebe o arquivo de um nó em São Paulo, não da Califórnia. Reduz a latência drasticamente. Exemplos: Cloudflare, Akamai.
-- **Hospedagem estática:** GitHub Pages, Netlify, Vercel, Cloudflare Pages — gratuitas e suficientes para tudo que faremos nesta disciplina. O projeto do Marco 3 (Aula 15) é publicado em uma delas.
+- **Hospedagem estática:** GitHub Pages, Netlify, Vercel, Cloudflare Pages — gratuitas e suficientes para tudo que faremos nesta trilha. O projeto do Marco 3 (Aula 15) é publicado em uma delas.
 - **DNS e domínio:** registro de domínios `.br` via Registro.br. Um domínio próprio custa por volta de R$ 40 por ano; a trilha Deploy (capítulo 04) mostra como apontar um para o seu site.
 
 ## 💻 Mão na massa — Pasta do projeto, primeiro HTML e DevTools
 
-Hoje nasce a pasta que você vai usar o semestre inteiro e o primeiro arquivo do site do evento.
+Hoje nasce a pasta que você vai usar até o fim da trilha e o primeiro arquivo do site do evento.
 
 ### Passo 1 — Estrutura de pastas
 
@@ -483,7 +479,7 @@ Crie, no seu computador (em *Documentos*, por exemplo), a seguinte estrutura. Po
 
 ```text
 introducao-web/
-├── site-evento/          ← projeto fio-condutor (construído em sala)
+├── site-evento/          ← projeto fio-condutor (construído aula a aula)
 │   ├── index.html
 │   ├── css/
 │   ├── img/
@@ -517,7 +513,7 @@ No painel esquerdo, clique com o botão direito em `site-evento` → *New File* 
 <body>
   <h1>Semana Acadêmica de Sistemas de Informação</h1>
   <p>Três dias de palestras, minicursos e oficinas na UNEMAT Sinop.</p>
-  <p>Este site está sendo construído na disciplina <strong>Introdução ao Desenvolvimento Web</strong>.</p>
+  <p>Este site está sendo construído com o WebLab, na trilha <strong>Introdução ao Desenvolvimento Web</strong>.</p>
 </body>
 </html>
 ```
@@ -562,7 +558,7 @@ Roteiro de exploração — faça agora, na sua página:
 
 ### Passo 6 — O projeto autoral começa hoje
 
-Copie `site-evento/index.html` para `meu-projeto/index.html` e troque o `<title>`, o `<h1>` e os parágrafos pelo tema do **seu** projeto. Abra também com o Live Server. Está feito o primeiro commit mental: a partir de agora, tudo que o site do evento ganha em sala, o seu projeto ganha em casa.
+Copie `site-evento/index.html` para `meu-projeto/index.html` e troque o `<title>`, o `<h1>` e os parágrafos pelo tema do **seu** projeto. Abra também com o Live Server. Está feito o primeiro commit mental: a partir de agora, tudo que o site do evento ganha nesta trilha, o seu projeto ganha também.
 
 ### Como testar
 
@@ -617,7 +613,7 @@ https://loja.exemplo.com.br:8443/produtos/notebooks?marca=dell&ordem=preco#avali
 Marque *Disable cache* antes de medir, senão a segunda visita vem do cache e distorce a comparação. A barra de resumo na parte inferior da aba Network mostra "N requests | X MB transferred | Load: Y s".
 </details>
 
-**B2.** Crie `exercicios/aula01/sobre-mim.html` contendo: título da página no `<title>`, um `<h1>` com seu nome, um parágrafo de apresentação, um parágrafo com seus objetivos na disciplina e um link para o site da UNEMAT que abra em nova aba (pesquise o atributo `target`).
+**B2.** Crie `exercicios/aula01/sobre-mim.html` contendo: título da página no `<title>`, um `<h1>` com seu nome, um parágrafo de apresentação, um parágrafo com seus objetivos nesta trilha e um link para o site da UNEMAT que abra em nova aba (pesquise o atributo `target`).
 
 **Resultado esperado:** a página abre no Live Server com acentos corretos; o link abre `https://www.unemat.br` em outra aba.
 
@@ -743,7 +739,7 @@ Quantos computadores um pacote atravessa entre a sua máquina e o servidor da UN
 ### ⭐⭐⭐ HTTP à mão
 Tags: http, https, terminal, investigacao
 
-O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele manualmente: dispara uma requisição HTTP sem navegador, lê a resposta crua e compara protocolos. A ferramenta é o `curl`, que já vem instalado no Windows 10+, no macOS e na maioria das distribuições Linux. Ao final, você vai conseguir explicar para um colega, com evidências, cada etapa do "o que acontece quando digito uma URL".
+O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele manualmente: dispara uma requisição HTTP sem navegador, lê a resposta crua e compara protocolos. A ferramenta é o `curl`, que já vem instalado no Windows 10+, no macOS e na maioria das distribuições Linux. Ao final, você vai conseguir explicar para outra pessoa, com evidências, cada etapa do "o que acontece quando digito uma URL".
 
 **Critérios de pronto**
 
@@ -751,7 +747,7 @@ O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele ma
 - A saída de `curl -I https://www.unemat.br` (só cabeçalhos) com uma explicação, em uma linha cada, de pelo menos 5 cabeçalhos de resposta.
 - Uma requisição a um caminho inexistente (`curl -I https://www.unemat.br/nao-existe`) e a interpretação do status recebido.
 - Uma comparação entre `curl --http1.1 -I` e `curl --http2 -I` no mesmo site: qual versão o servidor aceitou, e como você sabe?
-- Um texto de 10 linhas, escrito como se fosse explicar a um colega, ligando cada evidência ao passo correspondente da §4.
+- Um texto de 10 linhas, escrito como se fosse explicar a outra pessoa, ligando cada evidência ao passo correspondente da §4.
 
 <details><summary>Pistas</summary>
 
@@ -771,7 +767,7 @@ O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele ma
 | Live Server abre uma lista de pastas ou "Cannot GET /" | O VS Code foi aberto em um arquivo solto, ou em uma pasta que não contém o `index.html` | *File → Open Folder* na pasta raiz `introducao-web`; abrir o Live Server a partir do arquivo |
 | A página não recarrega ao salvar | Live Server não está ativo (não aparece "Port: 5500" na barra inferior) | Clicar em *Go Live*; se a porta estiver ocupada, fechar o outro servidor |
 | Edição feita no DevTools sumiu ao recarregar | O DevTools altera o DOM em memória, não o arquivo | Fazer a alteração no VS Code e salvar |
-| Confundir Internet com Web na prova | Erro conceitual: tratar as duas como sinônimos | Web é uma **aplicação** que roda **sobre** a Internet (§2) |
+| Confundir Internet com Web | Erro conceitual: tratar as duas como sinônimos | Web é uma **aplicação** que roda **sobre** a Internet (§2) |
 | Aba Network vazia ao abrir o DevTools | A aba só registra a partir do momento em que é aberta | Abrir o DevTools **antes** e recarregar a página |
 
 ## 🏠 Para praticar depois da aula (1 h)
@@ -784,7 +780,7 @@ O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele ma
 2. Uma captura de tela do VS Code com a pasta `introducao-web` aberta e outra do Live Server exibindo `site-evento/index.html`, com a URL `127.0.0.1:5500` visível.
 3. **O tema do seu projeto autoral**, em 3 linhas: o que é, para quem é, e o nome das cinco páginas (a versão "início, programação, inscrição, palestrantes, contato" do seu domínio).
 
-**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina), escreva 10 a 15 linhas sobre por que a Web se tornou a plataforma dominante de aplicações — pense em distribuição (não precisa instalar nada), padrões abertos e compatibilidade entre dispositivos. Se puder, compare sua resposta com a de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio — ou no fórum da turma, se você está cursando esta trilha em grupo —, escreva 10 a 15 linhas sobre por que a Web se tornou a plataforma dominante de aplicações — pense em distribuição (não precisa instalar nada), padrões abertos e compatibilidade entre dispositivos. Se puder, compare sua resposta com a de outra pessoa que esteja estudando o mesmo conteúdo.
 
 **Critério de pronto:** os dois arquivos abrem sem erro de codificação; as duas capturas mostram o ambiente funcionando; o tema tem cinco páginas nomeadas.
 

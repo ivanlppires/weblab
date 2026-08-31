@@ -58,7 +58,7 @@ O Café Cerrado vai atravessar as três fases ao longo do curso, nessa mesma ord
 
 ## 2. Quem define as regras: padrões abertos
 
-A Web é a única plataforma de software relevante que **não pertence a ninguém**. Nenhuma empresa é dona do HTML. Isso é o que faz o seu site funcionar no Chrome, no Firefox, no Safari do iPhone do seu colega, em um leitor de tela e em um navegador que ainda vai ser lançado.
+A Web é a única plataforma de software relevante que **não pertence a ninguém**. Nenhuma empresa é dona do HTML. Isso é o que faz o seu site funcionar no Chrome, no Firefox, no Safari do iPhone de outra pessoa, em um leitor de tela e em um navegador que ainda vai ser lançado.
 
 | Organização | Cuida de |
 |---|---|
@@ -73,7 +73,7 @@ O HTML **deixou de ter versões**. Depois do HTML5, não veio um "HTML6": a espe
 
 1. Não existe "meu site é HTML 5.2". Existe HTML, e existe o que os navegadores implementam hoje.
 2. A pergunta certa nunca é "isso é padrão?", e sim **"isso já funciona nos navegadores que meu público usa?"**.
-3. A documentação de referência precisa ser viva também. Por isso a MDN (<https://developer.mozilla.org/pt-BR/>) é a fonte desta disciplina, e não um livro impresso.
+3. A documentação de referência precisa ser viva também. Por isso a MDN (<https://developer.mozilla.org/pt-BR/>) é a fonte desta trilha, e não um livro impresso.
 
 > **🧠 Você sabia?**
 > No começo dos anos 2000 o W3C decidiu abandonar o HTML e apostar no XHTML 2.0, uma linguagem mais rígida e incompatível com o que já existia. Em 2004, gente da Opera, da Mozilla e da Apple discordou publicamente e fundou um grupo paralelo, o **WHATWG**, para continuar evoluindo o HTML de forma compatível com as páginas existentes. O grupo paralelo ganhou: o trabalho deles virou o HTML5, o XHTML 2.0 foi abandonado, e em 2019 o próprio W3C encerrou sua especificação de HTML e reconheceu o *living standard* da WHATWG como o documento oficial. A Web escolheu não quebrar o passado — e essa decisão é a razão de uma página de 1995 ainda abrir hoje.
@@ -136,7 +136,7 @@ Caminho é a causa da maioria dos "funciona na minha máquina".
 O ponto de partida de um caminho relativo é sempre **a pasta do arquivo onde o caminho está escrito**. E há uma armadilha específica do GitHub Pages: o seu site não fica na raiz do domínio, e sim em `https://SEU-USUARIO.github.io/cafe-cerrado/`. Um caminho absoluto como `/css/estilo.css` aponta para `https://SEU-USUARIO.github.io/css/estilo.css` — fora do seu projeto. Resultado: funciona no Live Server e quebra no site publicado.
 
 > **⚠️ Atenção**
-> Regra desta disciplina: **use sempre caminhos relativos** (`css/estilo.css`, `img/logo.png`) enquanto o projeto for publicado em subpasta. E jamais use caminho de disco (`C:\Users\...`): isso não existe na Web — o servidor só conhece a pasta do site.
+> Regra desta trilha: **use sempre caminhos relativos** (`css/estilo.css`, `img/logo.png`) enquanto o projeto for publicado em subpasta. E jamais use caminho de disco (`C:\Users\...`): isso não existe na Web — o servidor só conhece a pasta do site.
 
 ### 3.4 `file://` não é a mesma coisa que `http://`
 
@@ -257,7 +257,7 @@ Três arquivos, três papéis, uma página. Repare que o `<script>` está no `<h
 
 ## 6. Anatomia de um documento HTML5
 
-Todo documento desta disciplina precisa ter, no mínimo:
+Todo documento desta trilha precisa ter, no mínimo:
 
 | Elemento | Função |
 |---|---|
@@ -622,7 +622,7 @@ Substitua o conteúdo de `index.html` por este. Digite, não cole — e repare e
 
   <footer class="rodape">
     <p>Café Cerrado — Avenida dos Jacarandás, 1200, Sinop/MT</p>
-    <p>Projeto acadêmico da disciplina Desenvolvimento Web — UNEMAT Campus Sinop.</p>
+    <p>Projeto do Nível 2 do WebLab — Desenvolvimento Web, UNEMAT Campus Sinop.</p>
   </footer>
 </body>
 </html>
@@ -720,7 +720,7 @@ Refused to apply style from 'http://127.0.0.1:5500/css/estilo.css' because its M
 type ('text/html') is not a supported stylesheet MIME type.
 ```
 
-**A11.** Qual a diferença entre `rem` e `em`? Por que a disciplina prefere `rem` para espaçamentos?
+**A11.** Qual a diferença entre `rem` e `em`? Por que esta trilha prefere `rem` para espaçamentos?
 
 **A12.** O Git não versiona pastas vazias. Qual é a convenção usada no Mão na massa para contornar isso, e por que ela funciona?
 
@@ -768,7 +768,7 @@ A estrutura é `@media (prefers-color-scheme: dark) { :root { --cor-fundo: #1c17
 
 **B5.** Investigue a diferença entre `file://` e `http://` na prática. Abra o `index.html` das duas formas (duplo clique no arquivo e pelo Live Server) e compare, em uma tabela: o que aparece na barra de endereço, o que a aba Network mostra em cada caso, e o valor de `window.location.protocol` no Console.
 
-**Resultado esperado:** uma tabela com três linhas de comparação e um parágrafo explicando por que a disciplina exige o uso do Live Server.
+**Resultado esperado:** uma tabela com três linhas de comparação e um parágrafo explicando por que esta trilha exige o uso do Live Server.
 
 <details markdown="1">
 <summary>Dica</summary>

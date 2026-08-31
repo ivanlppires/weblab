@@ -52,7 +52,7 @@ O ecossistema Vue que usaremos no semestre:
 | **Vuetify** | Biblioteca de componentes visuais prontos (Material Design) | Aula 04 |
 | **Axios** | Cliente HTTP para consumir APIs | Aula 06 |
 
-Vamos usar a versão **3.5.41** do Vue, instalada via **Vite 8.2.1** com o plugin **@vitejs/plugin-vue 6.0.8** — as versões fixadas para esta disciplina, as mesmas em que todos os exemplos deste material foram testados.
+Vamos usar a versão **3.5.41** do Vue, instalada via **Vite 8.2.1** com o plugin **@vitejs/plugin-vue 6.0.8** — as versões fixadas para esta trilha, as mesmas em que todos os exemplos deste material foram testados.
 
 > **🧠 Você sabia?**
 > O Vue foi criado por Evan You em 2014, um ex-funcionário do Google que trabalhava com AngularJS e queria algo mais leve para prototipar interfaces rapidamente. A ideia deu tão certo que hoje o Vue é mantido por uma organização independente (a Vue.js), financiada por patrocinadores e por uma comunidade global — sem estar amarrado a nenhuma big tech, diferente do React (Meta) ou do Angular (Google). É por isso que a documentação oficial é, historicamente, uma das mais elogiadas do ecossistema JavaScript: escrever documentação clara sempre foi parte da estratégia de adoção do projeto.
@@ -103,7 +103,7 @@ onMounted(() => {
 ```
 
 > **📌 Vale gravar**
-> **Esta disciplina usa Composition API com `<script setup>`** do início ao fim, porque é o padrão gerado pelo `create-vue` e o que você vai encontrar em qualquer projeto Vue 3 novo. Nos primeiros exemplos de hoje mostramos o equivalente em Options API lado a lado — o plano de curso cita explicitamente "instância vue, data e methods" — mas a partir da Aula 03 falamos só Composition API.
+> **Esta trilha usa Composition API com `<script setup>`** do início ao fim, porque é o padrão gerado pelo `create-vue` e o que você vai encontrar em qualquer projeto Vue 3 novo. Nos primeiros exemplos de hoje mostramos o equivalente em Options API lado a lado — vale reconhecer os dois estilos, já que você vai encontrá-los em código real — mas a partir da Aula 03 falamos só Composition API.
 
 ## 2. Primeiro contato: Vue via CDN
 
@@ -197,7 +197,7 @@ Note que aqui, sem `<script setup>` (que só existe dentro de arquivos `.vue` co
 
 ## 3. Migrando para um projeto Vite de verdade
 
-CDN é ótimo para aprender o conceito, mas nenhuma aplicação real do semestre vai ser um único HTML. A partir de agora usamos **Vite** com **Single File Components** (`.vue`).
+CDN é ótimo para aprender o conceito, mas nenhuma aplicação real desta trilha vai ser um único HTML. A partir de agora usamos **Vite** com **Single File Components** (`.vue`).
 
 ### 3.1 Criando o projeto
 
@@ -205,7 +205,7 @@ CDN é ótimo para aprender o conceito, mas nenhuma aplicação real do semestre
 npm create vue@latest
 ```
 
-O `create-vue` (versão 3.23.0) pergunta interativamente o nome do projeto e quais recursos incluir. Para o UniEventos que construiremos em sala, as respostas são:
+O `create-vue` (versão 3.23.0) pergunta interativamente o nome do projeto e quais recursos incluir. Para o UniEventos que vamos construir ao longo da trilha, as respostas são:
 
 ```text
 ✔ Project name: … unieventos-web
@@ -1181,7 +1181,7 @@ function mostrarDica() {
 
 **C1.** Corrigir uma `:key` proposital. Troque temporariamente `:key="evento.id"` por `:key="indiceDoLoop"` (usando a forma `v-for="(evento, indiceDoLoop) in ..."`), adicione um `<input type="checkbox">` dentro de cada card, marque alguns, filtre por categoria e observe o comportamento estranho dos checkboxes. Depois desfaça a mudança e prove, na aba Elements do DevTools, que o elemento correto agora é reaproveitado pelo `id`, não pela posição.
 
-Resultado esperado: você reproduz em sala o bug descrito na Seção 5.6, documenta em uma frase por que ele acontece, e confirma que voltar para `:key="evento.id"` resolve — inclusive filtrando a lista com um checkbox marcado.
+Resultado esperado: você reproduz o bug descrito na Seção 5.6, documenta em uma frase por que ele acontece, e confirma que voltar para `:key="evento.id"` resolve — inclusive filtrando a lista com um checkbox marcado.
 
 <details markdown="1">
 <summary>Dica</summary>

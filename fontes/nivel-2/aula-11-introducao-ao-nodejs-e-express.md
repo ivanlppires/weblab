@@ -185,7 +185,7 @@ O `package.json` fica assim:
 
 O `^` significa "esta versão ou qualquer atualização **compatível**": aceita 5.1.1, 5.2.0, 5.9.3 — mas nunca 6.0.0, porque a versão MAIOR pode quebrar tudo. É por isso que este curso usa Express 5 enquanto a maioria dos tutoriais da internet ainda mostra Express 4: são versões MAIORES diferentes, com diferenças reais de sintaxe (voltaremos a isso na seção 6).
 
-O `package-lock.json`, por outro lado, guarda a versão exata que foi instalada **hoje**, na sua máquina. Ele existe para que o colega que clonar o projeto amanhã receba exatamente as mesmas versões, e não uma correção nova que apareceu no meio do caminho. Por isso: **`package-lock.json` vai para o Git**, sim.
+O `package-lock.json`, por outro lado, guarda a versão exata que foi instalada **hoje**, na sua máquina. Ele existe para que quem clonar o projeto amanhã receba exatamente as mesmas versões, e não uma correção nova que apareceu no meio do caminho. Por isso: **`package-lock.json` vai para o Git**, sim.
 
 ### 2.4 A pasta que nunca vai para o Git
 

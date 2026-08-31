@@ -266,7 +266,7 @@ Em um monitor de 1600 px as **quatro** queries estão ativas ao mesmo tempo. As 
 }
 ```
 
-Funciona, mas repare nos limites "menos um" (`1439px`, `1023px`, `767px`) — um convite a erro de conta — e na lógica invertida: a base é a tela que menos gente usa, e o celular é o último caso tratado. Nesta disciplina você escreve **sempre** mobile first.
+Funciona, mas repare nos limites "menos um" (`1439px`, `1023px`, `767px`) — um convite a erro de conta — e na lógica invertida: a base é a tela que menos gente usa, e o celular é o último caso tratado. Nesta trilha você escreve **sempre** mobile first.
 
 > **📌 Vale gravar**
 > Uma pergunta clássica: "no CSS mobile first, o que acontece se o navegador não suportar media queries?". Resposta: ele mostra a versão de celular, que é a base e funciona em qualquer largura. No desktop first, o mesmo navegador mostraria as quatro colunas espremidas em 360 px.
@@ -347,11 +347,11 @@ Media queries não são só sobre largura. Estas são as que você vai usar com 
 As três últimas — impressão, tema escuro e redução de movimento — são **preferências do usuário**, e a seção 6 volta a elas com calma.
 
 > **💡 Dica**
-> Existe uma sintaxe mais nova, de intervalo: `@media (width >= 768px)` e `@media (768px <= width < 1024px)`. Ela já funciona em todos os navegadores atuais e evita os limites "menos um". Nesta disciplina usamos `min-width` porque é a forma que você vai encontrar em 99 % do código existente — mas reconheça as duas.
+> Existe uma sintaxe mais nova, de intervalo: `@media (width >= 768px)` e `@media (768px <= width < 1024px)`. Ela já funciona em todos os navegadores atuais e evita os limites "menos um". Nesta trilha usamos `min-width` porque é a forma que você vai encontrar em 99 % do código existente — mas reconheça as duas.
 
 ### Onde as media queries ficam no arquivo
 
-Na Aula 06 você reservou a seção 7 de `estilo.css` para elas. Duas escolas convivem no mercado: agrupar todas as queries no fim do arquivo, em ordem crescente de largura, ou manter cada query logo abaixo do componente que ela ajusta. As duas funcionam; o que não pode é misturar. Nesta disciplina, para facilitar a leitura e a correção, **as queries ficam agrupadas no fim, em ordem crescente**: primeiro o bloco de `768px`, depois o de `1024px`, depois o de `1440px`.
+Na Aula 06 você reservou a seção 7 de `estilo.css` para elas. Duas escolas convivem no mercado: agrupar todas as queries no fim do arquivo, em ordem crescente de largura, ou manter cada query logo abaixo do componente que ela ajusta. As duas funcionam; o que não pode é misturar. Nesta trilha, para facilitar a leitura e a correção, **as queries ficam agrupadas no fim, em ordem crescente**: primeiro o bloco de `768px`, depois o de `1024px`, depois o de `1440px`.
 
 ## 4. Imagens e tipografia responsivas
 
@@ -1245,10 +1245,10 @@ Você escreveu `repeat(auto-fit, minmax())` hoje e talvez ainda não tenha certe
 3. As fases 22 em diante mostram `grid-template` e `grid-area` juntos — releia a seção "Áreas nomeadas" da Aula 07 antes de tentar.
 </details>
 
-### ⭐ Caça ao bug: o site que só funciona no monitor do professor
+### ⭐ Caça ao bug: o site que só funciona no monitor de quem escreveu
 Tags: bug, responsivo, css, devtools
 
-Um colega jura que "o site está responsivo, testei no meu monitor". No celular ele aparece minúsculo, com rolagem horizontal, imagem estourando e um menu que nunca vira hambúrguer. Há **seis** erros entre o HTML e o CSS abaixo. Encontre todos sem "reescrever do zero" — o desafio é diagnosticar, não refazer.
+Alguém jura que "o site está responsivo, testei no meu monitor". No celular ele aparece minúsculo, com rolagem horizontal, imagem estourando e um menu que nunca vira hambúrguer. Há **seis** erros entre o HTML e o CSS abaixo. Encontre todos sem "reescrever do zero" — o desafio é diagnosticar, não refazer.
 
 **`quebrado/index.html`** (trecho do `<head>`)
 
@@ -1378,7 +1378,7 @@ Rode o Lighthouse Mobile no `index.html` do seu projeto autoral agora, antes de 
 2. O menu responsivo do exercício **B3** funcionando em todas as páginas — no mínimo o básico da aula (`<button>`, `aria-expanded`, CSS mobile first, `menu.js` com `defer`); os fechamentos por <kbd>Esc</kbd> e por clique fora valem como extra.
 3. Tema escuro via `prefers-color-scheme` e o bloco `prefers-reduced-motion` no fim do arquivo.
 
-**Parte 3 — Teste no celular (5 min).** Abra o seu site em um celular real pelo IP do computador (ou peça o de um colega). Registre (no fórum da turma, se você cursa a disciplina, ou nas suas anotações) um problema que **só** apareceu no aparelho de verdade e não no simulador do DevTools — botão pequeno demais para o dedo, fonte ilegível, `100vh` escondido pela barra de endereço, campo que dá zoom sozinho — e como você o resolveu.
+**Parte 3 — Teste no celular (5 min).** Abra o seu site em um celular real pelo IP do computador (ou peça o de outra pessoa). Registre (no fórum da turma, se você está cursando esta trilha em grupo, ou nas suas anotações) um problema que **só** apareceu no aparelho de verdade e não no simulador do DevTools — botão pequeno demais para o dedo, fonte ilegível, `100vh` escondido pela barra de endereço, campo que dá zoom sozinho — e como você o resolveu.
 
 **Critério de pronto:** nenhuma rolagem horizontal em 320 px em nenhuma página; menu hambúrguer abre e fecha por toque, por clique e por <kbd>Enter</kbd> no teclado, com `aria-expanded` mudando no DevTools; capturas das cinco páginas nas três larguras; tema escuro sem nenhum par de contraste abaixo de 4.5:1; Lighthouse Mobile sem alerta de viewport, fonte pequena ou alvo de toque.
 

@@ -390,7 +390,7 @@ O Google padronizou três medidas de experiência real, os **Core Web Vitals**, 
 
 Os limites valem para o **percentil 75** dos carregamentos: três de cada quatro visitas precisam ficar na faixa boa. O INP substituiu o antigo FID, que media só o atraso da *primeira* interação — um número fácil de acertar e que escondia páginas travadas do segundo clique em diante.
 
-Há duas fontes de dado, bem diferentes. **Laboratório:** o Lighthouse roda a página na sua máquina, com CPU e rede simuladas — reproduzível, imediato e não representa ninguém em particular. **Campo:** medições de visitantes reais; o PageSpeed Insights mostra os dados do CrUX quando o site tem tráfego suficiente, o que provavelmente não é o caso do seu projeto de disciplina (para coletar os seus, use a biblioteca `web-vitals`). O Lighthouse não consegue medir INP em laboratório — não há usuário clicando — e usa o **TBT** (*Total Blocking Time*) como aproximação; a nota de 0 a 100 é uma média ponderada em que TBT, LCP e CLS pesam mais, e por isso um site com JavaScript pesado perde pontos mesmo pintando rápido.
+Há duas fontes de dado, bem diferentes. **Laboratório:** o Lighthouse roda a página na sua máquina, com CPU e rede simuladas — reproduzível, imediato e não representa ninguém em particular. **Campo:** medições de visitantes reais; o PageSpeed Insights mostra os dados do CrUX quando o site tem tráfego suficiente, o que provavelmente não é o caso do seu projeto de estudo (para coletar os seus, use a biblioteca `web-vitals`). O Lighthouse não consegue medir INP em laboratório — não há usuário clicando — e usa o **TBT** (*Total Blocking Time*) como aproximação; a nota de 0 a 100 é uma média ponderada em que TBT, LCP e CLS pesam mais, e por isso um site com JavaScript pesado perde pontos mesmo pintando rápido.
 
 > **🧠 Você sabia?**
 > A pontuação de performance do Lighthouse é comparativa: posiciona o seu site em uma curva construída a partir de milhões de páginas reais. Por isso ela é implacável na faixa alta — sair de 90 para 95 costuma dar mais trabalho do que sair de 40 para 70. E por isso a nota **varia entre execuções** na mesma página: rede, CPU disponível e até uma extensão do navegador mudam o resultado. Rode três vezes e use a mediana; o Lighthouse CI faz isso por você.
@@ -408,7 +408,7 @@ npx lighthouse@latest https://eventos.seudominio.dev \
   --chrome-flags="--headless" --quiet
 ```
 
-Isso grava `relatorios/antes.report.html` (para abrir no navegador) e `antes.report.json` (para extrair números). Sem `--preset=desktop`, o Lighthouse simula um celular mediano com rede lenta — que é o cenário certo para o público das nossas disciplinas.
+Isso grava `relatorios/antes.report.html` (para abrir no navegador) e `antes.report.json` (para extrair números). Sem `--preset=desktop`, o Lighthouse simula um celular mediano com rede lenta — que é o cenário certo para a maioria de quem acessa pela primeira vez.
 
 **No CI**, com o Lighthouse CI, que roda várias vezes, tira a mediana e **reprova o build** se a nota cair:
 
@@ -575,7 +575,7 @@ curl -sI -H 'Accept-Encoding: gzip, br' https://eventos.seudominio.dev/assets/in
 
 Em produção o `console.log` da API vai para um arquivo que ninguém lê, e o `console.error` do navegador morre no computador do usuário. Você fica sabendo do erro quando alguém reclama — se reclamar. Uma ferramenta de rastreamento inverte isso: o erro chega até você com pilha de chamadas, navegador, rota e quantas pessoas foram atingidas.
 
-O **Sentry** tem plano gratuito suficiente para projetos de disciplina. Crie a conta, crie dois projetos (um `node` e um `vue`) e guarde os dois **DSN** — a URL que identifica o projeto para onde os eventos são enviados.
+O **Sentry** tem plano gratuito suficiente para projetos de estudo. Crie a conta, crie dois projetos (um `node` e um `vue`) e guarde os dois **DSN** — a URL que identifica o projeto para onde os eventos são enviados.
 
 ```bash
 cd ~/weblab/unieventos-api
@@ -680,7 +680,7 @@ tail -500 ~/.pm2/logs/unieventos-api-out.log | jq -c 'select(.level >= 40) | {ms
 
 ### 7.3 Rotação: o log que enche o disco
 
-Um arquivo de log cresce para sempre, e servidor de projeto de disciplina para por disco cheio de log — o sintoma é bonito: tudo funciona, até que nada funciona. Com pm2 (Capítulo 06), o módulo oficial resolve; com o `logrotate` do sistema, que já roda diariamente no Ubuntu, é um arquivo de configuração:
+Um arquivo de log cresce para sempre, e servidor de projeto pequeno para por disco cheio de log — o sintoma é bonito: tudo funciona, até que nada funciona. Com pm2 (Capítulo 06), o módulo oficial resolve; com o `logrotate` do sistema, que já roda diariamente no Ubuntu, é um arquivo de configuração:
 
 ```bash
 pm2 install pm2-logrotate
@@ -936,7 +936,7 @@ Todo mundo diz que "otimizou o site". Quase ninguém consegue mostrar o número.
 ### ⭐⭐ A rede de segurança do projeto autoral
 Tags: testes, ci-cd, node
 
-O seu projeto autoral vai ser entregue, avaliado e — se der certo — mexido de novo em outro semestre. Sem testes, cada mudança futura é uma aposta. Construa a rede de segurança: uma suíte que roda em segundos, cobre o que importa e trava o pull request quando alguém quebra alguma coisa.
+O seu projeto autoral não termina no primeiro deploy: se der certo, você (ou outra pessoa) vai voltar a mexer nele daqui a alguns meses. Sem testes, cada mudança futura é uma aposta. Construa a rede de segurança: uma suíte que roda em segundos, cobre o que importa e trava o pull request quando alguém quebra alguma coisa.
 
 **Critérios de pronto**
 
@@ -1039,4 +1039,4 @@ No repositório do seu **projeto autoral** (front e API):
 - [MDN — atributo `loading`](https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/img) — quando o carregamento adiado ajuda e quando atrapalha.
 - [sitemaps.org](https://www.sitemaps.org/pt_BR/protocol.html) e [Google Search Central — robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro?hl=pt-br) — o formato dos dois arquivos, direto da fonte.
 
-No próximo capítulo a trilha fecha com a ferramenta mais nova e mais mal usada da caixa: assistentes de inteligência artificial. Você vai aprender a dar contexto em um prompt, a desconfiar de API inventada, a usar a IA para revisar o seu projeto autoral — e a regra que vale nas três disciplinas sobre o que é apoio e o que é cola.
+No próximo capítulo a trilha fecha com a ferramenta mais nova e mais mal usada da caixa: assistentes de inteligência artificial. Você vai aprender a dar contexto em um prompt, a desconfiar de API inventada, a usar a IA para revisar o seu projeto autoral — e a regra que vale nos três Níveis do WebLab sobre o que é apoio e o que é cola.
