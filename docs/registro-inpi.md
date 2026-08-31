@@ -11,7 +11,7 @@ Os campos marcados com **[preencher]** dependem de dados pessoais ou de decisõe
 | Título | WebLab — sistema de curso online aberto de desenvolvimento web |
 | Descrição resumida | Sistema que gera e publica um curso online gratuito de desenvolvimento web a partir de fontes em Markdown, com validação editorial automática, busca, banco de desafios, progresso local e publicação estática |
 | Data de criação | 29/08/2026 (primeiro commit do repositório) |
-| Situação | Publicado e em operação em https://weblab.ivanpires.dev |
+| Situação | Publicado e em operação em https://weblab.aprendabit.com |
 | Repositório | https://github.com/ivanlppires/weblab |
 
 ## 2. Autoria e titularidade

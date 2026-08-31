@@ -98,7 +98,7 @@ Existe também o **cache negativo**: se você consulta um nome que **ainda não 
 > Os "13 servidores-raiz" (nomeados de `a.root-servers.net` a `m.root-servers.net`) não são 13 máquinas: cada letra é replicada em centenas de locais pelo mundo com uma técnica chamada *anycast* — o mesmo IP é anunciado de vários pontos e sua consulta vai para o mais próximo. O Brasil hospeda dezenas dessas cópias, várias mantidas pelo NIC.br. E o TLD `.dev` tem uma peculiaridade: ele inteiro está na lista de *HSTS preload* dos navegadores, então **todo** site `.dev` só abre por HTTPS. Não existe `http://alguma-coisa.dev`.
 
 > **🔬 Investigue**
-> Rode `dig +trace weblab.ivanpires.dev` e conte quantos "saltos" aparecem: raiz, `.dev`, autoritativo. Em seguida rode `dig weblab.ivanpires.dev` duas vezes seguidas e compare o número na coluna do TTL (a segunda coluna da seção `ANSWER SECTION`). Ele diminui entre uma consulta e outra? Isso é o cache do resolvedor contando o tempo restante.
+> Rode `dig +trace weblab.aprendabit.com` e conte quantos "saltos" aparecem: raiz, `.dev`, autoritativo. Em seguida rode `dig weblab.aprendabit.com` duas vezes seguidas e compare o número na coluna do TTL (a segunda coluna da seção `ANSWER SECTION`). Ele diminui entre uma consulta e outra? Isso é o cache do resolvedor contando o tempo restante.
 
 ## 2. Registrando um domínio
 
@@ -375,8 +375,8 @@ Ative HSTS só quando **todos** os subdomínios já responderem em HTTPS: com `i
 > Veja o certificado do WebLab pelo terminal e responda: para qual nome ele foi emitido, quem assinou e até quando vale?
 >
 > ```bash
-> openssl s_client -connect weblab.ivanpires.dev:443 -servername weblab.ivanpires.dev </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
-> curl -sI https://weblab.ivanpires.dev | grep -i strict-transport
+> openssl s_client -connect weblab.aprendabit.com:443 -servername weblab.aprendabit.com </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
+> curl -sI https://weblab.aprendabit.com | grep -i strict-transport
 > ```
 >
 > Depois repita o `openssl` com `-servername` de um nome errado (por exemplo `-servername exemplo.com`) e observe que o servidor pode devolver **outro** certificado — é exatamente o que gera o erro `ERR_CERT_COMMON_NAME_INVALID` da §8.
@@ -525,7 +525,7 @@ Resultado esperado:
 
 ### Nível B — Aplicação
 
-**B1.** Mapa DNS do WebLab. Usando só o terminal, descubra: os servidores `NS` de `ivanpires.dev`; para onde `weblab.ivanpires.dev` aponta (`CNAME` ou `A`, e os IPs); quem emitiu o certificado e até quando vale; se o site envia HSTS.
+**B1.** Mapa DNS do WebLab. Usando só o terminal, descubra: os servidores `NS` de `ivanpires.dev`; para onde `weblab.aprendabit.com` aponta (`CNAME` ou `A`, e os IPs); quem emitiu o certificado e até quando vale; se o site envia HSTS.
 
 Resultado esperado: uma tabela de quatro linhas (NS · apontamento · certificado · HSTS) com o comando usado em cada uma.
 
@@ -575,7 +575,7 @@ A Cloudflare repassa o cabeçalho `Host` original para a origem; é por ele (e p
 ### ⭐ O caminho completo de um nome
 Tags: dns, terminal, investigacao
 
-Quantos servidores diferentes precisam ser consultados para que o seu navegador descubra o IP de `weblab.ivanpires.dev`? E de `www.unemat.br`? A resposta muda de um nome para outro — e o `dig +trace` mostra cada parada, com o nome do servidor que respondeu. Descubra o caminho dos dois nomes e explique as diferenças.
+Quantos servidores diferentes precisam ser consultados para que o seu navegador descubra o IP de `weblab.aprendabit.com`? E de `www.unemat.br`? A resposta muda de um nome para outro — e o `dig +trace` mostra cada parada, com o nome do servidor que respondeu. Descubra o caminho dos dois nomes e explique as diferenças.
 
 **Critérios de pronto**
 

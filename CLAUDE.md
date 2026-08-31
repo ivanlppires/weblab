@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## What this is
 
-**WebLab** (<https://weblab.ivanpires.dev>) — an online, self-contained textbook (pt-BR) for the web-development courses of UNEMAT/Sinop taught by Prof. Ivan Luiz Pedroso Pires: Nível 1 (FACET-SNP-319, HTML/CSS/JS), Nível 2 (FACET-SNP-307, front-end → Express + Google OAuth), Nível 3 (FACET-SNP-310, Vue 3/Vuetify/Pinia + Express/MySQL/Supabase/Firebase), plus the transversal **Deploy & Ferramentas** track, a **Banco de Desafios** and **Links úteis**. All student-facing content is Brazilian Portuguese and must stay that way.
+**WebLab** (<https://weblab.aprendabit.com>) — an online, self-contained textbook (pt-BR) for the web-development courses of UNEMAT/Sinop taught by Prof. Ivan Luiz Pedroso Pires: Nível 1 (FACET-SNP-319, HTML/CSS/JS), Nível 2 (FACET-SNP-307, front-end → Express + Google OAuth), Nível 3 (FACET-SNP-310, Vue 3/Vuetify/Pinia + Express/MySQL/Supabase/Firebase), plus the transversal **Deploy & Ferramentas** track, a **Banco de Desafios** and **Links úteis**. All student-facing content is Brazilian Portuguese and must stay that way.
 
 Design spec: `docs/superpowers/specs/2026-08-29-weblab-design.md`. Implementation plan: `docs/superpowers/plans/2026-08-29-weblab-implementation.md`.
 
@@ -15,7 +15,7 @@ Design spec: `docs/superpowers/specs/2026-08-29-weblab-design.md`. Implementatio
 - `build/lint.py` enforces `fontes/ESPECIFICACAO.md` (required sections in order, ≥4 A / ≥3 B / ≥1 C lab items, ≥3 desafios each with `Tags:`, `**Critérios de pronto**` and `<details>`, fences with language, no `TODO`/`...`, ≥600 lines for aulas / ≥400 for deploy chapters, tables ≤4 columns). `build.py` refuses to build with lint errors unless `--forcar`.
 - `build/paginas.py` holds the HTML templates; `build/theme.css` and `build/app.js` are inlined into every page (no external requests at runtime). `build/build.py` writes `site/`: per-lesson pages, per-track index and single-file `apostila.html`, `desafios/`, `links/`, home, `busca.json`, `sitemap.xml`, `404.html`, then checks internal links.
 - The material is **timeless and open**: no lesson carries dates, semester labels, class identifiers, grades, deadlines or institutional hand-ins. Each unit closes with a `## 🎓 Marco do projeto` (project milestone: requirements + quality checklist + how to know it's done), never an assessment — `config.MARCOS` holds their scope, and each lesson's `marco` field marks the unit-closing lesson. A semester's calendar is optional and lives only in `build/config.py` (`SEMESTRE`, `CRONOGRAMA`, and an optional `prazo` per item of `AVALIACOES`); with the defaults (`SEMESTRE = ""`, `CRONOGRAMA = {}`) the site shows no dates and says deadlines are published on SIGAA. See `docs/calendario-2026-2.md` for the format and for the 2026.2 calendar.
-- Deployment: `deploy.sh` = build + `rsync` to `webmaster@ivanpires.dev:/home/webmaster/apps/weblab/site/`, served by the nginx vhost `weblab.ivanpires.dev` (Let's Encrypt). See `docs/servidor.md`.
+- Deployment: `deploy.sh` = build + `rsync` to `webmaster@ivanpires.dev:/home/webmaster/apps/weblab/site/`, served by the nginx vhost `weblab.aprendabit.com` (Let's Encrypt). See `docs/servidor.md`.
 
 ## Commands
 

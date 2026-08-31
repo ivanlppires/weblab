@@ -18,7 +18,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 FONTES = RAIZ / "fontes"
 SITE = RAIZ / "site"
 
-URL_BASE = "https://weblab.ivanpires.dev"
+URL_BASE = "https://weblab.aprendabit.com"
 NOME_SITE = "WebLab"
 SUBTITULO = "Laboratório de Desenvolvimento Web"
 INSTITUICAO = "UNEMAT — Universidade do Estado de Mato Grosso · Campus Sinop · FACET"

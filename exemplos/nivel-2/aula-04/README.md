@@ -1,7 +1,7 @@
 # Aula 04 — Frameworks CSS · código de aula
 
 Exemplos **executáveis** que materializam a
-[Aula 04 do Nível 2](https://weblab.ivanpires.dev/nivel-2/aula-04.html) inteira:
+[Aula 04 do Nível 2](https://weblab.aprendabit.com/nivel-2/aula-04.html) inteira:
 cada seção teórica tem uma demo rodando, o "Mão na massa" tem o resultado final
 pronto, os erros comuns são reproduzidos de propósito e o laboratório tem gabarito.
 

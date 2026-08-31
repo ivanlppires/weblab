@@ -1,4 +1,4 @@
-# ESPECIFICAÇÃO EDITORIAL — WebLab (weblab.ivanpires.dev)
+# ESPECIFICAÇÃO EDITORIAL — WebLab (weblab.aprendabit.com)
 
 > Documento-mestre. Todo agente ou pessoa que escrever ou editar uma aula DEVE seguir isto à risca.
 > O build (`python3 build/build.py`) roda um lint que **rejeita** arquivos fora do padrão.

@@ -33,7 +33,7 @@ O material inteiro vive em [github.com/ivanlppires/weblab](https://github.com/iv
 
 Ao usar o WebLab em aula, em um trabalho ou em outro material, cite a versão que você consultou. O arquivo `CITATION.cff` no repositório mantém os dados sempre atualizados, e o site tem endereço fixo:
 
-> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. UNEMAT — Campus Sinop, FACET. Disponível em: https://weblab.ivanpires.dev.
+> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. UNEMAT — Campus Sinop, FACET. Disponível em: https://weblab.aprendabit.com.
 
 ## Licença
 

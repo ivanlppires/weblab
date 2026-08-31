@@ -82,7 +82,7 @@ No Capítulo 01 você abriu o site com o Live Server, em `http://127.0.0.1:5500/
 4. **Só vai para o ar o que está no Git.** Se `img/logo.png` está no `.gitignore`, ou se você esqueceu de commitar, ele simplesmente não existe do lado de lá.
 
 > **🔬 Investigue**
-> Rode `curl -I https://weblab.ivanpires.dev` e `curl -I https://github.com` e compare os cabeçalhos das duas respostas. Procure `server`, `cache-control`, `content-type` e `etag`. Depois rode `curl -I https://weblab.ivanpires.dev/pagina-que-nao-existe` e anote o código de status. O `-I` pede só os cabeçalhos (método `HEAD`) — é a forma mais rápida de saber quem está servindo um site e como ele manda o navegador guardar as respostas.
+> Rode `curl -I https://weblab.aprendabit.com` e `curl -I https://github.com` e compare os cabeçalhos das duas respostas. Procure `server`, `cache-control`, `content-type` e `etag`. Depois rode `curl -I https://weblab.aprendabit.com/pagina-que-nao-existe` e anote o código de status. O `-I` pede só os cabeçalhos (método `HEAD`) — é a forma mais rápida de saber quem está servindo um site e como ele manda o navegador guardar as respostas.
 
 ## 2. GitHub Pages
 

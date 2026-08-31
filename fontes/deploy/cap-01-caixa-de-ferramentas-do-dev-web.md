@@ -356,7 +356,7 @@ A aba **Lighthouse** roda uma auditoria automática e dá notas de 0 a 100 em qu
 **Sources** permite colocar pontos de parada (*breakpoints*) no JavaScript e executar linha a linha — você vai usar nas aulas de funções e eventos. **Application** mostra `localStorage`, cookies e *service workers* — aparece no Nível 3, quando o UniEventos guarda inscrições no navegador.
 
 > **🔬 Investigue**
-> Abra <https://weblab.ivanpires.dev> com a aba Network aberta e **Disable cache** marcado. Recarregue. Anote: quantas requisições? Qual o maior arquivo (clique no cabeçalho **Size** para ordenar)? Quanto tempo até `DOMContentLoaded`? Agora mude para **Slow 4G** e recarregue de novo. O que mais demorou? Esse é o tipo de medição que você vai repetir no seu próprio site publicado, no Capítulo 03.
+> Abra <https://weblab.aprendabit.com> com a aba Network aberta e **Disable cache** marcado. Recarregue. Anote: quantas requisições? Qual o maior arquivo (clique no cabeçalho **Size** para ordenar)? Quanto tempo até `DOMContentLoaded`? Agora mude para **Slow 4G** e recarregue de novo. O que mais demorou? Esse é o tipo de medição que você vai repetir no seu próprio site publicado, no Capítulo 03.
 
 ## 5. Node.js e npm
 
@@ -754,7 +754,7 @@ Resultado esperado: ao salvar, o arquivo fica com dois espaços de indentação,
 Se nada acontecer ao salvar, abra a paleta de comandos e execute **Format Document With…** → **Prettier**; se o Prettier não aparecer na lista, a extensão não está instalada. Se aparecer mas o resultado tiver ponto e vírgula, o `.prettierrc` não está na raiz da pasta aberta no VS Code.
 </details>
 
-**B3.** Caçador de requisições. Com a aba Network aberta e **Disable cache** marcado, carregue a página inicial de três sites: <https://weblab.ivanpires.dev>, o portal da UNEMAT e um site de notícias à sua escolha. Para cada um, registre: número de requisições, total transferido, maior arquivo (nome e tamanho) e tempo até `DOMContentLoaded`. Repita com **Slow 4G**.
+**B3.** Caçador de requisições. Com a aba Network aberta e **Disable cache** marcado, carregue a página inicial de três sites: <https://weblab.aprendabit.com>, o portal da UNEMAT e um site de notícias à sua escolha. Para cada um, registre: número de requisições, total transferido, maior arquivo (nome e tamanho) e tempo até `DOMContentLoaded`. Repita com **Slow 4G**.
 
 Resultado esperado: uma tabela com três linhas e as medições nas duas velocidades, mais uma frase por site dizendo qual recurso mais atrasou o carregamento no 4G lento.
 

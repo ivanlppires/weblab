@@ -8,7 +8,7 @@ para abrir no navegador, não fonte de conteúdo.
 
 | Pasta | Aula | O que é |
 |---|---|---|
-| `nivel-2/aula-04/` | [Nível 2 · Aula 04 — Frameworks CSS](https://weblab.ivanpires.dev/nivel-2/aula-04.html) | Café Cerrado com Bootstrap 5.3 pronto, 12 demos (uma por seção), erros comuns reproduzidos ao vivo, gabaritos do laboratório e um micro-framework de 146 linhas |
+| `nivel-2/aula-04/` | [Nível 2 · Aula 04 — Frameworks CSS](https://weblab.aprendabit.com/nivel-2/aula-04.html) | Café Cerrado com Bootstrap 5.3 pronto, 12 demos (uma por seção), erros comuns reproduzidos ao vivo, gabaritos do laboratório e um micro-framework de 146 linhas |
 
 Cada pasta tem um `README.md` com o roteiro de uso e um `servir.sh` que sobe um
 servidor estático local.

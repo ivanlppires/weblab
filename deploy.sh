@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publica o WebLab em https://weblab.ivanpires.dev
+# Publica o WebLab em https://weblab.aprendabit.com
 # Uso: ./deploy.sh            (lint + build completo + rsync)
 #      ./deploy.sh --parcial  (só as aulas existentes)
 #      ./deploy.sh --forcar   (ignora erros de lint — só para pré-visualizar)
@@ -15,4 +15,4 @@ DESTINO="webmaster@ivanpires.dev:/home/webmaster/apps/weblab/site/"
 rsync -az --delete --chmod=D755,F644 site/ "$DESTINO"
 
 echo
-echo "Publicado: https://weblab.ivanpires.dev/"
+echo "Publicado: https://weblab.aprendabit.com/"

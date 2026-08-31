@@ -1,8 +1,8 @@
 # WebLab — Laboratório de Desenvolvimento Web
 
-Apostila online, gratuita e autocontida de desenvolvimento web, escrita e revisada por professores da **UNEMAT — Campus Sinop (FACET)** (ver [autoria e créditos](https://weblab.ivanpires.dev/autores/)). Nasceu das disciplinas presenciais e é publicada aberta: serve a qualquer pessoa que queira aprender, em qualquer época — sem datas, notas ou prazos no material.
+Apostila online, gratuita e autocontida de desenvolvimento web, escrita e revisada por professores da **UNEMAT — Campus Sinop (FACET)** (ver [autoria e créditos](https://weblab.aprendabit.com/autores/)). Nasceu das disciplinas presenciais e é publicada aberta: serve a qualquer pessoa que queira aprender, em qualquer época — sem datas, notas ou prazos no material.
 
-**No ar em <https://weblab.ivanpires.dev>**
+**No ar em <https://weblab.aprendabit.com>**
 
 | Trilha | Disciplina | Aulas | Projeto fio-condutor |
 |---|---|---|---|
@@ -40,7 +40,7 @@ python3 -m venv --system-site-packages .venv && .venv/bin/pip install pytest mar
 .venv/bin/python build/lint.py                 # valida todas as fontes
 .venv/bin/python build/build.py                # gera site/ (falha se o lint acusar erro)
 .venv/bin/python build/build.py --parcial      # gera só o que existe (durante a escrita)
-./deploy.sh                                    # build + rsync → https://weblab.ivanpires.dev
+./deploy.sh                                    # build + rsync → https://weblab.aprendabit.com
 ```
 
 Para escrever ou alterar uma aula, siga `fontes/ESPECIFICACAO.md`. O lint rejeita aulas sem a estrutura completa (Objetivos → Pré-requisitos → Roteiro → teoria → Mão na massa → Laboratório A/B/C → 🏆 Desafios → Erros comuns → Atividade assíncrona → Checkpoint → Para aprofundar).

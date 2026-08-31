@@ -60,7 +60,7 @@ O primeiro modelo é o desta aula, e o serviço que você vai usar — o GitHub 
 
 ### 1.2 Domínio: o nome que as pessoas digitam
 
-Servidores são encontrados por **endereço IP** (`185.199.108.153`, por exemplo). Ninguém decora isso. O **domínio** é um apelido legível — `unemat.br`, `github.io`, `weblab.ivanpires.dev` — e o **DNS** é a agenda telefônica mundial que traduz o apelido no número.
+Servidores são encontrados por **endereço IP** (`185.199.108.153`, por exemplo). Ninguém decora isso. O **domínio** é um apelido legível — `unemat.br`, `github.io`, `weblab.aprendabit.com` — e o **DNS** é a agenda telefônica mundial que traduz o apelido no número.
 
 Quando alguém digita o endereço do seu site, acontece o seguinte, nesta ordem:
 
@@ -671,7 +671,7 @@ O `README.md` é a primeira coisa que o GitHub mostra ao abrir o repositório �
 # Semana Acadêmica de Sistemas de Informação
 
 Site do evento acadêmico do curso de Sistemas de Informação da UNEMAT — Campus
-Sinop, desenvolvido com o [WebLab](https://weblab.ivanpires.dev), trilha
+Sinop, desenvolvido com o [WebLab](https://weblab.aprendabit.com), trilha
 Introdução ao Desenvolvimento Web.
 
 **Site publicado:** https://usuario.github.io/site-evento/
