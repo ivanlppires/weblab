@@ -1,14 +1,14 @@
 # Aula 01 — Apresentação, tecnologias e arquitetura da Web
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
 Ao final desta aula você será capaz de:
 
-- Descrever como a disciplina funciona: unidades, avaliações, projeto fio-condutor e projeto autoral.
+- Descrever como a disciplina funciona: unidades, marcos do projeto, projeto fio-condutor e projeto autoral.
 - Distinguir Internet de World Wide Web e situar os principais marcos da história da Web.
 - Explicar o modelo cliente-servidor e o papel do front-end e do back-end.
 - Descrever, passo a passo, o que acontece entre digitar uma URL e ver a página renderizada.
@@ -23,7 +23,7 @@ Esta é a primeira aula: não há conteúdo anterior para retomar. Mas há o que
 - [ ] Um notebook (ou acesso ao laboratório) com **Google Chrome** ou **Firefox** atualizado.
 - [ ] **Visual Studio Code** instalado (<https://code.visualstudio.com/>). Se ainda não instalou, faremos juntos no Bloco 3.
 - [ ] Extensões do VS Code **Live Server** e **Prettier** (instalação na §1.6 desta aula).
-- [ ] Acesso ao **SIGAA** funcionando — é por lá que toda entrega acontece.
+- [ ] Uma pasta dedicada no computador para guardar os arquivos do curso (o Git chega na Aula 15).
 - [ ] Uma ideia, mesmo vaga, de **tema para o seu projeto autoral** (ver §1.4). Você decide hoje.
 
 Nenhuma experiência prévia com programação é exigida. Se você nunca escreveu uma linha de código, está no lugar certo — a disciplina começa do zero.
@@ -32,7 +32,7 @@ Nenhuma experiência prévia com programação é exigida. Se você nunca escrev
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Como a disciplina funciona (avaliações, projeto fio-condutor e projeto autoral); Internet × Web; linha do tempo |
+| 1 | 50 min | Como a disciplina funciona (marcos do projeto, projeto fio-condutor e projeto autoral); Internet × Web; linha do tempo |
 | 2 | 50 min | Cliente-servidor; o que acontece ao digitar uma URL; anatomia da URL; renderização; camadas, estático × dinâmico, MPA × SPA, APIs e REST |
 | 3 | 50 min | Mão na massa: ambiente de trabalho, pasta do projeto, primeiro HTML e exploração do DevTools |
 
@@ -46,15 +46,15 @@ Nenhuma experiência prévia com programação é exigida. Se você nunca escrev
 
 A palavra-chave é *front-end*: tudo que roda no navegador do usuário. Você vai entender o sistema completo (servidor, banco de dados, API), mas vai **construir** a parte que o usuário vê e toca. O back-end é assunto do Nível 2.
 
-### 1.2 Três unidades, três avaliações
+### 1.2 Três unidades, três marcos do projeto
 
-| Unidade | Foco | Aulas | Avaliação |
+| Unidade | Foco | Aulas | Marco do projeto |
 |---|---|---|---|
-| 1 | Arquitetura da Web e HTML | 01 a 05 | Avaliação 1 |
-| 2 | CSS: estilo, layout e responsividade | 06 a 09 | Avaliação 2 |
-| 3 | JavaScript e interatividade | 10 a 15 | Avaliação 3 |
+| 1 | Arquitetura da Web e HTML | 01 a 05 | Marco 1 |
+| 2 | CSS: estilo, layout e responsividade | 06 a 09 | Marco 2 |
+| 3 | JavaScript e interatividade | 10 a 15 | Marco 3 |
 
-As três avaliações incidem sobre **o mesmo site**: a Avaliação 1 constrói a estrutura em HTML, a Avaliação 2 aplica o design com CSS, a Avaliação 3 acrescenta o comportamento com JavaScript. Por isso é importante escolher hoje um tema que você aguente desenvolver até o fim do semestre.
+Os três marcos incidem sobre **o mesmo site**: o Marco 1 constrói a estrutura em HTML, o Marco 2 aplica o design com CSS, o Marco 3 acrescenta o comportamento com JavaScript. Por isso é importante escolher hoje um tema que você aguente desenvolver até o fim do curso.
 
 ### 1.3 A sequência das aulas
 
@@ -65,44 +65,42 @@ As três avaliações incidem sobre **o mesmo site**: a Avaliação 1 constrói 
 | 03 | Introdução ao formulário |
 | 04 | Formulário, mídias e listas |
 | 05 | Elementos HTML para layout e introdução ao CSS |
-| 06 | CSS: sintaxe, seletores, classes, atributos e valores — envio da Avaliação 1 |
+| 06 | CSS: sintaxe, seletores, classes, atributos e valores — Marco 1 do projeto |
 | 07 | Formatando o layout de um website e o menu |
 | 08 | Criando telas responsivas |
 | 09 | Animações e efeitos em CSS |
-| 10 | Introdução ao JavaScript — envio da Avaliação 2 |
+| 10 | Introdução ao JavaScript — Marco 2 do projeto |
 | 11 | Variáveis, operações aritméticas e estruturas de controle |
 | 12 | Estruturas sequenciais, condicionais e de repetição |
 | 13 | Funções e eventos |
 | 14 | JavaScript para validação de formulários e consultas dinâmicas |
-| 15 | Publicando seu website na internet — envio da Avaliação 3 |
+| 15 | Publicando seu website na internet — Marco 3 do projeto |
 
-As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
+Quem cursa a disciplina recebe o calendário do semestre do professor; o conteúdo abaixo é o mesmo em qualquer oferta e serve igualmente a quem estuda por conta própria, sem data alguma.
 
-| Avaliação | Escopo |
+| Marco | Escopo |
 |---|---|
 | 1 | Site em HTML com os elementos da Unidade 1 (estrutura, textos, links, tabelas, formulários, mídias, listas). |
 | 2 | O mesmo site estilizado com CSS: layout, menu, responsividade e animações. |
 | 3 | O site dinâmico e interativo com JavaScript: eventos, validação de formulários e consultas dinâmicas. |
 
-**Regras de aprovação:** Média final = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0; frequência mínima de 75%.
-
-O exame final é uma prova teórica, presencial e individual, sobre o conteúdo das três unidades. Os blocos `📌 Na prova` espalhados pelas aulas indicam o que costuma cair nele.
+Os blocos `📌 Vale gravar` espalhados pelas aulas destacam os pontos que mais reaparecem mais adiante — vale mesmo memorizar.
 
 | Modalidade | Horas | Como acontece |
 |---|---|---|
 | Síncrona presencial | 45 h | 15 encontros de três aulas de 50 min, com construção guiada do projeto |
-| Assíncrona a distância | 15 h | 15 atividades de 1 h, com entrega no SIGAA |
+| Assíncrona a distância | 15 h | 15 atividades de 1 h, praticadas por conta própria |
 | Total | 60 h | |
 
 > **⚠️ Atenção**
-> As atividades assíncronas não são extras opcionais. Elas compõem a carga horária oficial da disciplina e são pontuadas dentro da avaliação da unidade correspondente. Quem não entrega, perde nota.
+> As atividades assíncronas não são extras opcionais. Elas compõem a prática real do curso e alimentam o Marco do projeto da unidade correspondente. Pule uma e você sente falta dela mais adiante.
 
 ### 1.4 Projeto fio-condutor e projeto autoral
 
 A regra pedagógica central do WebLab é simples:
 
 1. **Em sala, o professor constrói o projeto fio-condutor** — o **site de um evento acadêmico**, a "Semana Acadêmica de Sistemas de Informação" da UNEMAT Sinop. São cinco páginas: **início**, **programação**, **inscrição**, **palestrantes** e **contato**. Na Unidade 1 elas nascem em HTML puro; na Unidade 2 ganham CSS; na Unidade 3 ganham JavaScript. Todo mundo digita junto.
-2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** (cinco páginas, mesma sequência de tecnologias) e um **domínio diferente**. As avaliações são sobre o projeto autoral, não sobre o site do evento.
+2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** (cinco páginas, mesma sequência de tecnologias) e um **domínio diferente**. Os marcos do projeto acompanham o projeto autoral, não o site do evento.
 
 Exemplos de temas que funcionam bem: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios do curso, brechó de roupas, controle de pescarias no Teles Pires, cardápio de um restaurante, portfólio de um fotógrafo, site de uma ONG de proteção animal. O critério é: você consegue pensar em **cinco páginas com conteúdo real** para esse tema? Se sim, serve.
 
@@ -111,7 +109,7 @@ Exemplos de temas que funcionam bem: catálogo de plantas do Pantanal, agenda de
 
 ### 1.5 Como estudar com este material
 
-Cada aula do WebLab tem quatro camadas de prática, sempre nesta ordem: **💻 Mão na massa** (todo mundo faz junto), **🧪 Laboratório** (exercícios em sala em três níveis), **🏆 Desafios** (extras, opcionais, com estrelas de dificuldade) e **🏠 Atividade assíncrona** (a tarefa de 1 h entregue no SIGAA).
+Cada aula do WebLab tem quatro camadas de prática, sempre nesta ordem: **💻 Mão na massa** (todo mundo faz junto), **🧪 Laboratório** (exercícios em sala em três níveis), **🏆 Desafios** (extras, opcionais, com estrelas de dificuldade) e **🏠 Para praticar depois da aula** (a tarefa de 1 h ligada ao seu projeto autoral).
 
 Uma rotina que funciona:
 
@@ -119,7 +117,7 @@ Uma rotina que funciona:
 2. **Durante a aula**, digite o código junto. Copiar e colar não fixa nada; digitar e errar, sim.
 3. **No mesmo dia**, faça o Laboratório Nível A. São perguntas curtas que consolidam o vocabulário.
 4. **Ao longo da semana**, faça o Nível B e a Atividade assíncrona. São eles que constroem habilidade de verdade.
-5. **Se sobrar tempo e vontade**, encare o Nível C e os Desafios. São do tamanho de um item de portfólio — e contam ponto extra na rubrica.
+5. **Se sobrar tempo e vontade**, encare o Nível C e os Desafios. São do tamanho de um item de portfólio — o tipo de coisa que impressiona em uma entrevista de emprego.
 
 Programação não se aprende lendo. Se você fechar esta página achando que entendeu tudo e não tiver escrito código, não aprendeu. Abra o editor.
 
@@ -268,7 +266,7 @@ Cache-Control: max-age=3600
 > **🔎 Por baixo do capô**
 > Por que tanto cache de DNS? Porque cada consulta que sai para a rede custa dezenas de milissegundos — e uma página faz dezenas de requisições, muitas para domínios diferentes. Sem cache, só a tradução de nomes já deixaria a Web visivelmente lenta. O mesmo raciocínio (guardar o que já foi obtido para não pedir de novo) aparece no cabeçalho `Cache-Control` da resposta acima, e é o tema do desafio C1 de hoje.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A ordem das etapas (URL → DNS → TCP → TLS → requisição → processamento → resposta → renderização) e o que cada uma faz. Saber que o DNS traduz **nome em IP** e que HTTP é **stateless** são perguntas frequentes.
 
 ## 5. Anatomia de uma URL
@@ -472,7 +470,7 @@ O formato de troca padrão é o **JSON** (JavaScript Object Notation) — texto,
 
 - **Servidor web:** Apache, Nginx, IIS, Node.js. Recebe requisições e devolve recursos.
 - **CDN (Content Delivery Network):** rede de servidores espalhados geograficamente que guardam cópias dos arquivos. Um usuário em Sinop recebe o arquivo de um nó em São Paulo, não da Califórnia. Reduz a latência drasticamente. Exemplos: Cloudflare, Akamai.
-- **Hospedagem estática:** GitHub Pages, Netlify, Vercel, Cloudflare Pages — gratuitas e suficientes para tudo que faremos nesta disciplina. O projeto final (Avaliação 3) deverá estar publicado em uma delas.
+- **Hospedagem estática:** GitHub Pages, Netlify, Vercel, Cloudflare Pages — gratuitas e suficientes para tudo que faremos nesta disciplina. O projeto do Marco 3 (Aula 15) é publicado em uma delas.
 - **DNS e domínio:** registro de domínios `.br` via Registro.br. Um domínio próprio custa por volta de R$ 40 por ano; a trilha Deploy (capítulo 04) mostra como apontar um para o seu site.
 
 ## 💻 Mão na massa — Pasta do projeto, primeiro HTML e DevTools
@@ -672,7 +670,7 @@ Comece por "HTTP/2 multiplexação" e "HTTP/3 QUIC" na MDN. Na aba Network, a co
 No Chrome: cadeado → *A conexão é segura* → *O certificado é válido*. O "emissor" é a autoridade certificadora (Let's Encrypt, DigiCert); ela é quem garante ao navegador que o servidor é quem diz ser — é o Passo 4 da §4.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Investigação de cache. Acesse um mesmo site duas vezes na aba Network: uma com *Disable cache* marcado e outra desmarcado. Compare o número de requisições e o peso transferido. Identifique quais recursos vieram do cache (procure por `(disk cache)`, `(memory cache)` ou status `304`). Produza um relatório de 1 página explicando o que é cache HTTP, o papel do cabeçalho `Cache-Control` e por que ele é essencial para a performance da Web.
 
@@ -776,21 +774,21 @@ O navegador esconde tudo o que a §4 descreve. Hoje você faz o trabalho dele ma
 | Confundir Internet com Web na prova | Erro conceitual: tratar as duas como sinônimos | Web é uma **aplicação** que roda **sobre** a Internet (§2) |
 | Aba Network vazia ao abrir o DevTools | A aba só registra a partir do momento em que é aberta | Abrir o DevTools **antes** e recarregar a página |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, M. S. *Criando sites com HTML*, capítulo introdutório. MILETTO, E. M.; BERTAGNOLLI, S. C. *Desenvolvimento de software II*, capítulo sobre arquiteturas para a Web. Anote duas ideias de cada texto que não apareceram nesta aula.
 
-**Parte 2 — Entrega (30 min).** Envie:
+**Parte 2 — Produção (30 min).** Produza:
 
 1. O exercício **B2** (`sobre-mim.html`) e o exercício **B5** (resumo sobre HTTP/1.1, 2 e 3).
 2. Uma captura de tela do VS Code com a pasta `introducao-web` aberta e outra do Live Server exibindo `site-evento/index.html`, com a URL `127.0.0.1:5500` visível.
 3. **O tema do seu projeto autoral**, em 3 linhas: o que é, para quem é, e o nome das cinco páginas (a versão "início, programação, inscrição, palestrantes, contato" do seu domínio).
 
-**Parte 3 — Fórum (10 min).** No fórum "Por que a Web venceu", discuta em 10 a 15 linhas por que a Web se tornou a plataforma dominante de aplicações — pense em distribuição (não precisa instalar nada), padrões abertos e compatibilidade entre dispositivos. Comente a resposta de pelo menos um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina), escreva 10 a 15 linhas sobre por que a Web se tornou a plataforma dominante de aplicações — pense em distribuição (não precisa instalar nada), padrões abertos e compatibilidade entre dispositivos. Se puder, compare sua resposta com a de um colega.
 
 **Critério de pronto:** os dois arquivos abrem sem erro de codificação; as duas capturas mostram o ambiente funcionando; o tema tem cinco páginas nomeadas.
 
-**Entrega:** arquivos `.html` e capturas em uma pasta compactada (`.zip`), enviada pelo SIGAA.
+**Guarde:** os arquivos `.html` e as capturas na pasta `exercicios/aula01/` — a partir da Aula 15 tudo isso passa a viver em um repositório Git.
 
 ## ✅ Checkpoint do projeto
 

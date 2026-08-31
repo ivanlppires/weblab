@@ -1,8 +1,8 @@
 # Aula 12 — CRUD com banco em nuvem (Supabase)
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -64,7 +64,7 @@ Os três caminhos têm modelos de cobrança bem diferentes, e vale entender isso
 
 **"Custo de saída" (egress)** é o valor cobrado por dados que **saem** do provedor em direção ao seu usuário — toda resposta de `select`, toda imagem baixada do Storage, conta. É um item fácil de esquecer ao estimar custo de um app com uso intenso de leitura, como uma lista de eventos que recarrega a cada navegação.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Os três modelos resolvem "onde guardar e servir dados", mas com contratos de responsabilidade diferentes: API própria = você administra tudo, custo previsível, controle total. Firebase = NoSQL gerenciado, ótimo para tempo real e mobile, lock-in alto. Supabase = Postgres gerenciado, SQL relacional, lock-in menor por ser padrão aberto.
 
 ## 2. Criando o projeto no Supabase
@@ -201,7 +201,7 @@ As duas cláusulas parecem sinônimos, mas checam momentos diferentes:
 
 Em um `UPDATE`, as duas coexistem e respondem perguntas diferentes: `USING` decide se você pode tocar naquela linha específica (ex.: só se `usuario_id` já era seu); `WITH CHECK` decide se o **novo** valor que você está tentando gravar é aceitável (ex.: impedir que você mude `usuario_id` da linha para outra pessoa, "roubando" o evento).
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `USING` = filtro sobre a linha que já existe (quem pode ver/mexer). `WITH CHECK` = validação sobre o dado que está sendo escrito (o resultado é permitido?). `INSERT` só tem `WITH CHECK` (não existe linha "antes"). `SELECT`/`DELETE` só têm `USING`. `UPDATE` tem os dois.
 
 ## 🧩 Padrão de projeto em uso — Adapter
@@ -895,7 +895,7 @@ VITE_BACKEND=supabase
 
 Nenhuma linha da store (`eventosStore.js`) ou das telas (`EventosListaView.vue`, `EventoFormView.vue`) precisa mudar. Isso é o Adapter cumprindo sua função: a store continua chamando `eventosService.listarEventos(...)`, que continua chamando `eventosRepo.listar(...)` — só a implementação por trás mudou, escolhida por uma variável de ambiente.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Facade (Aula 11) simplifica uma interface complexa. Adapter (esta aula) traduz uma interface para outra, permitindo trocar a implementação sem o cliente perceber. A camada `services/` do UniEventos usa os dois: é Facade em relação às telas (esconde detalhes de HTTP/Supabase) e se apoia num Adapter (`eventosRepo`) para trocar de fornecedor por baixo.
 
 ### Como testar
@@ -990,7 +990,7 @@ Resultado esperado: criar um registro numa aba faz a lista da outra atualizar em
 Confirme que o Realtime está habilitado para a tabela em Database → Replication no painel do Supabase — em alguns planos/tabelas ele vem desligado por padrão.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Adapter comparativo. Implemente as duas versões do repositório (`Repo...Express` e `Repo...Supabase`) para sua entidade principal, com a mesma interface, e alterne entre elas por variável de ambiente. Atenção a dois detalhes que costumam quebrar. (1) Os `id` são `INT` no MySQL e `uuid` no Supabase — a store e as rotas precisam funcionar com os dois. (2) A tabela do Supabase tem uma coluna de **dono** (`usuario_id`, exigida pelas policies de RLS) que a tabela MySQL das Aulas 09/11 não tem: decida se o Adapter devolve esse campo só num dos lados (e a tela lida com `undefined`) ou se você acrescenta `criado_por` também no MySQL — e escreva a decisão em uma linha no README.
 
@@ -1128,9 +1128,9 @@ Na Aula 11, a última vaga foi protegida com uma transação e `FOR UPDATE` dent
 | `.single()` lança erro "multiple (or no) rows returned" | Consulta não bateu em exatamente uma linha | Usar `.maybeSingle()` se zero linhas é um caso válido; revisar o filtro se esperava uma única linha |
 | Realtime não dispara nada | Tabela sem replicação habilitada, ou canal não te inscreveu no evento certo | Checar Database → Replication; conferir `schema: 'public', table: 'nome_certo'` no `.on(...)` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
-Recrie o CRUD da sua entidade principal usando Supabase (se ainda não completou no laboratório) e escreva uma **análise comparativa de 1 página** entre a abordagem Express+MySQL (Aula 11) e a abordagem Supabase (hoje), cobrindo: quantidade de código escrito em cada uma, onde ficou a validação e a regra de negócio em cada caso, o que foi mais rápido de implementar, o que você confiaria menos sem testes automatizados, e qual você escolheria para o seu projeto autoral final — com justificativa. **Este texto é conteúdo de estudo para o exame final.**
+Recrie o CRUD da sua entidade principal usando Supabase (se ainda não completou no laboratório) e escreva uma **análise comparativa de 1 página** entre a abordagem Express+MySQL (Aula 11) e a abordagem Supabase (hoje), cobrindo: quantidade de código escrito em cada uma, onde ficou a validação e a regra de negócio em cada caso, o que foi mais rápido de implementar, o que você confiaria menos sem testes automatizados, e qual você escolheria para o seu projeto autoral final — com justificativa. **Guarde este texto: é exatamente o tipo de comparação técnica que volta na retrospectiva de padrões da Aula 15.**
 
 **Critério de pronto:** CRUD Supabase funcionando (RLS + policies + operações básicas) e o texto comparativo entregue, com pelo menos os cinco pontos acima abordados.
 

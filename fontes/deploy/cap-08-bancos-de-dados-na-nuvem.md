@@ -1,8 +1,8 @@
 # Capítulo 08 — Bancos de dados na nuvem
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -71,7 +71,7 @@ Os três caminhos que interessam para os projetos da disciplina:
 | **Neon** | Postgres | você quer *branches* de banco: uma cópia instantânea do banco por pull request |
 | **MySQL gerenciado** (Aiven, Railway, RDS…) | MySQL 8 | o projeto já é MySQL e você não quer traduzir o schema agora |
 
-Planos gratuitos existem nos três, com limites que mudam com frequência (tamanho do banco, número de projetos, tempo de retenção de backup, suspensão por inatividade). **Confira o plano no site antes de decidir** — e nunca coloque um trabalho que vale nota em um plano que suspende o banco depois de uma semana sem uso sem você saber disso.
+Planos gratuitos existem nos três, com limites que mudam com frequência (tamanho do banco, número de projetos, tempo de retenção de backup, suspensão por inatividade). **Confira o plano no site antes de decidir** — e nunca coloque um projeto que você quer manter no ar em um plano que suspende o banco depois de uma semana sem uso sem você saber disso.
 
 Três características valem mais que o preço nesta escolha:
 
@@ -821,7 +821,7 @@ Resultado esperado: `pg_restore --table=eventos` (ou um dump `--data-only --tabl
 Faça tudo no contêiner descartável da §8: restaure o dump inteiro nele, `DROP TABLE eventos CASCADE`, e restaure de novo só a tabela. Repare no efeito do `CASCADE` sobre a chave estrangeira de `inscricoes` — esse é o aprendizado do exercício.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Faça a API funcionar com **dois** bancos sem mudar uma linha dos services: `DB_DIALETO=postgres` usa o repositório do Supabase, `DB_DIALETO=mysql` usa o do MySQL do Capítulo 07. Uma variável de ambiente escolhe a implementação na inicialização, e a suíte de testes passa nos dois modos.
 
@@ -911,7 +911,7 @@ O projeto nasceu em MySQL (Aula 09 do Nível 3) e agora vai para um Postgres ger
 | `pg_dump: error: aborting because of server version mismatch` | `pg_dump` mais antigo que o servidor | instale a versão do cliente igual ou maior (`postgresql-client-17`) ou rode dentro de um contêiner com a versão certa |
 | Consulta pelo `supabase-js` devolve `data: []` sem erro | RLS habilitado sem policy para aquele papel | crie a policy (§6); pelo `pg` com a senha do banco esse caso não aparece, porque o dono ignora RLS |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório da API do seu **projeto autoral**:
 
@@ -922,7 +922,7 @@ No repositório da API do seu **projeto autoral**:
 
 **Critério de pronto:** um colega consegue, só com o `README.md` e um `.env` que você entregue por outro canal, subir a API contra o banco na nuvem e ver dados na rota de listagem. Nenhuma senha aparece no repositório (`git log -p` incluído).
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Está no ar quando…
 

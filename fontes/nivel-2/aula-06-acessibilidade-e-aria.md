@@ -1,8 +1,8 @@
 # Aula 06 — Acessibilidade e ARIA
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -25,7 +25,7 @@ Ao final desta aula você será capaz de:
 - [ ] Chrome ou Firefox com DevTools; hoje você usa **Lighthouse**, o painel **Accessibility** da aba Elements e a aba **Rendering**.
 - [ ] Opcional, mas recomendado: NVDA instalado (Windows, gratuito), o VoiceOver do macOS/iOS, ou o TalkBack do seu Android.
 
-> Na aula passada o Café Cerrado ganhou movimento e desenho vetorial: transições em tudo o que é clicável, cards em cascata, logotipo em SVG e respeito à preferência de movimento reduzido. Você já tomou, sem perceber, três decisões de acessibilidade — `aria-hidden` nos ícones decorativos, `focusable="false"` nos `<svg>` e `:focus-visible` nos botões. Hoje essas decisões deixam de ser intuição e viram método: você vai medir o que o site entrega a quem não usa mouse, não enxerga a tela ou não distingue cores, corrigir o que estiver quebrado e fechar a Unidade 1 com a auditoria do Lighthouse. Esta é também a aula que abre a **Avaliação 1**.
+> Na aula passada o Café Cerrado ganhou movimento e desenho vetorial: transições em tudo o que é clicável, cards em cascata, logotipo em SVG e respeito à preferência de movimento reduzido. Você já tomou, sem perceber, três decisões de acessibilidade — `aria-hidden` nos ícones decorativos, `focusable="false"` nos `<svg>` e `:focus-visible` nos botões. Hoje essas decisões deixam de ser intuição e viram método: você vai medir o que o site entrega a quem não usa mouse, não enxerga a tela ou não distingue cores, corrigir o que estiver quebrado e fechar a Unidade 1 com a auditoria do Lighthouse. Esta é também a aula que abre o **Marco 1**.
 
 ## 🗺️ Roteiro
 
@@ -33,7 +33,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | O que é acessibilidade, quem se beneficia, a lei brasileira, WCAG e POUR; a árvore de acessibilidade no DevTools |
 | 2 | 50 min | Contraste medido; teclado, foco visível e link de salto; ARIA (papéis, nomes, estados, regiões vivas); formulários acessíveis |
-| 3 | 50 min | Mão na massa: auditoria e correção do Café Cerrado com Lighthouse e WAVE; Laboratório; instruções da Avaliação 1 |
+| 3 | 50 min | Mão na massa: auditoria e correção do Café Cerrado com Lighthouse e WAVE; Laboratório; instruções do Marco 1 |
 
 ## 1. Acessibilidade não é caridade
 
@@ -93,7 +93,7 @@ Os critérios que mais aparecem no trabalho de vocês:
 | 3.3.2 Rótulos ou instruções | A | Todo campo de formulário tem rótulo |
 | 4.1.2 Nome, função, valor | A | Cada controle expõe o que é, como se chama e em que estado está |
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Decore a diferença entre os três níveis e os quatro princípios do POUR, e saiba dizer a qual princípio pertence cada prática que você aplicou no projeto. "Contraste" é *perceptível*; "foco visível" é *operável*; "idioma declarado" é *compreensível*; "ARIA correto" é *robusto*.
 
 ## 3. Como uma tecnologia assistiva lê a sua página
@@ -440,7 +440,7 @@ Duas coisas que **não** aparecem no código acima, de propósito:
 E o leitor de tela, que não é uma quinta ferramenta e sim a prova real: NVDA (gratuito, Windows), VoiceOver (macOS/iOS, já instalado) ou TalkBack (Android). Feche os olhos por dois minutos e tente encontrar o preço do espresso no seu próprio site.
 
 > **⚠️ Atenção**
-> **Ferramentas automáticas detectam de 30 % a 40 % dos problemas de acessibilidade.** Nota 100 no Lighthouse não significa "site acessível": significa "os erros que uma máquina consegue detectar foram resolvidos". Nenhuma ferramenta sabe dizer se o seu `alt="imagem1.jpg"` descreve a foto, se a ordem do foco faz sentido ou se o rótulo "Clique aqui" é útil. O teste de teclado e o leitor de tela são insubstituíveis — e são justamente os itens da Avaliação 1 que o professor verifica à mão.
+> **Ferramentas automáticas detectam de 30 % a 40 % dos problemas de acessibilidade.** Nota 100 no Lighthouse não significa "site acessível": significa "os erros que uma máquina consegue detectar foram resolvidos". Nenhuma ferramenta sabe dizer se o seu `alt="imagem1.jpg"` descreve a foto, se a ordem do foco faz sentido ou se o rótulo "Clique aqui" é útil. O teste de teclado e o leitor de tela são insubstituíveis — e são justamente os itens do Marco 1 que valem a pena conferir você mesmo, com calma, em vez de confiar só na nota do Lighthouse.
 
 > **🧠 Você sabia?**
 > A WebAIM publica todo ano o relatório *The WebAIM Million*, uma varredura automática da página inicial de um milhão de sites. Em todas as edições recentes, mais de **95 %** das páginas apresentaram falhas de WCAG detectáveis por máquina — e os erros mais comuns são sempre os mesmos quatro: contraste insuficiente, `alt` ausente, link sem texto discernível e campo de formulário sem rótulo. Ou seja: os quatro erros que você vai corrigir hoje, em uma tarde, colocam o seu site à frente da esmagadora maioria da web comercial.
@@ -516,14 +516,14 @@ Três verificações:
 </body>
 ```
 
-Regras que valem ponto na Avaliação 1:
+Regras que valem a pena guardar para o Marco 1:
 
 - **Um `<h1>` por página**, e ele descreve a página, não o site inteiro.
 - **Sem saltos na hierarquia**: depois de um `h2` vem `h3`, nunca `h4`. Títulos são a tabela de conteúdo pela qual quem usa leitor de tela navega; um salto é um capítulo faltando no índice.
 - **Título nunca é escolhido por tamanho.** Se você quer um `h3` grande, use `class="h2"` do Bootstrap (que muda só a aparência) e mantenha a tag correta.
 - **Cada `<section>` recebe nome**, via `aria-labelledby` apontando para o `id` do seu próprio título. Sem nome, a seção não aparece na lista de regiões.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `<section>` sem nome acessível **não** vira landmark: o navegador a trata como um contêiner genérico. É por isso que `aria-labelledby` aponta para o `id` do `<h2>` — o título vira o nome da região, sem repetir texto.
 
 ### Passo 4 — Link de salto nas três páginas
@@ -829,7 +829,7 @@ Testes manuais: navegação completa por teclado nas três páginas e leitura da
 página inicial com o NVDA.
 ```
 
-Substitua os números pelos **seus** — inventar nota é plágio de dados, e o professor roda o Lighthouse na correção.
+Substitua os números pelos **seus** — o que vale aqui é o antes/depois real do seu próprio site, não um exemplo copiado.
 
 ### Como testar
 
@@ -888,7 +888,7 @@ Substitua os números pelos **seus** — inventar nota é plágio de dados, e o 
 
 **A19.** Para que servem `<fieldset>` e `<legend>`? Em que tipo de campo eles são indispensáveis?
 
-**A20.** Que porcentagem dos problemas de acessibilidade as ferramentas automáticas detectam? O que isso implica para a sua entrega da Avaliação 1?
+**A20.** Que porcentagem dos problemas de acessibilidade as ferramentas automáticas detectam? O que isso implica para o seu Marco 1?
 
 ### Nível B — Aplicação
 
@@ -955,7 +955,7 @@ O teste do telefone: se você estivesse descrevendo a página por telefone para 
 No Console, `document.querySelector("#status-envio").textContent = "Mensagem enviada"` altera o conteúdo. Se nada for anunciado, quase sempre é porque a região foi criada junto com o texto, em vez de já existir vazia — ou porque o elemento estava com `display: none`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** **Auditoria cruzada.** Em duplas, troque a URL do seu GitHub Pages com um colega. Cada um audita o site do outro em 25 minutos, produzindo um relatório com: nota do Lighthouse por página; três erros automáticos com o critério WCAG correspondente; três problemas que **só** o teste manual revelou (teclado, ordem de foco, `alt` inútil, texto de link inútil); e uma recomendação priorizada. Depois, cada um corrige o próprio site com base no relatório recebido e mede de novo. Entregue os dois relatórios e as notas antes/depois.
 
@@ -1071,11 +1071,11 @@ A Lei Brasileira de Inclusão exige acessibilidade em sites de órgãos público
 
 **Para ir além:** envie o documento pelo canal de ouvidoria do órgão. Não é retórica: relatórios bem escritos de estudantes já geraram correção em portais públicos, e o e-mail de resposta vale mais no seu currículo que o certificado do trabalho.
 
-### 🔥 Boss — O seu site pronto para a Avaliação 1
+### 🔥 Boss — O seu site pronto para o Marco 1
 
 Tags: html, css, acessibilidade, responsivo, projeto
 
-Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-criado. Hoje ele é um site de três páginas, semântico, responsivo, com framework CSS, identidade visual em SVG, movimento com propósito e utilizável por quem não vê a tela. O Boss desta unidade não traz nada novo: traz **tudo junto, funcionando ao mesmo tempo**, no seu tema — e é literalmente o roteiro da Avaliação 1.
+Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-criado. Hoje ele é um site de três páginas, semântico, responsivo, com framework CSS, identidade visual em SVG, movimento com propósito e utilizável por quem não vê a tela. O Boss desta unidade não traz nada novo: traz **tudo junto, funcionando ao mesmo tempo**, no seu tema — e é literalmente o roteiro do Marco 1.
 
 **Critérios de pronto**
 
@@ -1093,8 +1093,8 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 1. Use os checkpoints das Aulas 02 a 06 como lista de verificação, na ordem. A maior parte você já fez; o Boss é o que falta mais a integração.
 2. Rode o Lighthouse **antes** de mexer em qualquer coisa e guarde a captura: metade da nota da seção de acessibilidade do `README.md` é essa comparação.
 3. O item que mais reprova é o contraste, e o segundo é o texto de link inútil ("Saiba mais", "Clique aqui", "Ver detalhes" repetido seis vezes). Os dois são correções de minutos.
-4. Peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada anotação é um ponto da rubrica que você acabou de garantir.
-5. Deixe o `README.md` por último, mas não para a última hora: ele é o único lugar onde você defende as suas decisões, e decisões defendidas valem nota em três critérios diferentes.
+4. Peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada anotação é um problema real a menos no seu site.
+5. Deixe o `README.md` por último, mas não para a última hora: ele é o único lugar onde você defende as suas decisões, e decisões bem defendidas fecham três critérios do checklist de uma vez.
 </details>
 
 **Para ir além:** peça a alguém de fora do curso — um parente, um colega de trabalho — para realizar uma tarefa no seu site sem nenhuma instrução sua ("descubra quanto custa um cappuccino"). Fique calado e cronometre. O que essa pessoa não achou em 30 segundos é o que o seu site esconde.
@@ -1121,7 +1121,7 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 | O leitor de tela lê o nome do link errado, diferente do texto que aparece | `aria-label` sobrescrevendo o texto visível | Se há texto visível, ele deve compor o nome — use `.oculto-visualmente` para complementar, não `aria-label` para substituir |
 | O <kbd>Tab</kbd> para em um ponto onde nada é anunciado | `aria-hidden="true"` aplicado a um elemento focável ou ao contêiner de um | Nunca ponha `aria-hidden` em `<a>`, `<button>`, `<input>` nem em quem os contenha |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** QUEIRÓS e PORTELA, seção sobre a camada de comportamento — é a preparação para a Unidade 2, que começa na próxima aula. Leia também a página *Acessibilidade* da MDN em português e o texto do artigo 63 da Lei nº 13.146/2015 no portal do Planalto (são cinco linhas). Anote uma obrigação legal que você não sabia que existia.
 
@@ -1132,13 +1132,13 @@ Seis aulas atrás o seu projeto era uma pasta vazia e um repositório recém-cri
 3. Adicione: link de salto, `aria-label` nos dois `<nav>`, `aria-current="page"` no item certo de cada página, `aria-hidden` em todos os SVG decorativos e a região `aria-live` no formulário.
 4. Corrija o contraste de todos os pares reprovados, incluindo o indicador de foco.
 5. Registre no `README.md` a seção "Acessibilidade" com a tabela de notas antes/depois e as três principais correções, no formato do Passo 12.
-6. Finalize a **Avaliação 1** conforme as instruções da seção seguinte e entregue no SIGAA.
+6. Finalize o **Marco 1** conforme as instruções da seção seguinte.
 
 **Critério de pronto:** Lighthouse ≥ 90 nas três páginas; zero *Errors* no WAVE; teste de teclado percorrido sem falha; seção "Acessibilidade" no `README.md` com números reais; `evidencias/` com as capturas antes e depois.
 
-**Parte 3 — Fórum (5 min).** No fórum "O que me surpreendeu sem mouse", conte em um parágrafo o momento mais difícil da sua navegação por teclado desta semana e o que você mudou no seu site por causa dele. Comente a postagem de um colega apontando um problema semelhante ou uma solução diferente.
+**Parte 3 — Registro (5 min).** Em `docs/sem-mouse.md`, conte em um parágrafo o momento mais difícil da sua navegação por teclado desta semana e o que você mudou no seu site por causa dele. Se puder, compare com um colega apontando um problema semelhante ou uma solução diferente.
 
-**Entrega:** commit + push, link do repositório e link do GitHub Pages no SIGAA.
+**Guarde no seu repositório:** commit + push, com o link do GitHub Pages atualizado.
 
 ## ✅ Checkpoint do projeto
 
@@ -1161,20 +1161,20 @@ Ao fim desta aula — e da Unidade 1 — o repositório do seu projeto autoral p
 - [ ] `README.md` com as seções "Sobre o projeto", "Framework escolhido e por quê", "Movimento" e "Acessibilidade".
 - [ ] Tudo o que os checkpoints das Aulas 02 a 05 pediam continua funcionando.
 
-## 📝 Avaliação 1 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 1
 
 ### Escopo
 
-A Avaliação 1 cobre a **Unidade 1 — Web estática** inteira: *website client-side em HTML e CSS, com HTML semântico, layout responsivo, framework CSS, animação/SVG e acessibilidade*. Você entrega o **projeto autoral** que vem evoluindo desde a Aula 01 — não o Café Cerrado, que é o exemplo construído em sala.
+Este marco fecha a **Unidade 1 — Web estática** inteira: um *website client-side em HTML e CSS, com HTML semântico, layout responsivo, framework CSS, animação/SVG e acessibilidade*. Ele é sobre o **projeto autoral** que vem evoluindo desde a Aula 01 — não o Café Cerrado, que é o exemplo construído em sala.
 
 O projeto deve:
 
-- Ter um domínio **diferente** do Café Cerrado e diferente do de cada colega (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, oficina de bicicletas, estúdio de tatuagem — ou outro tema aprovado na Aula 01).
+- Ter um domínio **diferente** do Café Cerrado (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, oficina de bicicletas, estúdio de tatuagem — ou outro tema seu, definido na Aula 01).
 - Ter no mínimo **três páginas** navegáveis entre si, sendo uma delas com formulário completo.
 - Estar publicado e funcionando no **GitHub Pages**.
 - Ser construído **sem JavaScript autoral** — o único JavaScript permitido é o do framework CSS escolhido (o `bootstrap.bundle.min.js`, por exemplo). O comportamento próprio começa na Unidade 2.
 
-### Requisitos obrigatórios
+### Requisitos
 
 1. **HTML semântico:** landmarks `header`, `nav`, `main` e `footer`; um único `<main>` por página; hierarquia de títulos sem saltos, com um `<h1>` por página; listas e tabelas usadas para o que são; HTML sem erros no validador do W3C.
 2. **Layout responsivo:** usável em 360 px, 768 px e 1440 px, sem rolagem horizontal; imagens fluidas; menu adaptado ao celular.
@@ -1184,40 +1184,34 @@ O projeto deve:
 6. **`README.md`** com: nome e descrição do projeto, instruções para abrir localmente, link do GitHub Pages, justificativa do framework, seção "Movimento" e seção "Acessibilidade" com a tabela de notas antes/depois.
 7. **Repositório público** no GitHub, com histórico de commits mostrando evolução incremental (um commit por aula, no mínimo) e a pasta `evidencias/` com as capturas.
 
-### Formato e prazo de entrega
+### Checklist de qualidade
 
-Entregue, na atividade "Avaliação 1" do SIGAA, **dois links colados no campo de texto**: o do repositório público no GitHub e o do site publicado no GitHub Pages. **Não anexe arquivo `.zip`** — a entrega é por link, e um repositório sem histórico de commits perde ponto no critério 6 da rubrica.
+O que separa um projeto pronto de um feito às pressas, critério a critério:
 
-O prazo é o publicado no índice do Nível 2 no WebLab e na própria atividade no SIGAA. Confira a data lá; ela não é repetida aqui de propósito, para que este material continue válido em qualquer semestre.
+- **HTML semântico e válido** em todas as páginas — não só na inicial.
+- **Layout responsivo** de verdade em celular, tablet e desktop — não só "não quebra", mas confortável de usar nos três.
+- **Framework CSS** aplicado com consistência e com a escolha justificada em texto próprio.
+- **Animação e SVG** com propósito declarado, incluindo `prefers-reduced-motion`.
+- **Acessibilidade** completa: Lighthouse ≥ 90, teclado, contraste, ARIA — nas três páginas, não em uma.
+- **Versionamento, `README.md` e publicação** no GitHub Pages, com histórico de commits que mostra o projeto crescendo aula a aula.
 
-### Rubrica (10,0 pontos)
+Um projeto "pela metade" costuma ter um desses itens presente em uma página e ausente nas outras duas — revise sempre as três antes de considerar algo pronto.
 
-| Critério | Peso |
-|---|---|
-| HTML semântico, estrutura das páginas e HTML válido | 2,0 |
-| Layout responsivo em celular, tablet e desktop | 2,0 |
-| Framework CSS aplicado com consistência e escolha justificada | 2,0 |
-| Animação e SVG com propósito, incluindo `prefers-reduced-motion` | 2,0 |
-| Acessibilidade: Lighthouse ≥ 90, teclado, contraste, ARIA | 1,5 |
-| Versionamento, `README.md` e publicação no GitHub Pages | 0,5 |
+**Sobre IA:** use como apoio — para explicar um erro, sugerir sintaxe, revisar um trecho —, não como atalho para gerar o projeto inteiro sem entender o que ele faz. O teste real: se alguém apontar para um `aria-expanded` ou uma `transition` do seu código e perguntar por que ela está ali, você precisa saber responder.
 
-Cada critério é avaliado em três faixas: **completo** (peso total), **parcial** (metade) e **ausente** (zero). "Parcial" é, tipicamente, o requisito presente em uma página e ausente nas outras duas.
+### Como saber que está pronto
 
-### Política de atraso
-
-Entregas após o prazo perdem **1,0 ponto por dia corrido** de atraso, até o limite de 5 dias. Depois desse limite a atividade recebe nota zero, salvo justificativa formal protocolada junto à coordenação do curso. O horário de referência é o registrado pelo SIGAA — não o do seu último commit.
-
-### Política de plágio e uso de IA
-
-É permitido usar ferramentas de IA como apoio (explicar um erro, sugerir sintaxe, revisar um trecho), assim como é permitido consultar documentação, tutoriais e o próprio WebLab. **Não é permitido** entregar um projeto gerado quase integralmente por IA sem compreensão do próprio código: na correção, qualquer estudante pode ser chamado para explicar oralmente uma parte do seu projeto — por que aquele `aria-expanded` está ali, por que a `transition` está no estado base, o que aquele `viewBox` significa — e a nota é ajustada conforme a clareza da explicação.
-
-Cópia integral do projeto de outro colega, mesmo com o tema trocado, é plágio e resulta em **nota zero para ambos os envolvidos**, com encaminhamento conforme o regimento acadêmico da UNEMAT. Reaproveitar trechos do Café Cerrado construído em sala é esperado e permitido — o que não é permitido é entregar o Café Cerrado como se fosse o seu projeto.
+- Rode o Lighthouse (categoria Accessibility, modo mobile) nas três páginas e confira que todas passam de 90.
+- Passe as três páginas pelo [validador do W3C](https://validator.w3.org/nu/) e pelo [WAVE](https://wave.webaim.org/) até zerar os erros.
+- Faça o teste de teclado completo, sem mouse, nas três páginas.
+- Abra o site em 360 px, 768 px e 1440 px (DevTools) e confirme que não há rolagem horizontal em nenhuma largura.
+- Abra o repositório no GitHub: o histórico de commits mostra evolução real (não um único commit "projeto final"), o `README.md` tem todas as seções pedidas e a pasta `evidencias/` guarda as capturas de antes e depois.
 
 ## 📚 Para aprofundar
 
 - MDN — Acessibilidade: <https://developer.mozilla.org/pt-BR/docs/Web/Accessibility> — comece pelo guia "Acessibilidade HTML" e pela lista de erros comuns.
 - MDN — ARIA: <https://developer.mozilla.org/pt-BR/docs/Web/Accessibility/ARIA> — leia primeiro "As cinco regras do ARIA", depois a referência de atributos.
-- W3C — WCAG 2.2 Quick Reference: <https://www.w3.org/WAI/WCAG22/quickref/> — filtre por nível A e AA e use como lista de verificação da Avaliação 1.
+- W3C — WCAG 2.2 Quick Reference: <https://www.w3.org/WAI/WCAG22/quickref/> — filtre por nível A e AA e use como lista de verificação do Marco 1.
 - W3C — WAI-ARIA Authoring Practices Guide: <https://www.w3.org/WAI/ARIA/apg/> — cada componente (acordeão, menu, modal) com o HTML e o comportamento de teclado corretos.
 - W3C — Perspectivas de acessibilidade (vídeos curtos, legendados em português): <https://www.w3.org/WAI/perspective-videos/> — um minuto cada; mostre para quem disser que "ninguém usa isso".
 - WebAIM — Contrast Checker: <https://webaim.org/resources/contrastchecker/> — cole os dois hexadecimais e leia o veredito AA/AAA.
@@ -1230,6 +1224,6 @@ Cópia integral do projeto de outro colega, mesmo com o tema trocado, é plágio
 - ALVES, William P. *Projetos de Sistemas Web*. Érica, 2015 — usabilidade e padrões de interface.
 - LOUDON, Kyle. *Desenvolvimento de Grandes Aplicações Web*. Novatec, 2019 — qualidade de front-end em escala.
 
-Isso encerra a **Unidade 1**. Em seis aulas o seu projeto saiu de um repositório vazio para um site de três páginas, semântico, responsivo, com framework CSS, identidade visual desenhada em código, movimento com propósito e acessível a quem não usa mouse nem enxerga a tela — publicado na internet, com endereço próprio. Ele é a Avaliação 1, e o Boss desta aula é o roteiro para fechá-la.
+Isso encerra a **Unidade 1**. Em seis aulas o seu projeto saiu de um repositório vazio para um site de três páginas, semântico, responsivo, com framework CSS, identidade visual desenhada em código, movimento com propósito e acessível a quem não usa mouse nem enxerga a tela — publicado na internet, com endereço próprio. Ele é o Marco 1, e o Boss desta aula é o roteiro para fechá-lo.
 
 Na próxima aula começa a **Unidade 2 — Web dinâmica client-side**, com a revisão de JavaScript: objetos, funções, eventos e manipulação do DOM. O site que você acabou de entregar deixa de ser só apresentação e passa a **reagir**: o cardápio vai ser gerado a partir de um vetor de produtos em vez de estar escrito à mão no HTML, o formulário vai validar e responder de verdade — e aquela região `aria-live` que você deixou vazia hoje vai finalmente ganhar texto.

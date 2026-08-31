@@ -1,8 +1,8 @@
 # Aula 08 — Criando telas responsivas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -164,7 +164,7 @@ Hoje vale fazer a conta do que ela faz em cada largura. O contêiner tem `paddin
 
 O navegador cria quantas colunas de 280 px couberem, distribui o que sobrar entre elas e reorganiza tudo a cada mudança de largura. Nenhuma media query, nenhum breakpoint escolhido por você — o breakpoint nasce do conteúdo, que é exatamente onde ele deve nascer.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `auto-fit` e `auto-fill` fazem a mesma conta de quantas colunas cabem. A diferença aparece quando há **menos itens do que colunas**: `auto-fill` mantém as colunas vazias (os itens ficam estreitos, com espaço sobrando à direita); `auto-fit` colapsa as vazias e deixa os itens existentes crescerem. Para grades de cartões, você quase sempre quer `auto-fit`.
 
 > **⚠️ Atenção**
@@ -268,7 +268,7 @@ Em um monitor de 1600 px as **quatro** queries estão ativas ao mesmo tempo. As 
 
 Funciona, mas repare nos limites "menos um" (`1439px`, `1023px`, `767px`) — um convite a erro de conta — e na lógica invertida: a base é a tela que menos gente usa, e o celular é o último caso tratado. Nesta disciplina você escreve **sempre** mobile first.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Uma pergunta clássica: "no CSS mobile first, o que acontece se o navegador não suportar media queries?". Resposta: ele mostra a versão de celular, que é a base e funciona em qualquer largura. No desktop first, o mesmo navegador mostraria as quatro colunas espremidas em 360 px.
 
 ### Breakpoints: onde o layout quebra
@@ -778,7 +778,7 @@ O Live Server serve a pasta do projeto na porta 5500. Do celular, na mesma rede 
 2. No navegador do celular, abra `http://192.168.0.15:5500/site-evento/` (troque pelo seu IP).
 3. Se não abrir, o Live Server pode estar ouvindo só em `127.0.0.1`. Nas configurações do VS Code, defina `liveServer.settings.host` como `0.0.0.0`, reinicie o Live Server e tente de novo. Se ainda não abrir, o firewall do computador está bloqueando a porta 5500.
 
-No aparelho de verdade aparecem os problemas que o simulador esconde: o menu que não abre porque o botão tem 24 px e o dedo tem 40, a fonte que fica pequena demais, o campo de formulário que dá zoom sozinho, a altura de `100vh` que fica escondida atrás da barra de endereço. É sobre isso o fórum da atividade assíncrona.
+No aparelho de verdade aparecem os problemas que o simulador esconde: o menu que não abre porque o botão tem 24 px e o dedo tem 40, a fonte que fica pequena demais, o campo de formulário que dá zoom sozinho, a altura de `100vh` que fica escondida atrás da barra de endereço. É sobre isso a atividade assíncrona de hoje.
 
 ### 3. Lighthouse
 
@@ -1208,7 +1208,7 @@ Cada `<td>` recebe `data-rotulo="Horário"` no HTML. Na media query de `max-widt
 No modo dispositivo do DevTools, o menu de três pontos ao lado da largura tem *Capture full size screenshot*, que salva a página inteira de uma vez na largura escolhida. Faça primeiro o `index.html`, valide os três tamanhos, e só então replique o padrão nas outras páginas — o CSS é o mesmo.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Construa `portal/index.html` + `portal/css/portal.css`, um portal de notícias acadêmicas responsivo, com:
 
@@ -1341,7 +1341,7 @@ Rode o Lighthouse Mobile no `index.html` do seu projeto autoral agora, antes de 
 - Tabela de dados responsiva (a técnica do B4) em pelo menos uma página.
 - Tema escuro via `prefers-color-scheme` com todos os pares de contraste ≥ 4.5:1, verificados no WebAIM e listados em `contraste.md`.
 - Um `melhorias.md` com, para cada alerta do "antes", a correção aplicada e a seção da aula que a explica.
-- Vale como item extra da rubrica da Avaliação 2.
+- Isso entra bem no Marco 2 da unidade.
 
 <details><summary>Pistas</summary>
 
@@ -1368,21 +1368,21 @@ Rode o Lighthouse Mobile no `index.html` do seu projeto autoral agora, antes de 
 | Tema escuro deixa botões brancos com texto branco | Cores escritas "na mão" (`#fff`) em vez de variáveis; variável de texto-sobre-primária inexistente | Toda cor via variável; crie `--cor-sobre-primaria` e redefina no bloco `dark` |
 | Página imprime o menu, o rodapé e um fundo escuro | Sem `@media print` | Esconda navegação e rodapé, force fundo branco e texto preto na query de impressão |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulo de design responsivo. MDN: *Media queries* (`https://developer.mozilla.org/pt-BR/docs/Web/CSS/CSS_media_queries`) — leia a página de introdução e a de "Usando media queries"; anote a sintaxe de intervalo e as três preferências do usuário que você viu hoje.
 
-**Parte 2 — Entrega (40 min).** No seu **projeto autoral**:
+**Parte 2 — Produção (40 min).** No seu **projeto autoral**:
 
 1. O exercício **B5** completo: o site responsivo em três breakpoints (mobile first, queries agrupadas no fim do `estilo.css` em ordem crescente), com as capturas de tela de cada página em 360 px, 768 px e 1440 px na pasta `capturas/`.
 2. O menu responsivo do exercício **B3** funcionando em todas as páginas — no mínimo o básico da aula (`<button>`, `aria-expanded`, CSS mobile first, `menu.js` com `defer`); os fechamentos por <kbd>Esc</kbd> e por clique fora valem como extra.
 3. Tema escuro via `prefers-color-scheme` e o bloco `prefers-reduced-motion` no fim do arquivo.
 
-**Parte 3 — Fórum "Testei no celular" (5 min).** Abra o seu site em um celular real pelo IP do computador (ou peça o de um colega). Relate no fórum um problema que **só** apareceu no aparelho de verdade e não no simulador do DevTools — botão pequeno demais para o dedo, fonte ilegível, `100vh` escondido pela barra de endereço, campo que dá zoom sozinho — e como você o resolveu. Responda a um colega comparando com o que aconteceu no seu aparelho.
+**Parte 3 — Teste no celular (5 min).** Abra o seu site em um celular real pelo IP do computador (ou peça o de um colega). Registre (no fórum da turma, se você cursa a disciplina, ou nas suas anotações) um problema que **só** apareceu no aparelho de verdade e não no simulador do DevTools — botão pequeno demais para o dedo, fonte ilegível, `100vh` escondido pela barra de endereço, campo que dá zoom sozinho — e como você o resolveu.
 
 **Critério de pronto:** nenhuma rolagem horizontal em 320 px em nenhuma página; menu hambúrguer abre e fecha por toque, por clique e por <kbd>Enter</kbd> no teclado, com `aria-expanded` mudando no DevTools; capturas das cinco páginas nas três larguras; tema escuro sem nenhum par de contraste abaixo de 4.5:1; Lighthouse Mobile sem alerta de viewport, fonte pequena ou alvo de toque.
 
-**Entrega:** pasta `.zip` do projeto ou link do repositório no SIGAA, mais a URL da sua mensagem no fórum.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto, se ainda não usa Git).
 
 ## ✅ Checkpoint do projeto
 

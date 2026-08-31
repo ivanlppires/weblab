@@ -11,7 +11,7 @@ JS = (_AQUI / "app.js").read_text(encoding="utf-8")
 
 TRILHAS_NAV = [
     ("nivel-1", "Nível 1"), ("nivel-2", "Nível 2"), ("nivel-3", "Nível 3"),
-    ("deploy", "Deploy"), ("desafios", "Desafios"), ("links", "Links"),
+    ("deploy", "Deploy"), ("desafios", "Desafios"), ("links", "Links"), ("autores", "Autores"),
 ]
 
 
@@ -45,7 +45,7 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(titulo)}</title>
 <meta name="description" content="{e(descricao)}">
-<meta name="author" content="{e(config.PROFESSOR)}">
+<meta name="author" content="{e(config.autores_meta())}">
 <meta property="og:title" content="{e(titulo)}">
 <meta property="og:description" content="{e(descricao)}">
 <meta property="og:site_name" content="WebLab">
@@ -75,8 +75,8 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
   <main id="conteudo">{corpo}
     <div class="rodape">
       <strong>WebLab</strong> — {e(config.SUBTITULO)} · {e(config.INSTITUICAO)}<br>
-      {e(config.PROFESSOR)} · Material didático de uso educacional; livre para consulta, estudo e reuso com atribuição.<br>
-      <a href="{raiz_rel}">Início</a> · <a href="{raiz_rel}desafios/">Banco de Desafios</a> · <a href="{raiz_rel}links/">Links úteis</a> · <a href="https://github.com/ivanlppires/weblab">Fontes no GitHub</a>
+      Conteúdo sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" rel="license noopener">CC BY 4.0</a>; o gerador do site, sob licença MIT. Reuso livre com atribuição.<br>
+      <a href="{raiz_rel}">Início</a> · <a href="{raiz_rel}autores/">Autoria e créditos</a> · <a href="{raiz_rel}desafios/">Banco de Desafios</a> · <a href="{raiz_rel}links/">Links úteis</a> · <a href="https://github.com/ivanlppires/weblab">Fontes no GitHub</a>
     </div>
   </main>
   {toc}
@@ -138,13 +138,13 @@ def cabecalho_aula(trilha, a, apostila=False):
     ]
     if trilha["tipo"] == "aula":
         tags.append('<span class="tag">3 aulas de 50 min + 1 h EAD</span>')
-    if a["avaliacao"]:
-        tags.append(f'<span class="tag av">Fecha a unidade · Avaliação {a["avaliacao"]}</span>')
+    if a["marco"]:
+        tags.append(f'<span class="tag av">Fecha a unidade · Marco {a["marco"]}</span>')
     h1 = f'<h1>{rot} {a["num"]} — <span class="marca-texto">{e(a["titulo"])}</span></h1>'
     return (
         '<div class="cabecalho">'
         f'<div class="tags">{"".join(tags)}</div>{h1}'
-        f'<div class="sub">{e(trilha["nome"])} · {e(trilha["codigo"])} · WebLab · {e(config.PROFESSOR)}</div>'
+        f'<div class="sub">{e(trilha["nome"])} · {e(trilha["codigo"])} · WebLab</div>'
         "</div>"
     )
 
@@ -228,7 +228,7 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
             )
         disponivel = a["pagina"] in aulas_existentes
         href = a["pagina"] if disponivel else "#"
-        av = f'<span class="av">Fecha a unidade · Avaliação {a["avaliacao"]}</span>' if a["avaliacao"] else ""
+        av = f'<span class="av">Fecha a unidade · Marco {a["marco"]}</span>' if a["marco"] else ""
         breve = "" if disponivel else '<span class="av">Em breve</span>'
         cards.append(
             f'<a class="cartao" href="{href}" data-aula-id="{t["id"]}/{a["pagina"]}">'
@@ -250,20 +250,19 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
 <div class="tabela-wrap"><table><thead><tr><th>Data</th><th>{rot}</th><th>Conteúdo</th></tr></thead><tbody>{linhas}</tbody></table></div>"""
 
     avals = ""
-    if t["id"] in config.AVALIACOES:
-        com_prazo = any(av.get("prazo") for av in config.AVALIACOES[t["id"]])
+    if t["id"] in config.MARCOS:
+        com_prazo = any(m.get("prazo") for m in config.MARCOS[t["id"]])
         col_prazo = "<th>Prazo</th>" if com_prazo else ""
         linhas = "".join(
-            f'<tr><td>Avaliação {av["n"]}</td><td>{e(av["escopo"])}</td>'
-            + (f'<td>{e(av.get("prazo", ""))}</td>' if com_prazo else "")
+            f'<tr><td>Marco {m["n"]}</td><td>{e(m["escopo"])}</td>'
+            + (f'<td>{e(m.get("prazo", ""))}</td>' if com_prazo else "")
             + "</tr>"
-            for av in config.AVALIACOES[t["id"]]
+            for m in config.MARCOS[t["id"]]
         )
-        nota_prazo = "" if com_prazo else " Os prazos de cada avaliação são publicados no SIGAA e anunciados em aula."
         avals = f"""
-<h2 id="avaliacao">Avaliação</h2>
-<p>{e(config.REGRAS_APROVACAO)} Entregas via SIGAA.{nota_prazo} O exame final é uma prova teórica, presencial e individual sobre as três unidades.</p>
-<div class="tabela-wrap"><table><thead><tr><th>Instrumento</th><th>Escopo</th>{col_prazo}</tr></thead><tbody>{linhas}</tbody></table></div>"""
+<h2 id="marcos">Marcos do projeto</h2>
+<p>Cada unidade fecha com um marco: um estado do <strong>seu</strong> projeto que prova que você domina o que a unidade ensinou. A aula que fecha a unidade traz os requisitos e o checklist de qualidade. Se você estuda por conta própria, use os marcos como metas; se cursa a disciplina, eles são a base do que o professor pede.</p>
+<div class="tabela-wrap"><table><thead><tr><th>Marco</th><th>O que o projeto deve ter</th>{col_prazo}</tr></thead><tbody>{linhas}</tbody></table></div>"""
 
     stack = "".join(f"<tr><td>{e(k)}</td><td>{e(v)}</td></tr>" for k, v in t["stack"])
     biblio = config.BIBLIOGRAFIA.get(t["id"], [])
@@ -308,7 +307,7 @@ def pagina_indice_trilha(trilha, n_desafios, aulas_existentes):
     if cron:
         itens.append(("2", "cronograma", "Cronograma" + (f" {config.SEMESTRE}" if config.SEMESTRE else "")))
     if avals:
-        itens.append(("2", "avaliacao", "Avaliação"))
+        itens.append(("2", "marcos", "Marcos do projeto"))
     itens += [("2", "stack", "Stack")]
     if biblio_html:
         itens.append(("2", "bibliografia", "Bibliografia"))
@@ -492,6 +491,47 @@ def pagina_links(links_html, itens_toc):
         raiz_rel="../",
         body_class="links-pagina",
         canonico=f"{config.URL_BASE}/links/",
+    )
+
+
+def pagina_autores(texto_html):
+    def pessoa(a):
+        papeis = " · ".join(a.get("papel", []))
+        ids = []
+        if a.get("orcid"):
+            ids.append(f'<a href="https://orcid.org/{e(a["orcid"])}" rel="noopener">ORCID {e(a["orcid"])}</a>')
+        if a.get("lattes"):
+            ids.append(f'<a href="{e(a["lattes"])}" rel="noopener">Currículo Lattes</a>')
+        linha_ids = f'<p class="m">{" · ".join(ids)}</p>' if ids else ""
+        inst = f'<p class="m">{e(a["instituicao"])}</p>' if a.get("instituicao") else ""
+        return (f'<article class="ficha">'
+                f'<h3>{e(a["nome"])}</h3>'
+                f'<p class="tags"><span class="tag">{e(papeis)}</span></p>'
+                f'{inst}<p>{e(a.get("escopo", ""))}</p>{linha_ids}</article>')
+
+    principais = "".join(pessoa(a) for a in config.AUTORES if a.get("principal"))
+    demais = "".join(pessoa(a) for a in config.AUTORES if not a.get("principal"))
+    bloco_demais = (f'<h2 id="colaboracao">Revisão e colaboração</h2>'
+                    f'<div class="fichas">{demais}</div>') if demais else ""
+    corpo = f"""
+<div class="hero">
+  <div class="eyebrow">Quem escreve, revisa e mantém o WebLab</div>
+  <h1>Autoria e <span class="marca-texto">créditos</span></h1>
+  <p class="lead">O WebLab é um material aberto e vivo. Cada pessoa listada aqui contribuiu com uma parte identificável do conteúdo ou do gerador — o papel de cada uma está descrito ao lado do nome.</p>
+</div>
+<h2 id="autoria">Autoria</h2>
+<div class="fichas">{principais}</div>
+{bloco_demais}
+{texto_html}
+"""
+    return pagina_base(
+        titulo="Autores · WebLab",
+        descricao="Quem escreve, revisa e mantém o WebLab: autoria, papéis de contribuição e como citar o material.",
+        corpo=corpo,
+        trilha_id="autores",
+        raiz_rel="../",
+        body_class="links-pagina",
+        canonico=f"{config.URL_BASE}/autores/",
     )
 
 

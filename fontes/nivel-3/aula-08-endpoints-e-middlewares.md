@@ -1,8 +1,8 @@
 # Aula 08 — Definindo endpoints e middlewares
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,7 +18,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
-Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em memória, CORS habilitado, e conectou o front-end real a ela. Hoje essa API vira um CRUD completo, ganha middlewares próprios e validação de entrada — e você recebe as instruções da **Avaliação 2**, com entrega até hoje às 23h59.
+Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em memória, CORS habilitado, e conectou o front-end real a ela. Hoje essa API vira um CRUD completo, ganha middlewares próprios e validação de entrada — e você chega ao **Marco 2** do seu projeto autoral.
 
 - [ ] `unieventos-api` da Aula 07 rodando, com `GET /api/eventos` e `GET /api/eventos/:id` funcionando em memória.
 - [ ] Front-end `unieventos-web` apontando para essa API via `baseURL` do Axios.
@@ -26,7 +26,7 @@ Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em mem
 - [ ] Projeto autoral com API própria (`<seu-projeto>-api`) criada na atividade assíncrona da Aula 07.
 
 > **⚠️ Atenção**
-> Esta é a aula da **Avaliação 2**. Leia a seção "📝 Avaliação 2 — instruções de entrega" logo no início do período de aula, para planejar seu tempo — o prazo de entrega é hoje, às 23h59.
+> Esta é a aula do **Marco 2**. Leia a seção "🎓 Marco do projeto — Unidade 2" logo no início do período de aula, para planejar seu tempo.
 
 ## 🗺️ Roteiro
 
@@ -34,7 +34,7 @@ Na Aula 07 você criou a `unieventos-api` com Express 5, duas rotas `GET` em mem
 |---|---|---|
 | 1 | 50 min | REST na prática: recursos, verbos, status codes, formato de resposta, paginação e filtros |
 | 2 | 50 min | CRUD completo com `express.Router()`; middlewares próprios e de terceiros; tratador de erros central |
-| 3 | 50 min | Validação com `zod`; `requests.http` completo; instruções da Avaliação 2 |
+| 3 | 50 min | Validação com `zod`; `requests.http` completo; requisitos do Marco 2 |
 
 ## 1. REST na prática
 
@@ -79,7 +79,7 @@ POST /api/eventos/3/inscricoes    (inscrever alguém no evento 3)
 
 **Idempotência** significa: repetir a mesma requisição várias vezes produz o mesmo resultado final que executá-la uma vez. `GET /api/eventos/3` sempre devolve o mesmo evento (até que ele mude por outro motivo) — chamar dez vezes não altera nada. `DELETE /api/eventos/3` é idempotente porque, depois da primeira chamada, o evento já não existe; chamar de novo continua resultando em "evento 3 não existe" (ainda que a segunda chamada responda `404` em vez de `204` — o estado final do sistema é o mesmo). Já `POST /api/eventos` **não** é idempotente: cada chamada cria um evento novo, mesmo enviando o corpo idêntico.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Se a pergunta pedir para classificar um verbo HTTP como idempotente ou não, lembre: `GET`, `PUT`, `DELETE` são idempotentes; `POST` não é. `PATCH` depende de como é implementado, mas normalmente também não é.
 
 > **🧠 Você sabia?**
@@ -631,7 +631,7 @@ Se `buscarEventoPorIdNoBanco` rejeitasse a Promise (por exemplo, uma falha de co
 
 No Express 5, esse pacote é desnecessário. Se você encontrar em um projeto ou tutorial, é sinal de código escrito para Express 4 (ou copiado de um).
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Se perguntarem por que `express-async-handler` não é mais necessário no Express 5, a resposta é: o próprio framework agora captura automaticamente qualquer exceção lançada (ou Promise rejeitada) dentro de um handler `async`, encaminhando para o middleware de erro — antes isso exigia embrulhar manualmente.
 
 ## 🧩 Padrão de projeto em uso — Chain of Responsibility e Strategy
@@ -924,7 +924,7 @@ Resultado esperado: status `422` e corpo `{ "erro": { "mensagem": "...", "codigo
 3. No navegador, abra o `unieventos-web`: a lista da `HomeView` carrega normalmente, o formulário administrativo cria um evento e a exclusão remove da tabela. Na aba **Network**, a resposta de `GET /api/eventos` mostra o objeto `{ dados, paginacao }`; no **Console**, nenhum `filter is not a function`.
 4. Pare a API (`Ctrl+C`) e recarregue o front: a mensagem de erro que aparece na tela vem de `error.mensagemAmigavel`, não de um `undefined`.
 
-Se os quatro passos passam, o contrato novo está fechado dos dois lados — e é exatamente esse o critério da Avaliação 2.
+Se os quatro passos passam, o contrato novo está fechado dos dois lados — e é exatamente esse o critério do Marco 2.
 
 ## 🧪 Laboratório
 
@@ -1025,7 +1025,7 @@ Resultado esperado: antes da correção, o registro em memória passa a ter `id:
 Depois do merge (`{ ...eventos[indice], ...req.body }`), force `eventos[indice].id = id` (o id da URL, já convertido para número) por cima, sobrescrevendo qualquer valor vindo do corpo.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Middleware de erro específico para JSON malformado. Envie, via `curl`, um `POST /api/eventos` com corpo JSON propositalmente quebrado (ex.: `{"titulo": "teste",}` com vírgula sobrando). Observe qual status volta. `express.json()` lança um erro de parsing antes mesmo de sua rota rodar — confirme que esse erro também é capturado pelo seu `tratadorDeErros`, e ajuste a mensagem para ficar amigável ("corpo da requisição não é um JSON válido") quando o erro vier do parser.
 
@@ -1116,15 +1116,15 @@ O envelope `{ "erro": { "mensagem", "codigo" } }` desta aula não chega pronto a
 | Duas rotas parecem casar com a mesma URL, só a primeira responde | ordem de registro determina qual middleware/rota atende primeiro | reordene: rotas mais específicas antes das mais genéricas |
 | Front-end para de funcionar depois de adicionar `helmet()` | `helmet` por padrão bloqueia carregamento de alguns recursos cross-origin | ajuste as políticas de `helmet` conforme a necessidade, ou mantenha o padrão em desenvolvimento e ajuste caso a caso |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
-Além de finalizar e entregar a Avaliação 2, use esta hora para:
+Além de fechar o Marco 2, use esta hora para:
 
 1. Adicionar ao seu `requests.http` autoral os casos de erro esperados (`404`, `422`) — não só o caminho feliz.
 2. Rodar o laboratório de rate limit (exercício 4) no seu próprio projeto, confirmando que o `429` aparece.
 3. Revisar seu tratador de erros: force um erro inesperado (ex.: acesse uma propriedade de `undefined` de propósito dentro de uma rota) e confirme que a resposta chega como `500` com o envelope `{ "erro": { ... } }`, sem vazar o stack trace para o cliente.
 
-**Critério de pronto:** sua API autoral tem CRUD completo, middlewares próprios funcionando na ordem correta, validação com Zod retornando `422` com mensagens claras, e a Avaliação 2 já submetida no SIGAA.
+**Critério de pronto:** sua API autoral tem CRUD completo, middlewares próprios funcionando na ordem correta, e validação com Zod retornando `422` com mensagens claras.
 
 ## ✅ Checkpoint do projeto autoral
 
@@ -1134,44 +1134,40 @@ Além de finalizar e entregar a Avaliação 2, use esta hora para:
 - [ ] Validação de entrada com `zod`, retornando `422` com mensagens em português.
 - [ ] `requests.http` cobrindo todos os endpoints, inclusive casos de erro.
 - [ ] Front-end autoral consumindo o CRUD completo, com tratamento de carregando/erro/vazio.
-- [ ] Avaliação 2 entregue via SIGAA.
+- [ ] Marco 2 alcançado.
 
-## 📝 Avaliação 2 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 2
 
-**Escopo.** Uma aplicação **Vue 3** completa, consumindo uma API (a sua, em memória ou já com Firestore — MySQL só é exigido a partir da Aula 09), sobre o **projeto autoral** de cada estudante (não o UniEventos, que é o exemplo do professor).
+O Marco 2 fecha com uma aplicação **Vue 3** completa, consumindo uma API (a sua, em memória ou já com Firestore — MySQL só é exigido a partir da Aula 09), sobre o **projeto autoral** de cada estudante (não o UniEventos, que é o exemplo do curso).
 
-**Requisitos obrigatórios:**
+### Requisitos
 
-- **Vuetify** para toda a interface (nenhum CSS puro estrutural fora do Vuetify, exceto ajustes pontuais).
-- **Vue Router**, com no mínimo **4 rotas** (ex.: Home, Detalhe, Formulário de criação/edição, uma quarta rota própria do domínio — listagem filtrada, painel, etc.).
-- No mínimo **6 componentes próprios** (`.vue` autorais, além dos componentes do Vuetify) — componentes de card, formulário, lista, filtro, layout, etc.
-- **Uma store Pinia** com estado assíncrono: ações que chamam a API, estados de `carregando` e `erro`, getters quando fizer sentido.
-- **Axios** com instância dedicada (`axios.create`) e ao menos um interceptor.
-- Consumo de API com tratamento visível de **carregando / erro / vazio** (três estados, não só o caminho feliz) em pelo menos uma tela de listagem.
-- **Formulário com validação** (Vuetify `rules` ou biblioteca de validação) para criar ou editar um registro do domínio.
-- **Layout responsivo** — funcional em tela de celular e de desktop, usando o sistema de grid do Vuetify.
+1. **Vuetify** para toda a interface (nenhum CSS puro estrutural fora do Vuetify, exceto ajustes pontuais) — **Aula 04**.
+2. **Vue Router**, com no mínimo **4 rotas** (ex.: Home, Detalhe, Formulário de criação/edição, uma quarta rota própria do domínio — listagem filtrada, painel, etc.) — **Aula 04/05**.
+3. No mínimo **6 componentes próprios** (`.vue` autorais, além dos componentes do Vuetify) — componentes de card, formulário, lista, filtro, layout, etc. — **Aula 05**.
+4. **Uma store Pinia** com estado assíncrono: ações que chamam a API, estados de `carregando` e `erro`, getters quando fizer sentido — **Aula 06**.
+5. **Axios** com instância dedicada (`axios.create`) e ao menos um interceptor — **Aula 06**.
+6. Consumo de API com tratamento visível de **carregando / erro / vazio** (três estados, não só o caminho feliz) em pelo menos uma tela de listagem — **Aula 06**.
+7. **Formulário com validação** (Vuetify `rules` ou biblioteca de validação) para criar ou editar um registro do domínio — **Aula 05**.
+8. **Layout responsivo** — funcional em tela de celular e de desktop, usando o sistema de grid do Vuetify — **Aula 04**.
+9. **CRUD completo na API** (`unieventos-api` do projeto autoral), com middlewares próprios e validação com Zod retornando `422` — **Aulas 07/08**.
 
-**Rubrica:**
+### Checklist de qualidade
 
-| Critério | Peso |
-|---|---|
-| Vue Router — 4+ rotas, navegação coerente, guards se aplicável | 1,5 |
-| Componentização — 6+ componentes próprios, props/emits corretos | 2,0 |
-| Pinia — store com estado assíncrono, carregando/erro tratados | 2,0 |
-| Axios — instância dedicada, interceptor, integração com a store | 1,5 |
-| Vuetify — uso consistente, responsividade | 1,5 |
-| Formulário com validação funcionando | 1,0 |
-| Organização do código e commits (histórico git coerente) | 0,5 |
+- [ ] Navegação com Vue Router coerente — sem rotas mortas, sem telas inacessíveis.
+- [ ] Componentes com contrato claro: props tipadas, emits nomeados, nada de dado "vazando" entre componentes que não deveriam se conhecer.
+- [ ] Store Pinia refletindo de verdade os três estados (carregando/erro/sucesso) na interface, não só guardando dados.
+- [ ] Instância Axios dedicada, com `baseURL` configurada e ao menos um interceptor com propósito real (log, tratamento de erro, header comum).
+- [ ] Formulário validando antes de enviar, com mensagens de erro visíveis e específicas.
+- [ ] Layout testado em pelo menos duas larguras de tela (celular e desktop), não só "parece bom no meu monitor".
+- [ ] Histórico de commits granular, mostrando a evolução do CRUD ao longo das aulas.
 
-Total: **10,0 pontos**.
+### Como saber que está pronto
 
-**Formato de entrega.** Link do repositório Git (GitHub, GitLab ou similar), **público ou com acesso liberado para o professor**, enviado via **SIGAA**, no campo de entrega da Avaliação 2. O `README.md` do repositório deve conter: nome do projeto autoral, instruções de instalação (`npm install`, `npm run dev`) e uma breve descrição do domínio escolhido.
-
-**Prazo.** Até 23h59 do prazo publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)), horário de Brasília. O SIGAA registra o horário da submissão — entregas após o prazo entram na política de atraso abaixo.
-
-**Política de atraso.** Cada 24h de atraso desconta 1,0 ponto da nota final da avaliação, até o limite de 5 dias corridos; após esse prazo, a atividade recebe nota zero, salvo justificativa formal (atestado médico ou similar) protocolada junto à coordenação.
-
-**Política de plágio e uso de IA.** É permitido usar ferramentas de IA como apoio (explicar um erro, sugerir uma correção pontual, revisar um trecho) — é o mesmo tipo de apoio que se espera de qualquer ferramenta de desenvolvimento moderna. **Não é permitido** entregar um projeto majoritariamente gerado por IA sem compreensão do próprio código: na correção, o professor pode fazer perguntas orais sobre qualquer trecho entregue, e a incapacidade de explicar decisões básicas do próprio código (por que essa rota, por que essa store, o que faz esse `computed`) resulta em revisão da nota. Cópia entre colegas — código idêntico ou com alterações cosméticas — resulta em nota zero para todos os envolvidos, sem exceção.
+- Abra o `requests.http` (ou o Insomnia/Postman) e rode todos os endpoints da sua API, incluindo os casos de erro (`404`, `422`) — todos devem responder como esperado.
+- No navegador, force um erro (derrube a API com `Ctrl+C` e recarregue o front): a tela deve mostrar uma mensagem amigável, não um `undefined` ou uma tela em branco.
+- Redimensione a janela do navegador (ou use o modo responsivo do DevTools) navegando pelas rotas: nenhuma tela quebra.
+- Rode `npm install && npm run dev` em uma cópia limpa do repositório e confirme que tudo sobe sem passos extras não documentados no README.
 
 ## 📚 Para aprofundar
 

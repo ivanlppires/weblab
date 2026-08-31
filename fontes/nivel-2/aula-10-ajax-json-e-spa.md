@@ -1,8 +1,8 @@
 # Aula 10 — AJAX, JSON e Single Page Application
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na aula passada você aprendeu a esperar por um valor que ainda não chegou. Só que o valor não chegava de lugar nenhum: era o seu próprio `setTimeout` fingindo ser um servidor. Hoje a simulação acaba. O `fetch` entra em cena, os produtos do Café Cerrado passam a nascer de um arquivo JSON, o formulário de contato ganha destino de verdade e a navegação entre as páginas deixa de recarregar o navegador. No fim da aula você não terá mais um site: terá uma **aplicação**. E esta é a aula que fecha a Unidade 2.
 
@@ -17,7 +17,7 @@ Ao final desta aula você será capaz de:
 - Consumir um arquivo JSON do próprio projeto e duas APIs públicas (JSONPlaceholder e ViaCEP), entendendo o que CORS permite e o que ele bloqueia.
 - Organizar o código em **módulos ES** (`import` / `export`) e explicar por que módulos exigem servidor HTTP.
 - Implementar uma **SPA** com roteamento por hash: várias telas em um único HTML, com histórico do navegador, link direto e foco acessível funcionando.
-- Reunir tudo em uma entrega avaliável: a Avaliação 2 da disciplina.
+- Reunir tudo isso no Marco 2 do projeto.
 
 ## 📋 Pré-requisitos
 
@@ -35,7 +35,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | AJAX e o que ele mudou; JSON a fundo; `fetch` com `async/await`; `response.ok`; status HTTP |
 | 2 | 50 min | Módulos ES; `data/produtos.json`; APIs públicas (JSONPlaceholder, ViaCEP); CORS; `POST` no formulário |
-| 3 | 50 min | Padrão SPA; roteador por hash; acessibilidade na troca de tela; Mão na massa; laboratório e Avaliação 2 |
+| 3 | 50 min | Padrão SPA; roteador por hash; acessibilidade na troca de tela; Mão na massa; laboratório e Marco 2 |
 
 ## 1. AJAX: a Web que parou de recarregar
 
@@ -424,7 +424,7 @@ Quando o navegador carrega uma página nova, ele faz três coisas automaticament
 2. **Move o foco para o topo do documento.** Sem isso, quem navega por teclado continua com o foco no link clicado e o leitor de tela não anuncia nada. Solução: dar `tabindex="-1"` ao título da tela e chamar `.focus()` nele.
 3. **Sinaliza onde você está.** No menu, marque o link ativo com `aria-current="page"` — o mesmo atributo da Aula 03, agora atualizado por JavaScript.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Três perguntas recorrentes: (1) por que `fetch` não rejeita em um 404; (2) qual a diferença entre `JSON.parse` e `response.json()` — o segundo lê o corpo **e** faz o parse, devolvendo uma Promise; (3) por que a navegação por hash preserva o histórico do navegador enquanto trocar classes CSS "na mão" não preserva.
 
 ## 💻 Mão na massa — o Café Cerrado vira uma SPA
@@ -1242,7 +1242,7 @@ Resultado esperado: copiar a URL e abrir em outra aba reproduz exatamente a mesm
 Separe o hash em duas partes com `split("?")`: a primeira é a rota, a segunda alimenta `new URLSearchParams(...)`. Para escrever sem criar entrada nova no histórico a cada tecla, use `history.replaceState(null, "", novoHash)`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Implemente a rota de detalhe do produto: `#/produto/3` mostra uma tela com a foto grande, o nome, a descrição, o preço e um botão "Voltar ao cardápio". Cada card do cardápio vira um link para a rota do seu produto. Se o id não existir, a tela mostra "Produto não encontrado" com link para o cardápio — sem quebrar a aplicação.
 
@@ -1334,7 +1334,7 @@ O roteador da aula é um `Map` de caminhos fixos. Frameworks reais aceitam parâ
 ### 🔥 Boss — Pedido do Café Cerrado, do cardápio à confirmação
 Tags: spa, fetch, json, projeto
 
-Este é o Boss da Unidade 2: um fluxo completo de pedido, em quatro telas, usando **tudo** o que você aprendeu desde a Aula 07 — DOM e eventos, `map`/`filter`/`reduce`, assíncrono com estados, `fetch` de arquivo e de API, `POST`, formulário validado e roteamento SPA. É também o melhor treino possível para a Avaliação 2: quem faz o Boss no projeto autoral já tem a avaliação praticamente pronta.
+Este é o Boss da Unidade 2: um fluxo completo de pedido, em quatro telas, usando **tudo** o que você aprendeu desde a Aula 07 — DOM e eventos, `map`/`filter`/`reduce`, assíncrono com estados, `fetch` de arquivo e de API, `POST`, formulário validado e roteamento SPA. É também o melhor treino possível para o Marco 2: quem faz o Boss no projeto autoral já tem o marco praticamente pronto.
 
 O fluxo: a pessoa navega o cardápio, adiciona itens ao carrinho, revisa o pedido, preenche a entrega com busca de CEP e confirma. O pedido é enviado por `POST` e a tela final mostra o número do protocolo.
 
@@ -1377,7 +1377,7 @@ O fluxo: a pessoa navega o cardápio, adiciona itens ao carrinho, revisa o pedid
 | `Uncaught (in promise) TypeError: Cannot read properties of null (reading 'addEventListener')` | O elemento não existe na tela atual (`querySelector` devolveu `null`) | Conferir o `id` no HTML; em SPA, o elemento precisa existir no `index.html` |
 | O `POST` chega ao servidor sem corpo | Faltou `JSON.stringify` no `body` ou o cabeçalho `Content-Type` | Enviar `body: JSON.stringify(objeto)` com `headers: { "Content-Type": "application/json" }` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral**, feche a Unidade 2:
 
@@ -1391,7 +1391,7 @@ No **seu projeto autoral**, feche a Unidade 2:
 
 **Critério de pronto:** o projeto autoral roda inteiro a partir de um único `index.html`, os dados vêm de arquivos JSON e de pelo menos uma API, e a navegação entre as telas não recarrega o navegador em momento nenhum.
 
-**Entrega:** commit + push e link do repositório no SIGAA. Esta atividade é também a base da Avaliação 2 — veja as instruções abaixo.
+**Guarde no seu repositório:** commit + push. Esta atividade é também a base do Marco 2 — veja as instruções abaixo.
 
 **Leitura dirigida (Biblioteca Virtual da UNEMAT):** QUEIRÓS & PORTELA, capítulos sobre AJAX, JSON e comunicação com o servidor, e a introdução ao back-end com Node.js — a Unidade 3 começa na próxima aula.
 
@@ -1408,11 +1408,11 @@ No **seu projeto autoral**, feche a Unidade 2:
 - [ ] Nenhuma requisição repetida sem necessidade na aba Network ao alternar entre telas.
 - [ ] `cardapio.html`, `contato.html` e `js/dados.js` removidos, e o site publicado no GitHub Pages continua funcionando.
 
-## 📝 Avaliação 2 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 2
 
-**Escopo.** A evolução do **seu projeto autoral** (não o Café Cerrado, que é o exemplo construído em sala) para uma aplicação client-side dinâmica: validação de formulários, DOM e eventos, programação assíncrona e SPA com AJAX/JSON. É o resultado das Aulas 07 a 10 sobre a base entregue na Avaliação 1.
+**Escopo.** A evolução do **seu projeto autoral** (não o Café Cerrado, que é o exemplo construído em sala) para uma aplicação client-side dinâmica: validação de formulários, DOM e eventos, programação assíncrona e SPA com AJAX/JSON. É o resultado das Aulas 07 a 10 sobre a base do Marco 1.
 
-**Requisitos obrigatórios:**
+**Requisitos:**
 
 1. **Validação de formulário** com pelo menos quatro campos: validação nativa do HTML (`required`, `type`, `minlength`, `pattern`) somada a mensagens em JavaScript por campo, anunciadas em região com `aria-live`.
 2. **DOM e eventos**: uma lista de itens do seu domínio renderizada dinamicamente a partir de dados (nada de cards escritos à mão no HTML), com busca por texto, um filtro e uma ordenação funcionando juntos.
@@ -1424,26 +1424,26 @@ No **seu projeto autoral**, feche a Unidade 2:
 8. **Acessibilidade mantida** da Unidade 1: skip link, foco visível, contraste, `alt` nas imagens, foco movido para o título a cada troca de tela.
 9. **Repositório organizado**: `data/`, `js/` em módulos ES, `css/`, `README.md` explicando o projeto, como rodar e quais APIs consome; commits com mensagens descritivas ao longo do desenvolvimento.
 
-**Rubrica:**
+**Checklist de qualidade**
 
-| Critério | Peso |
-|---|---|
-| Validação de formulário (nativa + JS, mensagens acessíveis) | 1,5 |
-| DOM e eventos (render dinâmico, busca, filtro, ordenação, resumo) | 2,0 |
-| Programação assíncrona (async/await e os quatro estados) | 2,0 |
-| AJAX e JSON (`fetch` de arquivo e de API, `resposta.ok`, `POST`) | 2,0 |
-| SPA (roteamento por hash, histórico, link direto, acessibilidade) | 2,0 |
-| Organização do repositório, `README.md` e histórico de commits | 0,5 |
+- **Validação de formulário** completa: nativa + JS, com mensagens acessíveis por campo.
+- **DOM e eventos**: render dinâmico, busca, filtro e ordenação funcionando juntos, não isolados.
+- **Programação assíncrona**: os quatro estados (carregando, sucesso, erro, vazio) tratados de verdade, com caminho de recuperação no erro — não só o caminho feliz.
+- **AJAX e JSON**: `fetch` de arquivo e de API, sempre checando `resposta.ok`, com `POST` funcionando de ponta a ponta.
+- **SPA**: roteamento por hash, histórico do navegador, link direto para cada tela e acessibilidade mantida na troca de tela.
+- **Organização do repositório**: `README.md` completo e histórico de commits que mostra o projeto evoluindo, não um único commit final.
 
-Total: **10,0 pontos**.
+Um projeto "pela metade" costuma ter um dos itens acima funcionando só no caminho feliz (sem tratar erro, sem lidar com lista vazia) — teste sempre os casos de borda antes de considerar algo pronto.
 
-**Formato de entrega.** Link do repositório Git público (GitHub, GitLab ou similar) enviado pelo **SIGAA**, no campo da Avaliação 2. **Não envie arquivos `.zip`.** O repositório deve estar publicado no GitHub Pages, e o link do site publicado deve constar no topo do `README.md`. Um projeto que não abre pelo link publicado é corrigido como incompleto.
+**Sobre IA:** use como apoio — explicar um erro, sugerir uma correção pontual, revisar um trecho —, não como atalho para gerar o projeto sem entender o que ele faz. O teste real: se alguém apontar para um `await` ou um `filter` do seu código e perguntar por que está ali, você precisa saber responder.
 
-**Prazo.** O prazo oficial está publicado no índice da trilha e no SIGAA, sempre às 23h59 do dia indicado. O SIGAA registra o horário da submissão.
+### Como saber que está pronto
 
-**Política de atraso.** Cada dia corrido de atraso desconta 1,0 ponto da nota, até o limite de 5 dias; depois disso, a avaliação recebe zero, salvo justificativa formal protocolada junto à coordenação.
-
-**Política de plágio e uso de IA.** Ferramentas de IA são permitidas como apoio — explicar um erro, sugerir uma correção pontual, revisar um trecho. **Não é permitido** entregar um projeto majoritariamente gerado por IA sem compreensão do próprio código: na correção, o professor pode fazer perguntas orais sobre qualquer trecho entregue, e a incapacidade de explicar decisões básicas (por que este `await` está aqui, o que faz este `filter`, por que o roteador usa hash) resulta em revisão da nota. Cópia entre colegas — código idêntico ou com alterações cosméticas — resulta em nota zero para todos os envolvidos.
+- Abra a aba **Network** do DevTools ao alternar entre telas: nenhuma requisição repetida sem necessidade.
+- Force os quatro estados manualmente (desligue a rede, aponte para uma URL inexistente, filtre até a lista ficar vazia) e confirme que cada um tem uma tela própria, não uma tela em branco.
+- Navegue pelo histórico do navegador (voltar/avançar) dentro da SPA e confirme que cada tela tem link direto funcional.
+- Rode o teste de teclado e confira que o foco muda para o título a cada troca de tela.
+- Abra o repositório: `README.md` explica o projeto e como rodar, e o histórico de commits mostra evolução real ao longo das quatro aulas.
 
 ## 📚 Para aprofundar
 

@@ -1,8 +1,8 @@
 # Aula 05 — Animação e SVG
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -14,7 +14,7 @@ Ao final desta aula você será capaz de:
 - Construir animações de múltiplas etapas com `@keyframes` e controlá-las com `animation-delay`, `animation-iteration-count` e `animation-fill-mode`.
 - Justificar, pelo pipeline de renderização do navegador, por que `transform` e `opacity` são as propriedades baratas — e comprovar isso no painel Performance do DevTools.
 - Descrever a estrutura de um arquivo SVG (`viewBox`, formas básicas, `path`), escolher entre `<img src="…svg">` e SVG inline, e estilizar/animar um SVG inline com `fill`, `stroke` e `@keyframes`.
-- Aplicar `prefers-reduced-motion` e as regras da WCAG sobre movimento, entregando o critério "animação/SVG" da Avaliação 1.
+- Aplicar `prefers-reduced-motion` e as regras da WCAG sobre movimento, cobrindo o critério "animação/SVG" do Marco 1.
 
 ## 📋 Pré-requisitos
 
@@ -50,7 +50,7 @@ Se uma animação não responde a nenhuma dessas perguntas, ela é ruído. Movim
 A regra de ouro desta aula: **toda animação precisa responder "o que isso está dizendo ao usuário?"**. Se você não consegue responder em uma frase, apague.
 
 > **⚠️ Atenção**
-> A Avaliação 1 avalia o critério "animação/SVG" pela **coerência**, não pela quantidade. Três microinterações bem escolhidas valem mais que dez efeitos disputando atenção. Um site que pisca inteiro perde ponto.
+> O critério "animação/SVG" do Marco 1 é sobre **coerência**, não sobre quantidade. Três microinterações bem escolhidas valem mais que dez efeitos disputando atenção. Um site que pisca inteiro perde qualidade.
 
 > **🧠 Você sabia?**
 > Transições e animações em CSS não nasceram em um comitê: foram propostas pela Apple em 2007, dentro do WebKit, para que o Safari do primeiro iPhone conseguisse fazer interfaces fluidas sem JavaScript — o hardware da época não aguentava animar via script a 60 quadros por segundo. As propriedades saíram com prefixo `-webkit-`, os outros navegadores copiaram, e só anos depois viraram recomendação do W3C. É por isso que `transition` e `animation` parecem "feitas para telas de toque": elas foram, literalmente.
@@ -95,7 +95,7 @@ Passe o mouse: a cor muda suavemente e o botão sobe 2 px. Tire o mouse: ele des
 
 O atalho aceita várias transições separadas por vírgula, cada uma com sua duração e curva. Na prática você usa quase sempre o atalho.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A `transition` deve ser declarada no **estado base** do seletor (`.botao`), nunca dentro do estado de interação (`.botao:hover`). Se ficar no `:hover`, a entrada é suave e a saída é abrupta: ao tirar o mouse a regra `:hover` deixa de valer e leva a `transition` junto.
 
 ### 2.2 Funções de tempo
@@ -716,7 +716,7 @@ Repare também no que **não** está aqui: nenhuma cor de fundo, de borda ou de 
 
 Aqui está a `transform-origin` da §3.1 em ação: no estado base a origem é `right`, então o traço **recolhe pela direita** ao sair; nos estados ativos ela é `left`, então o traço **cresce da esquerda** ao entrar. O seletor `[aria-current="page"]` reaproveita o atributo que você colocou na Aula 03 — o item da página atual fica sublinhado o tempo todo, sem classe extra.
 
-Repare também que a `transition` aparece **duas vezes**, com curvas diferentes. Isso não contradiz a regra do callout **📌 Na prova**: a `transition` continua declarada no estado base (é ela que faz a saída acontecer); a segunda apenas **sobrescreve a curva** enquanto o estado ativo vale, dando `--curva-entrada` na ida e `--curva-saida` na volta. É a forma correta de ter velocidades diferentes nos dois sentidos — e é exatamente por isso que apagar a declaração do estado base quebraria a saída.
+Repare também que a `transition` aparece **duas vezes**, com curvas diferentes. Isso não contradiz a regra do callout **📌 Vale gravar**: a `transition` continua declarada no estado base (é ela que faz a saída acontecer); a segunda apenas **sobrescreve a curva** enquanto o estado ativo vale, dando `--curva-entrada` na ida e `--curva-saida` na volta. É a forma correta de ter velocidades diferentes nos dois sentidos — e é exatamente por isso que apagar a declaração do estado base quebraria a saída.
 
 ### Passo 4 — cards do cardápio que se elevam
 
@@ -1189,7 +1189,7 @@ Meça o caminho com `getTotalLength()` no Console e use o número em `stroke-das
 No painel Performance, use o botão de gravar, dispare a animação, pare e olhe o resumo por cores (roxo é Layout, verde é Paint, cinza-claro é Composite). Grave cada versão separadamente e com a mesma duração de gravação, senão os números não são comparáveis.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** **Cartaz animado do Café Cerrado.** Construa, em um arquivo novo `promocao.html`, um cartaz de página inteira para a promoção "Hora do café — 15 h às 17 h", com: fundo em gradiente que se desloca lentamente; título entrando escalonado letra a letra ou palavra a palavra; um relógio em SVG desenhado por você, com o ponteiro girando uma volta completa em 6 s; três cards de produto entrando em cascata; e um botão de chamada que pulsa três vezes e para. Requisitos técnicos: nenhuma animação de propriedade de layout; toda animação com propósito declarado em comentário; `prefers-reduced-motion` respeitado; o cartaz continua legível e navegável por teclado com o movimento desligado. Comece em sala pelo relógio e pelo título; o resto pode ser terminado em casa.
 
@@ -1268,7 +1268,7 @@ Um colega mandou o CSS abaixo dizendo "não anima nada, o navegador deve estar b
 
 <details><summary>Pistas</summary>
 
-1. Releia o callout **📌 Na prova** da §2: em qual seletor a `transition` precisa estar declarada?
+1. Releia o callout **📌 Vale gravar** da §2: em qual seletor a `transition` precisa estar declarada?
 2. A §2.4 explica por que uma propriedade específica nunca interpola e qual é a dupla que resolve.
 3. A §4.1 lista quatro valores de `animation-fill-mode`; dois deles resolvem o problema do card, e só um resolve os dois lados.
 4. Compare a duração da transição do `.icone` com a faixa recomendada para micro-interações na §2.3.
@@ -1375,7 +1375,7 @@ A página inicial do Café Cerrado vai ganhar uma seção "O café em números" 
 | Emular `prefers-reduced-motion: reduce` faz elementos sumirem da página | Animação de entrada com `opacity: 0` no estado base e sem `forwards` garantido | O bloco de movimento reduzido só encurta a duração; garanta que o estado final seja o visível (`forwards`/`both`) |
 | O CSS do Bootstrap vence o seu e o botão não muda | `css/estilo.css` carregado **antes** do CDN do Bootstrap no `<head>` | Inverta a ordem: framework primeiro, seu arquivo depois (Aula 04) |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** QUEIRÓS e PORTELA, seções sobre a camada de apresentação avançada. MDN: *Usando transições CSS*, *Usando animações CSS* e a página inicial de *SVG: Scalable Vector Graphics* (links em "Para aprofundar"). Anote uma coisa que a MDN explica e esta aula não.
 
@@ -1390,9 +1390,9 @@ A página inicial do Café Cerrado vai ganhar uma seção "O café em números" 
 
 **Critério de pronto:** os seis itens presentes; emular `prefers-reduced-motion: reduce` no DevTools não esconde nem quebra nada; nenhuma animação de `width`, `height`, `top`, `left` ou `margin`; nenhum `transition: all`; o site continua funcionando publicado no GitHub Pages.
 
-**Parte 3 — Fórum (5 min).** No fórum "Animação que ajuda e animação que atrapalha", poste o endereço de um site com movimento bem empregado e de outro com movimento excessivo, explicando tecnicamente a diferença: o que cada animação comunica, a duração aproximada e a propriedade animada (verifique no DevTools). Comente a postagem de um colega.
+**Parte 3 — Animação que ajuda e animação que atrapalha (5 min).** Em `docs/animacao.md`, anote o endereço de um site com movimento bem empregado e de outro com movimento excessivo, explicando tecnicamente a diferença: o que cada animação comunica, a duração aproximada e a propriedade animada (verifique no DevTools). Se puder, compare com um colega.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 
@@ -1428,4 +1428,4 @@ Ao fim desta aula o repositório do seu projeto autoral precisa ter:
 - ALVES, William P. *Projetos de Sistemas Web*. Érica, 2015 — capítulo sobre elementos gráficos em interfaces.
 - PUREWAL, Semmy. *Aprendendo a Desenvolver Aplicações Web*. Novatec, 2014 — front-end e organização de assets.
 
-Seu site agora responde ao usuário e tem identidade visual própria, desenhada em código. Falta a camada que decide se ele serve para **todo mundo**. Na próxima aula você fecha a Unidade 1 com acessibilidade e ARIA: skip link, foco visível, contraste medido com números, `aria-expanded` no menu, `aria-live` no formulário e uma auditoria ao vivo com o Lighthouse nos sites da turma. É também quando saem as instruções completas da Avaliação 1 — e várias decisões que você tomou hoje (`aria-hidden` nos ícones, `focusable="false"`, `:focus-visible`, movimento reduzido) já valem pontos lá.
+Seu site agora responde ao usuário e tem identidade visual própria, desenhada em código. Falta a camada que decide se ele serve para **todo mundo**. Na próxima aula você fecha a Unidade 1 com acessibilidade e ARIA: skip link, foco visível, contraste medido com números, `aria-expanded` no menu, `aria-live` no formulário e uma auditoria ao vivo com o Lighthouse. É também quando aparece o Marco 1 completo — e várias decisões que você tomou hoje (`aria-hidden` nos ícones, `focusable="false"`, `:focus-visible`, movimento reduzido) já entram nele.

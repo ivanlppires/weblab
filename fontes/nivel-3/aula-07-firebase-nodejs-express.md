@@ -1,8 +1,8 @@
 # Aula 07 — Introdução ao Firebase, Node.js e Express
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -80,7 +80,7 @@ O que trafega entre os dois é **HTTP**: requisições com método, URL, cabeça
                                                       banco de dados / Firestore
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Se a pergunta for "por que não validar tudo no front-end?", a resposta certa cita que o código do cliente é executado em uma máquina que o usuário controla, portanto não é confiável para decisões de segurança ou integridade — só o servidor pode ser esse árbitro.
 
 ### Relembrando HTTP, porque hoje você escreve os dois lados
@@ -596,7 +596,7 @@ app.delete('/api/eventos/:id', removerEvento)
 res.sendFile(caminhoDoArquivo)
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Se aparecer um trecho de código com `app.del(...)`, `res.json(obj, 201)` ou `req.param('id')`, é Express 4 — identifique a sintaxe errada e corrija para a equivalente do Express 5.
 
 ## 🧩 Padrão de projeto em uso — Chain of Responsibility
@@ -958,7 +958,7 @@ Resultado esperado: escolher uma categoria no `<v-select>` refaz a requisição 
 `api.get('/eventos', { params: { categoria: valorSelecionado } })` — se `valorSelecionado` for `undefined` ou string vazia, o Axios omite o parâmetro da URL automaticamente.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Explorando o Firestore com uma segunda coleção. Crie, pelo console do Firebase ou por script, uma coleção `organizadores` com pelo menos 2 documentos (`nome`, `email`). Escreva uma função `listarOrganizadores()` que usa `getDocs` para trazer todos e imprime no console. Depois, escreva `buscarOrganizadorPorEmail(email)` usando `query` + `where('email', '==', email)`.
 
@@ -1050,7 +1050,7 @@ A seção 2 desta aula prometeu que o Node atende milhares de conexões com uma 
 | Rota `GET /api/eventos/:id` sempre cai no "não encontrado" | comparou `req.params.id` (string) com `id` (number) sem converter | use `Number(req.params.id)` antes de comparar com `===` |
 | `npm run dev` não reinicia ao salvar o arquivo | versão do Node anterior à 18.11, sem suporte a `--watch` | rode `node -v` e atualize para a 22.x indicada na disciplina |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral**, replique o que foi feito hoje:
 
@@ -1080,4 +1080,4 @@ No seu **projeto autoral**, replique o que foi feito hoje:
 - Referência de `path-to-regexp` v8, usado internamente pelo Express 5 para casar rotas — útil para entender a sintaxe de curingas e segmentos opcionais em profundidade.
 - Plano de curso FACET-SNP-310 — bibliografia básica, capítulos sobre arquitetura cliente-servidor e Node.js.
 
-Na Aula 08 você transforma o servidor de hoje num CRUD completo, modulariza rotas com `express.Router()`, escreve middlewares próprios e recebe as instruções da **Avaliação 2**. Deixe a `unieventos-api` rodando — ela cresce a partir daqui, aula após aula, até virar a API do seu projeto autoral final.
+Na Aula 08 você transforma o servidor de hoje num CRUD completo, modulariza rotas com `express.Router()`, escreve middlewares próprios e chega ao **Marco 2** do projeto. Deixe a `unieventos-api` rodando — ela cresce a partir daqui, aula após aula, até virar a API do seu projeto autoral final.

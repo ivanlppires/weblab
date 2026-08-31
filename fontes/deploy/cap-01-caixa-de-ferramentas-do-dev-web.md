@@ -1,8 +1,8 @@
 # Capítulo 01 — Caixa de ferramentas do dev web
 
 > **Deploy & Ferramentas** · Unidade 1: Ferramentas e versionamento
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -473,8 +473,8 @@ O `^` antes da versão é **semver** (versionamento semântico): `^3.6.2` aceita
 
 Duas regras que evitam metade dos problemas de Git do semestre:
 
-1. **`node_modules/` nunca vai para o Git, para o `.zip` nem para o SIGAA.** É regenerável com `npm install`, pesa dezenas ou centenas de megabytes e tem milhares de arquivos.
-2. **`package-lock.json` sempre vai para o Git.** Ele garante que o colega, o professor e o servidor instalem exatamente as mesmas versões que você testou.
+1. **`node_modules/` nunca vai para o Git nem para o `.zip`.** É regenerável com `npm install`, pesa dezenas ou centenas de megabytes e tem milhares de arquivos.
+2. **`package-lock.json` sempre vai para o Git.** Ele garante que qualquer pessoa — um colega ou o servidor — instale exatamente as mesmas versões que você testou.
 
 ## 6. Gerenciando versões
 
@@ -772,7 +772,7 @@ Resultado esperado: `npm run` lista cinco scripts; depois de `npm install`, `npm
 Scripts são strings de shell comuns. Compare a saída de `npm ls --depth=0` antes e depois: as versões batem porque o lock foi respeitado, não porque você teve sorte.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Gerador de projeto. Escreva um script `novo-projeto.sh` que receba um nome (`bash novo-projeto.sh cardapio`) e: recuse se a pasta já existir; crie a pasta com `index.html` (esqueleto completo com `lang="pt-BR"`, viewport e título igual ao nome), `css/estilo.css`, `js/script.js`, `.editorconfig` e `.prettierrc`; e termine abrindo o VS Code na pasta. Torne-o executável e use-o para criar a pasta do seu projeto autoral.
 
@@ -835,7 +835,7 @@ Por que um site de notícias demora oito segundos no 4G e o WebLab demora um? Ho
 - Percentual de JavaScript e CSS **não usados** na carga inicial, medido com a aba Coverage.
 - Um laudo de uma página por site: o gargalo, por que ele acontece e uma correção concreta (formato de imagem, carregamento adiado, fonte, script de terceiros).
 - Uma das correções demonstrada: salve a página (**Save as… → Webpage, Complete**), aplique a correção localmente (ex.: converta as imagens para WebP com <https://squoosh.app>) e mostre o antes e o depois com Network e Lighthouse.
-- Vale como item extra na rubrica da avaliação de responsividade/performance da sua trilha.
+- Este é o tipo de investigação que compõe bem o seu Marco de responsividade/performance, se você quiser incluí-la no projeto autoral.
 
 <details><summary>Pistas</summary>
 
@@ -861,7 +861,7 @@ Por que um site de notícias demora oito segundos no 4G e o WebLab demora um? Ho
 | Prettier não formata ao salvar | `editor.defaultFormatter` não definido, ou outra extensão formata aquela linguagem | Paleta → **Format Document With…** → **Configure Default Formatter** → Prettier |
 | `warning: LF will be replaced by CRLF` em todo `git add` (Windows) | Fim de linha do Windows (CRLF) em conflito com o do projeto (LF) | `files.eol: "\n"` no VS Code e `git config --global core.autocrlf true`; o Capítulo 02 explica |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 Monte o ambiente completo e crie a pasta do seu **projeto autoral** (o site com o tema que você escolheu na sua trilha):
 
@@ -872,7 +872,7 @@ Monte o ambiente completo e crie a pasta do seu **projeto autoral** (o site com 
 
 **Critério de pronto:** as três capturas mostram versões LTS do Node, as sete extensões e a mensagem no Console; a pasta do projeto tem os cinco arquivos e **não** contém `node_modules`.
 
-**Entrega:** no SIGAA, um `.zip` da pasta do projeto (sem `node_modules`) e as três capturas em um único PDF. A partir do Capítulo 02, a entrega passa a ser o link do repositório no GitHub.
+**Guarde:** um `.zip` da pasta do projeto (sem `node_modules`) e as três capturas em um único PDF, num lugar seguro. A partir do Capítulo 02, isso vira o link do repositório no GitHub.
 
 ## ✅ Está no ar quando…
 

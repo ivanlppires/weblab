@@ -1,8 +1,8 @@
 # Aula 01 — Apresentação, arquitetura web, ambiente de desenvolvimento e Git
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Esta é a primeira aula do Nível 2. Ao final dela você terá um repositório Git publicado na internet, o ambiente de trabalho do semestre inteiro montado e uma ideia clara de onde a disciplina vai chegar: uma aplicação full-stack com API própria, login do Google e CRUD persistido.
 
@@ -10,7 +10,7 @@ Esta é a primeira aula do Nível 2. Ao final dela você terá um repositório G
 
 Ao final desta aula você será capaz de:
 
-- Explicar como a disciplina funciona: três unidades, três avaliações, projeto fio-condutor e projeto autoral.
+- Explicar como a disciplina funciona: três unidades, três marcos do projeto, projeto fio-condutor e projeto autoral.
 - Descrever o modelo cliente-servidor e narrar, passo a passo, o que acontece entre digitar uma URL e ver a página na tela.
 - Identificar os métodos e os códigos de status HTTP mais usados e decompor uma URL em suas partes.
 - Distinguir front-end, back-end e banco de dados, e classificar uma aplicação como estática ou dinâmica.
@@ -26,7 +26,6 @@ Checklist para começar:
 
 - [ ] Um notebook (ou uma máquina do laboratório) com **Google Chrome** ou **Firefox** atualizado.
 - [ ] Permissão para instalar programas na máquina — ou, no laboratório, saber que as instalações se perdem no reboot (a §7.5 resolve isso).
-- [ ] Acesso ao **SIGAA** funcionando: toda entrega da disciplina acontece por lá.
 - [ ] Uma conta de e-mail que você realmente acessa (vai virar sua conta do GitHub).
 - [ ] Uma ideia, mesmo vaga, de **tema para o seu projeto autoral** (§1.5). Você decide hoje ou até a próxima aula.
 
@@ -36,7 +35,7 @@ Você **não** precisa saber Git, terminal ou Node.js. Tudo isso começa do zero
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Como a disciplina funciona; a sequência das aulas e as avaliações; Café Cerrado e o projeto autoral; modelo cliente-servidor |
+| 1 | 50 min | Como a disciplina funciona; a sequência das aulas e os marcos do projeto; Café Cerrado e o projeto autoral; modelo cliente-servidor |
 | 2 | 50 min | HTTP na prática (métodos, status, URL, cabeçalhos); as três camadas; quem consome a web hoje; IA no fluxo de trabalho; ambiente de desenvolvimento |
 | 3 | 50 min | Git do zero: ciclo básico, GitHub e GitHub Pages — o repositório `cafe-cerrado` no ar; laboratório |
 
@@ -83,33 +82,29 @@ Repare que as unidades são cumulativas: o HTML da Unidade 1 continua lá na Uni
 | 15 | CRUD com front-end assíncrono (AJAX/SPA) |
 | 16 | CRUD completo com autenticação Google |
 
-As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
+As datas dos encontros de cada turma ficam no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre, e serve igualmente a quem estuda por conta própria, sem turma.
 
 > **⚠️ Atenção**
-> Os prazos das avaliações caem em dias de aula, sempre às 23h59. A aula acontece normalmente — o prazo é apenas o fim do período de entrega no SIGAA. Não conte com "entregar no fim da aula": a rede do laboratório escolhe justamente esses dias para cair.
+> Se você depende da rede do laboratório para subir seu trabalho, não deixe para o último minuto: ela tende a cair justamente quando mais gente está enviando ao mesmo tempo. Rode `git push` assim que terminar cada parte, não só no fim da aula.
 
-### 1.4 Avaliações e aprovação
+### 1.4 Os três marcos do projeto
 
-| Avaliação | Escopo |
+| Marco | Escopo |
 |---|---|
 | 1 | Website client-side em HTML e CSS: HTML semântico, layout responsivo, framework CSS, animação/SVG, acessibilidade. |
 | 2 | Evolução do site com JavaScript: validação de formulários, DOM e eventos, programação assíncrona, SPA com AJAX/JSON. |
 | 3 | Aplicação full-stack com Node.js e Express: rotas e controladores, autenticação Google, CRUD com persistência, front-end assíncrono. |
 
-O prazo de cada avaliação é publicado no SIGAA.
-
-**Regras de aprovação:** Média final = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0; frequência mínima de 75%.
-
-As três avaliações são **individuais**, **práticas** e recaem sobre o **mesmo projeto autoral**. Cada uma entrega o link de um repositório público do GitHub — não `.zip`, não pasta no Drive, não print de tela. O repositório *é* a entrega, e o histórico de commits faz parte dela.
+Os três marcos são **individuais**, **práticos** e recaem sobre o **mesmo projeto autoral**. Cada um vive no mesmo repositório público do GitHub — não `.zip`, não pasta no Drive, não print de tela. O repositório *é* o produto, e o histórico de commits faz parte dele.
 
 | Modalidade | Horas | Como acontece |
 |---|---|---|
 | Síncrona presencial | 45 h | 16 encontros de três aulas de 50 min, com construção guiada do projeto |
-| Assíncrona a distância | 15 h | 16 atividades de aproximadamente 1 h, com entrega no SIGAA |
+| Assíncrona a distância | 15 h | 16 atividades de aproximadamente 1 h, ligadas ao projeto autoral |
 | Total | 60 h | |
 
 > **⚠️ Atenção**
-> A carga assíncrona não é bônus. Ela é parte da carga horária oficial e alimenta diretamente a avaliação da unidade: quem pula a atividade da semana chega na aula seguinte sem o pré-requisito, porque cada aula assume que a anterior foi concluída.
+> A carga assíncrona não é bônus. Ela é parte da carga horária oficial e prepara direto o marco da unidade: quem pula a atividade da semana chega na aula seguinte sem o pré-requisito, porque cada aula assume que a anterior foi concluída.
 
 **Atendimento:** segundas-feiras, das 18h às 19h, com agendamento por e-mail ([ivanpires@unemat.br](mailto:ivanpires@unemat.br)).
 
@@ -118,14 +113,14 @@ As três avaliações são **individuais**, **práticas** e recaem sobre o **mes
 A regra pedagógica do WebLab tem duas metades:
 
 1. **Em sala, construímos juntos o projeto fio-condutor: o Café Cerrado.** É uma cafeteria fictícia de Sinop/MT, que torra grãos do cerrado mato-grossense. Na Unidade 1 ela é um site estático publicado no GitHub Pages; na Unidade 2 ganha cardápio dinâmico, busca, filtros e navegação SPA; na Unidade 3 ganha uma API em Express, login com conta Google e um CRUD de produtos com persistência. Todo mundo digita junto.
-2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** e um **domínio diferente**. As avaliações são sobre o projeto autoral.
+2. **Fora de sala, cada estudante desenvolve um projeto autoral** com a **mesma arquitetura** e um **domínio diferente**. Os marcos são sobre o projeto autoral.
 
 Exemplos de temas que funcionam: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios do curso, brechó, controle de pescarias no Teles Pires, loja de peças de bicicleta, biblioteca de uma escola, feira de produtores locais.
 
 O critério para saber se um tema serve é objetivo: **ele tem uma lista de coisas?** Produtos, plantas, quadras, vagas, peças, livros. O semestre inteiro gira em torno de uma coleção de itens que é exibida, filtrada, criada, editada e apagada. Se o seu tema não tem uma lista clara, troque agora — e não na Unidade 3.
 
 > **💡 Dica**
-> Escolha um domínio sobre o qual você **tenha conteúdo real**: nomes, preços, descrições, fotos. O erro clássico é escolher "site de uma empresa" e travar na hora de escrever a terceira frase. Tema concreto gera projeto melhor e avaliação mais alta.
+> Escolha um domínio sobre o qual você **tenha conteúdo real**: nomes, preços, descrições, fotos. O erro clássico é escolher "site de uma empresa" e travar na hora de escrever a terceira frase. Tema concreto gera projeto melhor — e mais fácil de defender quando alguém perguntar como funciona.
 
 ### 1.6 As quatro camadas de prática de cada aula
 
@@ -133,8 +128,8 @@ Cada aula do WebLab tem, sempre nesta ordem:
 
 1. **💻 Mão na massa** — passo a passo guiado no Café Cerrado. Todo mundo faz junto, digitando (não colando).
 2. **🧪 Laboratório** — exercícios em sala em três níveis: **A** (fixação), **B** (aplicação) e **C** (desafio para quem termina antes).
-3. **🏆 Desafios** — extras opcionais, com estrelas de dificuldade: ⭐ (1–2 h), ⭐⭐ (uma tarde), ⭐⭐⭐ (um fim de semana). Contam como item extra na rubrica da avaliação da unidade.
-4. **🏠 Atividade assíncrona (1 h)** — a tarefa da semana, ligada ao projeto autoral, entregue no SIGAA.
+3. **🏆 Desafios** — extras opcionais, com estrelas de dificuldade: ⭐ (1–2 h), ⭐⭐ (uma tarde), ⭐⭐⭐ (um fim de semana). Não são obrigatórios, mas aprofundam a aula e ficam bem no portfólio.
+4. **🏠 Atividade assíncrona (1 h)** — a tarefa da semana, ligada ao projeto autoral.
 
 Uma rotina que funciona: leia os objetivos antes da aula; digite o código durante a aula; faça o Laboratório A no mesmo dia; faça o Nível B e a atividade assíncrona ao longo da semana; encare o Nível C e os Desafios se sobrar fôlego.
 
@@ -167,7 +162,7 @@ Na Unidade 3 você vai escrever o retângulo da direita. Até lá, ele é um ser
 
 ### 2.2 O que acontece quando você digita um endereço
 
-Esta sequência é uma das perguntas mais frequentes em entrevista técnica e cai no exame final. Aprenda a narrá-la.
+Esta sequência é uma das perguntas mais frequentes em entrevista técnica. Aprenda a narrá-la.
 
 **Passo 1 — Análise da URL.** O navegador separa o endereço em partes (§3.4) e descobre qual protocolo usar e com quem falar.
 
@@ -185,7 +180,7 @@ Esta sequência é uma das perguntas mais frequentes em entrevista técnica e ca
 
 **Passo 8 — Renderização e sub-requisições.** O navegador interpreta o HTML e dispara **novas requisições** para cada recurso referenciado: folhas de estilo, scripts, imagens, fontes. Cada uma repete os passos 5 a 7.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A ordem das oito etapas e o papel de cada uma. Os pontos mais cobrados: DNS traduz **nome em IP** (não "acha o site"); TLS é o que torna o HTTP seguro (HTTPS = HTTP + TLS); e uma única página dispara **dezenas** de requisições, não uma.
 
 ### 2.3 Uma página não é um arquivo
@@ -358,7 +353,7 @@ A pergunta não é "pode usar IA?". Pode. A pergunta é "como usar bem?".
 
 **Então por que estudar HTTP, DOM e Express a fundo, se a IA escreve isso?** Pelo mesmo motivo pelo qual você estuda Arquitetura de Computadores sem programar em Assembly no dia a dia: para entender o que acontece por baixo quando quebra. A IA escreve o código; quem julga se ele está correto, seguro e bem arquitetado é você. E só revisa bem quem entende a base.
 
-**A regra desta disciplina:** o uso de IA é permitido como apoio em todas as avaliações. Em contrapartida, **você pode ser chamado a explicar qualquer linha do seu código**, na hora, sem consulta. Não saber explicar o que entregou equivale a não ter entregue. Cópia entre colegas resulta em zero para os dois envolvidos.
+**Use IA como apoio, não como atalho:** peça para ela explicar, não para resolver o que você ainda não entende. O teste real é simples — se você não consegue explicar uma linha do seu código, ela ainda não é sua.
 
 > **💡 Dica**
 > Um uso honesto e produtivo desde já: peça ao assistente para **explicar** um erro do terminal, não para "consertar o projeto". Cole a mensagem literal, pergunte o que ela significa e o que a causa. Você aprende a ler a mensagem — que é a habilidade que vai sobrar quando a ferramenta mudar de nome.
@@ -639,7 +634,7 @@ Abra a página com o Live Server (botão *Go Live*, canto inferior direito) e co
 
 ### Passo 3 — O `README.md`
 
-O `README.md` é a primeira coisa que o GitHub mostra a quem abre o repositório — e a primeira coisa que o professor lê ao corrigir. Crie-o na raiz:
+O `README.md` é a primeira coisa que o GitHub mostra a quem abre o repositório — e a primeira coisa que qualquer pessoa lê para decidir se vale a pena continuar explorando o projeto. Crie-o na raiz:
 
 `cafe-cerrado/README.md`
 
@@ -856,7 +851,7 @@ No Chrome: cadeado → *A conexão é segura* → *O certificado é válido*. O 
 O GitHub renderiza Markdown: `#` e `##` para títulos, `-` para listas, `**negrito**`, e links no formato `[texto](url)`. Prévia no VS Code: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Recuperação de desastre. Simule a perda da máquina: apague (de verdade, ou renomeie) a pasta local `cafe-cerrado`, clone o repositório do GitHub em outro diretório, confirme que os dois commits estão lá, faça uma alteração no `README.md`, commite e envie. Depois, responda por escrito: o que exatamente foi recuperado no `git clone` — só os arquivos atuais, ou o histórico inteiro? Comprove sua resposta com a saída de um comando.
 
@@ -980,7 +975,7 @@ O valor real do Git não aparece quando tudo dá certo — aparece às 23h30 do 
 | `node: command not found` (ou `'node' não é reconhecido…`) | O Node.js não está no `PATH`, ou o terminal foi aberto antes da instalação | Feche e reabra o terminal; se persistir, reinstale marcando a opção de adicionar ao `PATH` |
 | Live Server abre uma lista de pastas ou `Cannot GET /` | O VS Code foi aberto em um arquivo solto ou em uma pasta sem `index.html` | *File → Open Folder* na raiz do projeto e clique em *Go Live* de novo |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Ambiente (20 min).** Instale, na sua máquina pessoal, VS Code, Node.js 22 LTS e Git. Rode os quatro comandos de verificação da §7.2 e tire **uma captura de tela** do terminal com as quatro saídas visíveis.
 
@@ -996,7 +991,7 @@ O valor real do Git não aparece quando tudo dá certo — aparece às 23h30 do 
 
 **Critério de pronto:** os dois links abrem (repositório público e site no ar); o `git log` mostra pelo menos dois commits com mensagens descritivas; a captura de tela mostra Node, npm, Git e VS Code respondendo com suas versões.
 
-**Entrega:** no SIGAA, o **link do repositório** do projeto autoral, o **link do site publicado** e a captura de tela do terminal. Sem `.zip`.
+**Guarde no seu repositório:** o **link do repositório** do projeto autoral, o **link do site publicado** e a captura de tela do terminal. Sem `.zip`.
 
 ## ✅ Checkpoint do projeto
 

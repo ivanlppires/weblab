@@ -1,8 +1,8 @@
 # Aula 03 — Revisão de HTML: layout, links e formulários
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -155,8 +155,8 @@ h1  Cardápio
 └── h2  Doces
 ```
 
-> **📌 Na prova**
-> Duas afirmações caem quase sempre: (a) "pode haver mais de um `<h1>` por página" — na prática desta disciplina, **não**: um por página; (b) "`<h1>` é o texto maior da página" — falso, `h1` é o título mais importante, e o tamanho é decisão do CSS.
+> **📌 Vale gravar**
+> Duas confusões comuns: (a) "pode haver mais de um `<h1>` por página" — na prática deste material, **não**: um por página; (b) "`<h1>` é o texto maior da página" — falso, `h1` é o título mais importante, e o tamanho é decisão do CSS.
 
 ### 1.5 Quando `div` e `span` ainda são a resposta certa
 
@@ -421,7 +421,7 @@ O atributo `aria-current="page"` faz o leitor de tela anunciar "Cardápio, pági
 
 ## 4. Formulários: a porta de entrada de dados
 
-Formulário é onde o site deixa de ser um panfleto. Toda a Unidade 3 desta disciplina vive de dados que chegam por formulários: na Unidade 2 você vai validá-los com JavaScript e, na Unidade 3, recebê-los no Express. Estruturar o formulário direito agora é investimento nas três avaliações.
+Formulário é onde o site deixa de ser um panfleto. Toda a Unidade 3 desta disciplina vive de dados que chegam por formulários: na Unidade 2 você vai validá-los com JavaScript e, na Unidade 3, recebê-los no Express. Estruturar o formulário direito agora é investimento nos três marcos do projeto.
 
 ### 4.1 Anatomia do `<form>`
 
@@ -439,7 +439,7 @@ Formulário é onde o site deixa de ser um panfleto. Toda a Unidade 3 desta disc
 - **`name`** — o nome do dado enviado. **Sem `name`, o campo simplesmente não é enviado.** É o erro silencioso número um de formulário: tudo parece certo, e o servidor recebe menos campos do que a tela mostra.
 - **`id`** — identifica o elemento no documento, para o `<label>` e para o JavaScript. `id` e `name` costumam ter o mesmo valor, mas são coisas diferentes: `id` é para o navegador, `name` é para o servidor.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A diferença entre `id` e `name` em campos de formulário é pergunta recorrente. Resposta curta: `id` é único no documento e serve para `label for`, CSS e JavaScript; `name` é a chave com que o dado viaja para o servidor, pode se repetir (é assim que um grupo de `radio` funciona) e, se faltar, o campo não é enviado.
 
 ### 4.2 `<label>`: um para cada campo, sem exceção
@@ -1576,9 +1576,9 @@ Resultado esperado: o arquivo existe no repositório, tem pelo menos seis regras
 Escreva as regras como frases imperativas curtas ("Toda imagem informativa tem `alt` descritivo em uma frase") e não como teoria. Um guia de estilo que ninguém consegue conferir em dez segundos não é usado por ninguém — nem por você.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
-**C1.** Estrutura completa do projeto autoral. Defina o domínio do seu projeto (o seu "Café Cerrado": um brechó, um viveiro de mudas, uma escolinha de futebol, um estúdio de tatuagem, uma banda) e construa as **três páginas** equivalentes: inicial, catálogo e contato. Exigências: HTML semântico com todos os landmarks; um `<h1>` por página e hierarquia de títulos sem saltos; pelo menos uma `<figure>`, uma tabela de dados com `caption` e `th scope`, uma `<dl>` e três tipos de lista; menu idêntico nas três páginas com `aria-label` e `aria-current`; formulário de contato com no mínimo oito campos de tipos diferentes, todos com `label`, `required` onde faz sentido e ao menos dois `pattern`; e as três páginas com zero erros no validador do W3C. Este é o esqueleto que será estilizado na Aula 04 e avaliado na Avaliação 1.
+**C1.** Estrutura completa do projeto autoral. Defina o domínio do seu projeto (o seu "Café Cerrado": um brechó, um viveiro de mudas, uma escolinha de futebol, um estúdio de tatuagem, uma banda) e construa as **três páginas** equivalentes: inicial, catálogo e contato. Exigências: HTML semântico com todos os landmarks; um `<h1>` por página e hierarquia de títulos sem saltos; pelo menos uma `<figure>`, uma tabela de dados com `caption` e `th scope`, uma `<dl>` e três tipos de lista; menu idêntico nas três páginas com `aria-label` e `aria-current`; formulário de contato com no mínimo oito campos de tipos diferentes, todos com `label`, `required` onde faz sentido e ao menos dois `pattern`; e as três páginas com zero erros no validador do W3C. Este é o esqueleto que será estilizado na Aula 04 e chega pronto no Marco 1.
 
 <details markdown="1"><summary>Dica</summary>
 
@@ -1729,7 +1729,7 @@ Escolha uma página de um site que você usa toda semana — um portal de notíc
 | O leitor de tela anuncia "navegação" três vezes sem distinguir | Vários `<nav>` sem `aria-label` | Rotule cada um: `<nav aria-label="Principal">`, `<nav aria-label="Rodapé">` |
 | O formulário recarrega a página e perde os dados ao enviar | Comportamento padrão de `<form>` sem servidor que responda | Esperado nesta aula; na Aula 07 o JavaScript intercepta com `preventDefault()` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** QUEIRÓS e PORTELA, *Introdução ao Desenvolvimento Moderno para a Web*, seções sobre a camada de estrutura (HTML) e a camada de apresentação (CSS) — esta segunda serve de preparação para a próxima aula. Na MDN em pt-BR, leia "Estrutura de um documento e sites" e "Seu primeiro formulário". Anote **duas** tags ou atributos que aparecem nas leituras e não apareceram nesta aula.
 
@@ -1740,11 +1740,11 @@ Escolha uma página de um site que você usa toda semana — um portal de notíc
 3. As três páginas validadas no W3C — cole no `README.md` o print ou o texto "Document checking completed. No errors or warnings to show." para cada uma.
 4. `README.md` atualizado com: nome do projeto, uma frase sobre o domínio escolhido, a lista de páginas e o link do GitHub Pages.
 
-**Parte 3 — Fórum (10 min).** No fórum "Semântica na prática" do SIGAA, poste um trecho de dez a vinte linhas do HTML do seu projeto e explique **uma** decisão de marcação que você tomou e por quê (por exemplo: por que aquele bloco é `article` e não `section`). Depois comente o trecho de um colega apontando uma melhoria concreta.
+**Parte 3 — Explicar a decisão (10 min).** Em `docs/decisao.md`, escreva um trecho de dez a vinte linhas do HTML do seu projeto e explique **uma** decisão de marcação que você tomou e por quê (por exemplo: por que aquele bloco é `article` e não `section`). Se puder, compare com um colega (ou releia depois de um dia) e anote uma melhoria concreta que encontrar.
 
 **Critério de pronto:** as três páginas do projeto autoral abrem pelo endereço do GitHub Pages; o menu leva de qualquer página para qualquer outra e marca a atual com `aria-current`; o formulário bloqueia o envio quando algum campo obrigatório está vazio, com mensagem específica; e o validador do W3C não aponta nenhum erro em nenhuma das três.
 
-**Entrega:** `commit` + `push` e link do repositório público no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 

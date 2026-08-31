@@ -1,8 +1,8 @@
 # Aula 13 — Desenvolvimento do back-end em camadas
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -304,7 +304,7 @@ const configuracaoDoPool = {
 ```
 
 > **⚠️ Atenção**
-> Se você esquecer `DB_PASSWORD` no `.env`, o processo **não sobe** — imprime exatamente qual variável falta e sai com `process.exit(1)`. Isso é intencional: é infinitamente melhor descobrir isso no `npm run dev` do que às 23h58 tentando fazer o deploy funcionar para a Avaliação 3.
+> Se você esquecer `DB_PASSWORD` no `.env`, o processo **não sobe** — imprime exatamente qual variável falta e sai com `process.exit(1)`. Isso é intencional: é infinitamente melhor descobrir isso agora, no `npm run dev`, do que na madrugada anterior ao deploy do Marco 3, tentando descobrir por que a aplicação não sobe em produção.
 
 ## 4. Tratamento de erros maduro
 
@@ -472,7 +472,7 @@ process.on('uncaughtException', (erro) => {
 })
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `unhandledRejection` captura Promises rejeitadas que ninguém tratou; `uncaughtException` captura exceções síncronas que escaparam de qualquer `try/catch`. Nenhum dos dois substitui tratamento de erro local — são uma **rede de segurança final**, não a primeira linha de defesa.
 
 ## 5. Segurança prática
@@ -1455,7 +1455,7 @@ Resultado esperado: uma requisição de origem diferente da configurada em `CORS
 Teste abrindo o front em uma porta e fazendo uma requisição para a API configurada com outra origem em `CORS_ORIGEM_PERMITIDA` — o erro de CORS aparece no console do navegador, não no Postman (Postman ignora CORS).
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Service de inscrições com injeção de dependência e testes sem banco. Escreva `criarServicoDeInscricoes({ inscricoesRepository, eventosRepository })` com quatro regras: evento inexistente (`ErroNaoEncontrado`), evento lotado (`ErroDeConflito`), já inscrito (`ErroDeConflito`) e cancelamento por quem não é dono (`ErroDeAutorizacao`). Cubra cada regra com um teste unitário usando repositórios falsos e escreva um teste de rota para `POST /api/inscricoes` — que hoje é impossível sem Firebase, porque `autenticar` é importado direto dentro de `criarRotasDeInscricoes`. Resolva isso sem tocar no Firebase.
 
@@ -1589,7 +1589,7 @@ Sete testes dão confiança — mas confiança em quê, exatamente? Meça: insta
 | `npm run migrar` reaplica uma migration já aplicada | Tabela `migrations_executadas` não foi criada ou o nome do arquivo mudou | Confira `SELECT * FROM migrations_executadas` e não renomeie arquivos de migration já aplicados |
 | CORS bloqueando o front mesmo em desenvolvimento | `CORS_ORIGEM_PERMITIDA` no `.env` não bate com a porta real do Vite (`5173` por padrão) | Ajuste a variável para a URL exata mostrada pelo `npm run dev` do front |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 1. No projeto autoral, garanta que **os 5 endpoints principais** (listar, buscar por id, criar, atualizar, remover) passam pela arquitetura em camadas completa.
 2. Escreva testes cobrindo **pelo menos 40% dos métodos do service principal** (liste no README quais foram testados e por quê).

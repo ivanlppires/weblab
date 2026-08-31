@@ -1,8 +1,8 @@
 # Aula 02 — Introdução ao Vue: instância, ciclo de vida e diretivas
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -102,7 +102,7 @@ onMounted(() => {
 </script>
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > **Esta disciplina usa Composition API com `<script setup>`** do início ao fim, porque é o padrão gerado pelo `create-vue` e o que você vai encontrar em qualquer projeto Vue 3 novo. Nos primeiros exemplos de hoje mostramos o equivalente em Options API lado a lado — o plano de curso cita explicitamente "instância vue, data e methods" — mas a partir da Aula 03 falamos só Composition API.
 
 ## 2. Primeiro contato: Vue via CDN
@@ -823,7 +823,7 @@ export default {
 }
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `onMounted` é, de longe, o hook mais usado na prática — é onde disparamos requisições `fetch` (Aula 03) porque é o primeiro momento em que temos garantia de que o DOM existe. `onUnmounted` é onde limpamos qualquer recurso externo (`setInterval`, `addEventListener` em `window`, conexões abertas) para não vazar memória quando o componente sai de cena.
 
 ## 🧩 Padrão de projeto em uso — Observer (comportamental)
@@ -1177,7 +1177,7 @@ function mostrarDica() {
 ```
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Corrigir uma `:key` proposital. Troque temporariamente `:key="evento.id"` por `:key="indiceDoLoop"` (usando a forma `v-for="(evento, indiceDoLoop) in ..."`), adicione um `<input type="checkbox">` dentro de cada card, marque alguns, filtre por categoria e observe o comportamento estranho dos checkboxes. Depois desfaça a mudança e prove, na aba Elements do DevTools, que o elemento correto agora é reaproveitado pelo `id`, não pela posição.
 
@@ -1265,7 +1265,7 @@ Aplique tudo desta aula — `ref`/`reactive`, `v-bind`/`v-on`/`v-model`, `v-if`/
 | Checkbox/input "gruda" em posição errada após filtrar/remover | `:key` usando o índice do `v-for` | Use um identificador estável do dado, como `evento.id` |
 | `v-html` mostra texto cru com as tags `<...>` aparecendo | Trocou `v-html` por interpolação `{{ }}` sem querer | `{{ }}` sempre escapa HTML; use `v-html` só quando o objetivo é renderizar HTML de verdade |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do seu projeto autoral:
 

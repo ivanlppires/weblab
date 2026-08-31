@@ -1,8 +1,8 @@
 # Aula 08 — Arrow functions, callbacks e operações em vetores
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 07 você plantou uma ideia quase de passagem: em JavaScript, função é um valor. Ela apareceu no `addEventListener`, quando você entregou uma função ao navegador para que ele a chamasse depois. Hoje essa ideia deixa de ser detalhe e vira a ferramenta principal. Arrow functions, callbacks e os métodos de array que os recebem são o vocabulário com que se escreve JavaScript profissional — e são exatamente o que as Promises da próxima aula pressupõem que você já domina.
 
@@ -957,7 +957,7 @@ Resultado esperado: buscar "polvilho" encontra o Pão de Queijo Mineiro, cujo no
 Um `filter` cujo teste é `nome.includes(termo) || descricao.includes(termo)`. Para a contagem, um segundo `filter` sobre a lista visível, testando só a descrição — e cuidado com o termo vazio, que casa com tudo.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Uma passada só. Hoje o `render()` percorre a lista cinco vezes: dois `filter`, um `sort`, o `forEach` do render e dois `reduce` do resumo. Reescreva a derivação e o resumo para que a lista seja percorrida **uma vez** para filtrar e calcular todas as estatísticas ao mesmo tempo (contagem, soma, média, mais barato, mais caro), mantendo o `sort` como única passagem adicional. Depois prove, com medição, se valeu a pena.
 
@@ -1097,7 +1097,7 @@ Alguém filtra o cardápio por "Doces, ordenados por preço", acha o combo perfe
 | A busca dispara uma renderização por tecla | Ouvinte de `input` sem `debounce` | Envolver o callback com `comAtraso(…)` |
 | `TypeError: produtos.filter is not a function` | A variável não é array (é `NodeList`, objeto ou `undefined`) | Converter com `[...valor]` ou conferir de onde ela vem |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do **seu projeto autoral**:
 
@@ -1109,7 +1109,7 @@ No repositório do **seu projeto autoral**:
 
 **Critério de pronto:** os filtros funcionam combinados; o array de origem permanece na ordem original depois de qualquer ordenação (comprove no Console); nenhum laço `for` sobrou onde um método de array serviria; o Console fica sem erros.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 **Leitura dirigida (Biblioteca Virtual da UNEMAT):** Queirós e Portela, seções de JavaScript avançado; Loudon, padrões de código JavaScript escalável; MDN, "Array" (métodos) e "Introducing asynchronous JavaScript" — preparação direta para a próxima aula.
 

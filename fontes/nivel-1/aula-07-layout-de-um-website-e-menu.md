@@ -1,8 +1,8 @@
 # Aula 07 — Formatando o layout de um website e o menu
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -376,8 +376,8 @@ As propriedades de alinhamento têm os mesmos nomes do Flexbox, mas com uma cama
 }
 ```
 
-> **📌 Na prova**
-> Em Grid, `justify-*` sempre se refere ao eixo horizontal (colunas) e `align-*` ao vertical (linhas). Em Flexbox, `justify-content` segue o **eixo principal**, que muda com `flex-direction`. Essa diferença cai em prova — e cai no dia a dia.
+> **📌 Vale gravar**
+> Em Grid, `justify-*` sempre se refere ao eixo horizontal (colunas) e `align-*` ao vertical (linhas). Em Flexbox, `justify-content` segue o **eixo principal**, que muda com `flex-direction`. Essa diferença cai no dia a dia — vale gravar.
 
 > **🔬 Investigue**
 > Selecione no DevTools qualquer elemento com `display: grid`; ele ganha um selo **grid**. Clique nele e vá à aba Layout: ative "Show line numbers" e "Show area names". O navegador desenha as linhas-guia numeradas e escreve o nome de cada área por cima da página. Redimensione a janela com o overlay ligado e veja `auto-fit` criando e removendo colunas. Esse overlay vai economizar horas de tentativa e erro — use-o sempre que um item cair na célula errada.
@@ -402,7 +402,7 @@ Dois testes rápidos para decidir:
 
 ## 5. Construindo o menu de navegação
 
-O menu é o componente que mais aparece em avaliação e o que mais concentra erros de acessibilidade. Ele também é a primeira coisa que todo visitante toca. Vale construí-lo com cuidado.
+O menu é o componente que mais concentra erros de acessibilidade em projetos reais. Ele também é a primeira coisa que todo visitante toca. Vale construí-lo com cuidado.
 
 ### 5.1 Marcação
 
@@ -1189,9 +1189,9 @@ Resultado esperado: em 1200 px, uma grade de quatro colunas com os `span`s corre
 Defina `grid-template-columns: repeat(4, 1fr)` na base e use `grid-column: span 3` e `span 4` nos itens grandes. Nas media queries, troque o `repeat(4, 1fr)` por `repeat(2, 1fr)` e `1fr`, e ajuste os `span`s para que nenhum item peça mais colunas do que a grade tem — se pedir, o Grid cria colunas implícitas e o layout estoura.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
-**C1.** Base do projeto autoral. Defina o tema do seu projeto (o "site do evento" da sua versão: uma feira, um campeonato, uma semana cultural, um curso de extensão) e construa o esqueleto completo de todas as páginas: HTML semântico, estrutura de layout com Grid e áreas nomeadas, componentes internos com Flexbox, sistema de design em variáveis, navegação funcional entre as páginas, cabeçalho fixo e rodapé consistentes em todas elas, link de salto funcionando. Entregue também um wireframe (papel fotografado, Figma ou Excalidraw) de **três larguras**: celular, tablet e desktop. Este exercício é a primeira etapa do que será avaliado na Avaliação 2.
+**C1.** Base do projeto autoral. Defina o tema do seu projeto (o "site do evento" da sua versão: uma feira, um campeonato, uma semana cultural, um curso de extensão) e construa o esqueleto completo de todas as páginas: HTML semântico, estrutura de layout com Grid e áreas nomeadas, componentes internos com Flexbox, sistema de design em variáveis, navegação funcional entre as páginas, cabeçalho fixo e rodapé consistentes em todas elas, link de salto funcionando. Produza também um wireframe (papel fotografado, Figma ou Excalidraw) de **três larguras**: celular, tablet e desktop. Este exercício é a primeira etapa do que o Marco 2 vai cobrar (Aula 10).
 
 <details><summary>Dica</summary>
 
@@ -1306,7 +1306,7 @@ A página inicial do site do evento precisa de um bloco de destaques em formato 
 ### ⭐⭐⭐ Recriação de um layout real
 Tags: css, grid, flexbox, layout, responsivo
 
-Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha a home de um site conhecido (o portal da UNEMAT, um jornal, uma loja, a página inicial do GitHub) e reproduza seu **layout** — estrutura e disposição, com conteúdo próprio e sem copiar imagens — usando Grid para a página e Flexbox para os componentes, com responsividade em três larguras. Requisito inegociável: zero `float` e zero `position: absolute` para layout (o `absolute` só pode aparecer em selos e ícones). Ao terminar, você vai perceber quanto dos sites que admira é só Grid e Flexbox bem combinados. Vale como item extra na rubrica da Avaliação 2.
+Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha a home de um site conhecido (o portal da UNEMAT, um jornal, uma loja, a página inicial do GitHub) e reproduza seu **layout** — estrutura e disposição, com conteúdo próprio e sem copiar imagens — usando Grid para a página e Flexbox para os componentes, com responsividade em três larguras. Requisito inegociável: zero `float` e zero `position: absolute` para layout (o `absolute` só pode aparecer em selos e ícones). Ao terminar, você vai perceber quanto dos sites que admira é só Grid e Flexbox bem combinados. Isso entra bem no Marco 2 da unidade.
 
 **Critérios de pronto**
 
@@ -1341,21 +1341,21 @@ Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha
 | O menu fica com marcadores (bolinhas) | `list-style` padrão da `ul` não foi removido | `.menu { list-style: none; }` — e mantenha a lista: ela é semântica |
 | A ordem do <kbd>Tab</kbd> não bate com a ordem visual | `order` (Flexbox) ou `grid-auto-flow: dense` reordenou só a apresentação | Reordene o HTML, não o CSS; use `order` apenas para pequenos ajustes decorativos |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulos de posicionamento e layout. MDN Web Docs em pt-BR: os guias "Conceitos básicos do Flexbox" e "Conceitos básicos do Grid Layout" (links em "Para aprofundar"). Anote uma propriedade de cada guia que não apareceu nesta aula.
 
-**Parte 2 — Entrega (30 min).** No seu **projeto autoral**:
+**Parte 2 — Produção (30 min).** No seu **projeto autoral**:
 
 1. Exercícios **B1** (barra de navegação) e **B5** (dashboard), em arquivos separados na pasta `exercicios/aula07/`.
 2. O layout principal do projeto construído com Grid e áreas nomeadas em pelo menos uma página (a mais complexa), com Flexbox no interior dos componentes.
 3. O menu de navegação completo em **todas** as páginas: lista semântica, `nav aria-label`, `aria-current` na página atual, `:focus-visible` em todos os links e link de salto funcionando.
 
-**Parte 3 — Fórum (10 min).** No fórum "Flexbox ou Grid" do SIGAA: traga um componente do seu projeto (um trecho de HTML + CSS), diga qual dos dois você usou e justifique tecnicamente com base na tabela da seção 4. Comente a escolha de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um componente do seu projeto (um trecho de HTML + CSS), diga qual dos dois você usou (Grid ou Flexbox) e justifique tecnicamente com base na tabela da seção 4. Se puder, compare a escolha com a de um colega.
 
 **Critério de pronto:** ao pressionar <kbd>Tab</kbd> na primeira página do seu projeto, o link de salto aparece; ao pressionar <kbd>Enter</kbd>, o foco vai para o conteúdo; navegando pelo menu, cada link mostra foco visível e a página atual está marcada com `aria-current`; ao abrir a página mais curta, o rodapé está no fim da janela; ao clicar nos selos **grid**/**flex** do DevTools, a estrutura desenhada é a que você planejou.
 
-**Entrega:** pasta `.zip` do projeto ou link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto, se ainda não usa Git).
 
 ## ✅ Checkpoint do projeto
 

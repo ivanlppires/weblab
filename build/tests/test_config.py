@@ -28,7 +28,7 @@ def test_material_atemporal_por_padrao():
     """O site padrão não mostra datas: sem semestre, sem cronograma, sem prazos."""
     assert config.SEMESTRE == ""
     assert config.CRONOGRAMA == {}
-    for trilha, avs in config.AVALIACOES.items():
+    for trilha, avs in config.MARCOS.items():
         for av in avs:
             assert "prazo" not in av, f"{trilha}: avaliação {av['n']} tem prazo fixo"
 
@@ -41,14 +41,14 @@ def test_calendario_opcional_tem_o_formato_esperado():
     assert item["num"] in [a["num"] for a in config.aulas("nivel-1")]
 
 
-def test_avaliacoes_marcadas_nas_aulas():
-    marcadas = [a["num"] for a in config.aulas("nivel-2") if a["avaliacao"]]
+def test_marcos_marcados_nas_aulas():
+    marcadas = [a["num"] for a in config.aulas("nivel-2") if a["marco"]]
     assert marcadas == ["06", "10", "16"]
-    marcadas = [a["num"] for a in config.aulas("nivel-1") if a["avaliacao"]]
+    marcadas = [a["num"] for a in config.aulas("nivel-1") if a["marco"]]
     assert marcadas == ["06", "10", "15"]
-    marcadas = [a["num"] for a in config.aulas("nivel-3") if a["avaliacao"]]
+    marcadas = [a["num"] for a in config.aulas("nivel-3") if a["marco"]]
     assert marcadas == ["04", "08", "15"]
-    assert len(config.AVALIACOES["nivel-1"]) == 3
+    assert len(config.MARCOS["nivel-1"]) == 3
 
 
 def test_arquivos_unicos():

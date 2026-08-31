@@ -1,8 +1,8 @@
 # Capítulo 04 — Domínios, DNS e HTTPS
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -561,7 +561,7 @@ Resultado esperado: as duas mensagens do console copiadas, a explicação "ativo
 Scripts são conteúdo ativo: bloqueados. Imagens são passivas: carregam com aviso. A meta-tag muda o comportamento; trocar o `http://` por `https://` remove o problema.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Cloudflare na frente do GitHub Pages. Migre os `NS` do seu domínio para a Cloudflare, mantenha `evento` em DNS only até o certificado do GitHub existir, depois ligue o proxy, escolha **Full (strict)**, ative **Always Use HTTPS** e **HSTS** (sem `preload`). Prove com `curl -I` que a resposta agora vem com `server: cloudflare` e com o cabeçalho `strict-transport-security`, e mostre com `dig` que os IPs retornados mudaram. Explique, em três linhas, por que o GitHub continua sabendo qual repositório servir mesmo com a Cloudflare no meio.
 
@@ -648,7 +648,7 @@ Você tem dez subdomínios de projetos e não quer emitir dez certificados. Um c
 | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Servidor envia só o certificado folha, sem a intermediária | Configure `ssl_certificate` com `fullchain.pem` |
 | `ERR_SSL_PROTOCOL_ERROR` | Porta 443 respondendo HTTP puro (`listen 443` sem `ssl`) | Rode o `certbot --nginx` ou adicione `ssl` e os caminhos do certificado |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral** do Nível 1 (ou do nível que você está cursando), já publicado no Capítulo 03:
 
@@ -659,7 +659,7 @@ No seu **projeto autoral** do Nível 1 (ou do nível que você está cursando), 
 
 **Critério de pronto:** o site abre em `https://<subdominio>` com cadeado, `http://` redireciona, e o console do navegador não mostra avisos de conteúdo misto. O `dns.md` está commitado.
 
-**Entrega:** commit + push e link do repositório (com a URL do site na descrição) no SIGAA.
+**Guarde no seu repositório:** commit + push, com a URL do site na descrição.
 
 ## ✅ Está no ar quando…
 

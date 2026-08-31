@@ -1,8 +1,8 @@
 # Aula 12 — Express estruturado e middlewares
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 O `server.js` da Aula 11 funciona: serve o site, devolve o cardápio em JSON e responde `404` para um id inexistente. Mas ele é um arquivo só, e um arquivo só não escala. Imagine quarenta rotas, validações, regras de negócio e log de acesso empilhados ali dentro. Hoje aplicamos ao servidor exatamente o princípio que você já usa no front desde a Unidade 1 — **separação de responsabilidades** —, só que entre arquivos. E, para isso, você precisa conhecer a peça que sustenta o Express inteiro: o **middleware**.
 
@@ -161,7 +161,7 @@ E validação de servidor não é opcional nem "nível avançado": é o mínimo.
 
 `401` (não autenticado) e `403` (autenticado, mas sem permissão) entram na Aula 14, quando o login Google chegar.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A diferença entre `400` e `500` é de **culpa**. `4xx` diz "o problema está no que você mandou"; `5xx` diz "o problema está aqui dentro, desculpe". Devolver `500` para um campo faltando é mentir para o cliente: ele vai ficar tentando de novo, achando que é instabilidade do servidor, quando bastava corrigir o corpo da requisição.
 
 > **🧠 Você sabia?**
@@ -471,8 +471,8 @@ Content-Type: application/json; charset=utf-8
 
 E o terminal mostra a mensagem completa com a pilha de chamadas. Esse par — **log detalhado no servidor, mensagem genérica ao cliente** — é uma regra de segurança, não de organização. Um `stack trace` devolvido ao navegador entrega o caminho absoluto das suas pastas, os nomes dos seus arquivos e, muitas vezes, o trecho da consulta ao banco. É presente para quem estiver procurando uma brecha.
 
-> **📌 Na prova**
-> Três perguntas que caem sobre esta seção: (1) O que identifica um middleware de erro? **Ter quatro parâmetros.** (2) Por que ele precisa ser o último registrado? **Porque o Express só procura tratadores de erro à frente na fila.** (3) O que muda no Express 5 quanto a handlers `async`? **Exceções e Promises rejeitadas passam a ser capturadas automaticamente, sem `try/catch` nem pacotes auxiliares.**
+> **📌 Vale gravar**
+> Três perguntas que valem a pena revisar sobre esta seção: (1) O que identifica um middleware de erro? **Ter quatro parâmetros.** (2) Por que ele precisa ser o último registrado? **Porque o Express só procura tratadores de erro à frente na fila.** (3) O que muda no Express 5 quanto a handlers `async`? **Exceções e Promises rejeitadas passam a ser capturadas automaticamente, sem `try/catch` nem pacotes auxiliares.**
 
 ## 🧩 Padrão de projeto em uso
 
@@ -899,7 +899,7 @@ Resultado esperado: quatro blocos novos, todos disparados com sucesso e com o st
 `/api/produtos/0` é o caso que separa `Number.isInteger(id)` de `id > 0`. Se a sua validação usar só `isNaN`, o zero passa — e passar zero significa procurar um produto que jamais existirá, gastando um `404` onde cabia um `400`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Corrente completa com prioridade. Implemente um middleware `medirLento` que registre no console, em destaque, toda requisição que demore mais de 50 ms, e um middleware `simularLatencia` que — só quando a query string trouxer `?lento=1` — atrase a resposta em 300 ms antes de chamar `next()`. Depois, prove que a corrente funciona: mostre no terminal um `GET /api/produtos` normal e um `GET /api/produtos?lento=1`, e explique por que o `simularLatencia` precisa estar registrado **antes** das rotas e o `medirLento` **antes** dele.
 
@@ -1030,7 +1030,7 @@ Tags: node, express, middleware, http
 | `POST` devolve `400` mesmo com o corpo aparentemente correto | Falta o cabeçalho `Content-Type: application/json` na requisição | Acrescente o cabeçalho no `testes.http` ou no `fetch` |
 | O produto criado some depois de reiniciar o servidor | O array vive em memória; nada foi gravado em disco | Comportamento esperado hoje; a persistência chega na próxima aula |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral**, aplique a mesma refatoração:
 
@@ -1043,7 +1043,7 @@ No **seu projeto autoral**, aplique a mesma refatoração:
 
 **Critério de pronto:** todos os blocos do `testes.http` disparam com o status esperado, o terminal mostra uma linha de log por requisição e o `server.js` tem menos de trinta linhas.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 

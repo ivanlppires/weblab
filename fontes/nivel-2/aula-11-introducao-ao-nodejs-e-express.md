@@ -1,8 +1,8 @@
 # Aula 11 — Introdução ao Node.js e Express
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 10 o Café Cerrado virou uma SPA: um único `index.html`, navegação por hash, `fetch` buscando `data/produtos.json` e uma API pública para treinar `POST`. Todo esse código rodou dentro do navegador de quem visita o site. Hoje começa a **Unidade 3**, e você troca de lado: em vez de consumir a API dos outros, você escreve o programa que fica esperando requisições e devolvendo respostas. É o mesmo JavaScript — `const`, arrow functions, `async/await`, objetos e arrays funcionam igualzinho — em outro endereço.
 
@@ -378,8 +378,8 @@ Reconheça o padrão: é o mesmo modelo de callback dos eventos do DOM. Lá, `bo
 > **⚠️ Atenção**
 > No Express 5, `req.query` é **somente leitura**. Tentar `req.query.q = "cafe"` derruba o servidor com `TypeError: Cannot set property query of #<IncomingMessage> which has only a getter`. Se precisar de uma versão modificada, copie para uma variável: `const filtros = { ...req.query }`.
 
-> **📌 Na prova**
-> Duas trocas do Express 4 para o 5 caem com frequência: `res.json(obj, 201)` virou `res.status(201).json(obj)`, e `res.redirect('/rota', 302)` virou `res.redirect(302, '/rota')`. A regra mental é "status primeiro".
+> **📌 Vale gravar**
+> Duas trocas do Express 4 para o 5 costumam confundir: `res.json(obj, 201)` virou `res.status(201).json(obj)`, e `res.redirect('/rota', 302)` virou `res.redirect(302, '/rota')`. A regra mental é "status primeiro".
 
 ### 4.5 Reinício automático: `node --watch`
 
@@ -1028,7 +1028,7 @@ Resultado esperado: `curl -i http://localhost:3001/api/produtos` devolve o mesmo
 Você vai precisar escrever `res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" })` e `res.end(JSON.stringify(produtos))` na mão — é justamente esse o ponto do exercício.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Paginação no servidor. Faça `GET /api/produtos` aceitar `?pagina=2&limite=2` e devolver um objeto — não mais um array cru — no formato `{ "dados": [...], "pagina": 2, "limite": 2, "total": 6, "totalPaginas": 3 }`. Sem query string, o comportamento padrão deve ser `pagina=1` e `limite=10`. Depois, ajuste o `public/js/app.js` para continuar funcionando com o novo formato e acrescente dois botões, "Anterior" e "Próxima", que ficam desabilitados nos extremos.
 
@@ -1147,7 +1147,7 @@ Abra o DevTools na aba Network, recarregue o site e olhe a coluna Size do `estil
 | `SyntaxError: Expected double-quoted property name in JSON at position 217` | `data/produtos.json` com vírgula sobrando, aspas simples ou comentário | Abra o arquivo no VS Code: o erro de sintaxe fica sublinhado |
 | O site abre, mas o cardápio fica vazio e o console mostra 404 | O `fetch` ainda aponta para `data/produtos.json`, que saiu de `public/` | Troque a URL para `/api/produtos` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral**, crie o repositório da Unidade 3 e repita a arquitetura de hoje com os seus dados:
 
@@ -1160,7 +1160,7 @@ No **seu projeto autoral**, crie o repositório da Unidade 3 e repita a arquitet
 
 **Critério de pronto:** clonando o repositório em uma pasta vazia e rodando `npm install && npm run dev`, o site abre em `http://localhost:3000` com os dados vindos da API, e `curl -i http://localhost:3000/api/<seu-recurso>/999` devolve `404`.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 

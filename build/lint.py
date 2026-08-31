@@ -19,7 +19,7 @@ SECOES_AULA = [
     ("🧪", "Laboratório"),
     ("🏆", "Desafios"),
     ("🐛", "Erros comuns"),
-    ("🏠", "Atividade assíncrona"),
+    ("🏠", "Para praticar depois da aula"),
     ("✅", "Checkpoint"),
     ("📚", "Para aprofundar"),
 ]

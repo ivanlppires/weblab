@@ -1,9 +1,12 @@
 """Dados do WebLab: trilhas, aulas, unidades, avaliações e o calendário opcional.
 
-O material é ATEMPORAL: nenhuma aula traz datas, nome de semestre ou turma.
+O material é ATEMPORAL e ABERTO: nenhuma aula traz datas, semestre, turma, nota,
+prazo ou entrega institucional — serve a qualquer pessoa que queira estudar.
+No lugar das avaliações há MARCOS: o que o projeto do estudante precisa ter ao
+fim de cada unidade.
 O calendário de um semestre é um acréscimo opcional que aparece só no índice
 de cada trilha. Para publicá-lo, preencha SEMESTRE, CRONOGRAMA e (se quiser)
-o campo "prazo" de cada item de AVALIACOES — o passo a passo e o calendário
+o campo "prazo" de cada item de MARCOS — o passo a passo e o calendário
 de 2026.2, usado na primeira oferta, estão em docs/calendario-2026-2.md.
 
 Com SEMESTRE vazio e CRONOGRAMA vazio (o padrão), o site não mostra nenhuma
@@ -23,7 +26,7 @@ PROFESSOR = "Prof. Ivan Luiz Pedroso Pires"
 SEMESTRE = ""  # ex.: "2027.1"; vazio deixa o site atemporal
 
 
-def _aulas(trilha, prefixo, itens, unidades, avaliacoes):
+def _aulas(trilha, prefixo, itens, unidades, marcos):
     """Monta a lista de aulas de uma trilha a partir de (num, slug, título)."""
     out = []
     for num, slug, titulo in itens:
@@ -36,7 +39,7 @@ def _aulas(trilha, prefixo, itens, unidades, avaliacoes):
                 "slug": slug,
                 "titulo": titulo,
                 "unidade": unidade,
-                "avaliacao": avaliacoes.get(num),
+                "marco": marcos.get(num),
                 "arquivo": f"{prefixo}-{num}-{slug}.md",
                 "pagina": f"{prefixo}-{num}.html",
             }
@@ -133,7 +136,7 @@ TRILHAS = {
         "titulo_curto": "Introdução ao Desenvolvimento Web",
         "cor": "n1",
         "codigo": "FACET-SNP-319",
-        "carga": "60h · 45h presenciais + 15h EAD",
+        "carga": "≈60 h de estudo · 15 h de prática guiada",
         "prerequisito": "Nenhum",
         "prefixo": "aula",
         "tipo": "aula",
@@ -156,8 +159,8 @@ TRILHAS = {
         "titulo_curto": "Desenvolvimento Web: do front-end ao full-stack",
         "cor": "n2",
         "codigo": "FACET-SNP-307",
-        "carga": "60h · 45h presenciais + 15h EAD",
-        "prerequisito": "Nível 1 (FACET-SNP-319)",
+        "carga": "≈60 h de estudo · 15 h de prática guiada",
+        "prerequisito": "Nível 1 concluído (ou HTML, CSS e JavaScript básicos)",
         "prefixo": "aula",
         "tipo": "aula",
         "resumo": "Do site estático profissional (frameworks CSS, SVG, acessibilidade) à SPA em JavaScript "
@@ -180,8 +183,8 @@ TRILHAS = {
         "titulo_curto": "Frameworks Modernos: front-end e back-end",
         "cor": "n3",
         "codigo": "FACET-SNP-310",
-        "carga": "60h · 45h presenciais + 15h EAD",
-        "prerequisito": "Nível 2 (FACET-SNP-307)",
+        "carga": "≈60 h de estudo · 15 h de prática guiada",
+        "prerequisito": "Nível 2 concluído (ou JavaScript assíncrono e Node/Express básicos)",
         "prefixo": "aula",
         "tipo": "aula",
         "resumo": "Vue 3, Vuetify, Vue Router, Pinia e Axios no front; Express 5, MySQL, Supabase, Firebase Auth "
@@ -232,11 +235,46 @@ EXTRAS = {
 }
 
 # --------------------------------------------------------------------------
+# Autoria — aparece na página /autores/, no CITATION.cff e nos metadados do DOI
+# --------------------------------------------------------------------------
+# papel: use os termos da taxonomia CRediT (credit.niso.org) em português.
+#   "concepção"      — desenhou o material e a arquitetura
+#   "redação"        — escreveu as aulas
+#   "revisão"        — revisou tecnicamente (diga o que revisou em "escopo")
+#   "software"       — escreveu o gerador do site
+#   "curadoria"      — organizou desafios, links, exemplos
+# ordem: quem entra depois vai para o fim da lista, salvo decisão em contrário.
+AUTORES = [
+    {
+        "nome": "Ivan Luiz Pedroso Pires",
+        "papel": ["concepção", "redação", "software", "curadoria"],
+        "escopo": "Todas as trilhas e o gerador do site.",
+        "instituicao": "UNEMAT — Campus Sinop, FACET",
+        "orcid": "",   # ex.: "0000-0000-0000-0000"
+        "lattes": "",  # ex.: "http://lattes.cnpq.br/0000000000000000"
+        "principal": True,
+    },
+    # Exemplo de quem entra por revisão (remova o comentário e preencha):
+    # {
+    #     "nome": "Nome do colega",
+    #     "papel": ["revisão"],
+    #     "escopo": "Nível 2, aulas 11 a 16 (Node.js, Express e autenticação).",
+    #     "instituicao": "Instituição",
+    #     "orcid": "",
+    #     "lattes": "",
+    # },
+]
+
+# Crédito de revisão por aula: "trilha/num" -> ["Nome", ...]
+# Ex.: REVISORES = {"nivel-2/11": ["Nome do colega"]}
+REVISORES = {}
+
+# --------------------------------------------------------------------------
 # Calendário do semestre (opcional) — ver docs/calendario-2026-2.md
 # --------------------------------------------------------------------------
 CRONOGRAMA = {}  # {"nivel-1": [{"data": "dd/mm/aaaa", "num": "01", "descricao": "…", "prazo": True}, ...]}
 
-AVALIACOES = {
+MARCOS = {
     "nivel-1": [
         {"n": 1, "escopo": "Site em HTML com os elementos da Unidade 1 (estrutura, textos, links, tabelas, formulários, mídias, listas)."},
         {"n": 2, "escopo": "O mesmo site estilizado com CSS: layout, menu, responsividade e animações."},
@@ -253,8 +291,6 @@ AVALIACOES = {
         {"n": 3, "escopo": "Back-end com Express, banco de dados (MySQL/Supabase), autenticação Firebase, documentação e deploy."},
     ],
 }
-
-REGRAS_APROVACAO = "Média final = (A1 + A2 + A3) ÷ 3. Aprovação com MF ≥ 6,0; exame final se 4,0 ≤ MF < 6,0; frequência mínima de 75%."
 
 BIBLIOGRAFIA = {
     "nivel-1": [
@@ -279,6 +315,16 @@ BIBLIOGRAFIA = {
     ],
     "deploy": [],
 }
+
+
+def autores_meta():
+    """Nomes de todos os autores, para o <meta name="author">."""
+    return "; ".join(a["nome"] for a in AUTORES)
+
+
+def revisores(trilha_id, num):
+    """Quem revisou uma aula específica (crédito no rodapé da página)."""
+    return REVISORES.get(f"{trilha_id}/{num}", [])
 
 
 def trilha(id_):

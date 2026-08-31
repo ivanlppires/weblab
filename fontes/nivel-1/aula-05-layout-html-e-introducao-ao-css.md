@@ -1,8 +1,8 @@
 # Aula 05 — Elementos HTML para layout e introdução ao CSS
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -221,7 +221,7 @@ Esse é o esqueleto de praticamente todo site que você já visitou. Guarde-o: v
 
 **CSS** (*Cascading Style Sheets*, folhas de estilo em cascata) é a linguagem que descreve **como** o conteúdo estruturado pelo HTML deve ser apresentado. O HTML responde "o que é isso?" (um título, uma lista, um formulário); o CSS responde "com que aparência?" (azul, 2 rem, centralizado, com sombra).
 
-A separação é deliberada e vale ouro: o mesmo HTML pode ganhar dez aparências diferentes trocando só o CSS, e o mesmo CSS serve a cem páginas. É por isso que a Avaliação 1 é entregue **sem CSS** e a Avaliação 2 estiliza **o mesmo site**: a estrutura e a apresentação são trabalhos diferentes.
+A separação é deliberada e vale ouro: o mesmo HTML pode ganhar dez aparências diferentes trocando só o CSS, e o mesmo CSS serve a cem páginas. É por isso que o Marco 1 fecha **sem CSS** e o Marco 2 estiliza **o mesmo site**: a estrutura e a apresentação são trabalhos diferentes.
 
 ### 2.1 Sintaxe
 
@@ -549,7 +549,7 @@ Um seletor pode mirar um **estado** do elemento — mouse por cima, foco pelo te
 ```
 
 > **⚠️ Atenção**
-> Nunca escreva `outline: none` sem colocar outro indicador no lugar. Quem navega pelo teclado (por deficiência motora, por preferência ou porque o mouse quebrou) depende do contorno de foco para saber onde está. Um site sem foco visível é **inutilizável** por teclado — e reprova na rubrica.
+> Nunca escreva `outline: none` sem colocar outro indicador no lugar. Quem navega pelo teclado (por deficiência motora, por preferência ou porque o mouse quebrou) depende do contorno de foco para saber onde está. Um site sem foco visível é **inutilizável** por teclado — não importa quão bonito ele pareça.
 
 ### 6.3 Variáveis CSS
 
@@ -1110,7 +1110,7 @@ Comece pela página mais simples e copie o `<head>`, o `<header>` e o `<footer>`
 Faça a pergunta da seção 1.2 para cada `div`: "existe um elemento que descreva o que isto é?". `topo` é um cabeçalho; `menu` é navegação; `conteudo` é o principal; `noticia` faz sentido sozinha; `lateral` é tangencial; `rodape` é rodapé. Os "títulos" são cabeçalhos de nível 1, 2 e 3. A `div` que sobra, se sobrar, é o contêiner centralizado.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Engenharia reversa de um site real. Escolha a página inicial de um site institucional de verdade (o portal da UNEMAT, o site do IFMT, o gov.br). Com o DevTools, mapeie a estrutura de marcos dela: quantos `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` e `<footer>` existem, e quantas `<div>`. Depois reconstrua **o esqueleto** dessa página (sem copiar conteúdo — use textos próprios) em HTML semântico, com o contêiner centralizado, e escreva um parágrafo comparando: o site original usa os marcos corretamente? O que você faria diferente?
 
@@ -1243,7 +1243,7 @@ Sites institucionais brasileiros — de prefeituras, secretarias, campi — cost
 4. Conteúdo "inspirado no original" significa mesma estrutura de informação (seções, tipos de dado) com textos seus — não copie parágrafos nem imagens sem licença.
 </details>
 
-**Para ir além:** entregue este Boss como parte extra da Avaliação 1 — vale como item adicional da rubrica, a critério do professor.
+**Para ir além:** este Boss pode virar parte do seu Marco 1 — mostre-o junto com o restante do projeto.
 
 ## 🐛 Erros comuns
 
@@ -1262,17 +1262,17 @@ Sites institucionais brasileiros — de prefeituras, secretarias, campi — cost
 | A imagem vaza para fora do contêiner em telas estreitas | `<img>` sem `max-width: 100%` | Regra base `img { max-width: 100%; height: auto; }` |
 | Tudo em `px` e o usuário que aumentou a fonte do navegador não é atendido | Unidades absolutas para tipografia | `rem` para texto (Aula 06) |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, M. S. *Criando sites com HTML*, capítulos sobre estrutura de página e introdução ao CSS. Na MDN em pt-BR: "Estrutura de documento e site" e "O modelo de caixa" (links em Para aprofundar).
 
-**Parte 2 — Entrega (30 min).** Exercício **B3**: o esqueleto semântico das cinco páginas do **seu projeto autoral**, validado no W3C, mais a primeira folha de estilo (`css/estilo.css`) com reset, `box-sizing: border-box` global, variáveis de cores base e o contêiner centralizado aplicado nas cinco páginas.
+**Parte 2 — Produção (30 min).** Exercício **B3**: o esqueleto semântico das cinco páginas do **seu projeto autoral**, validado no W3C, mais a primeira folha de estilo (`css/estilo.css`) com reset, `box-sizing: border-box` global, variáveis de cores base e o contêiner centralizado aplicado nas cinco páginas.
 
 **Critério de pronto:** as cinco páginas abrem com o mesmo cabeçalho e rodapé estilizados; `document.querySelectorAll("main").length` retorna `1` em cada página; o DevTools mostra `box-sizing: border-box` em qualquer elemento; zero erros no validador.
 
-**Entrega:** commit + push e link do repositório no SIGAA (ou o `.zip` da pasta do projeto).
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto, se ainda não usa Git).
 
-**Parte 3 — Fórum (10 min).** No fórum "Projetos autorais", publique o tema do seu projeto e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. **As três avaliações da trilha são individuais e recaem sobre este mesmo projeto**, cada uma acrescentando uma camada (HTML na Avaliação 1, CSS na 2, JavaScript na 3). Comente o wireframe de dois colegas apontando um problema de hierarquia visual em cada.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): publique o tema do seu projeto e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. **Os três marcos da trilha acompanham este mesmo projeto**, cada um acrescentando uma camada (HTML no Marco 1, CSS no Marco 2, JavaScript no Marco 3). Se puder, compare o wireframe com o de um colega, apontando um problema de hierarquia visual.
 
 ## ✅ Checkpoint do projeto
 
@@ -1288,7 +1288,7 @@ Ao fim desta aula — e da Unidade 1 — o repositório do seu projeto autoral d
 - [ ] Um `.botao` com `:hover` e `:focus-visible` visíveis.
 - [ ] Página de contato com `<address>`, links `tel:`/`mailto:`, tabela com `caption` e formulário com `label` em todos os campos.
 - [ ] Zero erros no validador W3C nas cinco páginas.
-- [ ] Tema e wireframe do projeto autoral publicados no fórum.
+- [ ] Tema e wireframe do projeto autoral registrados (no fórum da turma ou nas suas próprias anotações).
 
 Isso encerra a Unidade 1.
 
@@ -1305,4 +1305,4 @@ Isso encerra a Unidade 1.
 - SILVA, Maurício Samy. *Criando sites com HTML: sites de alta qualidade com HTML e CSS*. Novatec, 2008 — capítulos sobre estrutura de página e introdução ao CSS.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo sobre os novos elementos estruturais do HTML5.
 
-Na próxima aula você entra no CSS de verdade — seletores, cascata, especificidade, cores, unidades, tipografia e variáveis — e é também o dia de envio da **Avaliação 1**: o site em HTML puro, com tudo o que a Unidade 1 ensinou. As instruções completas estão na Aula 06, e o escopo são os itens **não-CSS** do Checkpoint acima.
+Na próxima aula você entra no CSS de verdade — seletores, cascata, especificidade, cores, unidades, tipografia e variáveis — e é também o dia do **Marco 1**: o site em HTML puro, com tudo o que a Unidade 1 ensinou. As instruções completas estão na Aula 06, e o escopo são os itens **não-CSS** do Checkpoint acima.

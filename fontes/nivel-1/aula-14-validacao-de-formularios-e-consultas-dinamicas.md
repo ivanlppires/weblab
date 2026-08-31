@@ -1,8 +1,8 @@
 # Aula 14 — JavaScript para validação de formulários e consultas dinâmicas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -401,7 +401,7 @@ $     fim da string
 /\bgato\b/.test("gatorade"); // false — "gato" precisa ser palavra inteira
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A âncora é o que separa **busca** de **validação**. `/\d{3}/.test("abc1234xyz")` é `true`: encontrou três dígitos em algum lugar. `/^\d{3}$/.test("abc1234xyz")` é `false`: a string **inteira** precisa ser exatamente três dígitos. Toda regex de validação de formato precisa de `^` no início e `$` no fim. Essa questão cai todo semestre.
 
 ### 5.6 Grupos, alternância e lookahead
@@ -1803,7 +1803,7 @@ Resultado esperado: a paginação respeita o resultado filtrado (não o array co
 Guarde `paginaAtual` no estado e use `lista.slice(inicio, inicio + POR_PAGINA)`. O total de páginas é `Math.ceil(lista.length / POR_PAGINA)` — e nunca deixe `paginaAtual` maior que ele depois de um filtro.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Biblioteca de validação configurável. Escreva um `js/validador.js` genérico, dirigido por um objeto de regras, que funcione em qualquer formulário do seu projeto:
 
@@ -1944,7 +1944,7 @@ O `validarCampo` da Mão na massa tem um `switch` com sete casos. Funciona, mas 
 ### ⭐⭐⭐ O formulário mais acessível da turma
 Tags: acessibilidade, formularios, investigacao, projeto
 
-Um formulário pode passar em todos os testes automáticos e ainda ser impossível de preencher sem o mouse. Nesta missão você vai auditar o formulário do **seu projeto autoral** como um usuário que não enxerga a tela, corrigir o que encontrar e provar o resultado. Vale como item extra na rubrica da Avaliação 3.
+Um formulário pode passar em todos os testes automáticos e ainda ser impossível de preencher sem o mouse. Nesta missão você vai auditar o formulário do **seu projeto autoral** como um usuário que não enxerga a tela, corrigir o que encontrar e provar o resultado. Isso entra bem no Marco 3 da unidade.
 
 **Critérios de pronto**
 
@@ -1984,7 +1984,7 @@ Um formulário pode passar em todos os testes automáticos e ainda ser impossív
 | O leitor de tela não anuncia o resultado da busca | A região `aria-live` foi criada junto com o conteúdo | Deixe o elemento vazio no HTML e só altere o `textContent` depois |
 | `localStorage.getItem` devolve `[object Object]` | O objeto foi salvo sem `JSON.stringify` | `setItem(chave, JSON.stringify(obj))` e `JSON.parse` na leitura |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** FLANAGAN, *JavaScript: o guia definitivo*, capítulo de expressões regulares. MILETTO & BERTAGNOLLI, *Desenvolvimento de software II*, seção de validação de dados de entrada. Na MDN em português, o artigo "Validação de formulário no lado do cliente" (link em Para aprofundar). Anote duas restrições de validação nativa que não apareceram nesta aula.
 
@@ -1997,9 +1997,9 @@ Um formulário pode passar em todos os testes automáticos e ainda ser impossív
 
 **Critério de pronto:** enviar o formulário vazio destaca todos os campos com erro, leva o foco ao primeiro e não recarrega a página; digitar um termo sem acento encontra o item acentuado; o console fica limpo em todas as páginas.
 
-**Parte 3 — Fórum (5 min).** No fórum "Regex que quebrou": traga uma expressão regular sua que falhou em um caso que você não tinha previsto, explique por que falhou e mostre a correção. Comente a de um colega apontando outro caso que a expressão dele ainda não cobre.
+**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga uma expressão regular sua que falhou em um caso que você não tinha previsto, explique por que falhou e mostre a correção.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 
@@ -2032,4 +2032,4 @@ Um formulário pode passar em todos os testes automáticos e ainda ser impossív
 - MILETTO, Evandro M.; BERTAGNOLLI, Silvia C. *Desenvolvimento de software II*. Bookman, 2014 — validação de dados de entrada e tratamento de erros.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo de formulários, para revisar os atributos que alimentam a Constraint Validation API.
 
-Na próxima aula, o site sai da sua máquina e vai para a internet: você vai preparar o projeto para produção, versioná-lo com Git, publicá-lo no GitHub Pages, auditar o resultado com o Lighthouse e entregar a Avaliação 3 — o site do evento, no ar, com um endereço que qualquer pessoa pode acessar.
+Na próxima aula, o site sai da sua máquina e vai para a internet: você vai preparar o projeto para produção, versioná-lo com Git, publicá-lo no GitHub Pages, auditar o resultado com o Lighthouse e fechar o Marco 3 — o site do evento, no ar, com um endereço que qualquer pessoa pode acessar.

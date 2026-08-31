@@ -1,8 +1,8 @@
 # Capítulo 05 — Publicando o back-end Node
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -762,7 +762,7 @@ Resultado esperado: as três linhas `[acesso]` copiadas do painel, com os status
 Para forçar o `400`: `curl -X POST URL/api/produtos -H "Content-Type: application/json" -d '{isso não é json}'`. O `express.json()` rejeita e o erro cai no seu tratador. Para forçar o `500`, crie temporariamente uma rota que faça `throw new Error('erro de teste')`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Publique a **mesma** API em duas plataformas (Render e Fly.io, ou Render e Railway), a partir do mesmo repositório e do mesmo commit, e compare-as com dados. Meça, de Sinop: latência mediana de 20 requisições ao health check em cada uma, tempo do *cold start* (se houver), tempo total do deploy e o que cada painel mostra de log. Termine com uma recomendação de uma linha para o Café Cerrado, justificada pelos números.
 
@@ -854,7 +854,7 @@ Faça o teste que ninguém faz antes de entregar: crie três produtos pela API p
 | Deploy "bem-sucedido" mas o site responde `502` | o processo caiu logo depois de subir; o health check não estava configurado | veja os logs no minuto do deploy; defina o Health Check Path (Passo 6) |
 | Segredo apareceu no log do painel | algum `console.log` imprimindo o objeto de configuração inteiro | remova o log, **revogue e gere outro segredo** (§5.4) |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 Na API do seu **projeto autoral** (ou na `cafe-cerrado-api`, se o seu projeto ainda não tem back-end):
 
@@ -866,7 +866,7 @@ Na API do seu **projeto autoral** (ou na `cafe-cerrado-api`, se o seu projeto ai
 
 **Critério de pronto:** um colega consegue, lendo só o seu `README.md`, dizer quais variáveis precisa cadastrar; `curl https://sua-api/api/saude` responde `200` com JSON; o site publicado carrega dados da API sem erro no console; e `git ls-files` não lista nenhum `.env`.
 
-**Entrega:** commit + push e link do repositório no SIGAA, com a URL pública da API e a do site na descrição do repositório.
+**Guarde no seu repositório:** commit + push, com a URL pública da API e a do site na descrição do repositório.
 
 ## ✅ Está no ar quando…
 

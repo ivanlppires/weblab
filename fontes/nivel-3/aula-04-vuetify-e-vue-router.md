@@ -1,8 +1,8 @@
 # Aula 04 — Introdução a Vuetify e Vue Router
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -18,16 +18,16 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
-Nas Aulas 02 e 03 você construiu o UniEventos em Vue puro: listagem com `v-for`, filtros com `computed()`, carregamento assíncrono em `onMounted()` e HTML/CSS escritos à mão. Hoje ele ganha interface profissional com **Vuetify** e navegação real com **Vue Router**, virando uma SPA de verdade — e você recebe as instruções completas da Avaliação 1.
+Nas Aulas 02 e 03 você construiu o UniEventos em Vue puro: listagem com `v-for`, filtros com `computed()`, carregamento assíncrono em `onMounted()` e HTML/CSS escritos à mão. Hoje ele ganha interface profissional com **Vuetify** e navegação real com **Vue Router**, virando uma SPA de verdade — e você chega ao Marco 1 do seu projeto autoral.
 
 Antes de começar, confirme que você tem:
 
 - [ ] O projeto UniEventos das aulas 02–03 rodando localmente com `npm run dev` (lista de eventos com filtro, `v-for`, `v-if`, `computed`, `onMounted`, carregamento assíncrono com `fetch`).
 - [ ] Node.js 22.22.2 LTS instalado (`node -v`). O `create-vue` exige `^22.18.0 || >=24.12.0`.
-- [ ] Git configurado e uma conta no GitHub — hoje você vai precisar de um repositório público para a Avaliação 1.
+- [ ] Git configurado e uma conta no GitHub — hoje você vai precisar de um repositório público para o Marco 1.
 - [ ] Revisão rápida: `<script setup>`, `ref`, `computed`, `v-bind`, `v-on`, `v-model`, `v-if`/`v-for` com `:key`, `onMounted`.
 
-> **📌 Na prova:** hoje marca o fim da Unidade 1. Tudo que vier depois — Vuetify avançado, Axios, Pinia — pressupõe que você sabe montar uma SPA com rotas. Não pule esta aula.
+> **📌 Vale gravar:** hoje marca o fim da Unidade 1. Tudo que vier depois — Vuetify avançado, Axios, Pinia — pressupõe que você sabe montar uma SPA com rotas. Não pule esta aula.
 
 ## 🗺️ Roteiro
 
@@ -35,7 +35,7 @@ Antes de começar, confirme que você tem:
 |---|---|---|
 | 1 | 50 min | Design system, Material Design 3, instalação do Vuetify 4, estrutura de aplicação e grid |
 | 2 | 50 min | Componentes essenciais do Vuetify, tema customizado, Vue Router 5 (rotas, parâmetros, navegação) |
-| 3 | 50 min | Mão na massa: migração do UniEventos para SPA com layout, views e tema institucional + instruções da Avaliação 1 |
+| 3 | 50 min | Mão na massa: migração do UniEventos para SPA com layout, views e tema institucional + requisitos do Marco 1 |
 
 ## 1. Por que usar um framework de UI
 
@@ -1110,7 +1110,7 @@ Resultado esperado: clicar repetidamente no botão de tema percorre os três tem
 `themes: { light: {...}, dark: {...}, contraste: {...} }` no `createVuetify`, e uma função que usa um array `['light', 'dark', 'contraste']` com `indexOf` para descobrir o próximo tema.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Rota protegida por parâmetro inválido. No `EventoDetalheView.vue`, se `rota.params.id` não for um número válido (ex.: `/eventos/abc`), redirecione automaticamente para a rota `nao-encontrado` usando `router.push`. Não confunda esse caso com o de um ID numericamente válido, mas inexistente no array (ex.: `/eventos/999`) — esse continua mostrando o alerta "Evento não encontrado" que já existe.
 
@@ -1224,7 +1224,7 @@ A Unidade 1 terminou: você tem uma SPA com Vuetify, rotas, tema e grid responsi
 | `rota.params.id` comparado com `===` a um número nunca bate | Parâmetro de rota sempre é string | Converta com `Number(rota.params.id)` antes de comparar |
 | Rota 404 nunca é acionada, mesmo em URL inválida | Rota catch-all `/:pathMatch(.*)*` não está por último no array `routes` | Mova a rota catch-all para o final da lista |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral** (definido na Aula 01), aplique exatamente a mesma migração feita hoje no UniEventos:
 
@@ -1249,49 +1249,39 @@ Ao final desta aula, seu repositório deve ter:
 - [ ] README atualizado com instruções de instalação e execução (`npm install`, `npm run dev`).
 - [ ] Código versionado e enviado ao repositório GitHub público.
 
-## 📝 Avaliação 1 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 1
 
-### Escopo
+O Marco 1 fecha a **Unidade 1** inteira: estrutura de um projeto Vue 3 criado com CLI, componentes, diretivas, reatividade, ciclo de vida e — a partir de hoje — Vuetify e Vue Router básico. Ao final deste marco, o seu **projeto autoral** (o que vem evoluindo desde a Aula 01) deve ser uma SPA de verdade, com interface Vuetify e navegação por rotas, aplicada a um domínio de dados **diferente** do UniEventos construído em sala (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, cardápio de restaurante — ou outro tema definido na Aula 01).
 
-A Avaliação 1 cobre a **Unidade 1** inteira: estrutura de um projeto Vue 3 criado com CLI, componentes, diretivas, reatividade, ciclo de vida e — a partir de hoje — Vuetify e Vue Router básico. Você vai entregar o **projeto autoral** que vem evoluindo desde a Aula 01.
+### Requisitos
 
-O projeto deve:
+1. Projeto criado com `npm create vue@latest` (ou `npx create-vue@latest`), com a flag `--router` no mínimo — **Aula 01/02**.
+2. **Mínimo de 6 componentes `.vue`** próprios (views + componentes reutilizáveis), além do `App.vue` — **Aula 02**.
+3. **Uso comprovado** — em código, não só em teoria — de: `v-if`/`v-else`, `v-for` com `:key`, `v-model`, `v-bind` (ou o atalho `:`), `v-on` (ou o atalho `@`) — **Aula 02**; `computed` e `onMounted` — **Aula 03**.
+4. **Dados de pelo menos 8 registros** do domínio escolhido, em um arquivo separado (`src/data/*.js`) ou vindos de `fetch` a uma API pública/mock — **Aula 03**.
+5. **Interface visual com Vuetify** em toda a aplicação (não vale CSS puro substituindo os componentes do Vuetify nas telas principais) — **Aula 04**.
+6. **Roteamento** com Vue Router: no mínimo 3 rotas, sendo uma delas com parâmetro dinâmico e uma delas a rota 404 — **Aula 04**.
+7. **README.md** no repositório, com: nome do projeto, descrição de uma linha, instruções de instalação (`npm install`) e execução (`npm run dev`), e print de tela (opcional, mas recomendado).
+8. **Repositório GitHub público**, com histórico de commits que mostre evolução incremental (não um único commit "projeto final").
 
-- Ter sido criado com `npm create vue@latest` (ou `npx create-vue@latest`), com as flags `--router` no mínimo.
-- Ser uma SPA de página única transformada em múltiplas views navegáveis (o que fizemos hoje).
-- Usar **Vuetify** para toda a interface visual (não é permitido CSS puro substituindo os componentes do Vuetify nas telas principais).
-- Ter um domínio de dados **diferente** do UniEventos construído em sala (ex.: catálogo de plantas do Pantanal, agenda de quadras esportivas, mural de estágios, brechó, controle de pescarias, cardápio de restaurante — ou outro tema aprovado na Aula 01).
+### Checklist de qualidade
 
-### Requisitos obrigatórios
+O que separa um projeto pronto de um feito às pressas na véspera:
 
-1. **Mínimo de 6 componentes `.vue`** próprios (views + componentes reutilizáveis), além do `App.vue`.
-2. **Uso comprovado** — em código, não só em teoria — de: `v-if`/`v-else`, `v-for` com `:key`, `v-model`, `v-bind` (ou o atalho `:`), `v-on` (ou o atalho `@`), `computed` e `onMounted`.
-3. **Dados de pelo menos 8 registros** do domínio escolhido, em um arquivo separado (`src/data/*.js`) ou vindos de `fetch` a uma API pública/mock.
-4. **Roteamento** com Vue Router: no mínimo 3 rotas, sendo uma delas com parâmetro dinâmico e uma delas a rota 404.
-5. **README.md** no repositório, com: nome do projeto, descrição de uma linha, instruções de instalação (`npm install`) e execução (`npm run dev`), e print de tela (opcional, mas recomendado).
-6. **Repositório GitHub público**, com histórico de commits que mostre evolução incremental (não um único commit "projeto final").
+- [ ] Estrutura de pastas organizada, nomes de componentes e arquivos consistentes, sem componentização artificial só para bater o número mínimo.
+- [ ] Diretivas e reatividade (`v-if`, `v-for`, `v-model`, `v-bind`, `v-on`) usadas onde fazem sentido no domínio — não coladas de exemplo sem propósito.
+- [ ] `computed` e `onMounted` resolvendo um problema real do domínio (filtro, ordenação, carregamento assíncrono), não só presentes para cumprir requisito.
+- [ ] Vuetify e Vue Router funcionando de ponta a ponta: nenhuma tela quebrada, nenhuma rota morta.
+- [ ] README que permite a qualquer pessoa clonar o repositório e rodar o projeto sem precisar perguntar nada a você.
+- [ ] Histórico de commits granular ao longo do tempo — não um commit único "projeto final".
 
-### Formato e prazo de entrega
+### Como saber que está pronto
 
-Entregue **o link do repositório GitHub público** via SIGAA, na atividade "Avaliação 1", até 23h59 do prazo publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)). Cole o link diretamente no campo de texto da atividade — não anexe `.zip`.
-
-### Rubrica (10,0 pontos)
-
-| Critério | Peso |
-|---|---|
-| Estrutura e organização do projeto (pastas, nomes, componentização mínima) | 2,0 |
-| Uso correto de diretivas e reatividade (`v-if`, `v-for`, `v-model`, `v-bind`, `v-on`) | 3,0 |
-| Uso de `computed` e ciclo de vida (`onMounted`) de forma coerente com o domínio | 2,0 |
-| Interface visual com Vuetify e navegação com Vue Router funcionando | 1,5 |
-| README, versionamento e histórico de commits | 1,5 |
-
-### Política de atraso
-
-Entregas após o prazo perdem **1,0 ponto por dia corrido** de atraso, até o limite de 5 dias. Após esse prazo, a atividade recebe nota zero, salvo justificativa formal protocolada junto à coordenação do curso.
-
-### Política de plágio e uso de IA
-
-É permitido usar ferramentas de IA como apoio (explicar erros, sugerir sintaxe, revisar código) — assim como é permitido consultar documentação e tutoriais. **Não é permitido** entregar um projeto gerado quase integralmente por IA sem compreensão do próprio código: na correção, qualquer estudante pode ser chamado para explicar oralmente uma parte do seu projeto, e a nota é ajustada conforme a clareza da explicação. Cópia integral do projeto de outro colega (mesmo com o domínio "trocado") é considerada plágio e resulta em nota zero para ambos os envolvidos, com encaminhamento ao regimento acadêmico da UNEMAT.
+- Rode `npm install && npm run dev` em uma cópia limpa do repositório (ou peça a um colega para fazer isso) — se o projeto não sobe de primeira, o README está incompleto.
+- Abra o DevTools (aba Console) navegando por todas as rotas: zero erros e zero *warnings* do Vue Router.
+- Navegue para uma URL inexistente e confirme que a rota 404 aparece, não uma tela em branco.
+- Redimensione a janela (ou use o modo responsivo do DevTools) e confira que o grid Vuetify se reorganiza em telas menores.
+- Releia o próprio código um dia depois de terminar: se você não consegue explicar por que um `computed` ou um `v-if` está ali, reescreva-o.
 
 ## 📚 Para aprofundar
 

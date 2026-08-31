@@ -1,8 +1,8 @@
 # Capítulo 10 — Qualidade, performance e observabilidade
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -763,7 +763,7 @@ Em um ambiente de teste ou homologação o arquivo é outro (`User-agent: *` seg
 
 Se o seu site tem páginas geradas a partir do banco (uma por evento), escreva um script que gere o arquivo no build e inclua a tag `<lastmod>` com a data da última alteração de cada registro — assim o buscador sabe o que revisitar. Arquivo gerado por script não erra e não envelhece.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saber diferenciar as três métricas do Core Web Vitals pela pergunta que cada uma responde; saber que dado de laboratório (Lighthouse) e dado de campo (usuários reais) medem coisas diferentes; e explicar por que `robots.txt` não é mecanismo de segurança.
 
 ## 🚀 Passo a passo — UniEventos medido, testado e vigiado
@@ -902,7 +902,7 @@ Resultado esperado: dois links de execução do workflow — um verde e um verme
 Em `ci.assert.assertions` você pode citar auditorias individuais pelo id, como `largest-contentful-paint`, no formato `["error", { "maxNumericValue": 2500 }]`. Os ids aparecem na chave `audits` do relatório JSON.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Bug plantado, teste primeiro. Peça a um colega que introduza **um** bug em uma função de regra de negócio da sua API, sem dizer qual. Sua missão, em ordem obrigatória: (1) descubra o bug pelo comportamento, não lendo o diff; (2) escreva um teste que **falha** por causa dele; (3) só então corrija; (4) confirme que o teste passa. Troque de papel e repita. No fim, os dois repositórios têm um teste novo cada, com uma mensagem de commit explicando o bug capturado.
 
@@ -974,7 +974,7 @@ Sistemas profissionais têm uma página que responde, em cinco segundos de olhad
 1. `import { onLCP, onINP, onCLS } from 'web-vitals'` e, no callback, `navigator.sendBeacon('/api/metricas', JSON.stringify(metrica))` — o `sendBeacon` sobrevive ao fechamento da aba.
 2. Grave as métricas em uma tabela simples (`nome`, `valor`, `rota`, `dispositivo`) e calcule a mediana em SQL com `ORDER BY` e `LIMIT`/`OFFSET`, ou em JavaScript mesmo.
 3. Para os source maps, o plugin oficial do Sentry para Vite recebe organização, projeto e um token de autenticação — que vive em um secret do GitHub Actions, nunca no repositório.
-4. Vale como item extra na rubrica da avaliação final da sua trilha.
+4. Este é o tipo de material que fecha bem o Marco final da sua trilha.
 </details>
 
 ## 🐛 Erros comuns
@@ -996,7 +996,7 @@ Sistemas profissionais têm uma página que responde, em cinco segundos de olhad
 | A pilha no Sentry mostra `t.e is not a function` na linha 1 | Código minificado sem source map enviado | Ative `build.sourcemap` e envie os mapas com o plugin oficial do Sentry para Vite |
 | O servidor parou e o disco está 100 % cheio de logs | Nenhuma rotação configurada | `pm2 install pm2-logrotate` ou um arquivo em `/etc/logrotate.d/` com `copytruncate` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do seu **projeto autoral** (front e API):
 
@@ -1007,7 +1007,7 @@ No repositório do seu **projeto autoral** (front e API):
 
 **Critério de pronto:** `npm run qualidade` termina sem erro nos dois projetos; `relatorios/comparativo.md` mostra a nota antes e depois com as duas correções nomeadas; existe uma captura de tela do evento no painel do Sentry.
 
-**Entrega:** commit + push e link do repositório no SIGAA, com o `comparativo.md` visível na raiz e a captura em `relatorios/`.
+**Guarde no seu repositório:** commit + push, com o `comparativo.md` visível na raiz e a captura em `relatorios/`.
 
 ## ✅ Está no ar quando…
 

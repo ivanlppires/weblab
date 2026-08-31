@@ -1,8 +1,8 @@
 # Aula 14 — Documentação com Swagger
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -309,7 +309,7 @@ controllers. Custo: uma camada de indireção a mais para quem está lendo o
 código pela primeira vez.
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Um ADR não documenta código — documenta **decisão e motivo**. Se a resposta para "por que você fez assim?" está só na sua cabeça, ela vai se perder. Escrever ADRs curtos ao longo do desenvolvimento é mais barato do que reconstruir esse raciocínio depois.
 
 ## 🧩 Padrão de projeto em uso — Decorator (documentação como anotação)
@@ -356,7 +356,7 @@ const opcoes = {
         'API REST da plataforma UniEventos — divulgação e inscrição em eventos acadêmicos. ' +
         'Desenvolvida na disciplina FACET-SNP-310 (UNEMAT/Sinop).',
       contact: {
-        name: 'Prof. Ivan Luiz Pedroso Pires',
+        name: 'Equipe UniEventos',
         email: 'ivanpires@unemat.br',
       },
       license: {
@@ -1034,7 +1034,7 @@ Resultado esperado: arquivo `docs/adr/0001-<slug>.md` seguindo o formato de 10 l
 Escolha uma decisão que você realmente tomou e hesitou entre alternativas — é mais fácil escrever o "Contexto" quando a dúvida foi real.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Crie os schemas reutilizáveis da entidade principal do seu domínio (equivalente a `Evento`/`EventoInput`/`Erro`/`Paginacao`) e referencie com `$ref` nos 3 endpoints do exercício B2 — nenhum campo pode ser redigitado à mão dentro de uma anotação de rota.
 
@@ -1120,7 +1120,7 @@ Na Seção 1 você leu que "documentação vira uma fonte de verdade verificáve
 | "Try it out" falha com erro de CORS | A origem da própria página do Swagger UI não está liberada pelo middleware de CORS da API | Garanta que a origem da API (onde o `/api-docs` é servido) está coberta pela configuração de CORS, ou sirva o Swagger UI na mesma origem da API |
 | YAML do comentário `@openapi` quebra a spec inteira silenciosamente | Indentação incorreta no bloco YAML dentro do comentário JSDoc | YAML é sensível a espaços — nunca misture tabs, use 2 espaços por nível, consistentemente |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 1. Documente **todos** os endpoints do seu projeto autoral com anotações `@openapi` (não só os 3 do laboratório).
 2. Garanta que os schemas `Erro` e de paginação (se aplicável) estão presentes e referenciados.
@@ -1150,4 +1150,4 @@ Ao final desta aula, seu repositório `<tema>-api` deve ter:
 - [Keep a README — checklist do que compõe um bom README](https://www.makeareadme.com/)
 - Bibliografia do plano de curso FACET-SNP-310 — capítulos sobre documentação de APIs REST e contratos de serviço.
 
-**Na Aula 15** fechamos o semestre com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, guia de estudo para o exame final e as instruções completas da Avaliação 3. Traga a API documentada e pronta para publicar.
+**Na Aula 15** fechamos o curso com deploy real (front e back), CI/CD com GitHub Actions, retrospectiva de todos os padrões de projeto usados, perguntas para testar seu domínio e os requisitos completos do Marco 3. Traga a API documentada e pronta para publicar.

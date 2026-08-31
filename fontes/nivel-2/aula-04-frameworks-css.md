@@ -1,8 +1,8 @@
 # Aula 04 — Frameworks CSS: Bootstrap, Tailwind e Material
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -14,7 +14,7 @@ Ao final desta aula você será capaz de:
 - Montar layouts responsivos com o grid de 12 colunas do Bootstrap 5.3 (`container` → `row` → `col-*`) e prever, sem abrir o navegador, o que acontece em cada breakpoint.
 - Personalizar o Bootstrap pelo caminho certo — sobrescrevendo as variáveis CSS `--bs-*` — em vez de brigar com o framework a golpes de `!important`.
 - Escrever o mesmo componente nos três frameworks (Bootstrap, Tailwind 4 e Material Web) e comparar peso, verbosidade e liberdade visual com números medidos na aba Network.
-- Justificar por escrito, no `README.md`, a escolha de framework do seu projeto — critério explícito da Avaliação 1.
+- Justificar por escrito, no `README.md`, a escolha de framework do seu projeto — requisito do Marco 1.
 
 ## 📋 Pré-requisitos
 
@@ -124,7 +124,7 @@ Nenhuma dessas classes sabe o que é um botão. `px-4` é `padding-left` e `padd
 
 Não caia na guerra santa. O Bootstrap 5 tem **centenas** de classes utilitárias (`d-flex`, `mt-3`, `text-center`, `gap-2`) — a filosofia utility entrou nele. E o Tailwind tem `@apply` e plugins que empacotam conjuntos de utilitários em uma classe só — a filosofia de componente entrou nele. A diferença real, hoje, é **de onde você parte**: de um componente que você customiza, ou de peças soltas que você monta.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saber diferenciar as duas filosofias olhando um trecho de HTML é pergunta clássica. Regra prática: se as classes descrevem **o que a coisa é** (`card`, `navbar`, `btn`), é componente pronto; se descrevem **como a coisa parece** (`flex`, `p-4`, `text-xl`), é utility-first.
 
 ## 3. Como um framework chega até a página
@@ -575,7 +575,7 @@ Três mecanismos novos aparecem aqui, e vale entender cada um:
 Material Web é elegante e é o futuro anunciado dos componentes web, mas tem três características que pesam contra ele na Unidade 1:
 
 1. **Depende de JavaScript para tudo.** Se o script não carregar, `<md-filled-button>` fica sendo uma tag desconhecida e some da tela. Um site Bootstrap sem JavaScript perde o menu hambúrguer; um site Material Web sem JavaScript perde tudo.
-2. **Não tem sistema de grid.** Ele entrega componentes, não layout. Você teria que escrever o grid à mão com CSS Grid — que é ótimo, mas não é o que a Avaliação 1 pede ("sistema de grid do framework").
+2. **Não tem sistema de grid.** Ele entrega componentes, não layout. Você teria que escrever o grid à mão com CSS Grid — que é ótimo, mas não é o que o Marco 1 pede ("sistema de grid do framework").
 3. **Identidade visual muito forte.** Um site com Material Web parece um app do Google. Para uma cafeteria de Sinop, isso é uma escolha, não um padrão.
 
 > **🧠 Você sabia?**
@@ -611,11 +611,11 @@ A última linha merece atenção: o Bootstrap publica o `integrity` de cada arqu
 O Café Cerrado adota o **Bootstrap 5.3**. A justificativa, que vai literalmente para o `README.md`, tem quatro pontos:
 
 1. O projeto é um site estático, sem etapa de build — e o Bootstrap é o único dos três que entrega grid **e** componentes por CDN, sem npm.
-2. O critério "framework CSS" da Avaliação 1 pede um sistema de grid responsivo; o de 12 colunas é o mais direto e o mais documentado em português.
+2. O critério "framework CSS" do Marco 1 pede um sistema de grid responsivo; o de 12 colunas é o mais direto e o mais documentado em português.
 3. Uma cafeteria de bairro precisa de menu, cards e formulário bem-resolvidos, não de um design autoral disputando prêmio — a curva baixa vale mais que a liberdade total.
 4. As variáveis `--bs-*` da versão 5.3 permitem aplicar a paleta da marca sem lutar contra o framework, o que responde à principal crítica ao Bootstrap ("todo site fica igual").
 
-Seu projeto autoral **pode escolher outro**. O que a avaliação exige não é a escolha, é a **justificativa** e a aplicação consistente.
+Seu projeto autoral **pode escolher outro**. O que o marco exige não é a escolha, é a **justificativa** e a aplicação consistente.
 
 ## 💻 Mão na massa — O Café Cerrado adota o Bootstrap 5.3
 
@@ -1071,7 +1071,7 @@ Mantenha, logo abaixo dos grids, a `<figure>` do guia de torras e a tabela de gr
 
 ### Passo 5 — `contato.html`: o formulário com classes do Bootstrap
 
-A estrutura do formulário não muda: **os mesmos treze campos** da Aula 03, com os mesmos `name`, os mesmos `<optgroup>` e a mesma validação nativa. O que muda são as classes e a troca dos `<p class="campo">` por `<div class="mb-3">`. Nenhum campo pode desaparecer — o requisito 5 da Avaliação 1 cobra o formulário completo.
+A estrutura do formulário não muda: **os mesmos treze campos** da Aula 03, com os mesmos `name`, os mesmos `<optgroup>` e a mesma validação nativa. O que muda são as classes e a troca dos `<p class="campo">` por `<div class="mb-3">`. Nenhum campo pode desaparecer — o requisito 5 do Marco 1 cobra o formulário completo.
 
 **`cafe-cerrado/contato.html`** (trecho do `<main>`)
 
@@ -1519,7 +1519,7 @@ A coluna **Transferred** é o que veio pela rede (comprimido); a coluna **Size**
 
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Aplique o framework escolhido ao **seu projeto autoral** inteiro, nas três páginas, com os mesmos requisitos do Café Cerrado: menu responsivo que colapsa, grid com no mínimo três cards que viram uma coluna no celular, formulário estilizado, paleta própria aplicada por variáveis do framework (não por `!important`), estrutura semântica da Aula 03 intacta e a justificativa no `README.md`. Publique no GitHub Pages e abra o endereço no celular de um colega.
 
@@ -1644,7 +1644,7 @@ A melhor forma de entender um framework é escrever um. Não um clone do Bootstr
 | `<md-filled-button>` não aparece na tela | O `importmap` veio depois do módulo que importa, ou o script não é `type="module"` | O `<script type="importmap">` precisa vir antes de qualquer `import`; o segundo script precisa de `type="module"` |
 | Dois frameworks juntos e componentes com aparência quebrada | Colisão de nomes: `.card`, `.btn` e `.container` existem em quase todos | Um framework por projeto; remova o anterior por inteiro antes de trocar |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** QUEIRÓS e PORTELA, *Introdução ao Desenvolvimento Moderno para a Web*, seções sobre a camada de apresentação e frameworks de CSS (Biblioteca Virtual da UNEMAT). Em seguida, leia a página *Layout → Breakpoints* da documentação oficial do Bootstrap 5.3 e a página *Styling with utility classes* do Tailwind. Anote **duas** ideias que os dois textos defendem de formas opostas.
 
@@ -1655,11 +1655,11 @@ A melhor forma de entender um framework é escrever um. Não um clone do Bootstr
 3. `docs/peso.md` com a auditoria do exercício **B4**.
 4. Nenhum `!important` no seu CSS — fora do bloco `prefers-reduced-motion` da Aula 05, onde ele é a forma correta. Se houver algum, troque por variável do framework ou por um seletor honesto, e registre a troca no `README.md`.
 
-**Parte 3 — Fórum (10 min).** No fórum "Qual framework e por quê" do SIGAA, poste o link do seu projeto publicado, o framework escolhido e **um** argumento contra a sua própria escolha (todo framework tem um). Depois comente o post de um colega que escolheu diferente, apontando uma situação concreta em que a escolha dele seria melhor que a sua.
+**Parte 3 — Argumento contrário (10 min).** Em `docs/framework.md`, anote o framework escolhido e **um** argumento contra a sua própria escolha (todo framework tem um). Se puder, compare com um colega que escolheu diferente e anote uma situação concreta em que a escolha dele seria melhor que a sua.
 
 **Critério de pronto:** o site do projeto autoral abre pelo endereço do GitHub Pages; em 360 px de largura não há rolagem horizontal e o menu colapsa; em 1200 px os cards ficam lado a lado; a paleta é a da sua marca, não a padrão do framework; e o `README.md` justifica a escolha em texto próprio.
 
-**Entrega:** `commit` + `push` e link do repositório público no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 

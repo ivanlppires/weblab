@@ -1,8 +1,8 @@
 # Aula 10 — Requisições autenticadas com Firebase
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -107,7 +107,7 @@ O Firebase trabalha com dois tokens:
 
 Essa separação existe porque um token de vida curta limita o estrago se ele vazar (ex.: em um log, em uma extensão maliciosa do navegador), enquanto o refresh token, mais sensível, fica protegido e raramente trafega.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > JWT tem três partes (header.payload.assinatura), é codificado em Base64URL (não criptografado) e assinado (não pode ser alterado sem invalidar a assinatura). ID token expira em 1h; o SDK renova sozinho usando o refresh token.
 
 > **🔬 Investigue**
@@ -1133,7 +1133,7 @@ Resultado esperado: depois de deslogar e logar de novo, `authStore.ehAdmin` vira
 Se continuar `false`, o token em cache é o antigo — force `getIdTokenResult(true)` ou deslogue mesmo.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Sessão comprometida, ponta a ponta. Hoje, se um usuário desconfiar que seu token vazou (ex.: perdeu o notebook destravado), trocar a senha **não** invalida tokens já emitidos: o ID token continua válido até expirar (até 1h) e o refresh token, que renova automaticamente, também segue válido. Implemente um endpoint `POST /api/usuarios/revogar-sessoes` (autenticado) que chama `authAdmin.revokeRefreshTokens(uid)`, e prove com `curl` que o efeito é real de imediato — não só depois de o token expirar sozinho.
 
@@ -1224,9 +1224,9 @@ Hoje, qualquer conta criada por e-mail/senha pode criar um evento imediatamente 
 | `admin` sempre `false` mesmo após `setCustomUserClaims` | Token antigo em cache, claim não propagada | Deslogar e logar de novo, ou `getIdTokenResult(true)` para forçar renovação |
 | `req.usuario` é `undefined` no controller | `autorizar` usado sem `autenticar` antes na cadeia de middlewares | Sempre montar a rota como `autenticar, autorizar([...])`, nessa ordem |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
-No seu projeto autoral: implemente cadastro, login, logout e proteção de pelo menos uma rota do front (`requerAuth: true`) e um endpoint de escrita da API (`autenticar`). Grave um GIF ou vídeo curto (menos de 1 minuto) mostrando: (1) tentativa de acessar a rota protegida deslogado sendo redirecionada, (2) login, (3) acesso liberado, (4) `curl` sem token retornando 401. Suba o material (código + evidência) no repositório do projeto e envie o link pelo SIGAA.
+No seu projeto autoral: implemente cadastro, login, logout e proteção de pelo menos uma rota do front (`requerAuth: true`) e um endpoint de escrita da API (`autenticar`). Grave um GIF ou vídeo curto (menos de 1 minuto) mostrando: (1) tentativa de acessar a rota protegida deslogado sendo redirecionada, (2) login, (3) acesso liberado, (4) `curl` sem token retornando 401. Suba o material (código + evidência) no repositório do projeto: commit + push.
 
 **Critério de pronto:** os quatro passos do vídeo aparecem, e o commit com a implementação está no repositório.
 

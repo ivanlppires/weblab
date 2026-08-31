@@ -1,0 +1,128 @@
+/* Café Cerrado — tempero sobre o Bootstrap 5.3.
+   Só o que o framework não entrega: paleta da marca, variantes de botão,
+   card de produto, navbar colorida e o realce de campo inválido. */
+
+/* ---------- 1. Variáveis do projeto (Aula 02) ---------- */
+:root {
+  --cor-marca: #6f4e37;
+  --cor-marca-escura: #4a3325;
+  --cor-destaque: #c2703d;
+  --cor-fundo: #fdfaf6;
+  --cor-superficie: #ffffff;
+  --cor-texto: #2b2118;
+  --cor-texto-suave: #5c4b3c;
+  --cor-menu-inativo: rgba(255, 255, 255, 0.82);
+  --cor-menu-borda: rgba(255, 255, 255, 0.35);
+  --borda-suave: rgba(111, 78, 55, 0.15);
+  --realce-invalido: rgba(220, 53, 69, 0.2);
+
+  --fonte-base: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --raio: 0.75rem;
+}
+
+/* ---------- 2. Tokens globais do Bootstrap ---------- */
+/* Cores em três números são exigência do Bootstrap: ele monta rgba() com elas
+   para oferecer os utilitários de opacidade. 111,78,55 = #6f4e37. */
+:root {
+  --bs-body-bg: var(--cor-fundo);
+  --bs-body-color: var(--cor-texto);
+  --bs-body-font-family: var(--fonte-base);
+  --bs-link-color-rgb: 111, 78, 55;
+  --bs-link-hover-color-rgb: 74, 51, 37;
+  --bs-border-radius: var(--raio);
+  --bs-secondary-color: var(--cor-texto-suave);
+}
+
+/* ---------- 3. Navbar com a cor da marca ---------- */
+/* Só variáveis do componente: o HTML fica limpo, sem classe de cor. A única cor literal fora do :root está dentro da data URI do ícone — ali ela é texto de uma imagem SVG, não uma declaração CSS. */
+.navbar {
+  background-color: var(--cor-marca);
+  --bs-navbar-color: var(--cor-menu-inativo);
+  --bs-navbar-hover-color: var(--cor-superficie);
+  --bs-navbar-active-color: var(--cor-superficie);
+  --bs-navbar-brand-color: var(--cor-superficie);
+  --bs-navbar-brand-hover-color: var(--cor-superficie);
+  --bs-navbar-toggler-border-color: var(--cor-menu-borda);
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar .nav-link[aria-current="page"] {
+  font-weight: 600;
+}
+
+/* ---------- 4. Variantes de botão da marca ---------- */
+.btn-cafe {
+  --bs-btn-bg: var(--cor-marca);
+  --bs-btn-border-color: var(--cor-marca);
+  --bs-btn-color: var(--cor-superficie);
+  --bs-btn-hover-bg: var(--cor-marca-escura);
+  --bs-btn-hover-border-color: var(--cor-marca-escura);
+  --bs-btn-hover-color: var(--cor-superficie);
+  --bs-btn-active-bg: var(--cor-marca-escura);
+  --bs-btn-active-border-color: var(--cor-marca-escura);
+  --bs-btn-active-color: var(--cor-superficie);
+  --bs-btn-disabled-bg: var(--cor-marca);
+  --bs-btn-disabled-border-color: var(--cor-marca);
+  --bs-btn-disabled-color: var(--cor-superficie);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
+}
+
+.btn-cafe-vazado {
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--cor-marca);
+  --bs-btn-color: var(--cor-marca);
+  --bs-btn-hover-bg: var(--cor-marca);
+  --bs-btn-hover-border-color: var(--cor-marca);
+  --bs-btn-hover-color: var(--cor-superficie);
+  --bs-btn-active-bg: var(--cor-marca-escura);
+  --bs-btn-active-border-color: var(--cor-marca-escura);
+  --bs-btn-active-color: var(--cor-superficie);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
+}
+
+/* ---------- 5. Hero e cards ---------- */
+.hero {
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--borda-suave);
+}
+
+.hero__titulo {
+  color: var(--cor-marca-escura);
+}
+
+.hero__texto {
+  color: var(--cor-texto-suave);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.card-produto {
+  --bs-card-bg: var(--cor-superficie);
+  --bs-card-border-color: var(--borda-suave);
+  --bs-card-border-radius: var(--raio);
+  --bs-card-cap-bg: transparent;
+}
+
+.card-produto .card-img-top {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* ---------- 6. Formulário: o que o Bootstrap não faz sem JavaScript ---------- */
+/* :user-invalid só marca o campo DEPOIS da interação (Aula 03, §4.5). */
+.form-control:user-invalid,
+.form-select:user-invalid {
+  border-color: var(--bs-form-invalid-border-color);
+  box-shadow: 0 0 0 0.25rem var(--realce-invalido);
+}
+
+/* ---------- 7. Rodapé ---------- */
+.rodape {
+  background-color: var(--cor-marca-escura);
+  color: var(--cor-menu-inativo);
+}
+
+.rodape h2,
+.rodape a {
+  color: var(--cor-superficie);
+}

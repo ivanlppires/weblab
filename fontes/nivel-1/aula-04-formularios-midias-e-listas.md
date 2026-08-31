@@ -1,8 +1,8 @@
 # Aula 04 — Formulários, mídias e listas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -460,7 +460,7 @@ Sobre `preload`: o padrão de cada navegador varia, e `auto` pode baixar o víde
 
 ### 4.3 Legendas com `<track>` e WebVTT
 
-Vídeo sem legenda é conteúdo inacessível para pessoas surdas — e, na prática, para qualquer pessoa no ônibus sem fone. Legenda não é extra: é requisito do critério 1.2.2 da WCAG e item da rubrica desta disciplina.
+Vídeo sem legenda é conteúdo inacessível para pessoas surdas — e, na prática, para qualquer pessoa no ônibus sem fone. Legenda não é extra: é requisito do critério 1.2.2 da WCAG, e volta no checklist de qualidade do Marco do projeto.
 
 O `<track>` aponta para um arquivo **WebVTT**, um texto simples com marcações de tempo:
 
@@ -1042,7 +1042,7 @@ Um prato pode ter dois `<dd>`: um para a descrição, outro para o preço. Para 
 Teste o `formnovalidate` deixando um campo `required` vazio e clicando nos dois botões: só o "Enviar" deve bloquear. Para o `<output>`, o valor fica fixo por enquanto — ele só passará a calcular sozinho quando você aprender eventos, na Aula 13.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Landing page multimídia. Crie a landing page de um produto ou evento contendo: vídeo de fundo (`muted`, `loop`, `autoplay`, com `poster`), galeria responsiva com `<picture>` em três formatos, player de áudio com depoimento, formulário de captação de contatos (nome, e-mail, telefone, interesse em `<select>`) e mapa em `<iframe>`. Sem CSS ainda. Otimize todas as mídias e apresente uma tabela comparando o peso de cada arquivo antes e depois, com o percentual de redução total da página.
 
@@ -1157,15 +1157,15 @@ A WCAG exige, para vídeo pré-gravado: legendas (critério 1.2.2), audiodescri�
 | O servidor recebe só o nome do arquivo, não o conteúdo | `<form>` com `type="file"` sem `enctype="multipart/form-data"` | Adicione o `enctype` ao `<form>` |
 | Peso da página não muda depois de otimizar as imagens | Cache do navegador servindo os arquivos antigos | Marque **Disable cache** na aba Network antes de recarregar |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, M. S. *Criando sites com HTML*, capítulos sobre listas e imagens. TERUEL, E. C. *HTML5 — Guia Prático*, capítulo sobre APIs de mídia. Na MDN em pt-BR, leia "Imagens responsivas" e "Conteúdo de vídeo e áudio" (links em Para aprofundar).
 
-**Parte 2 — Entrega (30 min).** No seu **projeto autoral**, entregue os exercícios **B1** (galeria com a tabela de peso antes/depois) e **B5** (formulário ampliado com upload, `inputmode`, `<output>` e botão de rascunho). Entregue também as páginas de programação e de galeria do seu projeto, com todas as mídias e os três tipos de lista aplicados, validadas no W3C.
+**Parte 2 — Produção (30 min).** No seu **projeto autoral**, produza os exercícios **B1** (galeria com a tabela de peso antes/depois) e **B5** (formulário ampliado com upload, `inputmode`, `<output>` e botão de rascunho). Produza também as páginas de programação e de galeria do seu projeto, com todas as mídias e os três tipos de lista aplicados, validadas no W3C.
 
 **Critério de pronto:** as páginas validam com zero erros; toda `<img>` tem `alt`, `width` e `height`; o vídeo tem `<track>` com arquivo `.vtt` funcionando; a página de galeria pesa menos de 2 MB na aba Network com cache desabilitado; o comentário HTML com o peso antes/depois está no topo do `<body>`.
 
-**Entrega:** commit + push e link do repositório no SIGAA (ou o `.zip` da pasta do projeto, se você ainda não estiver usando Git).
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto, se você ainda não estiver usando Git).
 
 **Parte 3 — Fórum (10 min).** No fórum "Descrever imagens", escreva o `alt` de três imagens do seu próprio projeto — uma informativa, uma decorativa e uma dentro de link — e justifique cada escolha em duas linhas. Comente o `alt` de dois colegas: ele entrega a mesma informação que a imagem entrega para quem vê?
 

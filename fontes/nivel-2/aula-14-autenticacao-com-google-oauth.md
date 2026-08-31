@@ -1,8 +1,8 @@
 # Aula 14 — Autenticação com Google (OAuth 2.0)
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Sua API está completa e tem um problema grave: qualquer pessoa com um terminal pode apagar o cardápio inteiro do Café Cerrado. `curl -X DELETE http://localhost:3000/api/produtos/1` e pronto. Hoje a aplicação aprende a responder a pergunta que separa um exercício de um sistema de verdade — **quem está fazendo esta requisição?** — sem que você precise guardar a senha de ninguém.
 
@@ -198,7 +198,7 @@ Assinar com HMAC significa calcular um resumo criptográfico dos dados **mistura
 
 Você vai escrever isso com o módulo `node:crypto`, que já vem no Node — sem instalar nada.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saiba explicar por que a assinatura de um token não pode ser comparada com `===`. Comparar strings byte a byte com parada no primeiro byte diferente vaza informação pelo **tempo** de resposta: um atacante que meça milhares de tentativas consegue descobrir a assinatura correta byte a byte. A defesa é comparar em tempo constante — em Node, `crypto.timingSafeEqual`.
 
 ## 🧩 Padrão de projeto em uso: Chain of Responsibility
@@ -826,7 +826,7 @@ Resultado esperado: o texto cita XSS pelo nome, explica o que um cookie `httpOnl
 Um bom parágrafo de risco responde três perguntas: o que um atacante precisaria conseguir, o que ele obteria, e por quanto tempo o estrago dura. A duração está no `DURACAO_MS` do `sessao.js`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Sessão que expira na cara do usuário. Reduza `DURACAO_MS` para 60 segundos e observe o desastre: passado um minuto, cada tentativa de escrita devolve `401` e o site continua exibindo alegremente o nome e a foto do usuário, como se nada tivesse acontecido. Conserte o comportamento nas duas pontas.
 
@@ -944,7 +944,7 @@ Se um único script malicioso rodar na sua página, ele lê o `sessionStorage` e
 | `SyntaxError: Unexpected token '<'` ao ler `/api/config` | A rota não existe e o Express devolveu HTML, que o `fetch` tentou ler como JSON | Registrar `app.get('/api/config', ...)` antes do 404 de API e conferir o caminho |
 | O `.env` aparece no `git status` | O `.gitignore` foi criado depois do primeiro `git add` do arquivo | `git rm --cached .env`, ajustar o `.gitignore` e **trocar** o segredo, que já foi exposto |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral**:
 
@@ -957,7 +957,7 @@ No **seu projeto autoral**:
 
 **Critério de pronto:** o `git status` não mostra o `.env` em momento algum; um visitante anônimo consegue ler o conteúdo; e nenhuma operação de escrita funciona sem um token de sessão válido — verificado pelo `curl`, não pela interface.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 

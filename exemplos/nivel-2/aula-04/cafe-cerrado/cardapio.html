@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cardápio do Café Cerrado: cafés, bebidas geladas, salgados e doces em Sinop, MT.">
+  <title>Cardápio — Café Cerrado</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <header>
+    <nav class="navbar navbar-expand-lg" aria-label="Navegação principal">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          Café Cerrado
+          <span class="d-block small fw-normal opacity-75">Torrefação artesanal · Sinop, MT</span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#menu-principal"
+                aria-controls="menu-principal" aria-expanded="false"
+                aria-label="Abrir e fechar o menu de navegação">
+          <span class="navbar-toggler-icon" aria-hidden="true"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu-principal">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Início</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="cardapio.html" aria-current="page">Cardápio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contato.html">Contato</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container pt-5">
+      <h1>Cardápio</h1>
+      <p class="lead">
+        Preços válidos para consumo no local. Todos os cafés podem ser preparados
+        com leite vegetal por R$ 2,00 adicionais.
+      </p>
+
+      <nav aria-label="Seções do cardápio">
+        <ul class="nav gap-2">
+          <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#cafes">Cafés</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#geladas">Bebidas geladas</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#salgados">Salgados</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#doces">Doces</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-cafe-vazado" href="#torras">Guia de torras</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section id="cafes" class="container py-5">
+      <h2 class="mb-4">Cafés</h2>
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/espresso.jpg" class="card-img-top"
+                 alt="Xícara de espresso sobre a mesa de madeira"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Espresso do Cerrado</h3>
+              <p class="card-text">
+                Grãos de Alto Paraíso, torra média, corpo encorpado e final achocolatado.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 6,00</span>
+              <span class="badge text-bg-secondary">Torra média</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/coado.jpg" class="card-img-top"
+                 alt="Café sendo coado em filtro de papel sobre uma jarra de vidro"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Coado da Casa</h3>
+              <p class="card-text">
+                Duzentos mililitros em coador de papel, moagem média feita na hora do pedido.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 8,50</span>
+              <span class="badge text-bg-secondary">Torra clara</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/cappuccino.jpg" class="card-img-top"
+                 alt="Cappuccino com canela polvilhada sobre a espuma"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Cappuccino Sinop</h3>
+              <p class="card-text">
+                Espresso duplo, leite vaporizado e canela do Cerrado por cima.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 12,00</span>
+              <span class="badge text-bg-secondary">Com leite</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/latte.jpg" class="card-img-top"
+                 alt="Copo de latte com camadas de leite e café visíveis"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Latte de Baunilha</h3>
+              <p class="card-text">
+                Espresso, leite vaporizado e calda de baunilha feita na casa.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 14,00</span>
+              <span class="badge text-bg-secondary">Com leite</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="geladas" class="container py-5">
+      <h2 class="mb-4">Bebidas geladas</h2>
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/cold-brew.jpg" class="card-img-top"
+                 alt="Copo alto de cold brew com gelo e rodela de laranja"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Cold Brew da Chapada</h3>
+              <p class="card-text">
+                Extração a frio por dezoito horas, servida com gelo e rodela de laranja.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 15,00</span>
+              <span class="badge text-bg-secondary">Gelado</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/frappe.jpg" class="card-img-top"
+                 alt="Frappê de café coberto com chantili em copo de vidro"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Frappê de Café</h3>
+              <p class="card-text">
+                Espresso batido com gelo, leite e chantili. Também sai sem lactose.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 16,00</span>
+              <span class="badge text-bg-secondary">Gelado</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="salgados" class="container py-5">
+      <h2 class="mb-4">Salgados</h2>
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/pao-de-queijo.jpg" class="card-img-top"
+                 alt="Porção de pães de queijo dourados em um prato branco"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Pão de Queijo Mineiro</h3>
+              <p class="card-text">
+                Porção com quatro unidades de polvilho azedo com queijo canastra.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 7,00</span>
+              <span class="badge text-bg-secondary">Sem glúten</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/torta-de-frango.jpg" class="card-img-top"
+                 alt="Fatia de torta de frango em um prato de cerâmica"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Torta de Frango</h3>
+              <p class="card-text">
+                Fatia generosa com massa amanteigada e recheio de frango desfiado.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 13,00</span>
+              <span class="badge text-bg-secondary">Assado do dia</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="doces" class="container py-5">
+      <h2 class="mb-4">Doces</h2>
+
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/bolo-de-milho.jpg" class="card-img-top"
+                 alt="Fatia de bolo de milho verde sobre papel manteiga"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Bolo de Milho Verde</h3>
+              <p class="card-text">
+                Fatia de bolo cremoso feito com milho da feira do produtor.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 9,50</span>
+              <span class="badge text-bg-secondary">Feito na casa</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="col">
+          <article class="card card-produto h-100">
+            <img src="img/brownie.jpg" class="card-img-top"
+                 alt="Brownie de chocolate com castanhas por cima"
+                 width="1200" height="900" loading="lazy">
+            <div class="card-body">
+              <h3 class="h5 card-title">Brownie de Castanha</h3>
+              <p class="card-text">
+                Chocolate meio amargo com castanha-do-pará. Sem glúten.
+              </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <span class="fw-bold">R$ 11,00</span>
+              <span class="badge text-bg-secondary">Sem glúten</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section id="torras" class="container py-5">
+      <h2 class="mb-4">Guia de torras</h2>
+
+      <figure class="figure">
+        <img src="img/grao-cerrado.jpg" class="figure-img img-fluid rounded-3"
+             alt="Grãos de café verdes sendo peneirados em uma bandeja de metal"
+             width="1000" height="667" loading="lazy">
+        <figcaption class="figure-caption">
+          Grãos do Cerrado mato-grossense recém-beneficiados, antes da torra.
+        </figcaption>
+      </figure>
+
+      <dl class="row">
+        <dt class="col-12 col-sm-3">Torra clara</dt>
+        <dd class="col-12 col-sm-9">Realça a acidez e as notas frutadas do grão. Boa para métodos coados.</dd>
+
+        <dt class="col-12 col-sm-3">Torra média</dt>
+        <dd class="col-12 col-sm-9">Equilibra doçura, corpo e acidez. É a nossa torra padrão.</dd>
+
+        <dt class="col-12 col-sm-3">Torra escura</dt>
+        <dd class="col-12 col-sm-9">Mais amarga e encorpada, com notas de chocolate amargo. Boa para espresso com leite.</dd>
+      </dl>
+
+      <div class="table-responsive">
+        <table class="table table-striped caption-top">
+          <caption>Grãos disponíveis para moagem e venda em pacote de 250 g</caption>
+          <thead>
+            <tr>
+              <th scope="col">Sítio parceiro</th>
+              <th scope="col">Torra</th>
+              <th scope="col">Preço do pacote</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Sítio Santa Rita</th>
+              <td>Clara</td>
+              <td>R$ 38,00</td>
+            </tr>
+            <tr>
+              <th scope="row">Fazenda Vale Verde</th>
+              <td>Média</td>
+              <td>R$ 35,00</td>
+            </tr>
+            <tr>
+              <th scope="row">Sítio Boa Esperança</th>
+              <td>Escura</td>
+              <td>R$ 33,00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Quer levar grãos para casa em outra moagem?
+        <a href="contato.html">Peça pelo formulário de contato</a>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="rodape mt-5 py-5">
+    <div class="container">
+      <div class="row g-4">
+        <section class="col-12 col-md-4">
+          <h2 class="h5">Café Cerrado</h2>
+          <p class="mb-0">
+            Torrefação artesanal de grãos do Cerrado mato-grossense. Projeto fictício
+            usado como estudo de caso da disciplina de Desenvolvimento Web.
+          </p>
+        </section>
+
+        <section class="col-12 col-md-4">
+          <h2 class="h5">Onde estamos</h2>
+          <address class="mb-0">
+            Avenida dos Jacarandás, 1200 — Setor Comercial<br>
+            Sinop — MT<br>
+            <a href="tel:+556699999000">(66) 9 9999-9000</a><br>
+            <a href="mailto:contato@cafecerrado.exemplo.br">contato@cafecerrado.exemplo.br</a>
+          </address>
+        </section>
+
+        <nav class="col-12 col-md-4" aria-label="Rodapé">
+          <h2 class="h5">Navegação</h2>
+          <ul class="list-unstyled mb-0">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="cardapio.html">Cardápio</a></li>
+            <li><a href="contato.html">Contato</a></li>
+            <li><a href="index.html#horarios">Horários</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <p class="text-center small mt-4 mb-0">Café Cerrado · UNEMAT Sinop · Projeto acadêmico</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"></script>
+</body>
+</html>

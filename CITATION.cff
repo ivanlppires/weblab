@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "Se você usar o WebLab, cite-o como abaixo."
+type: software
+title: "WebLab — Laboratório de Desenvolvimento Web"
+abstract: "Apostila online e aberta de desenvolvimento web em português do Brasil, organizada em quatro trilhas (introdução; desenvolvimento web; frameworks modernos; deploy e ferramentas), com 57 aulas, banco de desafios e um gerador de site estático em Python. O material é atemporal: não traz datas, notas nem prazos, e cada unidade fecha com um marco de projeto."
+authors:
+  - given-names: "Ivan Luiz Pedroso"
+    family-names: "Pires"
+    affiliation: "UNEMAT — Campus Sinop, FACET"
+url: "https://weblab.ivanpires.dev"
+repository-code: "https://github.com/ivanlppires/weblab"
+license: CC-BY-4.0
+keywords:
+  - "desenvolvimento web"
+  - "recurso educacional aberto"
+  - "ensino de programação"
+  - "HTML"
+  - "CSS"
+  - "JavaScript"
+  - "Node.js"
+  - "Vue.js"
+  - "material didático"

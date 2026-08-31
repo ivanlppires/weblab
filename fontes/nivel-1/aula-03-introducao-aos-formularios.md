@@ -1,8 +1,8 @@
 # Aula 03 — Introdução aos formulários
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -101,7 +101,7 @@ Nesta disciplina você ainda não tem um servidor para receber os dados — isso
 
 ### 2.2 GET × POST
 
-Essa é a decisão mais importante do `<form>`, e a que mais aparece em prova.
+Essa é a decisão mais importante do `<form>` — e a que mais confunde quem está começando.
 
 | Aspecto | GET | POST |
 |---|---|---|
@@ -238,7 +238,7 @@ Quatro pares que costumam ser confundidos:
 
 ## 4. `<label>` — obrigatório, não opcional
 
-Todo campo precisa de um rótulo associado. Não é recomendação de estilo: é requisito de acessibilidade, de usabilidade e da rubrica das avaliações desta disciplina.
+Todo campo precisa de um rótulo associado. Não é recomendação de estilo: é requisito de acessibilidade e de usabilidade — e o checklist de qualidade do Marco do projeto cobra isso.
 
 ### 4.1 As duas formas de associar
 
@@ -507,7 +507,7 @@ O navegador valida os campos **antes** de enviar, sem uma linha de JavaScript. V
 
 Como ler `[0-9]{5}-[0-9]{3}`: "um dígito de 0 a 9, repetido cinco vezes; depois um hífen; depois um dígito repetido três vezes". O ponto precisa de barra invertida (`\.`) porque, sozinho, `.` significa "qualquer caractere".
 
-Sem `title`, o navegador mostra uma mensagem inútil como **"Corresponda ao formato solicitado."** — a pessoa fica sabendo que errou, mas não o que fazer. Com `title`, a mensagem inclui o seu texto. **`pattern` sem `title` é erro de rubrica nesta disciplina.**
+Sem `title`, o navegador mostra uma mensagem inútil como **"Corresponda ao formato solicitado."** — a pessoa fica sabendo que errou, mas não o que fazer. Com `title`, a mensagem inclui o seu texto. **`pattern` sem `title` é considerado formulário incompleto neste material.**
 
 ### 7.3 As mensagens são do navegador
 
@@ -523,8 +523,8 @@ Selecione um item na lista.
 
 Você **não controla** esse texto no HTML puro (na Aula 14 vai controlar, com a Constraint Validation API do JavaScript). O que você controla é o `title` do `pattern` e, principalmente, o rótulo: um campo bem rotulado gera menos erro do que qualquer mensagem bem escrita.
 
-> **📌 Na prova**
-> Três perguntas caem quase sempre: (1) o que acontece com um campo sem `name` ao enviar — ele não é enviado; (2) por que os rádios de um grupo precisam do mesmo `name` — é o que os torna mutuamente exclusivos; (3) a validação nativa garante que o dado chega correto ao servidor? **Não.** Ela é conveniência para o usuário, não segurança.
+> **📌 Vale gravar**
+> Três perguntas voltam sempre: (1) o que acontece com um campo sem `name` ao enviar — ele não é enviado; (2) por que os rádios de um grupo precisam do mesmo `name` — é o que os torna mutuamente exclusivos; (3) a validação nativa garante que o dado chega correto ao servidor? **Não.** Ela é conveniência para o usuário, não segurança.
 
 ### 7.4 Validação no cliente não é segurança
 
@@ -998,7 +998,7 @@ Resultado esperado: o formulário completo dentro do `<main>` da `contato.html`,
 Um `<select>` de assunto com `value=""` na primeira opção mais `required` garante uma escolha consciente. Para o telefone opcional, não use `required`: em HTML puro você ainda não consegue tornar um campo obrigatório **em função de outro** — isso é JavaScript, e você fará na Aula 14.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Formulário de matrícula institucional. Reproduza, em HTML puro, um formulário de matrícula acadêmica com pelo menos **25 campos** organizados em **cinco** `<fieldset>`: identificação, documentos, endereço, dados acadêmicos e informações complementares. Requisitos: todo campo com `<label>` associado e `autocomplete` semântico; validação nativa em todos os campos aplicáveis (`required`, `pattern`, `min`/`max`, `minlength`); ordem de tabulação lógica sem `tabindex` positivo; zero erros no validador do W3C. Ao final, escreva meia página justificando a escolha do `type` de cada campo não trivial (CPF, CEP, data, matrícula, renda, telefone).
 
@@ -1007,7 +1007,7 @@ Um `<select>` de assunto com `value=""` na primeira opção mais `required` gara
 Comece pela lista de dados em papel, agrupando-os antes de escrever uma linha de HTML: os cinco `<fieldset>` saem naturalmente do agrupamento. Para o endereço, use os valores de `autocomplete` específicos (`postal-code`, `address-line1`, `address-level2`, `address-level1`) — é o que faz o navegador preencher tudo depois do CEP. Teste com o teclado antes de validar no W3C.
 </details>
 
-**C2.** Formulário de inscrição do projeto autoral. No seu `meu-projeto/`, construa a página de formulário equivalente à `inscricao.html` — pedido, reserva, cadastro, matrícula, agendamento: o que fizer sentido no seu tema — com no mínimo 12 campos, 3 `<fieldset>`, um `<select>` com `<optgroup>`, um `<datalist>`, um grupo de rádios, um grupo de caixas de seleção, um `<textarea>` e validação nativa em pelo menos 5 campos. Este formulário é o item 8 da rubrica da Avaliação 1.
+**C2.** Formulário de inscrição do projeto autoral. No seu `meu-projeto/`, construa a página de formulário equivalente à `inscricao.html` — pedido, reserva, cadastro, matrícula, agendamento: o que fizer sentido no seu tema — com no mínimo 12 campos, 3 `<fieldset>`, um `<select>` com `<optgroup>`, um `<datalist>`, um grupo de rádios, um grupo de caixas de seleção, um `<textarea>` e validação nativa em pelo menos 5 campos. Este formulário é um dos requisitos do Marco 1 do projeto (Aula 06).
 
 <details markdown="1"><summary>Dica</summary>
 
@@ -1117,17 +1117,17 @@ Formulários longos assustam. A solução clássica é dividir em etapas ("Etapa
 | O validador acusa `Element optgroup is missing required attribute label` | `<optgroup>` sem o atributo `label` | Todo `<optgroup>` precisa de `label`; ele é anunciado pelo leitor de tela |
 | Só o último valor do grupo de caixas de seleção chega ao servidor | Cada caixa recebeu um `name` diferente, e o servidor foi programado para uma chave só | Use o mesmo `name` em todas as caixas do grupo e `value` distintos |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulo de formulários. TERUEL, Evandro C. *HTML 5 — Guia Prático*, capítulo de formulários HTML5. Na MDN em pt-BR, o guia "Seu primeiro formulário" e a referência de `<input>`. Anote dois atributos que aparecem nas leituras e não apareceram nesta aula.
 
-**Parte 2 — Entrega (30 min).** Exercícios **B2** (matrícula em disciplinas) e **B4** (caça aos problemas), em arquivos `.html` comentados dentro de `exercicios/aula03/`. Para o B4, entregue também o documento listando cada problema identificado, a correção aplicada e a justificativa.
+**Parte 2 — Produção (30 min).** Exercícios **B2** (matrícula em disciplinas) e **B4** (caça aos problemas), em arquivos `.html` comentados dentro de `exercicios/aula03/`. Para o B4, produza também o documento listando cada problema identificado, a correção aplicada e a justificativa.
 
-**Parte 3 — Fórum (10 min).** No fórum "Dados de qualidade" do SIGAA: em 10 a 15 linhas, explique como a escolha do tipo de campo e das restrições de validação influencia a qualidade do que chega ao banco de dados. Traga um exemplo concreto de dado sujo que você já viu (um telefone impossível, um nome em caixa alta, uma data no futuro) e diga qual atributo desta aula teria evitado. Comente a resposta de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): em 10 a 15 linhas, explique como a escolha do tipo de campo e das restrições de validação influencia a qualidade do que chega ao banco de dados. Traga um exemplo concreto de dado sujo que você já viu (um telefone impossível, um nome em caixa alta, uma data no futuro) e diga qual atributo desta aula teria evitado.
 
 **Critério de pronto:** os dois arquivos abrem no navegador, validam sem erros no W3C, permitem envio apenas com os campos obrigatórios preenchidos e podem ser percorridos inteiramente pelo teclado, com o rótulo de cada campo funcionando ao clique.
 
-**Entrega:** o `.zip` da pasta do projeto no SIGAA (se você já usa Git — assunto do capítulo 02 da trilha Deploy e da Aula 15 —, o link do repositório também é aceito).
+**Guarde:** a pasta do projeto (ou, se você já usa Git — assunto do capítulo 02 da trilha Deploy e da Aula 15 —, faça commit e push).
 
 ## ✅ Checkpoint do projeto
 

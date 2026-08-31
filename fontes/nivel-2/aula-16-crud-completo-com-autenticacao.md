@@ -1,10 +1,10 @@
 # Aula 16 — CRUD completo com autenticação e entrega final
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
-Última aula da disciplina. As duas metades do sistema já existem: o CRUD com persistência e o login do Google. Hoje elas se encontram no detalhe que separa um projeto de aula de um sistema de verdade — **saber de quem é cada registro**. Ao fim destes 150 minutos, a sua aplicação vai recusar com `401` quem não está logado, recusar com `403` quem está logado mas mexe no que não é seu, e rodar do zero numa pasta limpa com dois comandos. É também o dia da Avaliação 3, o fechamento do semestre e a hora de olhar para o que vem depois.
+Última aula da disciplina. As duas metades do sistema já existem: o CRUD com persistência e o login do Google. Hoje elas se encontram no detalhe que separa um projeto de aula de um sistema de verdade — **saber de quem é cada registro**. Ao fim destes 150 minutos, a sua aplicação vai recusar com `401` quem não está logado, recusar com `403` quem está logado mas mexe no que não é seu, e rodar do zero numa pasta limpa com dois comandos. É também o dia do Marco 3, o fechamento do semestre e a hora de olhar para o que vem depois.
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -14,7 +14,7 @@ Ao final desta aula você será capaz de:
 - Gravar a identidade do criador de um registro a partir do token verificado, e explicar por que jamais a partir do corpo da requisição.
 - Implementar regras de autorização por dono nas rotas de escrita, concentradas num único ponto do código.
 - Fazer a interface refletir as permissões do usuário sem confundir conforto visual com segurança.
-- Executar um roteiro completo de auto-teste que simula a correção da avaliação, incluindo o teste com duas contas diferentes.
+- Executar um roteiro completo de auto-teste que simula uma revisão rigorosa do projeto, incluindo o teste com duas contas diferentes.
 - Escrever um `README.md` que permita a outra pessoa rodar o seu projeto do zero, e provar isso num clone limpo.
 - Reconhecer o que foi construído em todo o semestre como a arquitetura padrão de uma aplicação web e identificar os próximos passos de estudo.
 
@@ -34,7 +34,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | `401` × `403`; campo `dono` vindo do token; regras de autorização no servidor; migração dos registros antigos |
 | 2 | 50 min | Interface reagindo ao dono; roteiro de auto-teste com duas contas; README e teste da pasta limpa |
-| 3 | 50 min | Laboratório, tira-dúvidas da Avaliação 3 e encerramento da disciplina |
+| 3 | 50 min | Laboratório, tira-dúvidas do Marco 3 e encerramento da disciplina |
 
 ## 1. Autenticação e autorização: duas perguntas diferentes
 
@@ -548,7 +548,7 @@ Use-a nos dois `catch` que mostram erro ao usuário (o do `submit` e o do `exclu
 
 ## 5. Roteiro de auto-teste: simule a correção
 
-Antes de entregar qualquer trabalho, faça o que o avaliador vai fazer. Com o servidor rodando e o navegador em uma janela anônima (para não reaproveitar a sua sessão), percorra os dez passos abaixo. Anote o que falhar; corrija; repita do começo.
+Antes de considerar o projeto pronto, faça o que uma revisão rigorosa faria. Com o servidor rodando e o navegador em uma janela anônima (para não reaproveitar a sua sessão), percorra os dez passos abaixo. Anote o que falhar; corrija; repita do começo.
 
 1. **Visitante.** Abra o site sem login: a lista carrega, nenhum botão de escrita aparece, a área de gestão está oculta.
 2. **Escrita bloqueada.** Pelo `testes.http`, faça um `POST /api/produtos` sem cabeçalho `Authorization`. Esperado: `401` com JSON explicando.
@@ -561,8 +561,8 @@ Antes de entregar qualquer trabalho, faça o que o avaliador vai fazer. Com o se
 9. **Persistência.** Derrube o servidor (<kbd>Ctrl</kbd>+<kbd>C</kbd>), suba de novo e recarregue a página: tudo continua lá.
 10. **Higiene.** `git status` limpo, `node_modules/` e `.env` fora do Git, e o teste da pasta limpa da seção 6 passando.
 
-> **📌 Na prova**
-> Este roteiro é um bom resumo do que cai no exame final teórico sobre a Unidade 3: qual status cada situação produz, quem valida o quê, em que ordem os middlewares rodam e por que a proteção do cliente não substitui a do servidor. Se você consegue explicar cada um dos dez passos para um colega, a parte de back-end do exame está resolvida.
+> **📌 Vale gravar**
+> Este roteiro é um bom resumo de como o back-end da Unidade 3 funciona: qual status cada situação produz, quem valida o quê, em que ordem os middlewares rodam e por que a proteção do cliente não substitui a do servidor. Se você consegue explicar cada um dos dez passos para um colega, você domina a parte de back-end desta unidade.
 
 ## 6. Higiene do repositório e o teste da pasta limpa
 
@@ -617,10 +617,10 @@ npm run dev
 # abra http://localhost:3000 e repita os passos 1 a 7 do roteiro de auto-teste
 ```
 
-Três coisas costumam falhar aqui, e todas contam pontos na avaliação:
+Três coisas costumam falhar aqui, e todas fazem o projeto parecer quebrado para quem só tem o repositório, sem acesso à sua máquina:
 
 - **`Cannot find module 'express'`** — alguma dependência foi instalada sem entrar no `package.json`. Rode `npm install express google-auth-library dotenv` na pasta original e comite o `package.json` e o `package-lock.json`.
-- **`data/produtos.json` não existe** — o arquivo de dados está no `.gitignore` ou nunca foi comitado. Versione uma versão pequena com dois ou três itens de exemplo: o avaliador precisa ver a tela cheia, não vazia.
+- **`data/produtos.json` não existe** — o arquivo de dados está no `.gitignore` ou nunca foi comitado. Versione uma versão pequena com dois ou três itens de exemplo: quem for testar precisa ver a tela cheia, não vazia.
 - **A aplicação sobe, mas o login não funciona** — o `README.md` não explica que é preciso criar um Client ID próprio e adicionar `http://localhost:3000` às origens autorizadas. Explique.
 
 ### 6.3 O README que faz o projeto existir para os outros
@@ -836,7 +836,7 @@ O ponto onde as pessoas mais travam é o Client ID do Google: escreva o passo a 
 `GET /api/auth/eu` já existe desde a Aula 14 e passa pelo `exigirLogin`: ele responde `200` com o usuário quando o token é válido e `401` quando não é — exatamente a pergunta que você precisa fazer. Chame-o dentro da função `async iniciar()` do `auth.js`, antes de `pintarAreaDoUsuario()`, e trate o `401` como logout. Para testar, edite o token no DevTools (Application → Session Storage), troque um caractere e recarregue: a página tem de voltar ao estado de visitante sozinha.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Em dupla, cada um usando a própria conta Google: cadastrem produtos, tentem editar e excluir os itens um do outro pela interface e pelo `testes.http`, e produzam um pequeno relatório `docs/teste-autorizacao.md` com as requisições feitas, os status obtidos e os status esperados. Encontrem pelo menos uma diferença entre o que a interface permite e o que o servidor permite.
 
@@ -962,12 +962,12 @@ Um pedido tem, no mínimo: `id`, `produtoId`, `quantidade`, `observacao`, `clien
 | `Error: Wrong recipient, payload audience != requiredAudience` | O `GOOGLE_CLIENT_ID` do `.env` não é o do projeto que emitiu o token (dois projetos no Google Cloud, ou o `.env` de outra máquina) | Corrija o `.env` e reinicie o servidor; o front lê o mesmo valor por `GET /api/config`, então não há um segundo lugar para ajustar |
 | Tudo funciona por um tempo e depois só dá `401` | O token de sessão emitido em `POST /api/auth/google` expirou (8 horas, Aula 14) | Faça login de novo e atualize o `@tokenA`/`@tokenB` do `testes.http` |
 | `Cannot find module 'google-auth-library'` num clone limpo | A dependência não está no `package.json` | `npm install google-auth-library` na pasta original e comite `package.json` e `package-lock.json` |
-| A aplicação sobe vazia no computador do avaliador | `data/produtos.json` está no `.gitignore` ou nunca foi comitado | Versione um arquivo de dados com dois ou três itens de exemplo |
+| A aplicação sobe vazia num clone limpo | `data/produtos.json` está no `.gitignore` ou nunca foi comitado | Versione um arquivo de dados com dois ou três itens de exemplo |
 | `git push` recusado com aviso de segredo detectado | O `.env` (ou um token) entrou no commit | `git rm -r --cached .env`, comite, e gere um Client ID novo no Google Cloud Console |
 | O botão de excluir some, mas o `curl` ainda apaga | A regra está só na interface, não no servidor | A checagem de `403` precisa estar no controlador ou no middleware (seção 3) |
 | `EADDRINUSE: address already in use :::3000` | Ficou um servidor antigo rodando em outro terminal | Feche o outro terminal, ou `kill $(lsof -t -i:3000)` no Linux e no macOS |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 Esta é a última atividade do semestre, e ela é a própria preparação da entrega:
 
@@ -977,11 +977,11 @@ Esta é a última atividade do semestre, e ela é a própria preparação da ent
 4. Atualize o `testes.http` com os cenários de `401`, `403` e `404`, usando duas contas.
 5. Escreva o `README.md` completo, seguindo a estrutura da seção 6.3.
 6. Execute o roteiro de auto-teste da seção 5, os dez passos, e o teste da pasta limpa da seção 6.2.
-7. Faça o commit final, confirme que `.env` e `node_modules/` não subiram, e entregue o link do repositório no SIGAA.
+7. Faça o commit final e confirme que `.env` e `node_modules/` não subiram.
 
 **Critério de pronto:** o repositório clonado numa pasta vazia roda com `npm install && npm run dev`; um usuário logado só altera o que é dele; a documentação permite que outra pessoa reproduza tudo sem perguntar nada.
 
-**Entrega:** link do repositório público no SIGAA, no prazo da Avaliação 3 publicado lá.
+**Guarde no seu repositório:** commit + push, com o link público atualizado.
 
 ## ✅ Checkpoint do projeto
 
@@ -998,11 +998,11 @@ Ao final desta aula, o seu repositório precisa ter:
 - [ ] `npm install && npm run dev` funcionando num clone limpo.
 - [ ] Roteiro de auto-teste da seção 5 executado, com os dez passos passando.
 
-## 📝 Avaliação 3 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 3
 
-**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o site da Avaliação 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado lá.
+**Escopo.** Aplicação full-stack do **projeto autoral**, construída sobre o Marco 2: API em Node.js com Express 5, autenticação com Google, CRUD completo com persistência e front-end assíncrono consumindo a própria API. Este é o marco final da disciplina — reúne tudo o que o projeto acumulou desde a Aula 01.
 
-**Requisitos obrigatórios.**
+**Requisitos.**
 
 | # | Requisito | Onde foi estudado |
 |---|---|---|
@@ -1021,25 +1021,28 @@ Ao final desta aula, o seu repositório precisa ter:
 | 13 | `testes.http` versionado, cobrindo sucesso e todos os erros previstos | Aulas 12 a 16 |
 | 14 | `README.md` completo e projeto rodando num clone limpo com `npm install && npm run dev` | Aula 16 |
 
-**Formato de entrega.** Link de um **repositório público no GitHub** enviado como resposta à tarefa no SIGAA. Não são aceitos arquivos `.zip` nesta avaliação: parte do que se avalia é o uso correto do Git (histórico de commits ao longo do semestre, `.gitignore` funcionando, ausência de `node_modules/` e de segredos no repositório). O repositório precisa conter o front em `public/`, o `testes.http` e o `README.md`.
+O repositório precisa ser **público no GitHub**, com histórico de commits mostrando evolução ao longo do semestre (não um único commit final), `.gitignore` funcionando e nenhum segredo versionado. Ele precisa conter o front em `public/`, o `testes.http` e o `README.md`.
 
-**Rubrica.**
+### Checklist de qualidade
 
-| Critério | Peso |
-|---|---|
-| Rotas, controladores e middlewares (arquitetura em camadas, status corretos) | 2,0 |
-| Autenticação Google (botão, verificação do token no servidor, segredos fora do Git) | 2,0 |
-| CRUD com persistência (quatro operações, validação, dados sobrevivendo ao reinício) | 2,5 |
-| Autorização (401 nas escritas sem token, 403 em registro alheio, dono vindo do token) | 1,0 |
-| Integração com front-end assíncrono (fetch/async-await, quatro estados, sem recarregar) | 2,0 |
-| README, `testes.http` e higiene do repositório (roda num clone limpo) | 0,5 |
-| **Total** | **10,0** |
+- **Rotas, controladores e middlewares:** arquitetura em camadas de verdade, com os status HTTP corretos em cada rota.
+- **Autenticação Google:** botão funcionando, verificação do token no servidor (nunca só no cliente), segredos fora do Git.
+- **CRUD com persistência:** as quatro operações completas, com validação e dados sobrevivendo ao reinício do servidor.
+- **Autorização:** `401` em toda escrita sem token, `403` em registro alheio, dono sempre vindo do token — nunca do corpo da requisição.
+- **Integração com front-end assíncrono:** `fetch`/`async-await`, os quatro estados de tela, nada recarregando a página.
+- **README, `testes.http` e higiene do repositório:** roda de fato num clone limpo, sem depender da sua máquina.
 
-**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até o limite de 5 dias; depois desse limite a avaliação recebe zero, salvo justificativa formal protocolada junto à coordenação do curso. O horário de referência é o registrado pelo SIGAA.
+Um critério "pela metade" costuma significar que ele funciona no caminho feliz mas falha num caso de borda (token expirado, registro alheio, lista vazia) — teste esses casos antes de considerar o marco pronto.
 
-**Plágio e uso de IA.** Ferramentas de IA são permitidas como apoio: tirar dúvidas, sugerir abordagens, revisar código. O trabalho, porém, precisa ser seu — você pode ser chamado a explicar qualquer trecho do que entregou, e não saber explicar equivale a não ter feito. Cópia entre colegas, total ou parcial, com ou sem alterações cosméticas, resulta em nota zero para todos os envolvidos.
+**Sobre IA:** use como apoio para tirar dúvidas, sugerir abordagens e revisar código — não para gerar o projeto inteiro sem entender. O teste real: você precisa conseguir explicar qualquer trecho do que construiu.
 
-**Média final e exame.** A média da disciplina é `MF = (A1 + A2 + A3) ÷ 3`. Aprovação com `MF ≥ 6,0`; exame final se `4,0 ≤ MF < 6,0` — prova teórica, individual, presencial e dissertativa sobre todo o conteúdo do semestre, com aprovação a partir de 5,0. Frequência mínima de 75%. A data do exame segue o calendário acadêmico; acompanhe o SIGAA.
+### Como saber que está pronto
+
+- Execute o roteiro de auto-teste completo da seção 5 (os dez passos) numa janela anônima, com duas contas Google diferentes.
+- Rode o teste da pasta limpa da seção 6.2: clone o próprio repositório numa pasta nova e confirme que `npm install && npm run dev` funciona sem ajustes manuais.
+- Confira, pelo `testes.http`, que cada rota de escrita devolve `401` sem token e `403` para quem não é dono do registro.
+- Abra o `README.md` como se fosse a primeira vez vendo o projeto: ele explica tecnologias, como rodar, endpoints e estrutura de pastas?
+- Revise o histórico de commits: ele mostra o projeto evoluindo aula a aula, não aparecendo pronto de uma vez.
 
 ## 8. Depois daqui: para onde ir agora
 

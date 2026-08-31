@@ -1,8 +1,8 @@
 # Capítulo 02 — Git e GitHub do zero ao pull request
 
 > **Deploy & Ferramentas** · Unidade 1: Ferramentas e versionamento
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -24,7 +24,7 @@ Ao final deste capítulo você será capaz de:
 - [ ] Um e-mail que você acesse, para criar a conta no GitHub.
 - [ ] O `gh` (GitHub CLI) instalado — o Passo 4 do passo a passo mostra como, em cada sistema.
 
-> No Capítulo 01 você montou a bancada: terminal, VS Code, DevTools, Node e npm. A bancada funciona, mas não tem memória — apagou, apagou; quebrou, quebrou. Hoje você instala essa memória. O Git guarda cada versão do projeto na sua máquina; o GitHub guarda uma cópia na internet, permite trabalhar em dupla e é o endereço que você vai entregar no SIGAA daqui em diante. No Capítulo 03, esse mesmo repositório vira um site publicado.
+> No Capítulo 01 você montou a bancada: terminal, VS Code, DevTools, Node e npm. A bancada funciona, mas não tem memória — apagou, apagou; quebrou, quebrou. Hoje você instala essa memória. O Git guarda cada versão do projeto na sua máquina; o GitHub guarda uma cópia na internet, permite trabalhar em dupla e é o endereço público do seu trabalho daqui em diante. No Capítulo 03, esse mesmo repositório vira um site publicado.
 
 ## 🗺️ Roteiro
 
@@ -296,7 +296,7 @@ Estado atual: as cinco páginas em HTML semântico e o menu de navegação estã
 prontos; faltam o layout responsivo e a validação do formulário de inscrição.
 
 Ana Souza — Introdução ao Desenvolvimento Web (FACET-SNP-319),
-Prof. Ivan Luiz Pedroso Pires. Código sob licença MIT.
+seu nome. Código sob licença MIT.
 ```
 
 Repare que o bloco de comandos dentro do README está indentado com quatro espaços em vez de cercado por crases — é a outra forma de marcar código em Markdown, e ela evita confusão quando o arquivo é mostrado dentro de outro documento. No seu projeto, use títulos `##` para separar as cinco seções e uma lista de tarefas (`- [x]` e `- [ ]`) no estado atual: o GitHub a renderiza com caixas de seleção.
@@ -506,7 +506,7 @@ gh pr create --base main --head menu-responsivo \
   --body "Abaixo de 768px o menu vira um botão. Fecha ao clicar em um link e ao apertar Esc. Testado no modo dispositivo do DevTools em 375px e 768px."
 ```
 
-Três opções que valem conhecer: `--fill` usa a mensagem do commit como título e corpo, `--draft` abre como rascunho (ninguém revisa ainda) e `--web` abre o formulário no navegador. O `gh` imprime a URL do PR — guarde-a: é o que você cola no SIGAA quando a entrega envolve revisão.
+Três opções que valem conhecer: `--fill` usa a mensagem do commit como título e corpo, `--draft` abre como rascunho (ninguém revisa ainda) e `--web` abre o formulário no navegador. O `gh` imprime a URL do PR — guarde-a: é o link que você compartilha quando a entrega envolve revisão.
 
 ### 9.3 Revisando
 
@@ -567,14 +567,14 @@ Na pilha também valem `git stash apply stash@{0}` (devolve mantendo o item), `g
 Uma tag é um nome fixo para um commit. Serve para marcar entregas:
 
 ```bash
-git tag -a v1.0.0 -m "Entrega da Avaliação 1: cinco páginas em HTML"
+git tag -a v1.0.0 -m "Marco 1: cinco páginas em HTML"
 git push origin v1.0.0   # tags não sobem no push comum; --tags envia todas
 ```
 
 O `git tag -l` lista as existentes. O `-a` cria uma **tag anotada**, que guarda autor, data e mensagem — é a que se usa em entregas. Sem `-a`, a tag é apenas um apelido do hash. No GitHub, uma tag pode virar uma **release**, com notas e arquivos anexados:
 
 ```bash
-gh release create v1.0.0 --title "Avaliação 1 — site do evento" \
+gh release create v1.0.0 --title "Marco 1 — site do evento" \
   --notes "Cinco páginas em HTML semântico, menu de navegação e formulário de inscrição."
 ```
 
@@ -847,7 +847,7 @@ Resultado esperado: dois PRs mesclados, cada um com uma revisão de aprovação 
 `gh pr checkout <numero>` baixa a branch do PR para testar antes de aprovar. Lembre que ninguém aprova o próprio PR — se aparecer `Can not approve your own pull request`, você está tentando revisar o seu.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Resgate depois do desastre. Prepare o cenário: em um repositório de teste com cinco commits, rode `git reset --hard HEAD~3`. Os três últimos commits sumiram do `git log`. Recupere-os sem clonar de novo e sem usar o GitHub, deixando a `main` exatamente como estava antes. Depois, repita o desastre de outra forma: crie uma branch `experimento`, commite algo nela, volte para a `main` e apague a branch com `git branch -D experimento`. Recupere o commit perdido.
 
@@ -911,7 +911,7 @@ Um site que funcionava parou de funcionar, e ninguém sabe quando. Em vez de ler
 - A sessão completa de `git bisect run ./verificar.sh` colada em um `caca.md`, mostrando quantos passos foram necessários e qual commit foi apontado.
 - Uma comparação escrita: quantos commits você teria conferido na mão (busca linear) e quantos o `bisect` conferiu; a explicação do porquê da diferença.
 - O bug corrigido por um `git revert` do commit culpado, e não por uma edição manual.
-- Vale como item extra na rubrica de qualidade de código da sua trilha.
+- Este tipo de investigação é o que separa quem entende Git de quem só decora comandos — vale a pena incluir no seu projeto autoral.
 
 <details><summary>Pistas</summary>
 
@@ -960,7 +960,7 @@ Este é o Boss da Unidade 1: ele junta tudo o que os Capítulos 01 e 02 ensinara
 | `fatal: The current branch menu-responsivo has no upstream branch` | Primeiro push de uma branch nova, sem `-u` | `git push -u origin menu-responsivo` |
 | `node_modules` aparece em `git status` mesmo com a linha no `.gitignore` | A pasta já estava rastreada antes da regra | `git rm -r --cached node_modules` e commite; o `.gitignore` passa a valer |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 Leve o seu **projeto autoral** (o site com o tema que você escolheu na sua trilha) para o GitHub, com histórico decente:
 
@@ -972,7 +972,7 @@ Leve o seu **projeto autoral** (o site com o tema que você escolheu na sua tril
 
 **Critério de pronto:** `git log --oneline` na `main` mostra cinco ou mais commits com mensagens legíveis; o repositório é público; o README aparece renderizado na página; existe um PR com estado `MERGED`; a tag `v0.1.0` está no GitHub; `git status` diz `working tree clean`.
 
-**Entrega:** no SIGAA, o link do repositório público e o link do pull request mesclado. Nada de `.zip` daqui em diante.
+**Guarde no seu repositório:** o link do repositório público e o link do pull request mesclado. Nada de `.zip` daqui em diante.
 
 ## ✅ Está no ar quando…
 

@@ -1,8 +1,8 @@
 # Capítulo 03 — Publicando sites estáticos
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -114,7 +114,7 @@ A caixa de **Branch** oferece duas pastas: `/ (root)` e `/docs`. Use `/ (root)` 
 A opção **GitHub Actions**, no mesmo menu **Source**, serve para sites que precisam ser **construídos** antes de publicar — um projeto Vite do Nível 3, por exemplo, em que o que vai ao ar é a pasta `dist/`, e não os fontes. Esse é o assunto do Capítulo 09; aqui, o site já está pronto no repositório.
 
 > **⚠️ Atenção**
-> O GitHub Pages é gratuito para **repositórios públicos**. Em repositório privado, ele exige uma conta paga. Nos trabalhos da disciplina o repositório é público de qualquer jeito (é assim que você entrega no SIGAA), então isso não te afeta — mas não coloque no `site-evento` nada que você não mostraria à turma inteira. Publicar é publicar.
+> O GitHub Pages é gratuito para **repositórios públicos**. Em repositório privado, ele exige uma conta paga. Neste projeto o repositório é público de qualquer jeito, então isso não te afeta — mas não coloque no `site-evento` nada que você não mostraria a qualquer pessoa. Publicar é publicar.
 
 ### 2.3 Publicando pelo terminal, com o `gh`
 
@@ -170,7 +170,7 @@ Crie esse arquivo **sempre**. Ele não atrapalha nada e evita uma tarde de depur
 
 **Existem limites, e eles são suaves.** O site publicado deve ficar abaixo de 1 GB, a banda mensal recomendada é de 100 GB e há um limite de dez construções por hora. Nenhum projeto de disciplina chega perto disso, mas vale saber que existe — e que a documentação oficial é a fonte a conferir, porque os números mudam.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > "Um site estático pode ter formulário de login?" Não com validação de verdade: qualquer verificação feita em JavaScript no navegador é lida e burlada por quem abre o DevTools. Autenticação exige servidor. Um site estático pode ter o **formulário**; a verificação precisa acontecer do outro lado.
 
 ## 3. Caminhos absolutos e relativos: o bug que aparece só depois de publicar
@@ -846,7 +846,7 @@ Resultado esperado: uma tabela em `comparacao.md` com quatro linhas (URL, `serve
 `curl -sI <url> | grep -iE 'server|cache-control'` dá as duas primeiras linhas de uma vez. Rode o Lighthouse nas duas URLs na mesma sessão, em janela anônima, para a comparação valer.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Publicação sem cliques. Escreva um script `publicar.sh` que, rodado dentro de qualquer pasta de site estático não versionada, deixe o site no ar em uma URL do GitHub Pages: cria `.nojekyll` e `.gitignore` se não existirem, roda `git init` e o primeiro commit, cria o repositório remoto com `gh repo create`, faz push, liga o Pages via `gh api`, espera o `status` virar `built` consultando a API em laço, e imprime a URL final. Rodar o script duas vezes na mesma pasta não pode dar erro nem duplicar nada.
 
@@ -927,7 +927,7 @@ Nota de Lighthouse é fácil de melhorar quando você sabe o que ela mede — e 
 6. Rode cada medição três vezes e use a mediana; a variação entre execuções chega a 5 pontos e pode inventar um ganho que não existe.
 </details>
 
-**Para ir além:** vale como item extra na rubrica de qualidade da avaliação da sua trilha, se os relatórios estiverem no repositório e o histórico mostrar um commit por otimização.
+**Para ir além:** isso compõe bem o Marco de qualidade da sua trilha, se os relatórios estiverem no repositório e o histórico mostrar um commit por otimização.
 
 ## 🐛 Erros comuns
 
@@ -946,7 +946,7 @@ Nota de Lighthouse é fácil de melhorar quando você sabe o que ela mede — e 
 | Links funcionam na home e quebram nas páginas de subpasta | Caminho relativo ao documento em profundidade diferente | `../` a mais, ou uma `<base href>` no `<head>` (§3.4) |
 | Tudo certo, mas a URL sem barra final quebra o CSS | `…/site-evento` resolve os relativos como se estivesse na raiz | Divulgue sempre a URL com a barra final: `…/site-evento/` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 Publique o **seu projeto autoral** e deixe-o apresentável:
 
@@ -958,7 +958,7 @@ Publique o **seu projeto autoral** e deixe-o apresentável:
 
 **Critério de pronto:** a URL abre em janela anônima com todos os recursos carregando (nenhuma linha vermelha no DevTools), o ícone aparece na aba, um endereço inexistente devolve a sua página 404 com CSS aplicado, e o `README.md` do repositório mostra a URL e as notas.
 
-**Entrega:** no SIGAA, o link do repositório e a URL do site publicado. Nada de `.zip`.
+**Guarde no seu repositório:** o link do repositório e a URL do site publicado. Nada de `.zip`.
 
 ## ✅ Está no ar quando…
 

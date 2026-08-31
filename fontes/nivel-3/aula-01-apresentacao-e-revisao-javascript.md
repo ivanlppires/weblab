@@ -1,14 +1,14 @@
 # Aula 01 — Apresentação da disciplina e revisão de JavaScript
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
 Ao final desta aula você será capaz de:
 
-- Descrever a estrutura da disciplina: unidades, cronograma, avaliações e regras de aprovação.
+- Descrever a estrutura do curso: unidades, cronograma e os marcos do projeto autoral.
 - Configurar o ambiente de desenvolvimento (Node.js 22 LTS, VS Code, Git) e validar a instalação.
 - Explicar por que frameworks front-end existem, comparando manipulação manual do DOM com um paradigma declarativo.
 - Escrever e ler código JavaScript moderno (ES2015+): `let`/`const`, arrow functions, desestruturação, spread/rest, template literals, optional chaining e nullish coalescing.
@@ -32,15 +32,15 @@ Esta é a primeira aula — não há pré-requisito de conteúdo da disciplina. 
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
-| 1 | 50 min | Apresentação da disciplina, cronograma, avaliações, instalação do ambiente |
+| 1 | 50 min | Apresentação da disciplina, cronograma, marcos do projeto autoral, instalação do ambiente |
 | 2 | 50 min | Por que frameworks existem: DOM manual vs. paradigma declarativo |
 | 3 | 50 min | Revisão de JavaScript moderno (ES2015+) com foco no domínio de dados do curso |
 
 ## 1. Apresentação da disciplina
 
-### 1.1 Quem sou eu e como essa disciplina funciona
+### 1.1 O que é esta trilha
 
-Meu nome é Ivan Luiz Pedroso Pires, professor da FACET/UNEMAT — Campus Sinop. Esta disciplina, **FACET-SNP-310 — Frameworks Modernos para Desenvolvimento de Sistemas**, tem carga horária de 60 horas: 45h de aulas síncronas presenciais (15 encontros de 3 aulas de 50 minutos, às noites, horário 4N234) e 15h de atividades assíncronas — uma hora de trabalho fora de sala a cada encontro.
+Esta trilha nasceu da disciplina **FACET-SNP-310 — Frameworks Modernos para Desenvolvimento de Sistemas** (FACET/UNEMAT — Campus Sinop) e é publicada aberta: são 15 aulas de cerca de 150 minutos cada, mais uma hora de prática por aula. Quem cursa a disciplina acompanha o calendário da turma; quem estuda por conta própria avança no ritmo que conseguir sustentar — a ordem das aulas é a mesma nos dois casos, porque cada uma depende da anterior. Quem escreveu e revisou cada parte está na página [Autoria e créditos](../autores/).
 
 A ementa oficial do curso é:
 
@@ -63,50 +63,46 @@ Isso significa duas coisas na prática: (1) você vai aprender a construir aplic
 | 01 | U1 | Apresentação da disciplina e revisão de JavaScript |
 | 02 | U1 | Introdução ao Vue: lifecycle, instância, data e methods, diretivas básicas |
 | 03 | U1 | Vue: v-if, v-else, v-for, computed e onMounted |
-| 04 | U1 | Introdução a Vuetify e Vue Router — **entrega da Avaliação 1** |
+| 04 | U1 | Introdução a Vuetify e Vue Router — **Marco 1 do projeto** |
 | 05 | U2 | Componentes, Vue Router e Vuetify |
 | 06 | U2 | Axios e Pinia |
 | 07 | U3 | Firebase, Node.js e Express |
-| 08 | U3 | Endpoints e middlewares — **entrega da Avaliação 2** |
+| 08 | U3 | Endpoints e middlewares — **Marco 2 do projeto** |
 | 09 | U3 | Integração com MySQL |
 | 10 | U3 | Requisições autenticadas com Firebase |
 | 11 | U3 | CRUD front-end + back-end |
 | 12 | U3 | CRUD com banco de dados em nuvem (Supabase) |
 | 13 | U3 | Desenvolvimento do back-end em camadas |
 | 14 | U3 | Documentação com Swagger |
-| 15 | U3 | Apresentação dos resultados — **entrega da Avaliação 3** |
+| 15 | U3 | Apresentação dos resultados — **Marco 3 do projeto** |
 
-As datas dos encontros e os prazos das avaliações são publicados no SIGAA e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
+As datas dos encontros ficam no cronograma da disciplina, anunciado em aula e no índice desta trilha — o conteúdo abaixo é o mesmo em qualquer semestre.
 
-Todas as aulas 01 a 15 constroem, em sala, uma aplicação de referência chamada **UniEventos** — uma plataforma de divulgação e inscrição em eventos acadêmicos. Você vai acompanhar essa construção passo a passo, mas seu **projeto autoral** (o que você entrega nas avaliações) terá a mesma arquitetura aplicada a um domínio diferente, escolhido por você. Falamos disso na Seção 1.6.
+Todas as aulas 01 a 15 constroem, em sala, uma aplicação de referência chamada **UniEventos** — uma plataforma de divulgação e inscrição em eventos acadêmicos. Você vai acompanhar essa construção passo a passo, mas seu **projeto autoral** (o que evolui até cada marco) terá a mesma arquitetura aplicada a um domínio diferente, escolhido por você. Falamos disso na Seção 1.6.
 
-### 1.4 Avaliações
+### 1.4 Marcos do projeto
 
-A nota final é a **média aritmética simples das três avaliações**.
+O curso está dividido em três marcos, um ao final de cada unidade. Cada marco é um estado que o seu projeto autoral precisa alcançar — não uma prova separada — e mostra que você domina o conteúdo daquela unidade.
 
-| Avaliação | Escopo |
+| Marco | Escopo |
 |---|---|
-| Avaliação 1 | Vue 3 com CLI: estrutura de projeto, componentes, diretivas |
-| Avaliação 2 | Vue avançado: Vuetify + Axios + Vue Router + Pinia |
-| Avaliação 3 | Back-end: Firebase/Express/Supabase, banco de dados, autenticação |
+| Marco 1 | Vue 3 com CLI: estrutura de projeto, componentes, diretivas |
+| Marco 2 | Vue avançado: Vuetify + Axios + Vue Router + Pinia |
+| Marco 3 | Back-end: Firebase/Express/Supabase, banco de dados, autenticação |
 
-Todas as entregas são feitas **via SIGAA**. Os prazos de cada avaliação são publicados no SIGAA e anunciados em aula. As instruções detalhadas de cada avaliação (escopo exato, rubrica, formato de entrega) serão publicadas na aula correspondente — a Avaliação 1 será detalhada na Aula 04.
+Os requisitos completos de cada marco — o que precisa estar pronto e como conferir — são detalhados na aula que fecha a unidade correspondente: o Marco 1 na Aula 04, o Marco 2 na Aula 08, o Marco 3 na Aula 15. Quem cursa a disciplina em sala recebe do professor os prazos e a forma de acompanhamento de cada marco; quem estuda por conta própria usa os marcos como metas de progresso no próprio ritmo.
 
-> **📌 Na prova**
-> Existe também um **exame final**: prova teórica, presencial e individual, cobrindo as três unidades. Ele é aplicado a quem não atinge a média mínima de aprovação direta pelas três avaliações, conforme o regimento da UNEMAT. Estude a teoria, não só a prática — o exame não é sobre "rodar o código", é sobre entender os conceitos.
+### 1.5 Comunicação
 
-### 1.5 Frequência e comunicação
+Canais de acompanhamento do curso:
 
-A frequência é obrigatória e verificada em cada um dos 15 encontros presenciais — o mínimo de 75% de presença é exigência regimental para aprovação, independente da nota. Encontros faltados não podem ser compensados só com a atividade assíncrona: a atividade assíncrona é conteúdo adicional, não substituto de presença.
+- **E-mail** — dúvidas pontuais sobre o conteúdo.
+- **GitHub** — cada estudante mantém um repositório público do projeto autoral; é ali que o progresso é acompanhado semana a semana, por você mesmo, por um colega ou pelo professor, para quem cursa a disciplina em sala.
 
-Canais oficiais de comunicação:
-
-- **SIGAA** — avisos oficiais, entrega de avaliações, notas.
-- **E-mail institucional** — dúvidas individuais e assuntos administrativos.
-- **GitHub** — cada estudante mantém um repositório público do projeto autoral; é ali que o professor acompanha o progresso semana a semana.
+Quem cursa a disciplina em sala recebe também os avisos, datas e canais oficiais da própria instituição.
 
 > **💡 Dica**
-> Comite no seu repositório do projeto autoral **toda semana**, mesmo que pouco. Um histórico de commits ao longo do semestre vale mais, na avaliação de processo, do que um único commit gigante na véspera da entrega.
+> Comite no seu repositório do projeto autoral **toda semana**, mesmo que pouco. Um histórico de commits ao longo do tempo mostra evolução de verdade — vale muito mais do que um único commit gigante na véspera de um marco.
 
 ### 1.6 O projeto autoral
 
@@ -718,7 +714,7 @@ Para rodar módulos ES direto no navegador (sem bundler ainda), o HTML precisa d
 <script type="module" src="main.js"></script>
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A partir da Aula 02, todo componente `.vue` é, por baixo, um módulo ES: ele importa outros componentes com `import` e é importado por quem o usa. Entender `import`/`export` agora evita confusão depois.
 
 ### 3.11 Classes
@@ -1148,7 +1144,7 @@ eventos.map((evento) => formatador.format(new Date(evento.dataHora)))
 ```
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Buscar dados de uma API pública e renderizar. Usando `fetch` e `async/await`, busque `https://jsonplaceholder.typicode.com/users` (sem parâmetro de limite), pegue apenas os 3 primeiros com `.slice(0, 3)`, e renderize o `name` de cada um em uma lista `<ul>` no HTML. Se a rede falhar (desligue o Wi-Fi um instante e tente de novo), a página não pode travar nem ficar em branco — mostre uma mensagem de erro no lugar da lista.
 
@@ -1238,7 +1234,7 @@ Toda a Seção 3 revisou ferramentas de JavaScript moderno usando eventos como e
 | `TypeError: Cannot read properties of undefined` | Esqueceu de colocar `await` antes de uma Promise | Confira se toda chamada assíncrona tem `await` dentro de uma função `async` |
 | `fetch` falha com erro de CORS no console | A API não libera requisições vindas do seu domínio local | Use uma API que libere CORS publicamente (como JSONPlaceholder) ou rode via proxy/back-end nas aulas futuras |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 1. Escolha o **tema do seu projeto autoral** seguindo as regras da Seção 1.6.
 2. Crie um repositório público no GitHub chamado `<seu-tema>-web` (ex.: `pantanal-plantas-web`).
@@ -1246,7 +1242,7 @@ Toda a Seção 3 revisou ferramentas de JavaScript moderno usando eventos como e
    - Uma descrição de 3 a 5 linhas do problema que o projeto resolve.
    - As **entidades** do domínio (no mínimo duas relacionadas) com seus **campos**, no mesmo estilo da Seção 3 do plano de curso (compare com `Evento`/`Inscricao`/`Usuario` do UniEventos).
    - As **telas previstas**: pelo menos listagem com filtro, detalhe, e uma área autenticada.
-4. Envie o link do repositório pelo canal indicado no SIGAA.
+4. Guarde no seu repositório: commit + push.
 
 **Critério de pronto:** repositório público criado, `README.md` com descrição, modelo de dados (entidades + campos) e lista de telas.
 

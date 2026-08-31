@@ -1,8 +1,8 @@
 # Capítulo 11 — IA como ferramenta de desenvolvimento
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -14,7 +14,7 @@ Ao final deste capítulo você será capaz de:
 - Usar o assistente com proveito em cinco tarefas concretas: explicar um erro, revisar código, gerar testes, escrever mensagem de commit e `README`, e aprender uma API nova.
 - Reconhecer os modos típicos de falha — API alucinada, versão desatualizada, pacote inexistente, código plausível e inseguro — e checar cada um na documentação oficial em menos de dois minutos.
 - Aplicar as regras de segurança e privacidade sobre o que nunca entra em um prompt (segredos, `.env`, dados pessoais reais) e o que fazer se algo escapar.
-- Enunciar e cumprir a política de uso de IA das disciplinas: apoio permitido, autoria e explicação obrigatórias, cópia entre colegas igual a zero.
+- Adotar uma política pessoal de uso de IA como estudante: apoio bem-vindo, mas autoria e capacidade de explicar são o que provam — para você mesmo, antes de qualquer outra pessoa — que o aprendizado aconteceu.
 
 ## 📋 Pré-requisitos
 
@@ -461,7 +461,7 @@ Tudo que você cola em um assistente sai do seu computador. Dependendo do servi�
 | Chave de API, token, `service_role` | Uso indevido imediato da sua conta | Substitua por `CHAVE_AQUI` |
 | Dados pessoais reais (CPF, telefone, e-mail de gente de verdade) | LGPD: você é o controlador desses dados | Gere dados fictícios |
 | Código sob contrato do estágio | Pode violar o contrato do seu trabalho | Reescreva um exemplo mínimo equivalente |
-| Prova, avaliação ou material sob sigilo | Regra da instituição | Nada substitui; simplesmente não cole |
+| Prova, processo seletivo ou material sob sigilo (seu ou de outra pessoa) | Confidencialidade não é sua para compartilhar | Nada substitui; simplesmente não cole |
 
 Como redigir um trecho antes de colar, sem perder o contexto:
 
@@ -502,8 +502,8 @@ Aceitar uma sugestão de IA sem esse ciclo é o equivalente a fazer deploy sem t
 4. **Rode.** `npm run lint`, `npm test`, `curl` na rota, clique na tela. Depois **quebre de propósito** e confirme que o teste falha.
 5. **Explique em voz alta, sem olhar.** Feche o editor e conte para um colega — ou para a parede — o que a mudança faz e por quê. Se travar, você não entendeu; volte ao passo 2.
 
-> **📌 Na prova**
-> O passo 5 não é uma metáfora. Na arguição do projeto autoral, o professor aponta uma linha do seu código e pede a explicação. Você pode ter usado IA para escrevê-la — mas precisa saber dizer o que ela faz, por que está ali e o que aconteceria se fosse removida.
+> **📌 Vale gravar**
+> O passo 5 não é uma metáfora. A qualquer momento — um colega perguntando, uma entrevista técnica, ou você mesmo relendo o código em seis meses — alguém pode apontar uma linha e pedir a explicação. Você pode ter usado IA para escrevê-la, mas precisa saber dizer o que ela faz, por que está ali e o que aconteceria se fosse removida. Saber explicar o próprio código é o que separa quem aprendeu de quem colou.
 
 ## 8. Dependência: o custo que só aparece depois
 
@@ -519,33 +519,28 @@ Isso não é argumento para não usar. É argumento para usar **em uma ordem esp
 > **🧠 Você sabia?**
 > Quando o ChatGPT surgiu, o Stack Overflow proibiu respostas geradas por IA no site. O motivo declarado não foi a qualidade média — era razoável — e sim a **taxa de acerto combinada com a facilidade de produção**: respostas erradas passaram a chegar mais rápido do que voluntários conseguiam revisar. É o mesmo problema em escala pessoal: a IA gera código mais rápido do que você revisa. Quem não impõe um limite de revisão acumula dívida técnica em velocidade recorde.
 
-## 9. Política de uso de IA nas disciplinas
+## 9. Como usar IA sem enganar a si mesmo
 
-Vale para Nível 1, Nível 2, Nível 3 e para esta trilha. É simples e não é negociável.
+Não existe fiscal aqui, e este material não tem nota. O motivo para ter uma política pessoal de uso de IA não é evitar punição — é que só você paga o preço de aprender de mentirinha. Um projeto que "funciona" mas que você não sabe explicar não te prepara para a próxima vaga, para a próxima entrevista técnica, ou para o próximo bug que a IA não vai resolver sozinha.
 
-**Permitido, e incentivado:** usar assistentes como apoio para entender erros, revisar o seu código, gerar testes, escrever documentação, aprender uma API e discutir alternativas de solução.
+A regra que resume tudo isto: **use IA para explicar, não para entregar o que você não sabe explicar.** Pedir para o assistente destrinchar um erro, revisar um trecho, sugerir testes, ensinar uma API nova — isso é estudo, e é o uso incentivado ao longo deste capítulo. Colar uma resposta pronta num projeto e seguir em frente sem entender por que ela funciona não é estudo: é adiar o problema para o momento em que você mais precisar da habilidade que pulou.
 
-**Obrigatório:** você é o autor. Você responde pelo código que entrega, entende cada linha e consegue explicá-la quando perguntado, em qualquer momento da disciplina.
-
-**Proibido:** entregar como seu o trabalho de outra pessoa — com ou sem IA no meio do caminho.
-
-| Situação | Vale? | Observação |
+| Situação | Ajuda a aprender? | Por quê |
 |---|---|---|
 | Pedir explicação de um erro e corrigir entendendo | Sim | O melhor uso; recomendado |
 | Gerar testes, revisar e completar com casos seus | Sim | Verifique quebrando de propósito |
 | Gerar o `README` a partir de fatos do repositório | Sim | Revise; ele inventa funcionalidade |
-| Colar código do assistente sem entender | Não | Reprova na arguição, mesmo funcionando |
-| Copiar o repositório do colega | Não | Zero para os dois envolvidos |
-| Usar IA durante avaliação prática presencial | Não | Só o que estiver anunciado na atividade |
+| Colar código do assistente sem entender | Não | Na próxima vez que precisar mexer ali, você vai travar |
+| Pedir para alguém (ou uma IA) terminar o seu projeto autoral por você | Não | O projeto para de ser seu; a habilidade que ele deveria treinar não aparece |
 | Colar `.env` ou dado pessoal real no chat | Não | Incidente de segurança; rotacione a chave |
 
-Duas regras operacionais que fazem essa política funcionar na prática:
+Duas práticas que fazem essa política funcionar de verdade, sem precisar de ninguém cobrando:
 
-1. **Declare o uso.** Todo projeto entregue traz um arquivo `IA.md` na raiz (modelo no Passo a passo) dizendo em que partes você usou assistente, o que aceitou e o que recusou. Declarar não tira ponto. Não declarar e ser flagrado, sim.
-2. **Esteja pronto para a arguição.** A qualquer momento o professor pode pedir que você explique um trecho, altere um comportamento ao vivo ou diga o que acontece se aquela linha sumir. Essa é a verificação de autoria, e ela é mais confiável do que qualquer detector automático — inclusive porque detectores de texto gerado por IA erram muito, nos dois sentidos, e não são usados como prova nesta disciplina.
+1. **Registre o uso.** Um arquivo `IA.md` na raiz do projeto (modelo no Passo a passo) dizendo em que partes você usou assistente, o que aceitou e o que recusou — guarde-o no seu próprio repositório. Não é para prestar contas a ninguém: é um espelho. Escrever obriga você a notar o que realmente aconteceu, e reler daqui a um mês mostra se você está aprendendo ou só acelerando a entrega.
+2. **Teste-se de vez em quando.** Feche o editor e explique em voz alta — para um colega, ou para a parede — o que uma parte do seu código faz e por que está ali. Se travar, você ainda não entendeu; volte ao passo 2 do protocolo da §7. Ninguém vai te arguir por isso, mas o dia em que alguém perguntar — numa entrevista, numa vaga, numa dúvida sua mesmo — é o dia em que essa prática se paga.
 
-> **⚠️ Atenção**
-> Cópia entre colegas é zero para quem copiou **e** para quem forneceu, nas duas avaliações envolvidas. Ajudar um colega a entender é excelente e esperado; entregar o arquivo dele é outra coisa. Se dois projetos autorais chegam com a mesma estrutura de pastas, os mesmos nomes de variável e os mesmos comentários, a conversa vai acontecer.
+> **💡 Dica**
+> Ajudar um colega a entender um problema é ótimo — é assim que se aprende em grupo. Entregar o arquivo pronto para ele é outra coisa: você tira dele exatamente o exercício que o projeto deveria proporcionar. Se dois projetos autorais chegam com a mesma estrutura de pastas, os mesmos nomes de variável e os mesmos comentários, vale perguntar a si mesmo quem realmente escreveu aquilo — e se alguém aprendeu o que deveria.
 
 ## 🚀 Passo a passo — Revisão assistida do projeto autoral, com tudo verificado
 
@@ -798,7 +793,7 @@ Resultado esperado: para cada achado confirmado, dois comandos `curl` no seu `AC
 Use `curl -i` para ver o status e os cabeçalhos. Para testar injeção, um apóstrofo dentro de um campo de texto já basta: se a resposta for 500 com erro de sintaxe SQL, o problema está confirmado.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** O trecho abaixo foi gerado por um assistente e "funciona". Encontre **quatro** problemas **sem usar IA**, em no máximo dez minutos. Depois peça a revisão ao assistente e compare: quantos ele achou, quantos você achou, e se ele inventou algum que não existe.
 
@@ -857,7 +852,7 @@ Você provavelmente não faz ideia de quanto do seu código vem de sugestão ace
 1. Registre na hora, em três linhas. Reconstituir de memória no fim da semana produz um relato bonito e falso.
 2. Separe por tipo de tarefa: explicar erro, gerar código novo, revisar, documentar. As taxas são bem diferentes entre elas.
 3. "Verifiquei" precisa ser um ato: rodei o teste, abri a doc, reproduzi com `curl`. Se a verificação foi "pareceu certo", registre exatamente isso — é um dado honesto.
-4. Vale como item extra na rubrica da avaliação final da sua trilha.
+4. Este é o tipo de registro que fecha bem o Marco final da sua trilha.
 </details>
 
 ### ⭐⭐ Placar do caça-alucinação
@@ -946,7 +941,7 @@ Este é o encerramento da trilha, e ele é simples de enunciar: o seu projeto au
 | `npm error code ERESOLVE` ao instalar o que a IA sugeriu | Versões incompatíveis inventadas no `package.json` | Instale sem fixar versão (`npm install pacote`) e deixe o npm resolver; não force `--legacy-peer-deps` sem entender |
 | O componente Vue some da tela depois de uma refatoração do agente | Mudança ampla aceita sem ler o diff | `git diff` antes de aceitar; `git reset --hard` para o commit-âncora e refaça em pedaços |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do seu **projeto autoral**:
 
@@ -958,7 +953,7 @@ No repositório do seu **projeto autoral**:
 
 **Critério de pronto:** existe um pull request com quatro ou mais commits; `npm test` passa e falha quando você quebra o código de propósito; `ACHADOS.md` tem pelo menos um achado marcado como `falso` com justificativa; o `README` funciona em um clone limpo; o `IA.md` está na raiz.
 
-**Entrega:** commit + push e link do repositório no SIGAA, com o link do pull request na descrição.
+**Guarde no seu repositório:** commit + push, com o link do pull request na descrição.
 
 ## ✅ Está no ar quando…
 

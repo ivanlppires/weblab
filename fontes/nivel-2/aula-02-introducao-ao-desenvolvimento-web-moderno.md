@@ -1,8 +1,8 @@
 # Aula 02 — Introdução ao desenvolvimento web moderno
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 1: Web estática
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 01 você acompanhou a requisição saindo do navegador e a resposta voltando do servidor. Hoje a câmera vira para o outro lado: o que acontece **depois** que a resposta chega — como o navegador transforma texto em pixels, quem decide as regras dessa transformação e como organizar um projeto para que ele funcione tanto na sua máquina quanto em um servidor real.
 
@@ -271,7 +271,7 @@ Todo documento desta disciplina precisa ter, no mínimo:
 | `<link rel="stylesheet" …>` | Conecta a folha de estilo |
 | `<body>` | Todo o conteúdo visível |
 
-Três observações que valem nota na Avaliação 1:
+Três observações que valem gravar — entram no Marco 1 do projeto:
 
 - **`lang="pt-BR"` não é decoração.** É o que faz um leitor de tela pronunciar "pão" como português e não como inglês, e o que informa ao navegador qual dicionário usar na correção ortográfica de campos de formulário.
 - **Sem `<meta name="viewport">` o celular mente.** O navegador móvel finge ter 980 px de largura e encolhe a página inteira, deixando o texto ilegível. Essa única linha é o pré-requisito de todo layout responsivo (Aula 04).
@@ -776,7 +776,7 @@ A estrutura é `@media (prefers-color-scheme: dark) { :root { --cor-fundo: #1c17
 Em `file://` a aba Network normalmente não registra nada, porque não houve requisição HTTP nenhuma — o navegador leu o disco. Esse é o ponto central da resposta.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Reproduza uma página real. Escolha a página inicial de uma cafeteria ou restaurante que você conheça, abra o DevTools e identifique: quais landmarks ela usa (ou deixa de usar), quantas requisições faz, qual o peso total e quantas fontes externas carrega. Depois reescreva o esqueleto dessa página — só a estrutura HTML com os landmarks corretos, sem copiar textos nem imagens — em um arquivo `exercicios/aula02/estrutura-analisada.html`, e escreva cinco linhas apontando o que você faria diferente.
 
@@ -901,7 +901,7 @@ O GitHub Pages e o Live Server fazem a mesma coisa que você vai programar na Un
 | Alterações no CSS não aparecem no site publicado | Cache do navegador servindo a versão anterior | Recarregar com <kbd>Ctrl</kbd>+<kbd>F5</kbd>; confirmar na aba Network que o arquivo veio com `200`, não `304` |
 | `fetch` bloqueado ou módulo não carrega ao abrir o arquivo | A página foi aberta com duplo clique, no esquema `file://` | Abrir sempre pelo Live Server, em `http://127.0.0.1:5500` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Estrutura do projeto autoral (35 min).** No repositório do seu projeto:
 
@@ -917,7 +917,7 @@ O GitHub Pages e o Live Server fazem a mesma coisa que você vai programar na Un
 
 **Critério de pronto:** as duas páginas do projeto autoral abrem no site publicado, navegam entre si, passam no validador sem erros e usam variáveis CSS para todas as cores.
 
-**Entrega:** no SIGAA, o **link do repositório** e o **link do site publicado**. Sem `.zip`.
+**Guarde no seu repositório:** commit + push, com o site publicado atualizado. Sem `.zip`.
 
 ## ✅ Checkpoint do projeto
 

@@ -1,8 +1,8 @@
 # Aula 05 — Componentes, Vue Router e Vuetify avançado
 
 > **Nível 3 — Frameworks Modernos** · Unidade 2: Vue.js avançado: Vuetify, Axios, Router e Pinia
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -19,7 +19,7 @@ Ao final desta aula você será capaz de:
 ## 📋 Pré-requisitos desta aula
 
 - [ ] UniEventos da Aula 04 rodando: Vuetify instalado, tema configurado, rotas `home`, `evento-detalhe`, `sobre`, `nao-encontrado` funcionando.
-- [ ] Avaliação 1 entregue (ou em fase final de entrega).
+- [ ] Marco 1 do projeto alcançado (ou em fase final de conclusão).
 - [ ] Domínio confortável de `<script setup>`, `defineProps`/`defineEmits` básicos (vistos rapidamente na Aula 02), `computed`, `onMounted`.
 
 Na Aula 04 você transformou o UniEventos em uma SPA navegável: Vuetify instalado com tema institucional, `v-app-bar`/`v-navigation-drawer`/`v-main` no lugar, quatro rotas registradas e as views migradas para componentes Vuetify. O que ficou pendente é a organização interna: cada view ainda concentra marcação, dados e lógica no mesmo arquivo.
@@ -1367,7 +1367,7 @@ Resultado esperado: clicar no botão de três pontinhos abre um menu com as duas
 Use o slot `#activator="{ props }"` do `v-menu`, como no exemplo da §5.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Query string de paginação. Adicione um `v-pagination` na `AdminEventosView.vue` (fora do `v-data-table`, como exercício) e sincronize a página atual com `?pagina=N` na URL, seguindo o padrão da §4. A URL precisa ser a fonte da verdade: recarregar a página em `/admin/eventos?pagina=3` deve abrir já na página 3, e voltar/avançar no navegador entre páginas visitadas deve funcionar sem recarregar a tela.
 
@@ -1490,7 +1490,7 @@ Refatore essa cadeia usando `provide`/`inject` (§1), e depois responda: o que m
 | `onBeforeRouteLeave` não é chamado | Guard declarado fora de um componente renderizado pela rota (ex.: em um componente filho que não é o componente-alvo da rota) | `onBeforeRouteLeave` só funciona dentro do componente que a rota renderiza diretamente |
 | Slot com escopo não recebe os dados esperados | Faltou vincular os dados no `<slot>` do componente filho (`:evento="evento"`) | Toda variável que o slot precisa expor deve ser passada como atributo do `<slot>` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral**:
 

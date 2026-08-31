@@ -1,8 +1,8 @@
 # Capítulo 07 — Docker para desenvolvedores web
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -728,7 +728,7 @@ Resultado esperado: uma tabela com os três tamanhos, a variante Alpine + `--omi
 Use `docker build -f` com Dockerfiles alternativos (`Dockerfile.debian`, `Dockerfile.dev`) ou passe `--build-arg`. `docker history nome:tag` mostra o tamanho de cada camada — a do `npm ci` é a que muda.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Faça a API recarregar sozinha dentro do contêiner quando você edita um arquivo em `src/`, sem reconstruir a imagem. Crie um `compose.override.yaml` (o Compose o mescla automaticamente com `compose.yaml`) que monte a pasta do projeto dentro do contêiner e troque o comando por `node --watch src/server.js`.
 
@@ -817,7 +817,7 @@ Hoje o site chama a API em outra origem e o CORS precisa liberar o domínio do f
 | `docker stop` demora 10 s e a API "morre" em vez de encerrar | Node como PID 1 sem tratador de `SIGTERM` ignora o sinal | `process.on('SIGTERM')` no `server.js` e `init: true` no compose |
 | A porta 3000 do VPS está aberta para a internet apesar do `ufw` | o Docker escreve regras de firewall próprias, antes das do `ufw` | publique como `"127.0.0.1:3000:3000"` e deixe o nginx ser a única porta de entrada |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório da API do seu **projeto autoral**:
 
@@ -828,7 +828,7 @@ No repositório da API do seu **projeto autoral**:
 
 **Critério de pronto:** um colega (ou você, em outra pasta) consegue clonar o repositório, seguir só o `README.md` e ter `curl http://localhost:3000/health` respondendo `{"status":"ok"}` — sem instalar Node nem banco na máquina. O `.env` não está no repositório nem na imagem (`docker run --rm sua-imagem cat .env` deve falhar).
 
-**Entrega:** commit + push e link do repositório no SIGAA, junto com o link do pacote no GHCR.
+**Guarde no seu repositório:** commit + push, junto com o link do pacote no GHCR.
 
 ## ✅ Está no ar quando…
 

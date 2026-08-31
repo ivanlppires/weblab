@@ -1,8 +1,8 @@
 # Aula 13 — Funções e eventos
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -845,7 +845,7 @@ lista.addEventListener("click", (e) => {
 });
 ```
 
-Este padrão é a espinha dorsal de qualquer CRUD em JavaScript puro — e será exigido no projeto da Avaliação 3. Vale a pena entendê-lo agora.
+Este padrão é a espinha dorsal de qualquer CRUD em JavaScript puro — e vai aparecer de novo no Marco 3. Vale a pena entendê-lo agora.
 
 ## 15. Eventos personalizados
 
@@ -945,8 +945,8 @@ div.addEventListener("keydown", (e) => {
 
 Regra: se algo é **clicável**, use `<button>`. Se **navega** para outro lugar, use `<a href>`. Reinventar controles com `<div>` é a origem da maioria dos problemas de acessibilidade em sites modernos — e o Lighthouse (Aula 15) penaliza isso.
 
-> **📌 Na prova**
-> Costuma cair: (1) a diferença entre `target` e `currentTarget`; (2) por que `addEventListener("click", fn())` não funciona; (3) o que acontece sem `preventDefault` no `submit`; (4) por que delegação resolve elementos criados depois; (5) a ordem de impressão em um exemplo de borbulhamento.
+> **📌 Vale gravar**
+> Vale saber de cor: (1) a diferença entre `target` e `currentTarget`; (2) por que `addEventListener("click", fn())` não funciona; (3) o que acontece sem `preventDefault` no `submit`; (4) por que delegação resolve elementos criados depois; (5) a ordem de impressão em um exemplo de borbulhamento.
 
 ## 18. A arquitetura: estado → dados → renderização → eventos
 
@@ -1531,7 +1531,7 @@ Ouça `input` no textarea, calcule `restantes = LIMITE - textarea.value.length` 
 Não mova o `<li>` no DOM — troque as posições no array com `[itens[i - 1], itens[i]] = [itens[i], itens[i - 1]]` e chame `renderizar()`. Use `data-acao` e `data-id` nos botões e o `switch` da seção 14.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Kanban com arrastar e soltar. Construa um quadro com três colunas (A fazer, Em andamento, Concluído). Cartões podem ser criados, editados, excluídos e arrastados entre colunas usando a API de Drag and Drop (`dragstart`, `dragover`, `drop`). Contadores por coluna. Deve funcionar também por teclado (botões "mover para →" e "← mover para").
 
@@ -1667,7 +1667,7 @@ Sites de evento costumam ter um "quiz de conhecimentos" para engajar quem se ins
 | `<div onclick>` não funciona com Tab/Enter nem é lido pelo leitor de tela | `div` não é focável nem tem semântica de controle | Troque por `<button type="button">` |
 | Menu abre e fecha no mesmo clique | O clique no botão borbulha até o ouvinte de "clique fora" em `document` | Verifique `botao.contains(e.target)` antes de fechar (ou não use `stopPropagation`) |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** FLANAGAN, *JavaScript: o guia definitivo*, capítulos de funções, de scripting de documentos e de eventos. MILETTO & BERTAGNOLLI, *Desenvolvimento de software II*, capítulo de interação com o usuário. Na MDN em português, o guia "Introdução a eventos" (link em Para aprofundar).
 
@@ -1680,9 +1680,9 @@ Sites de evento costumam ter um "quiz de conhecimentos" para engajar quem se ins
 
 **Critério de pronto:** nenhuma página do projeto mostra erro no Console; a listagem some do "Exibir código-fonte" e aparece na aba Elements; o menu abre e fecha só com o teclado.
 
-**Parte 3 — Fórum (5 min).** No fórum "Delegação salva", explique, com um trecho do seu projeto, um problema que só a delegação de eventos resolve bem — e o que aconteceria sem ela.
+**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): explique, com um trecho do seu projeto, um problema que só a delegação de eventos resolve bem — e o que aconteceria sem ela.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 

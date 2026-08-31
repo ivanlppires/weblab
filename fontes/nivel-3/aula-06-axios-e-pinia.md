@@ -1,8 +1,8 @@
 # Aula 06 — Axios e Pinia
 
 > **Nível 3 — Frameworks Modernos** · Unidade 2: Vue.js avançado: Vuetify, Axios, Router e Pinia
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -67,7 +67,7 @@ Não é preciso decorar os ~60 códigos HTTP — só os que aparecem o tempo tod
 | `422 Unprocessable Entity` | validação de negócio falhou | e-mail em formato inválido, vagas negativas |
 | `500 Internal Server Error` | erro não tratado no servidor | bug no back-end |
 
-> **📌 Na prova:** a diferença entre `400` e `422` é sutil, mas cai em prova: `400` é sobre a **forma** da requisição (JSON quebrado, tipo errado); `422` é sobre o **conteúdo semanticamente inválido** de uma requisição bem formada (ex.: `vagas: -5`).
+> **📌 Vale gravar:** a diferença entre `400` e `422` é sutil, mas costuma confundir: `400` é sobre a **forma** da requisição (JSON quebrado, tipo errado); `422` é sobre o **conteúdo semanticamente inválido** de uma requisição bem formada (ex.: `vagas: -5`).
 
 ### Headers e JSON
 
@@ -405,7 +405,7 @@ export const useContadorStore = defineStore('contador', () => {
 
 No setup store: `ref` vira **state**, `computed` vira **getter**, função comum vira **action** — e você retorna explicitamente tudo que deve ficar público. É o mesmo modelo mental que você já usa em `<script setup>` e em composables, o que reduz a curva de aprendizado: uma store é, na prática, um composable que vive fora de qualquer componente e é compartilhado por todos eles.
 
-> **📌 Na prova:** se te perguntarem a diferença entre uma store setup e um composable comum, a resposta central é: **uma store é um singleton** (uma instância única compartilhada por toda a aplicação, gerenciada pelo Pinia); **um composable comum cria estado novo a cada chamada**. Veja o box de padrões de projeto logo abaixo.
+> **📌 Vale gravar:** se te perguntarem a diferença entre uma store setup e um composable comum, a resposta central é: **uma store é um singleton** (uma instância única compartilhada por toda a aplicação, gerenciada pelo Pinia); **um composable comum cria estado novo a cada chamada**. Veja o box de padrões de projeto logo abaixo.
 
 ### `storeToRefs` — por que desestruturar direto quebra a reatividade
 
@@ -1331,7 +1331,7 @@ Resultado esperado: o tema escolhido persiste entre recarregamentos de página (
 A store guarda o nome do tema em um `ref`; um `watch` sobre esse `ref` chama `tema.global.name.value = novoValor` e `localStorage.setItem`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Cancelamento de requisição na busca. Aplique a técnica de `AbortController` da §2 no `eventosService.listar`, cancelando a busca anterior sempre que o usuário digitar um novo termo antes da resposta anterior chegar. Prove que funciona sob condições realistas: digite rapidamente, sem pausar, e confirme na aba Network que as respostas antigas não sobrescrevem a lista com resultados desatualizados.
 
@@ -1456,7 +1456,7 @@ A Unidade 2 terminou. Você sabe componentizar de verdade, sincronizar filtros c
 | Inscrição some ao recarregar a página | `localStorage.setItem` não está sendo chamado após a mutação, ou a chave usada na leitura é diferente da usada na escrita | Confirme que `persistir()` roda em toda ação que muda `idsInscritos`, e que a chave é idêntica nos dois lugares |
 | Interceptor de request não injeta o token | Token não existe ainda em `localStorage` (usuário nunca logou) ou a chave usada é diferente da chave de login | Confirme a chave (`uniEventosToken`) e teste manualmente com `localStorage.setItem('uniEventosToken', 'teste')` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral**:
 
@@ -1489,6 +1489,6 @@ No seu **projeto autoral**:
 - Pinia — `storeToRefs`: <https://pinia.vuejs.org/core-concepts/state.html#accessing-the-state>
 - Referências básicas do plano de curso: capítulos sobre consumo de API e gerenciamento de estado.
 
-Isso encerra a Unidade 2. O prazo da **Avaliação 2** é publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)), com as instruções completas de entrega na Aula 08 — mas o escopo, resumido em 5 linhas: seu projeto autoral deve consumir dados de uma API (própria ou `json-server`) através de uma camada de serviços com Axios; ter estado gerenciado por pelo menos uma store Pinia com `carregando`/`erro`; refletir esses estados visualmente na interface; persistir algum dado em `localStorage`; e manter tudo isso rodando em cima da estrutura de rotas e componentes que você já construiu nas Aulas 04 e 05. Comece a organizar seu `db.json` e sua camada de serviços desde já — não deixe para a última semana.
+Isso encerra a Unidade 2. O **Marco 2** do projeto fecha na Aula 08 — veja o quadro de marcos em [`../nivel-3/#marcos`](../nivel-3/#marcos) — com os requisitos completos lá, mas o escopo, resumido em 5 linhas: seu projeto autoral deve consumir dados de uma API (própria ou `json-server`) através de uma camada de serviços com Axios; ter estado gerenciado por pelo menos uma store Pinia com `carregando`/`erro`; refletir esses estados visualmente na interface; persistir algum dado em `localStorage`; e manter tudo isso rodando em cima da estrutura de rotas e componentes que você já construiu nas Aulas 04 e 05. Comece a organizar seu `db.json` e sua camada de serviços desde já — não deixe para a última semana.
 
 **Na próxima aula** o `json-server` sai de cena: você escreve a `unieventos-api` de verdade, com Node.js e Express 5, conhece o Firebase (autenticação e Firestore) e aponta o `baseURL` do `http.js` desta aula para o seu próprio back-end. É a virada da Unidade 3 — do front que consome uma API falsa para o desenvolvedor full-stack que escreve as duas pontas.

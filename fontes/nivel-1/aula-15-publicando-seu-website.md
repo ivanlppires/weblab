@@ -1,8 +1,8 @@
 # Aula 15 — Publicando seu website na internet
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -14,7 +14,7 @@ Ao final desta aula você será capaz de:
 - Versionar o projeto com os comandos essenciais do Git e publicá-lo em um repositório público no GitHub, com `.gitignore` e `README.md` adequados.
 - Publicar o site no **GitHub Pages** e reconhecer quando a Netlify ou a Vercel são alternativas melhores.
 - Auditar o site publicado com o **validador do W3C** e o **Lighthouse**, interpretar as quatro pontuações e aplicar as correções de maior impacto.
-- Entregar a Avaliação 3 com o projeto autoral no ar, acessível por uma URL pública que qualquer pessoa consegue abrir.
+- Fechar o Marco 3 com o projeto autoral no ar, acessível por uma URL pública que qualquer pessoa consegue abrir.
 
 ## 📋 Pré-requisitos
 
@@ -33,7 +33,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | Hospedagem, domínio e HTTPS; o que muda entre "funciona aqui" e "está no ar"; preparação para produção |
 | 2 | 50 min | Git essencial, repositório no GitHub, GitHub Pages passo a passo e alternativas |
-| 3 | 50 min | Auditoria com validador do W3C e Lighthouse, correções, README e entrega da Avaliação 3 |
+| 3 | 50 min | Auditoria com validador do W3C e Lighthouse, correções, README e Marco 3 do projeto |
 
 ## 1. O caminho de um site até o navegador de outra pessoa
 
@@ -165,9 +165,9 @@ Regras dessa estrutura:
 
 ### 3.2 A limpeza obrigatória
 
-Percorra esta lista antes de publicar. Ela leva vinte minutos e evita metade dos problemas da avaliação:
+Percorra esta lista antes de publicar. Ela leva vinte minutos e evita metade dos problemas do Marco 3:
 
-- **Remova os `console.log` de depuração.** Console limpo é critério de nota, e um console cheio de mensagens suas denuncia código não revisado. O truque profissional está na próxima subseção.
+- **Remova os `console.log` de depuração.** Console limpo é critério de qualidade, e um console cheio de mensagens suas denuncia código não revisado. O truque profissional está na próxima subseção.
 - **Remova blocos de código comentado.** Aquele CSS antigo que você "deixou comentado por via das dúvidas" não serve para nada: a versão anterior está no histórico do Git.
 - **Remova arquivos não referenciados.** Se nenhum HTML aponta para ele, ele só está ocupando espaço e confundindo quem lê.
 - **Confira todos os links.** Nenhum `href="#"` esquecido, nenhum link para uma página que você renomeou.
@@ -399,7 +399,7 @@ Três modos de uso, todos gratuitos:
 
 Valide **todas** as páginas, não só a inicial. A meta é zero erros. Avisos (*warnings*) merecem leitura, mas nem todos exigem ação — o aviso sobre `<section>` sem cabeçalho, por exemplo, costuma ser legítimo em alguns layouts.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saiba dizer a diferença entre **erro** e **aviso** no validador, e por que HTML inválido pode funcionar no navegador mesmo assim: o algoritmo de análise do HTML é deliberadamente tolerante, e "conserta" a árvore do documento por conta própria. O problema é que cada navegador conserta de um jeito, e o resultado deixa de ser previsível — sem falar que leitores de tela e buscadores dependem da estrutura correta.
 
 ### 4.2 Links quebrados e o console
@@ -648,11 +648,11 @@ O GitHub Pages resolve o caso desta disciplina. Duas alternativas gratuitas reso
 
 A **prévia por branch** é o recurso mais transformador dos três da tabela: cada branch enviada ganha uma URL própria, o que permite mostrar uma versão em teste sem tocar no site oficial. Os **formulários** da Netlify recebem envios de um `<form>` HTML puro e mostram as respostas no painel — resolvendo, sem back-end, o formulário de contato que hoje só existe visualmente no seu site.
 
-Para a Avaliação 3, qualquer uma das três serve. Publique em uma; se sobrar tempo, publique nas três e compare (é o exercício B4).
+Para o Marco 3, qualquer uma das três serve. Publique em uma; se sobrar tempo, publique nas três e compare (é o exercício B4).
 
 ## 8. Domínio próprio, em quatro passos
 
-Você não precisa de domínio próprio para a avaliação. Mas se quiser um — para o portfólio, por exemplo —, o caminho é curto:
+Você não precisa de domínio próprio para o marco. Mas se quiser um — para o portfólio, por exemplo —, o caminho é curto:
 
 1. **Registre.** No [Registro.br](https://registro.br) para `.com.br` (exige CPF e custa por volta de quarenta reais por ano); em registradores internacionais para `.com`, `.dev`, `.me`.
 2. **Aponte o DNS.** No painel do registrador, crie os registros que a plataforma de hospedagem indicar: quatro registros `A` para o GitHub Pages (com os IPs listados na documentação oficial) ou um `CNAME` apontando para `<seu-usuario>.github.io`.
@@ -734,7 +734,7 @@ HTML validado sem erros no validator.w3.org em todas as páginas.
 ## Autoria
 
 Desenvolvido por Nome Sobrenome, estudante de Sistemas de Informação da UNEMAT
-Sinop, sob orientação do Prof. Ivan Luiz Pedroso Pires.
+Sinop.
 ```
 
 Sete seções, nenhuma opcional na prática: o que é, onde está no ar, o que faz, com o que foi feito, como está organizado, como rodar e quem fez. Um README com o link do site no topo economiza o tempo de quem avalia — e isso conta.
@@ -1018,7 +1018,7 @@ Resultado esperado: o README renderizado no GitHub, sem link quebrado e sem imag
 Teste o resultado renderizado, não o texto-fonte: uma imagem referenciada com caminho errado aparece como um ícone quebrado. Caminhos no README são relativos à raiz do repositório.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Faça uma **auditoria cruzada**: forme dupla com um colega, troquem as URLs publicadas e cada um audita o site do outro. Produza um relatório de uma página com as quatro notas do Lighthouse (mobile e desktop), o resultado da validação W3C de todas as páginas, a navegação completa por teclado (o que quebrou), o teste com zoom em 200% e uma lista priorizada de cinco problemas com a correção sugerida para cada um.
 
@@ -1164,22 +1164,22 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 | A prévia do link no WhatsApp mostra só a URL, sem cartão | Falta `og:title`, `og:description` ou `og:image`, ou a `og:image` está com caminho relativo | Preencha as três com URL absoluta na imagem e teste em uma conversa consigo mesmo |
 | Uma pasta com nome começando por `_` não aparece no site | O Jekyll do GitHub Pages ignora arquivos e pastas iniciados por sublinhado | Crie um arquivo vazio `.nojekyll` na raiz do repositório |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** MILETTO & BERTAGNOLLI, *Desenvolvimento de software II*, capítulo sobre implantação. TERUEL, *HTML 5 — Guia Prático*, capítulo de publicação. Na documentação oficial do GitHub Pages, a página "Configuring a publishing source for your GitHub Pages site". Anote uma diferença entre o processo descrito no livro e o que você fez hoje.
 
-**Parte 2 — Entrega (40 min).** No seu **projeto autoral**:
+**Parte 2 — Produção (40 min).** No seu **projeto autoral**:
 
 1. Publique o projeto autoral no GitHub Pages, com repositório público e `README.md` completo conforme o modelo da seção 9.
 2. Otimize todas as imagens e registre no README o peso total da página inicial **antes** e **depois**, com as duas capturas da aba Network.
-3. Rode o Lighthouse no site publicado (Mobile, janela anônima), registre as quatro notas no README e aplique as correções necessárias até atingir as metas da disciplina.
+3. Rode o Lighthouse no site publicado (Mobile, janela anônima), registre as quatro notas no README e aplique as correções necessárias até atingir as metas deste material (veja o Marco 3, logo abaixo).
 4. Valide as páginas no validador do W3C até zero erros e crie a página `404.html` personalizada.
 
 **Critério de pronto:** o link público abre o site em qualquer máquina, em janela anônima; o console está limpo; o validador não aponta erros; o README traz o link do site, as quatro notas do Lighthouse e a comparação de peso.
 
-**Parte 3 — Fórum (5 min).** No fórum "Meu site está no ar": poste o link do seu projeto autoral publicado, com uma frase sobre o problema mais difícil da publicação. Depois abra o link de **dois** colegas, rode o Lighthouse em cada um e devolva um elogio específico e uma sugestão acionável para cada.
+**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): poste o link do seu projeto autoral publicado, com uma frase sobre o problema mais difícil da publicação. Se puder, peça a um colega para abrir o link, rodar o Lighthouse e devolver um elogio específico e uma sugestão acionável.
 
-**Entrega:** link do repositório e link do site publicado no SIGAA.
+**Guarde no seu repositório:** o link do site publicado, registrado no README.
 
 ## ✅ Checkpoint do projeto
 
@@ -1196,11 +1196,11 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 - [ ] Lighthouse no site publicado: desempenho ≥ 80; acessibilidade, práticas recomendadas e SEO ≥ 90.
 - [ ] Site testado em celular real com dados móveis e navegável inteiramente por teclado.
 
-## 📝 Avaliação 3 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 3
 
-**Escopo.** A terceira avaliação verifica o uso de **JavaScript para tornar o site dinâmico e interativo** — eventos, validação de formulários e consultas dinâmicas —, com o resultado **publicado na internet**. O objeto é o seu **projeto autoral**, o mesmo das Avaliações 1 e 2, com as correções apontadas já aplicadas e agora acrescido da camada de comportamento. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado no Plano de Curso da sua turma.
+**Escopo.** Ao fim da Unidade 3, o seu **projeto autoral** — o mesmo dos Marcos 1 e 2, com as correções apontadas já aplicadas — precisa estar dinâmico e interativo com **JavaScript** (eventos, validação de formulários e consultas dinâmicas) e **publicado na internet**.
 
-**Requisitos obrigatórios.**
+**Requisitos.**
 
 | # | Requisito | Onde foi estudado |
 |---|---|---|
@@ -1220,26 +1220,25 @@ Esta é a simulação mais honesta do que se pede em um teste técnico de estág
 | 14 | Imagens otimizadas, metatags de SEO e Open Graph em todas as páginas | Aula 15 |
 | 15 | Zero erros no validador do W3C e Lighthouse com acessibilidade ≥ 90 no site publicado | Aula 15 |
 
-**Formato de entrega.** Duas informações na tarefa do SIGAA: o **link do site publicado** e o **link do repositório público no GitHub**. O link do site publicado é obrigatório — um projeto que não está no ar não atende ao escopo desta avaliação. O código-fonte pode, alternativamente, ser enviado como `.zip` nomeado `av03-seunome.zip`, mas nesse caso o histórico do Git precisa estar incluído (a pasta `.git`), porque parte do que se avalia é o uso do controle de versão. Frameworks e bibliotecas de JavaScript (jQuery, React, Vue e similares) **não** são permitidos: o objetivo é demonstrar domínio da linguagem.
+Frameworks e bibliotecas de JavaScript (jQuery, React, Vue e similares) não entram aqui — o objetivo deste marco é demonstrar domínio da linguagem pura. O site publicado é o que fecha o marco: um projeto que só existe na sua máquina ainda não chegou lá.
 
-**Rubrica.**
+**Checklist de qualidade.**
 
-| Critério | Peso |
-|---|---|
-| Interatividade: eventos, delegação e manipulação do DOM | 2,0 |
-| Validação de formulário: regras, regex e mensagens acessíveis | 2,0 |
-| Consultas dinâmicas: listagem, busca, filtro, ordenação e estados | 2,0 |
-| Organização e legibilidade do código JavaScript | 1,0 |
-| Publicação: repositório, commits, README e site no ar com HTTPS | 1,5 |
-| Qualidade auditada: validador W3C, Lighthouse e acessibilidade | 1,0 |
-| Coerência do projeto como um todo e capricho geral | 0,5 |
-| **Total** | **10,0** |
+- Interatividade construída com eventos, delegação e manipulação do DOM, não com gambiarras.
+- Formulário validado com regras claras, regex corretas e mensagens acessíveis (não só cor).
+- Consultas dinâmicas (busca, filtro, ordenação) com estados vazios tratados com uma mensagem de verdade, não uma tela em branco.
+- Código JavaScript organizado e legível — você deveria conseguir reabri-lo em seis meses e entender na hora.
+- Publicação completa: repositório com histórico de commits que conta uma história, README que orienta um estranho e site no ar com HTTPS.
+- Qualidade auditada: validador W3C e Lighthouse sem alertas ignorados.
+- Coerência do projeto como um todo — o visitante não percebe onde uma aula terminou e a outra começou.
 
-**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até cinco dias; depois disso, a entrega não é aceita.
+**Como saber que está pronto.**
 
-**Plágio e uso de IA.** Ferramentas de IA são permitidas como apoio: tirar dúvidas, sugerir abordagens, revisar código. O trabalho, porém, precisa ser seu — você pode ser chamado a explicar qualquer trecho do que entregou, e não saber explicar equivale a não ter feito. Cópia entre colegas, total ou parcial, com ou sem alterações cosméticas, resulta em nota zero para todos os envolvidos.
-
-**Média final e exame.** A média da disciplina é `MF = (A1 + A2 + A3) ÷ 3`. Aprovação com `MF ≥ 6,0`; exame final se `4,0 ≤ MF < 6,0` — prova teórica, individual, presencial e dissertativa sobre todo o conteúdo do semestre, com aprovação a partir de 5,0. Frequência mínima de 75%. A data do exame segue o calendário acadêmico; acompanhe o SIGAA.
+- Abra o site publicado em uma janela anônima, em outro computador se possível: se abrir e funcionar sem nada da sua máquina, está no ar de verdade.
+- Rode o Lighthouse (Mobile) no site publicado: desempenho ≥ 80; acessibilidade, boas práticas e SEO ≥ 90.
+- No Console, use o site inteiro (busca, filtro, formulário) e confirme zero linhas vermelhas.
+- Peça para alguém preencher o formulário tentando errar de propósito: as mensagens de erro precisam fazer sentido para quem não escreveu o código.
+- Use IA para tirar dúvida ou revisar uma abordagem — não para gerar a lógica inteira. Se você não souber explicar por que os blocos do seu `app.js` estão naquela ordem, ainda não é seu.
 
 ## 📚 Para aprofundar
 
@@ -1285,4 +1284,4 @@ Hoje você publicou clicando em botões. A trilha [Deploy & Ferramentas](../depl
 - **Leia o código dos sites que você usa.** <kbd>Ctrl</kbd>+<kbd>U</kbd> mostra o HTML de qualquer página. Você já entende boa parte dele — e a parte que não entende é a sua próxima lista de estudo.
 - **Publique tudo o que fizer.** Um projeto no ar vale mais que dez pastas na sua máquina. O hábito de terminar e publicar é, sozinho, uma vantagem competitiva.
 
-Na próxima aula da sua trajetória — a Aula 01 do [Nível 2 — Desenvolvimento Web](../nivel-2/) — o Café Cerrado começa com um `index.html` vazio, exatamente como este semestre começou. A diferença é que, desta vez, você já sabe o que fazer com ele. Bom exame a quem precisar, e bons deploys a todos.
+Na próxima aula da sua trajetória — a Aula 01 do [Nível 2 — Desenvolvimento Web](../nivel-2/) — o Café Cerrado começa com um `index.html` vazio, exatamente como este começou. A diferença é que, desta vez, você já sabe o que fazer com ele. Bons deploys a todos.

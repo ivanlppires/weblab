@@ -1,0 +1,25 @@
+{
+  "title": "WebLab — Laboratório de Desenvolvimento Web",
+  "description": "Apostila online e aberta de desenvolvimento web em português do Brasil, organizada em quatro trilhas (introdução; desenvolvimento web; frameworks modernos; deploy e ferramentas), com 57 aulas, banco de desafios e um gerador de site estático em Python. O material é atemporal: não traz datas, notas nem prazos, e cada unidade fecha com um marco de projeto.",
+  "creators": [
+    {
+      "name": "Pires, Ivan Luiz Pedroso",
+      "affiliation": "UNEMAT — Campus Sinop, FACET"
+    }
+  ],
+  "upload_type": "software",
+  "license": "cc-by-4.0",
+  "keywords": [
+    "desenvolvimento web",
+    "recurso educacional aberto",
+    "ensino de programação",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Node.js",
+    "Vue.js",
+    "material didático"
+  ],
+  "language": "por",
+  "access_right": "open"
+}

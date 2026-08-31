@@ -1,8 +1,8 @@
 # Aula 09 — Promises e async/await
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Até agora todos os dados do Café Cerrado estavam prontos no momento em que a página abria: o array `produtos` já existia dentro do `js/app.js`, e renderizar os cards era uma questão de percorrer o que já estava na memória. No mundo real isso não acontece. Os dados moram em outro computador, do outro lado de uma rede que pode estar rápida, lenta ou fora do ar — e o navegador não pode parar tudo para esperar. Hoje você aprende o mecanismo que o JavaScript inventou para lidar com valores que ainda não chegaram: a **Promise**, e a sintaxe que a tornou confortável, o **async/await**.
 
@@ -114,7 +114,7 @@ Saída: `1`, `2`, `3`, `4`. As duas linhas síncronas rodam primeiro (elas estã
 > **🔎 Por baixo do capô**
 > Entre esvaziar as microtarefas e pegar a próxima tarefa, o navegador tem a chance de **renderizar**: recalcular estilos, fazer layout e pintar. É por isso que uma cadeia infinita de microtarefas trava a tela tanto quanto um `while` infinito, enquanto uma cadeia de `setTimeout` deixa a página respirar entre uma e outra. Se você algum dia precisar processar 100 mil itens sem congelar a interface, a solução é fatiar o trabalho em tarefas, não em microtarefas.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saber prever a saída de um trecho que mistura `console.log` síncrono, `setTimeout(fn, 0)` e `Promise.resolve().then(fn)` é questão clássica. A regra em uma frase: **síncrono primeiro, depois microtarefas, depois tarefas** — e o número em milissegundos do `setTimeout` é um mínimo, nunca uma garantia.
 
 ## 2. Callbacks: a primeira solução, e por que ela não bastou
@@ -489,8 +489,8 @@ carregarComContexto(99).catch((erro) => {
 
 Repare no `return await` dentro do `try`: sem o `await`, a Promise seria devolvida **antes** de falhar, e o `catch` local nunca rodaria. É uma das poucas situações em que `return await` não é redundante.
 
-> **📌 Na prova**
-> Duas afirmações que caem sempre: (1) "`await` bloqueia a página" é **falsa** — ele pausa apenas a função `async` onde está escrito; (2) "uma função `async` pode retornar um valor comum" é **falsa na prática** — o valor sai sempre embrulhado numa Promise.
+> **📌 Vale gravar**
+> Duas confusões comuns: (1) "`await` bloqueia a página" é **falsa** — ele pausa apenas a função `async` onde está escrito; (2) "uma função `async` pode retornar um valor comum" é **falsa na prática** — o valor sai sempre embrulhado numa Promise.
 
 ## 6. O padrão de interface: carregando, sucesso, erro, vazio
 
@@ -1251,7 +1251,7 @@ Resultado esperado: duas linhas no console, algo como `sequencial: 2013 ms (méd
 Zere `CHANCE_DE_FALHA` antes de medir, senão uma rejeição derruba a rodada. Um laço `for` com `await` dentro acumula os tempos; divida pelo número de repetições no final.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Nem toda falha é permanente: uma rede instável costuma funcionar na segunda tentativa. Implemente em `js/dados.js` a função `comTentativas(criarPromessa, tentativas, esperaInicial)` que executa `criarPromessa()`, e em caso de rejeição tenta de novo, dobrando a espera a cada falha (500 ms, 1000 ms, 2000 ms) — o padrão conhecido como *exponential backoff*. Depois, envolva a chamada com um limite de tempo total usando `Promise.race`, de modo que a tela nunca fique presa em "Carregando…" por mais de 8 segundos.
 
@@ -1368,7 +1368,7 @@ Tags: async, performance, refatoracao, javascript
 | A página congela por segundos ao clicar em um botão | Trabalho síncrono pesado (laço grande) na thread principal | Fatiar o processamento em tarefas ou movê-lo para fora do caminho do clique |
 | Leitor de tela não anuncia o carregamento | Elemento com `aria-live` criado junto com a mensagem | Deixar o elemento vazio no HTML e alterar apenas o `textContent` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral** (não no Café Cerrado), aplique tudo o que fizemos hoje:
 
@@ -1381,7 +1381,7 @@ No **seu projeto autoral** (não no Café Cerrado), aplique tudo o que fizemos h
 
 **Critério de pronto:** a lista do seu projeto autoral nunca aparece instantaneamente; ela sempre passa por "Carregando…", e uma falha simulada produz mensagem visível na tela com caminho de recuperação. O console fica limpo de erros não tratados.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 **Leitura dirigida (Biblioteca Virtual da UNEMAT):** QUEIRÓS & PORTELA, capítulo de JavaScript assíncrono; MDN, *Usando Promises* e a página da *Fetch API* — o `fetch` é o protagonista da próxima aula.
 
@@ -1409,4 +1409,4 @@ No **seu projeto autoral** (não no Café Cerrado), aplique tudo o que fizemos h
 - LOUDON, K. *Desenvolvimento de Grandes Aplicações Web*. Novatec, 2019 — fluxos assíncronos em aplicações grandes.
 - PUREWAL, S. *Aprendendo a Desenvolver Aplicações Web*. Novatec, 2014 — capítulo sobre interação com o servidor.
 
-Na próxima aula a simulação sai de cena. O `setTimeout` do `js/dados.js` dá lugar ao **`fetch`**: você vai buscar JSON de um arquivo do próprio projeto e de uma API pública na internet, enviar dados com `POST` e transformar o Café Cerrado em uma **SPA** — uma única página em que a navegação acontece sem recarregar nada. É também a aula que fecha a Unidade 2 e traz as instruções da Avaliação 2.
+Na próxima aula a simulação sai de cena. O `setTimeout` do `js/dados.js` dá lugar ao **`fetch`**: você vai buscar JSON de um arquivo do próprio projeto e de uma API pública na internet, enviar dados com `POST` e transformar o Café Cerrado em uma **SPA** — uma única página em que a navegação acontece sem recarregar nada. É também a aula que fecha a Unidade 2 e traz o Marco 2.

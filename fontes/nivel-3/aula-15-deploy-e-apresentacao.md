@@ -1,8 +1,8 @@
 # Aula 15 — Deploy, apresentação e finalização
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -15,8 +15,8 @@ Ao final desta aula você será capaz de:
 - Diagnosticar e corrigir os erros mais comuns pós-deploy (CORS, mixed content, 404 em rota interna, banco inacessível).
 - Configurar um pipeline básico de CI/CD no GitHub Actions que roda lint e testes a cada push.
 - Relacionar cada padrão de projeto estudado no semestre ao trecho de código onde ele apareceu no UniEventos.
-- Apresentar o projeto autoral em formato de seminário técnico, dentro do tempo e critérios definidos.
-- Entregar a Avaliação 3 seguindo integralmente os requisitos e o prazo estabelecidos.
+- Apresentar o projeto autoral em formato de seminário técnico, dentro de um tempo definido, explicando as próprias decisões técnicas.
+- Alcançar o Marco 3 do projeto autoral, conferindo cada requisito da unidade de ponta a ponta.
 
 ## 📋 Pré-requisitos desta aula
 
@@ -38,8 +38,8 @@ Checklist antes de começar:
 | Bloco | Tempo | Atividade |
 |---|---|---|
 | 1 | 50 min | Build de produção, deploy do front e do back, Docker, CORS em produção |
-| 2 | 50 min | CI/CD com GitHub Actions, retrospectiva de padrões de projeto, guia de estudo do exame final |
-| 3 | 50 min | Instruções da Avaliação 3, formato do seminário, encerramento da disciplina |
+| 2 | 50 min | CI/CD com GitHub Actions, retrospectiva de padrões de projeto, teste seu domínio dos padrões |
+| 3 | 50 min | Marco 3 do projeto, formato da apresentação final, encerramento do curso |
 
 ## 1. Build de produção do front-end
 
@@ -158,7 +158,7 @@ A solução é configurar o servidor para, em qualquer caminho que não seja um 
 }
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > "F5 em rota interna dá 404" é o sintoma mais clássico de rewrite de SPA mal configurado. Sempre que alguém relatar esse erro pós-deploy, a primeira pergunta é: "o servidor está configurado para devolver `index.html` em qualquer caminho desconhecido?"
 
 ## 2. Deploy do front-end
@@ -525,14 +525,14 @@ A ementa exige explicitamente padrões **criacionais, estruturais e comportament
 | Strategy | Middlewares/validadores intercambiáveis; escolha de qual repositório usar por ambiente (`obterRepositorioDeEventos`, MySQL vs. memória) | 08, 13 |
 | Template Method | Componentes de layout com slots definindo um "esqueleto" fixo e pontos variáveis preenchidos por quem usa o componente | 05 |
 
-> **📌 Na prova**
-> O exame final cobra a definição de cada padrão **e** um exemplo concreto de onde ele apareceu no semestre — não basta decorar o nome, é preciso saber reconhecer o padrão dentro de um trecho de código real.
+> **📌 Vale gravar**
+> Dominar de verdade os padrões de projeto do semestre exige duas coisas: saber a definição de cada padrão **e** conseguir apontar um exemplo concreto de onde ele apareceu — não basta decorar o nome, é preciso reconhecer o padrão dentro de um trecho de código real.
 
-## 7. Guia de estudo para o exame final
+## 7. Teste seu domínio: padrões de projeto e arquitetura do semestre
 
-O exame final é **teórico, presencial e individual**, cobrindo as três unidades da disciplina. Ele avalia conceitos, não "rodar código" — estude o porquê de cada decisão técnica, não só a sintaxe.
+Esta seção é uma autoavaliação, cobrindo as três unidades do curso. O objetivo não é "rodar código" — é entender o porquê de cada decisão técnica, não só a sintaxe. Use as perguntas para descobrir sozinho o que você já domina e o que vale revisar antes de fechar o projeto (ou de explicar seu código na apresentação).
 
-### 7.1 Lista de 25 a 30 questões de estudo
+### 7.1 Lista de 25 a 30 perguntas para se testar
 
 **Unidade 1 — Fundamentos de Vue.js**
 
@@ -681,9 +681,9 @@ O exame final é **teórico, presencial e individual**, cobrindo as três unidad
 
 ## 8. Apresentação dos resultados
 
-### 8.1 Formato do seminário final
+### 8.1 Estrutura da apresentação final
 
-Cada estudante apresenta seu projeto autoral individualmente, em **8 minutos**, cobrindo obrigatoriamente:
+Apresente seu projeto autoral individualmente, em **8 minutos**, cobrindo estes pontos:
 
 1. **O problema** (1 min) — que problema real o projeto resolve, para quem.
 2. **Demonstração ao vivo** (3 min) — navegar pela aplicação publicada (URL real, não localhost): listagem com filtro, detalhe, fluxo autenticado, CRUD funcionando.
@@ -691,9 +691,11 @@ Cada estudante apresenta seu projeto autoral individualmente, em **8 minutos**, 
 4. **Decisão técnica mais difícil** (1 min) — um problema real enfrentado e como foi resolvido (ex.: "por que troquei X por Y", "como resolvi o CORS em produção").
 5. **O que faria diferente** (1 min) — autoavaliação honesta: o que ficaria melhor com mais tempo ou outra escolha técnica.
 
-### 8.2 Critérios de avaliação da apresentação
+### 8.2 O que uma boa apresentação tem
 
-| Critério | O que é observado |
+Use esta tabela para se autoavaliar — ou peça a um colega que assista e aponte o que falta:
+
+| Critério | O que observar |
 |---|---|
 | Clareza da comunicação | Explica o projeto para alguém que nunca viu, sem depender de jargão não explicado |
 | Demonstração funcional | A aplicação publicada realmente funciona ao vivo, sem "deixa eu tentar de novo" |
@@ -701,11 +703,11 @@ Cada estudante apresenta seu projeto autoral individualmente, em **8 minutos**, 
 | Gestão do tempo | Respeita os 8 minutos, sem cortar abruptamente nem sobrar tempo vazio |
 
 > **⚠️ Atenção**
-> A apresentação é sobre o **projeto autoral publicado**, com URL pública real — não é permitido apresentar rodando em `localhost`. Se o deploy falhar no dia, tenha um vídeo curto de backup gravado com antecedência mostrando o fluxo funcionando.
+> A apresentação é sobre o **projeto autoral publicado**, com URL pública real — apresentar rodando em `localhost` não mostra o que você realmente construiu. Se o deploy falhar na hora, tenha um vídeo curto de backup gravado com antecedência mostrando o fluxo funcionando.
 
-### 8.3 Ordem e cronograma
+### 8.3 Quando apresentar
 
-A ordem de apresentação é definida por sorteio, feito em sala na aula anterior (Aula 14) ou no início desta aula, conforme a quantidade de estudantes matriculados. Com 3 blocos de 50 minutos e 8 minutos por estudante, o tempo permite aproximadamente 15 a 16 apresentações — se a turma for maior, o professor comunica com antecedência um ajuste (ex.: reduzir para 6 minutos ou dividir em dois dias, dentro do que o calendário acadêmico permitir).
+Quem cursa a disciplina em sala apresenta na ordem e no dia combinados com o professor, dentro do tempo do encontro. Quem estuda por conta própria pode gravar a apresentação e revê-la sozinho no dia seguinte, ou apresentá-la a um colega — o exercício de explicar o próprio projeto em voz alta, dentro de um tempo limitado, é o que importa.
 
 ## 9. Encerramento: caminhos depois da disciplina
 
@@ -727,7 +729,7 @@ O que foi construído nesta disciplina é uma base real de desenvolvimento full 
 
 ### 9.2 Convite para iniciação científica e extensão
 
-Muitos dos temas tocados de leve nesta disciplina — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do prazo de uma avaliação, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
+Muitos dos temas tocados de leve nesta disciplina — arquitetura de software, segurança de aplicações web, engenharia de dados, IA aplicada a desenvolvimento — são linhas de pesquisa ativas na FACET. Se algum tópico desta disciplina despertou curiosidade além do conteúdo de uma aula, procure o professor para conversar sobre projetos de iniciação científica ou extensão relacionados — é o próximo passo natural para quem quer ir além do conteúdo obrigatório da ementa.
 
 ## 🧩 Padrão de projeto em uso — Configuração externa (Twelve-Factor) e Adapter
 
@@ -744,7 +746,7 @@ const servidor = app.listen(config.PORT, () => {
 
 **Adapter — trocar o banco sem tocar no service.** Na Aula 12, MySQL virou Supabase mantendo a mesma interface de repositório (`listar`, `buscarPorId`, `criar`, `atualizar`, `remover`) — o service nunca soube qual banco estava por trás. Hoje, ao decidir onde hospedar o banco de produção (MySQL gerenciado na Render/Railway, ou Supabase), essa escolha de infraestrutura continua isolada na camada de repositório: o `Adapter` já construído é exatamente o que torna essa decisão, tomada agora no deploy, indiferente para o resto da aplicação.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Configuração externa e Adapter resolvem problemas diferentes, mas se reforçam: uma isola **onde a aplicação roda**, a outra isola **em que banco ela persiste** — juntas, permitem que o mesmo código passe de `localhost` para produção sem reescrever uma linha de lógica de negócio.
 
 ## 💻 Mão na massa — publicando o UniEventos
@@ -791,7 +793,7 @@ Confira na aba **Actions** do GitHub que o workflow rodou e passou.
 
 ### Como testar
 
-O teste do deploy é feito **de fora**, numa aba anônima — exatamente como o avaliador vai ver. Nada de "funciona na minha máquina".
+O teste do deploy é feito **de fora**, numa aba anônima — exatamente como qualquer pessoa acessando de fora vai ver. Nada de "funciona na minha máquina".
 
 ```bash
 # 1) a API publicada responde
@@ -807,7 +809,7 @@ Resultado esperado: `200 {"status":"ok"}` no health check e o objeto `paginacao`
 5. **Variáveis** — confira no painel da Vercel que `VITE_API_URL` termina em `/api`, e no painel da Render que `CORS_ORIGEM_PERMITIDA` é exatamente a URL do front (sem barra no fim).
 6. **CI** — faça um commit qualquer e confirme na aba **Actions** que lint e testes rodaram no push.
 
-Só depois que os seis passam é que a Avaliação 3 tem os links que ela pede.
+Só depois que os seis passam é que o Marco 3 está de fato completo.
 
 ## 🧪 Laboratório
 
@@ -889,7 +891,7 @@ Resultado esperado: requisições do front publicado funcionam; uma requisição
 Teste abrindo o Console do navegador em uma aba com origem diferente (ex.: `http://localhost:5500`) e tentando um `fetch` contra sua API publicada — deve falhar por CORS.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Crie o workflow de CI/CD completo no seu repositório de back-end: um job `lint-e-testes` que roda em qualquer push, e um job `deploy` que só roda depois do primeiro passar, restrito à branch `main`, disparando o deploy de verdade (deploy hook do seu serviço de hospedagem).
 
@@ -967,7 +969,7 @@ Hoje, se um deploy quebrar (uma variável de ambiente errada, uma migration esqu
 ### 🔥 Boss — Seu projeto autoral, no ar e à prova de F5
 Tags: deploy, ci-cd, projeto, testes
 
-Chegamos ao fim das três unidades. Este é o desafio que fecha a disciplina: seu projeto autoral publicado, de ponta a ponta, com todas as camadas construídas no semestre funcionando juntas em produção — e não só "funcionando", mas resistindo aos testes que costumam derrubar um projeto de estudante na frente do avaliador.
+Chegamos ao fim das três unidades. Este é o desafio que fecha o curso: seu projeto autoral publicado, de ponta a ponta, com todas as camadas construídas ao longo das aulas funcionando juntas em produção — e não só "funcionando", mas resistindo aos testes que costumam derrubar um projeto assim que alguém de fora tenta usá-lo.
 
 **Critérios de pronto**
 
@@ -984,7 +986,7 @@ Chegamos ao fim das três unidades. Este é o desafio que fecha a disciplina: se
 1. Comece pelo smoke test — ele é o que prova, de fora para dentro, que "está no ar" significa mais do que a página inicial carregar.
 2. Para testar F5 em produção sem abrir o navegador manualmente três vezes, um script com `curl -I` em cada rota (a resposta, graças ao rewrite de SPA, deve vir com `200`, nunca `404`) automatiza a checagem.
 3. O parágrafo de padrões não precisa ser longo — uma linha por unidade já cumpre o critério, desde que aponte um trecho de código real, não só o nome do padrão.
-4. Se o smoke test falhar depois de um deploy automático, registre no README como um ADR curto (Aula 14): o que quebrou e por quê — é exatamente esse tipo de decisão que um avaliador (ou você mesmo, em três meses) vai querer entender.
+4. Se o smoke test falhar depois de um deploy automático, registre no README como um ADR curto (Aula 14): o que quebrou e por quê — é exatamente esse tipo de decisão que outra pessoa (ou você mesmo, em três meses) vai querer entender.
 </details>
 
 ## 🐛 Erros comuns e como resolver
@@ -998,7 +1000,7 @@ Chegamos ao fim das três unidades. Este é o desafio que fecha a disciplina: se
 | `docker compose up` falha ao conectar no banco | API tentando conectar em `localhost` em vez do nome do serviço `mysql` | Ajuste `DB_HOST` para `mysql` (o nome do serviço no `docker-compose.yml`), não `localhost` |
 | Workflow de CI nunca dispara o job de deploy | Condição `if` do job `deploy` não bateu (branch errada ou evento errado) | Confira se o push foi feito diretamente em `main` ou via merge de PR para `main` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 1. Finalize o deploy completo (front + back) do projeto autoral, se ainda não tiver feito no laboratório.
 2. Grave um vídeo curto (3 a 5 minutos, pode ser não listado no YouTube ou enviado por link de drive) demonstrando o fluxo publicado, como backup para a apresentação.
@@ -1018,44 +1020,39 @@ Ao final desta aula, seu projeto deve ter:
 - [ ] README com links da aplicação publicada, da API publicada e de `/api-docs`.
 - [ ] Roteiro de apresentação pronto, dentro de 8 minutos.
 
-## 📝 Avaliação 3 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 3
 
-**Escopo:** aplicação full stack completa, construída sobre o projeto autoral definido na Aula 01 e evoluído ao longo de todo o semestre.
+O Marco 3 fecha o curso: uma aplicação full stack completa, construída sobre o projeto autoral definido na Aula 01 e evoluído ao longo de todas as aulas.
 
-**Requisitos obrigatórios:**
+### Requisitos
 
-1. Back-end próprio, em **Express** ou usando **Supabase** como back-end gerenciado (ou uma combinação dos dois, desde que a arquitetura em camadas da Aula 13 esteja presente onde houver código Express).
-2. Banco de dados persistente (MySQL ou Supabase/Postgres), com **schema versionado** (migrations ou scripts SQL organizados).
-3. Autenticação funcional (Firebase Auth ou autenticação nativa do Supabase), protegendo pelo menos as rotas de escrita (criação/edição/remoção).
-4. **CRUD completo de pelo menos 2 entidades relacionadas** (ex.: "Evento" e "Inscrição"), com relacionamento real no banco (chave estrangeira ou equivalente).
-5. Documentação **Swagger** (OpenAPI 3) cobrindo todos os endpoints, ou documentação equivalente de todas as políticas/endpoints se o back for majoritariamente Supabase.
-6. **Deploy funcionando com URL pública** — tanto do front quanto do back (ou só do front, se usando Supabase como back completo).
+1. Back-end próprio, em **Express** ou usando **Supabase** como back-end gerenciado (ou uma combinação dos dois, desde que a arquitetura em camadas da Aula 13 esteja presente onde houver código Express) — **Aulas 07/13**.
+2. Banco de dados persistente (MySQL ou Supabase/Postgres), com **schema versionado** (migrations ou scripts SQL organizados) — **Aulas 09/12**.
+3. Autenticação funcional (Firebase Auth ou autenticação nativa do Supabase), protegendo pelo menos as rotas de escrita (criação/edição/remoção) — **Aula 10**.
+4. **CRUD completo de pelo menos 2 entidades relacionadas** (ex.: "Evento" e "Inscrição"), com relacionamento real no banco (chave estrangeira ou equivalente) — **Aula 11**.
+5. Documentação **Swagger** (OpenAPI 3) cobrindo todos os endpoints, ou documentação equivalente de todas as políticas/endpoints se o back for majoritariamente Supabase — **Aula 14**.
+6. **Deploy funcionando com URL pública** — tanto do front quanto do back (ou só do front, se usando Supabase como back completo) — **Aula 15**.
 7. **README completo**, seguindo a estrutura da Aula 14 (badges, requisitos, instalação, variáveis de ambiente, scripts, endpoints, licença), com os links de aplicação publicada e repositório.
 
-**Rubrica (pesos somam 10 pontos):**
+### Checklist de qualidade
 
-| Critério | Peso | O que precisa estar funcionando |
-|---|---|---|
-| CRUD completo de 2+ entidades relacionadas | 2,5 | Criar, listar, editar e remover funcionando de ponta a ponta, com relacionamento real entre as entidades |
-| Banco de dados persistente e corretamente modelado | 1,5 | Schema versionado (migrations/scripts), queries corretas, sem duplicação nem inconsistência de dados |
-| Autenticação protegendo rotas sensíveis | 1,5 | Rotas de escrita exigem usuário autenticado; identidade do usuário usada corretamente (ex.: só o dono edita/remove seu próprio recurso) |
-| Documentação Swagger/OpenAPI completa | 1,5 | Todos os endpoints documentados, schemas reutilizáveis, segurança declarada, `/api-docs` acessível |
-| Deploy funcionando com URL pública | 2,0 | Front e back publicados, acessíveis externamente, sem depender de `localhost` |
-| README e qualidade geral do código | 1,0 | README completo conforme estrutura da Aula 14; arquitetura em camadas aplicada; ao menos alguns testes automatizados presentes |
+O que separa um projeto pronto de um feito às pressas na véspera:
 
-**Formato de entrega:** via **SIGAA**, até o prazo publicado no plano de curso e no SIGAA, contendo:
+- [ ] CRUD completo de 2+ entidades relacionadas funcionando de ponta a ponta (criar, listar, editar, remover), com relacionamento real entre elas.
+- [ ] Banco de dados corretamente modelado: schema versionado, queries corretas, sem duplicação nem inconsistência de dados.
+- [ ] Rotas de escrita exigindo usuário autenticado, com a identidade usada corretamente (ex.: só o dono edita/remove seu próprio recurso).
+- [ ] Documentação Swagger/OpenAPI completa: todos os endpoints documentados, schemas reutilizáveis, segurança declarada, `/api-docs` acessível.
+- [ ] Front e back publicados e acessíveis externamente, sem depender de `localhost` em nenhum lugar (nem no README, nem em variável de ambiente esquecida).
+- [ ] README completo conforme a estrutura da Aula 14; arquitetura em camadas aplicada; ao menos alguns testes automatizados presentes.
 
-- Link do repositório do front-end.
-- Link do repositório do back-end (ou anotação de que o back é 100% Supabase, com link do projeto Supabase se aplicável).
-- Link da aplicação publicada (URL pública funcionando).
-- Link de `/api-docs` (se aplicável) ou da documentação equivalente.
+### Como saber que está pronto
 
-> **⚠️ Atenção**
-> A entrega é considerada incompleta se qualquer um dos quatro links acima estiver ausente ou não funcionar no momento da correção. Teste os links em uma aba anônima do navegador antes de enviar, simulando o que o avaliador vai ver.
-
-**Política de atraso:** entregas após o prazo têm desconto de 1,0 ponto (sobre a nota final da Avaliação 3) por dia corrido de atraso, até o limite de 5 dias corridos — após esse prazo, a avaliação recebe nota zero, exceto em casos de justificativa formal e documentada junto à coordenação do curso, conforme o regimento da UNEMAT.
-
-**Política de plágio e uso de IA:** é permitido e esperado o uso de ferramentas de IA (como assistentes de código) como apoio ao desenvolvimento — é exatamente essa prática que a indústria de software usa hoje. O que não é aceito: (1) entregar código que você não é capaz de explicar linha a linha na apresentação; (2) copiar o projeto de outro colega, com ou sem alterações cosméticas; (3) apresentar como próprio um projeto gerado quase integralmente por IA sem compreensão do que foi produzido. A apresentação de 8 minutos (Seção 8) é, entre outras coisas, o mecanismo de verificação de autoria: perguntas técnicas sobre decisões do próprio código fazem parte da avaliação.
+- Abra a aplicação publicada em uma aba anônima do navegador (sem cache, sem sessão salva) e percorra o fluxo completo: listar, ver detalhe, autenticar, criar, editar, remover.
+- Teste com `curl` (ou uma aba anônima) que uma rota de escrita sem token retorna `401`/`403`, não `200`.
+- Abra `/api-docs` publicamente e use o botão "Authorize" com um token real — todos os endpoints devem responder como documentado.
+- Aperte F5 em pelo menos três rotas internas da aplicação publicada: nenhuma deve retornar `404`.
+- Rode `npm install && npm run dev` (ou `docker compose up`) em uma cópia limpa dos dois repositórios e confirme que tudo sobe sem passo não documentado no README.
+- Explique em voz alta, para um colega ou para você mesmo, uma decisão técnica do próprio código — se travar, é sinal de que vale revisar aquele trecho antes da apresentação.
 
 ## 📚 Para aprofundar
 
@@ -1073,4 +1070,4 @@ Ao final desta aula, seu projeto deve ter:
 
 ---
 
-**Fim do semestre.** Obrigado pelo empenho nas 15 aulas — do primeiro `console.log` da Aula 01 até uma aplicação full stack publicada, com autenticação, banco de dados e documentação. O exame final cobre teoria das três unidades; revise o guia de estudo da Seção 7 com antecedência, não na véspera. Bom exame, e bom portfólio.
+**Fim do curso.** Obrigado pelo empenho nas 15 aulas — do primeiro `console.log` da Aula 01 até uma aplicação full stack publicada, com autenticação, banco de dados e documentação. Se você quer testar o quanto absorveu, revise as questões da Seção 7 com calma, não na véspera da apresentação. Bom estudo, e bom portfólio.

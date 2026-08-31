@@ -1,8 +1,8 @@
 # Aula 09 — Integrando com SGBD MySQL
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -19,7 +19,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos desta aula
 
-Na Aula 08 você entregou a Avaliação 2 com um CRUD completo, middlewares próprios e validação com Zod — tudo isso guardando dados num array em memória. Hoje esse array desaparece. Toda a `unieventos-api` passa a persistir em um banco de dados relacional de verdade: **MySQL**.
+Na Aula 08 você chegou ao Marco 2 com um CRUD completo, middlewares próprios e validação com Zod — tudo isso guardando dados num array em memória. Hoje esse array desaparece. Toda a `unieventos-api` passa a persistir em um banco de dados relacional de verdade: **MySQL**.
 
 Vale reforçar o que muda e o que não muda hoje. O que muda: de onde os dados vêm e para onde vão — de um array na RAM para tabelas em disco, com todas as garantias que isso traz. O que **não** muda: o formato de cada requisição, o formato de cada resposta, os status codes, as rotas, os middlewares de validação e de erro. Esse é o teste que valida se você fez a migração corretamente — se o `requests.http` da Aula 08 continuar passando sem editar uma linha sequer, a API está correta.
 
@@ -27,7 +27,7 @@ Guarde desde já uma decisão que vai valer para toda a Unidade 3: **as colunas 
 
 - [ ] `unieventos-api` da Aula 08, com CRUD completo em memória, middlewares e validação Zod funcionando.
 - [ ] `requests.http` cobrindo todos os endpoints (Aula 08).
-- [ ] Avaliação 2 entregue.
+- [ ] Marco 2 alcançado.
 - [ ] Modelagem relacional revisada: entidade, atributo, chave primária e estrangeira (conteúdo de disciplinas anteriores de banco de dados — hoje é aplicação, não introdução).
 - [ ] Máquina com privilégios de administrador para instalar o MySQL (ou Docker instalado, como alternativa).
 - [ ] Ao menos uma ferramenta gráfica de banco escolhida (MySQL Workbench, DBeaver ou a extensão do VS Code) para inspecionar tabelas visualmente durante a aula.
@@ -939,7 +939,7 @@ Resultado esperado: depois do `throw` proposital, a tabela `inscricoes` não gan
 Consulte a tabela `inscricoes` direto pelo Workbench/DBeaver antes e depois de rodar o teste, para confirmar visualmente que nada foi persistido.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Endpoint de listagem com `JOIN`. Crie `GET /api/eventos/:id/inscricoes` que devolve a lista de inscritos de um evento, usando a consulta `JOIN` desta aula, no formato de envelope `{ "dados": [...] }`. Trate o caso de evento inexistente com `404`.
 
@@ -1030,7 +1030,7 @@ A promessa central desta aula é que migrar de memória para MySQL não deveria 
 | `Incorrect arguments to mysqld_stmt_execute` na listagem paginada | `pool.execute` envia os parâmetros de `LIMIT ? OFFSET ?` como string, e o MySQL só aceita inteiro ali | troque por `pool.query` nessa consulta (com `porPagina`/`offset` já validados como inteiro no service), como no repositório desta aula |
 | `PROTOCOL_CONNECTION_LOST` durante uso prolongado | conexão do pool expirou por inatividade (timeout do servidor MySQL) | normal em pools ociosos; o `mysql2` reabre conexões automaticamente na próxima consulta — se persistir, revise `connectionLimit` e tempo de vida da conexão |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral**:
 

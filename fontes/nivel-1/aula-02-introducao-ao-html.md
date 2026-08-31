@@ -1,8 +1,8 @@
 # Aula 02 — Introdução ao HTML: estrutura, textos, links e tabelas
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 1: Arquitetura da Web e HTML
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -150,7 +150,7 @@ Pense nos títulos como o sumário de um livro: `<h1>` é o título do livro (um
 
 Na prática: use `strong` e `em`; deixe `b` e `i` para casos específicos. Uma regra simples: se você leria a palavra em voz alta com outro tom, é `em`; se a informação é importante mesmo lida em tom neutro, é `strong`.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A diferença entre `<strong>`/`<b>` e `<em>`/`<i>` é pergunta clássica. Resposta curta: os dois pares têm a mesma aparência padrão, mas só `strong` e `em` carregam **significado** — e significado é o que leitores de tela e buscadores usam.
 
 ### Citações e quebras
@@ -902,13 +902,13 @@ Use a página de palestrantes como modelo: `<header>` com seu nome no `<h1>`, `<
 O exemplo da §7 é quase esse esqueleto. O subtítulo da notícia é um `<p>` dentro do `<header>` do artigo, não um `<h2>` — subtítulo jornalístico é descrição, não seção. As tags do assunto cabem em uma `<ul>` dentro do `<footer>` do artigo.
 </details>
 
-**B3.** Reproduza em HTML a tabela do cronograma desta disciplina (15 aulas, com data, unidade e tema — está na Aula 01), usando `<caption>`, `<thead>`, `<tbody>` e `<th scope>` corretamente. Mescle células nas linhas de avaliação para indicar "Avaliação — entrega pelo SIGAA".
+**B3.** Reproduza em HTML a tabela com a sequência das 15 aulas desta disciplina (está na Aula 01), usando `<caption>`, `<thead>`, `<tbody>` e `<th scope>` corretamente. Mescle células nas linhas que fecham unidade (06, 10, 15) para indicar "Marco do projeto".
 
-**Resultado esperado:** uma tabela de 15 linhas de dados, três `<th scope="row">` de avaliação mesclados com `colspan`, e cada linha somando o mesmo número de colunas.
+**Resultado esperado:** uma tabela de 15 linhas de dados, três `<th scope="row">` de marco mesclados com `colspan`, e cada linha somando o mesmo número de colunas.
 
 <details><summary>Dica</summary>
 
-Comece pela tabela de programação do Mão na massa: um `<tbody>` por unidade deixa a estrutura mais clara. Nas linhas de avaliação, se a tabela tem 4 colunas e você quer "Data" + "Avaliação — entrega pelo SIGAA", use `<th scope="row">` + `<td colspan="3">`.
+Comece pela tabela de programação do Mão na massa: um `<tbody>` por unidade deixa a estrutura mais clara. Nas linhas de marco, se a tabela tem 3 colunas e você quer "Aula" + "Marco do projeto", use `<th scope="row">` + `<td colspan="2">`.
 </details>
 
 **B4.** Pegue o trecho abaixo (*div soup*) e reescreva-o inteiramente com HTML5 semântico:
@@ -971,7 +971,7 @@ Use *Validate by URI*. Sites grandes costumam ter dezenas de erros — isso não
 É a mesma receita do `index.html` do evento, com outro conteúdo. Se travar em algum elemento, procure-o na página do site do evento e copie a estrutura.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Site institucional de 4 páginas. Construa, em `exercicios/aula02/curso/`, um site sobre o curso de Sistemas de Informação da UNEMAT com quatro páginas interligadas: `index.html` (apresentação), `grade.html` (tabela com a grade curricular completa), `corpo-docente.html` (lista de professores com formação) e `contato.html` (endereço, telefone, e-mail e mapa em link). Requisitos: navegação idêntica em todas as páginas; caminhos relativos corretos; HTML5 semântico; zero erros no validador; nomes de arquivos em minúsculas sem acentos. Sem CSS ainda — este site será estilizado nas Aulas 05 e 06.
 
@@ -1129,19 +1129,19 @@ A Wikipédia é um dos sites mais bem estruturados da Web: sumário com âncoras
 | Página inteira de `<div>` | Falta de elementos semânticos | `header`, `nav`, `main`, `section`, `article`, `aside`, `footer` |
 | `&` sozinho no texto vira algo estranho ou gera aviso | `&` não escapado | `&amp;` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, M. S. *Criando sites com HTML*, capítulos sobre estrutura do documento e elementos de texto. TERUEL, E. C. *HTML5 — Guia Prático*, capítulo introdutório. Anote um elemento HTML que apareceu na leitura e não nesta aula, e pesquise o que ele faz na MDN.
 
-**Parte 2 — Entrega (30 min).** Envie o exercício **B1** (currículo em HTML semântico), em arquivo `.html`, acompanhado de captura de tela do validador W3C mostrando "Document checking completed. No errors or warnings to show."
+**Parte 2 — Produção (30 min).** Produza o exercício **B1** (currículo em HTML semântico), em arquivo `.html`, acompanhado de captura de tela do validador W3C mostrando "Document checking completed. No errors or warnings to show."
 
-No **projeto autoral**: replique no seu `meu-projeto/` o que o site do evento ganhou hoje — `index.html` completo (cabeçalho, navegação com as cinco páginas, três seções com `<h2>`, uma lista ordenada, uma lista de definições, um `<blockquote>`, rodapé), mais uma página com uma tabela de dados do seu domínio e uma página com `<article>` por item (o equivalente aos palestrantes). Inclua o `.zip` da pasta na entrega.
+No **projeto autoral**: replique no seu `meu-projeto/` o que o site do evento ganhou hoje — `index.html` completo (cabeçalho, navegação com as cinco páginas, três seções com `<h2>`, uma lista ordenada, uma lista de definições, um `<blockquote>`, rodapé), mais uma página com uma tabela de dados do seu domínio e uma página com `<article>` por item (o equivalente aos palestrantes).
 
 **Parte 3 — Fórum (10 min).** Poste no fórum "Semântica importa": encontre um site real com problemas de semântica (uso excessivo de `div`, títulos fora de ordem, links "clique aqui") e descreva três problemas encontrados com a correção proposta para cada. Comente a postagem de um colega.
 
 **Critério de pronto:** o currículo e as três páginas do projeto autoral passam no validador com zero erros; a navegação do projeto autoral não leva a nenhum `404`.
 
-**Entrega:** `curriculo.html`, a captura do validador e o `.zip` de `meu-projeto/`, pelo SIGAA.
+**Guarde:** `curriculo.html`, a captura do validador e a pasta `meu-projeto/` — a partir da Aula 15 tudo isso vai para um repositório Git.
 
 ## ✅ Checkpoint do projeto
 

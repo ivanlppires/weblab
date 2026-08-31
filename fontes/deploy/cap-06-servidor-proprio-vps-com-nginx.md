@@ -1,8 +1,8 @@
 # Capítulo 06 — Servidor próprio (VPS) com nginx
 
 > **Deploy & Ferramentas** · Unidade 2: Publicação: estático, back-end, domínio e servidor
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -22,7 +22,7 @@ Ao final deste capítulo você será capaz de:
 
 - [ ] Capítulos 02 e 04 concluídos: repositórios no GitHub e um domínio (ou subdomínio gratuito) sob seu controle, com acesso ao painel de DNS.
 - [ ] Terminal com `ssh`, `rsync` e `dig` (Windows: use o WSL — todos os comandos deste capítulo assumem um shell Linux/macOS).
-- [ ] Um VPS ou o acesso do laboratório da disciplina (`gN@ivanpires.dev`) fornecido pelo professor. A §2 lista opções a partir de poucos reais por mês.
+- [ ] Um VPS próprio — a §2 lista opções a partir de poucos reais por mês. Se você é aluno da turma de Deploy & Ferramentas na UNEMAT Sinop, vale também o acesso ao laboratório da disciplina (`gN@ivanpires.dev`) fornecido pelo professor, descrito na §11.
 - [ ] `unieventos-api` (Nível 3) e `unieventos-web` funcionando na sua máquina, com `npm run build` gerando `dist/`. Não está no Nível 3? Use a `cafe-cerrado-api` e o Café Cerrado estático — os passos são idênticos.
 - [ ] Paciência para errar: você **vai** se trancar fora do servidor pelo menos uma vez. A §4 mostra como não perder o acesso de vez.
 
@@ -687,9 +687,9 @@ Guarde a linha de publicação em um script do `package.json` para não errar a 
 }
 ```
 
-## 11. O laboratório da disciplina: `ivanpires.dev/dsw/gN/`
+## 11. Estudo de caso: o laboratório da turma da UNEMAT em `ivanpires.dev/dsw/gN/`
 
-A disciplina tem um servidor real, e cada grupo tem uma conta nele. É o mesmo VPS que hospeda este WebLab. Substitua `N` pelo número do seu grupo em tudo o que segue — os exemplos usam o grupo 3.
+Esta seção descreve o servidor real da turma de Deploy & Ferramentas na UNEMAT Sinop — é o mesmo VPS que hospeda este WebLab, com uma conta por grupo. Se você é aluno dessa turma, é o ambiente que você vai usar, e o acesso é fornecido pelo professor. Se está estudando por conta própria, leia esta seção como um **estudo de caso completo** de tudo o que as §§1–10 ensinaram, aplicado a um servidor de verdade — e repita o mesmo desenho no seu próprio VPS. Substitua `N` pelo número do seu grupo em tudo o que segue — os exemplos usam o grupo 3.
 
 ### 11.1 O que cada grupo recebe
 
@@ -1069,7 +1069,7 @@ Resultado esperado: uma tabela de quatro linhas (supervisor · comando de status
 Descubra o PID com `pm2 ls` ou `systemctl show -p MainPID unieventos-api`. O `RestartSec=5` da unidade define a espera do systemd; o pm2 reinicia quase instantaneamente, mas tem proteção contra laço de reinício se o processo morrer rápido demais várias vezes seguidas.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Publique o seu projeto no laboratório da disciplina, do zero, em 20 minutos: build do front com `base` correta, `rsync` para `~/frontend`, `git pull` e `npm ci --omit=dev` no `~/backend`, `.env` apontando para `db_gN`, `sudo systemctl restart dsw-gN` e verificação em `https://ivanpires.dev/dsw/gN/`. Documente cada comando em um arquivo `PUBLICAR.md` no repositório, de modo que qualquer integrante do grupo consiga repetir sem perguntar nada.
 
@@ -1191,7 +1191,7 @@ Os três: o **site do evento** (Nível 1, estático), o **Café Cerrado** (Níve
 | `413 Request Entity Too Large` ao enviar imagem | limite padrão de corpo do nginx (1 MB) | `client_max_body_size 5m;` no `server` e `reload` |
 | `rsync` apagou arquivos que você queria manter | `--delete` sincroniza destruindo o que não está na origem | use `--dry-run` antes; e nunca `--delete` numa pasta que recebe uploads |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu **projeto autoral** (ou no projeto do grupo, no laboratório da disciplina):
 
@@ -1202,7 +1202,7 @@ No seu **projeto autoral** (ou no projeto do grupo, no laboratório da disciplin
 
 **Critério de pronto:** o endereço público responde em HTTPS, sem erro no console do navegador; `sudo ss -tlnp` mostra o Node em loopback; e um colega consegue publicar uma alteração seguindo apenas o seu `PUBLICAR.md`, sem fazer perguntas.
 
-**Entrega:** commit + push e link do repositório no SIGAA, com a URL pública na descrição.
+**Guarde no seu repositório:** commit + push, com a URL pública na descrição.
 
 ## ✅ Está no ar quando…
 

@@ -1,8 +1,8 @@
 # Aula 10 — Introdução ao JavaScript
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -15,13 +15,13 @@ Ao final desta aula você será capaz de:
 - Reconhecer os tipos primitivos, prever o resultado de `typeof` e listar os valores falsy.
 - Montar textos com template literals e usar os métodos essenciais de string.
 - Converter tipos explicitamente e prever o resultado das conversões implícitas.
-- Entregar a Avaliação 2 no formato exigido.
+- Fechar o Marco 2 do projeto autoral.
 
 ## 📋 Pré-requisitos
 
 - [ ] Site do evento com as cinco páginas (início, programação, inscrição, palestrantes, contato) estilizadas, responsivas e com animações, abrindo no Live Server.
 - [ ] VS Code com a extensão Live Server; Chrome ou Firefox com o DevTools acessível pelo <kbd>F12</kbd>.
-- [ ] Avaliação 2 pronta para envio — as instruções completas estão no fim desta aula.
+- [ ] Marco 2 pronto para fechar — as instruções completas estão no fim desta aula.
 
 > Na aula passada você fechou a Unidade 2 com transições, `@keyframes` e `prefers-reduced-motion`: o site do evento está bonito e responsivo, mas continua parado — cada número de vagas foi digitado à mão no HTML e nada reage ao visitante. Hoje começa a Unidade 3: o JavaScript entra em cena, o site ganha o seu primeiro script e o Console do navegador vira a sua principal ferramenta de trabalho.
 
@@ -31,7 +31,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | O que é JavaScript; as três formas de incluir um script; `defer` × `async`; o Console e o DevTools |
 | 2 | 50 min | Variáveis com `const`/`let`; tipos primitivos e `typeof`; strings e template literals; conversões e valores falsy |
-| 3 | 50 min | Mão na massa: o site do evento ganha um script externo; envio da Avaliação 2 |
+| 3 | 50 min | Mão na massa: o site do evento ganha um script externo; Marco 2 do projeto |
 
 ## 1. O que é JavaScript
 
@@ -570,8 +570,8 @@ Boolean("");        // false
 Boolean(NaN);       // false
 ```
 
-> **📌 Na prova**
-> A lista dos oito valores falsy e a diferença entre `==` e `===` caem em toda avaliação teórica. Decore a lista e saiba explicar por que `"0"` é truthy (é uma string não vazia) enquanto `0` é falsy.
+> **📌 Vale gravar**
+> A lista dos oito valores falsy e a diferença entre `==` e `===` aparecem em toda entrevista técnica de front-end. Decore a lista e saiba explicar por que `"0"` é truthy (é uma string não vazia) enquanto `0` é falsy.
 
 ## 8. Lendo erros no Console
 
@@ -880,7 +880,7 @@ Resultado esperado: `descreverConversao("42px")` devolve `"Number: NaN | parseIn
 `Number.isNaN(x)` diz se `x` é `NaN`. Monte a lista de quem deu `NaN` concatenando strings condicionalmente com o ternário `condicao ? "Number " : ""` — a Aula 11 formaliza esse operador.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Crie `js/diagnostico.js` e inclua-o (com `defer`) em todas as páginas do site do evento. Ao carregar, o script deve imprimir um único `console.group` chamado "Diagnóstico" com: o caminho da página (`location.pathname`), o título, o idioma do navegador (`navigator.language`), se está online (`navigator.onLine`), a largura da janela classificada como texto (`"estreita"` abaixo de 600 px, `"média"` até 1024 px, `"larga"` acima — use ternários encadeados) e o tempo, em milissegundos, que o próprio script levou para montar tudo isso (`console.time`/`console.timeEnd`). Ao fim, remova o arquivo das páginas — ele foi só um exercício.
 
@@ -1021,17 +1021,17 @@ Um sistema de inscrição cobra R$ 0,10 de taxa por SMS e envia três. No Consol
 | O console mostra `[object Object]` | um objeto foi concatenado com string usando `+` | use vírgula no `console.log` ou `JSON.stringify(objeto)` |
 | Nada acontece e nenhum erro aparece | o script nem foi carregado (cache do navegador, Live Server parado) ou um `SyntaxError` em outro arquivo silenciou tudo | coloque um `console.log("carregou")` na primeira linha; recarregue com <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** FLANAGAN, D. *JavaScript: o guia definitivo*, capítulos introdutórios sobre tipos, valores e variáveis. STEFANOV, S. *Padrões JavaScript*, capítulo de fundamentos (o trecho sobre variáveis globais e `var`). Na MDN, leia "Tipos e estruturas de dados do JavaScript" (link em Para aprofundar).
 
-**Parte 2 — Entrega (30 min).** Além da Avaliação 2, entregue o exercício **B4** em um arquivo `conversao.js` com pelo menos cinco casos de teste no Console. No seu **projeto autoral**: crie a pasta `js`, inclua `js/app.js` com `defer` em todas as páginas e imprima no Console, com `console.table`, pelo menos cinco dados do seu domínio (por exemplo, cinco plantas do catálogo, cinco quadras da agenda). Em uma das páginas, calcule e exiba um número derivado de constantes — o equivalente às "vagas restantes" do site do evento.
+**Parte 2 — Produção (30 min).** Hoje fecha o **Marco 2** (instruções completas logo abaixo). Além dele, produza o exercício **B4** em um arquivo `conversao.js` com pelo menos cinco casos de teste no Console. No seu **projeto autoral**: crie a pasta `js`, inclua `js/app.js` com `defer` em todas as páginas e imprima no Console, com `console.table`, pelo menos cinco dados do seu domínio (por exemplo, cinco plantas do catálogo, cinco quadras da agenda). Em uma das páginas, calcule e exiba um número derivado de constantes — o equivalente às "vagas restantes" do site do evento.
 
 **Critério de pronto:** todas as páginas do projeto autoral carregam `js/app.js` sem erro no Console; uma página exibe um valor calculado por JavaScript no lugar de um número digitado no HTML; o `conversao.js` roda sem erros e mostra os cinco casos.
 
-**Parte 3 — Fórum (10 min).** No fórum "Coerção de tipos", traga um resultado surpreendente de comparação ou de operação em JavaScript (diferente dos que apareceram nesta aula), explique tecnicamente por que ele ocorre e como evitá-lo.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um resultado surpreendente de comparação ou de operação em JavaScript (diferente dos que apareceram nesta aula), explique tecnicamente por que ele ocorre e como evitá-lo.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 
@@ -1042,13 +1042,13 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 - [ ] Um `console.table` com dados do seu domínio ao carregar qualquer página.
 - [ ] Pelo menos uma página com um valor calculado em JavaScript (não digitado no HTML), com o HTML mostrando um travessão quando o script não roda.
 - [ ] Zero ocorrências de `var` e de `==` nos seus arquivos `.js`.
-- [ ] Avaliação 2 enviada no SIGAA.
+- [ ] Marco 2 fechado.
 
-## 📝 Avaliação 2 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 2
 
-**Escopo.** A segunda avaliação verifica o uso de CSS para estilizar o site e torná-lo responsivo. O objeto é o **mesmo site da Avaliação 1** (com as correções apontadas já aplicadas), agora completamente estilizado: layout, menu, responsividade em três larguras e animações. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo publicado no Plano de Curso da sua turma.
+**Escopo.** Ao fim da Unidade 2, o **mesmo site do Marco 1** (com as correções apontadas já aplicadas) precisa estar completamente estilizado: layout, menu, responsividade em três larguras e animações.
 
-**Requisitos obrigatórios.**
+**Requisitos.**
 
 | # | Requisito | Onde foi estudado |
 |---|---|---|
@@ -1068,24 +1068,25 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 | 14 | Formulário estilizado com indicação visual de campo inválido que não dependa só de cor | Aulas 06 e 09 |
 | 15 | Sem `float` para estrutura e sem `!important` (exceto dentro do bloco `prefers-reduced-motion`) | Aulas 07 e 09 |
 
-**Formato de entrega.** Um `.zip` da pasta completa do site, nomeado `av02-seunome.zip`, **ou** o link de um repositório público no GitHub com a mesma estrutura. Em ambos os casos, inclua na raiz o arquivo `contraste.md` listando os pares de cor usados (texto × fundo) e suas razões de contraste. Frameworks CSS (Bootstrap, Tailwind e similares) **não** são permitidos — o objetivo é demonstrar domínio do CSS.
+Frameworks CSS (Bootstrap, Tailwind e similares) não entram aqui — o objetivo deste marco é demonstrar domínio do CSS puro.
 
-**Rubrica.**
+**Checklist de qualidade.**
 
-| Critério | Peso |
-|---|---|
-| Organização da folha de estilo e sistema de design | 1,5 |
-| Domínio de seletores e especificidade | 1,0 |
-| Layout com Grid e Flexbox | 2,0 |
-| Responsividade real em três larguras | 2,0 |
-| Estados visuais e acessibilidade (contraste, foco) | 1,5 |
-| Transições e animações com propósito | 1,0 |
-| Coerência visual e capricho geral | 1,0 |
-| **Total** | **10,0** |
+- Folha de estilo organizada e sistema de design coerente (variáveis, não valores soltos).
+- Domínio de seletores e especificidade — nenhum `!important` usado como atalho.
+- Layout com Grid e Flexbox aplicados onde cada um faz sentido, não ao acaso.
+- Responsividade real nas três larguras, testada em dispositivo de verdade, não só no simulador.
+- Estados visuais completos e contraste acessível em todo texto.
+- Transições e animações com propósito, nunca só para "parecer moderno".
+- Coerência visual entre as cinco páginas e capricho geral no acabamento.
 
-**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até cinco dias; depois disso, a entrega não é aceita.
+**Como saber que está pronto.**
 
-**Plágio e uso de IA.** Ferramentas de IA são permitidas como apoio (tirar dúvidas, revisar, sugerir). O trabalho, porém, precisa ser seu: você pode ser chamado a explicar qualquer trecho do CSS entregue, e não saber explicar equivale a não ter feito. Cópia entre colegas — total ou parcial, com ou sem alterações cosméticas — resulta em nota zero para todos os envolvidos.
+- Rode o Lighthouse (modo mobile) em cada página: Acessibilidade e Boas práticas ≥ 90.
+- No DevTools, alterne `prefers-reduced-motion: reduce` e `prefers-color-scheme: dark` e confira que nada quebra.
+- Redimensione a janela (ou use o modo *Responsive*) em 360 px, 768 px e 1440 px: nenhuma rolagem horizontal, nenhum texto cortado.
+- Verifique `contraste.md` contra o WebAIM: todo par texto × fundo em AA.
+- Use IA para tirar dúvida ou revisar sintaxe — não para gerar a folha de estilo inteira. Se você não souber explicar por que escolheu Grid em vez de Flexbox num trecho, ainda não é seu.
 
 ## 📚 Para aprofundar
 

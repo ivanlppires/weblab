@@ -1,8 +1,8 @@
 # Aula 11 — Variáveis, operações aritméticas e estruturas de controle
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -396,8 +396,8 @@ Repare no resultado oposto: para o operador `<`, "Ana" vem antes; para o portugu
 
 `localeCompare` devolve um número negativo, zero ou positivo — exatamente o que a função de ordenação de arrays espera, como você verá na Aula 12.
 
-> **📌 Na prova**
-> Três resultados costumam cair: `"10" < "9"` é `true` (comparação textual), `NaN === NaN` é `false` (o único valor diferente de si mesmo) e `0.1 + 0.2 === 0.3` é `false` (ponto flutuante). Saiba explicar cada um em uma frase.
+> **📌 Vale gravar**
+> Três resultados costumam confundir: `"10" < "9"` é `true` (comparação textual), `NaN === NaN` é `false` (o único valor diferente de si mesmo) e `0.1 + 0.2 === 0.3` é `false` (ponto flutuante). Saiba explicar cada um em uma frase.
 
 ## 5. Operadores lógicos
 
@@ -1125,7 +1125,7 @@ Resultado esperado: dois arquivos (`decisao-if.js` e `decisao-ternario.js`) que 
 Para que a versão com ternário produza duas variáveis (`situacao` e `mensagem`), você precisará de dois encadeamentos — ou de um objeto. Formate o encadeamento em coluna, uma condição por linha, como no exemplo da seção 7.3. Ao comparar, considere também o caso de um ramo precisar executar **duas** instruções: o que acontece com o ternário nessa hora?
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** No seu **projeto autoral**, crie o equivalente ao painel de vagas do site do evento: um bloco de estado que muda sozinho conforme um único número que você edita no topo do script. Requisitos: pelo menos quatro faixas de decisão (com `if`/`else if`), um valor formatado com `Intl.NumberFormat` (preço, distância, peso — o que fizer sentido no seu domínio), uma data formatada com `toLocaleDateString("pt-BR")`, concordância correta de singular e plural com ternário, e nenhum número mágico no meio do código (todos os limites devem ser constantes nomeadas no topo).
 
@@ -1271,17 +1271,17 @@ A organização da Semana Acadêmica precisa saber, a qualquer momento, em que f
 | `Uncaught RangeError: toFixed() digits argument must be between 0 and 100` | passou um número inválido para `toFixed` | use de 0 a 100; para dinheiro, `toFixed(2)` ou `Intl.NumberFormat` |
 | O mês exibido está um a menos do esperado | `getMonth()` devolve 0 para janeiro | some 1 ao exibir, ou use `toLocaleDateString` com a opção `month` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** FLANAGAN, D. *JavaScript: o guia definitivo*, capítulos sobre expressões, operadores e instruções. Na MDN, leia "Expressões e operadores" e a página do operador de coalescência nula (links em Para aprofundar). Anote dois operadores que existem na MDN e não apareceram nesta aula.
 
-**Parte 2 — Entrega (30 min).** Entregue os exercícios **B1** (`validarSenha`) e **B4** (`calcularFrete`) em arquivos `.js` comentados, cada um com pelo menos cinco casos de teste demonstrados no Console. No seu **projeto autoral**, entregue o exercício **C1**: o bloco de estado que decide sozinho, com as constantes no topo, quatro faixas e formatação em pt-BR.
+**Parte 2 — Produção (30 min).** Produza os exercícios **B1** (`validarSenha`) e **B4** (`calcularFrete`) em arquivos `.js` comentados, cada um com pelo menos cinco casos de teste demonstrados no Console. No seu **projeto autoral**, produza o exercício **C1**: o bloco de estado que decide sozinho, com as constantes no topo, quatro faixas e formatação em pt-BR.
 
 **Critério de pronto:** ao trocar um único número no topo do script do projeto autoral e recarregar, a mensagem e o destaque visual mudam de faixa; nenhuma página do projeto mostra erro vermelho no Console; nenhum número mágico aparece no meio do código; nenhum `var` e nenhum `==` sobreviveram nos arquivos `.js`.
 
-**Parte 3 — Fórum (10 min).** No fórum "`let` ou `const`" do SIGAA: defenda, com argumentos técnicos, a prática de declarar tudo como `const` por padrão e usar `let` só quando a reatribuição for necessária. Traga um trecho do seu próprio projeto em que a escolha importou, e comente o argumento de um colega.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): defenda, com argumentos técnicos, a prática de declarar tudo como `const` por padrão e usar `let` só quando a reatribuição for necessária. Traga um trecho do seu próprio projeto em que a escolha importou.
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 

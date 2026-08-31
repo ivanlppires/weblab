@@ -1,8 +1,8 @@
 # Aula 15 — CRUD com front-end assíncrono
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Sua API já faz CRUD completo e já sabe quem está batendo na porta. Só que, até agora, quem usou esses recursos foi você — pelo `testes.http`, com a extensão REST Client. Nenhuma pessoa de fora da disciplina consegue cadastrar um café no Café Cerrado sem escrever uma requisição HTTP na mão. Hoje isso muda: a interface que você construiu na Unidade 2 passa a criar, editar e excluir produtos consumindo a sua própria API, sem recarregar a página uma única vez.
 
@@ -27,7 +27,7 @@ Ao final desta aula você será capaz de:
 - [ ] Login Google funcionando, `.env` com `GOOGLE_CLIENT_ID` fora do Git e o middleware `exigirLogin` protegendo as rotas de escrita (Aula 14).
 - [ ] `fetch` com `async/await` e tratamento de erro no cliente (Aulas 09 e 10) — hoje é tudo isso ao mesmo tempo.
 
-> Na aula passada você delegou o login ao Google, verificou o ID token no servidor com `google-auth-library` e barrou com `401` toda escrita sem token. As duas metades do sistema — API com CRUD e API com autenticação — existem, mas só respondem ao `testes.http`. Hoje elas ganham interface: a tela do cardápio passa a listar, criar, editar e excluir produtos consumindo `/api/produtos` com `fetch`, e os dados passam a sobreviver ao reinício do servidor. Na próxima aula, cada registro ganha dono e a disciplina se encerra com a entrega da Avaliação 3.
+> Na aula passada você delegou o login ao Google, verificou o ID token no servidor com `google-auth-library` e barrou com `401` toda escrita sem token. As duas metades do sistema — API com CRUD e API com autenticação — existem, mas só respondem ao `testes.http`. Hoje elas ganham interface: a tela do cardápio passa a listar, criar, editar e excluir produtos consumindo `/api/produtos` com `fetch`, e os dados passam a sobreviver ao reinício do servidor. Na próxima aula, cada registro ganha dono e a disciplina se encerra com o Marco 3.
 
 ## 🗺️ Roteiro
 
@@ -125,7 +125,7 @@ Cada item de `detalhes` traz **o campo** e **a mensagem**, e não só um texto s
 > **💡 Dica**
 > `204` não pode ter corpo: `resposta.json()` sobre uma resposta `204` explode com `Unexpected end of JSON input`. A camada de API que escreveremos na seção 3 trata isso em uma linha — e é o tipo de detalhe que consome uma tarde de quem não sabe que existe.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Decore a semântica dos status que este contrato usa: `200 OK` (deu certo e há corpo), `201 Created` (criou um recurso novo), `204 No Content` (deu certo e não há corpo), `400 Bad Request` (o cliente mandou algo inválido), `401 Unauthorized` (não sei quem você é), `404 Not Found` (o recurso não existe). O `403` entra na próxima aula.
 
 ### 1.3 O ciclo estado → render
@@ -1126,7 +1126,7 @@ Marque cada botão com `dataset.acao = "editar"` ou `"excluir"`. No listener: `c
 Guarde o texto original antes de trocar (`const rotulo = botao.textContent`) e restaure no `finally`. Cuidado: se você recarregar a lista no sucesso, o botão do card excluído nem existe mais — proteja o restore com uma verificação de que o elemento ainda está no documento (`botao.isConnected`).
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Implemente o **desfazer** da exclusão: ao excluir um produto, em vez de sumir para sempre, o feedback exibe "Produto excluído · Desfazer" por 6 segundos. Clicar em "Desfazer" recria o produto com os mesmos dados (id novo é aceitável) e cancela o sumiço definitivo.
 
@@ -1259,7 +1259,7 @@ O `confirm()` do navegador congela a aba inteira, não pode ser estilizado, não
 | A lista aparece como `[object Promise]` ou vazia sem erro | Faltou `await` antes de `api.listar()` | Toda chamada da fachada devolve promessa: `produtos = await api.listar()` |
 | `Failed to fetch` ao abrir a página | O site foi aberto por `file://`, não pelo Express | Rode `npm run dev` e acesse `http://localhost:3000` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **projeto autoral**, replique tudo o que foi feito hoje no Café Cerrado:
 
@@ -1273,7 +1273,7 @@ No **projeto autoral**, replique tudo o que foi feito hoje no Café Cerrado:
 
 **Critério de pronto:** com o servidor rodando, é possível fazer login, criar, editar e excluir registros pela interface, sem nenhum recarregamento de página; os dados sobrevivem ao reinício; e o `testes.http` cobre os cinco cenários da etapa 6.
 
-**Entrega:** commit + push no repositório do projeto autoral e link do repositório no SIGAA. Confirme, antes do push, que `.env` e `node_modules/` **não** estão no commit.
+**Guarde no seu repositório:** commit + push. Confirme, antes do push, que `.env` e `node_modules/` **não** estão no commit.
 
 ## ✅ Checkpoint do projeto
 
@@ -1308,4 +1308,4 @@ Ao final desta aula, o seu repositório precisa ter:
 
 ---
 
-Na próxima aula, cada produto ganha um **dono**: o e-mail extraído do token verificado passa a marcar quem criou cada registro, e a API aprende a diferença entre "não sei quem você é" (`401`) e "sei quem você é, mas isso não é seu" (`403`). É também a aula de encerramento da disciplina, com o roteiro completo de auto-teste, a entrega da Avaliação 3 e os caminhos para continuar depois daqui.
+Na próxima aula, cada produto ganha um **dono**: o e-mail extraído do token verificado passa a marcar quem criou cada registro, e a API aprende a diferença entre "não sei quem você é" (`401`) e "sei quem você é, mas isso não é seu" (`403`). É também a aula de encerramento da disciplina, com o roteiro completo de auto-teste, o Marco 3 e os caminhos para continuar depois daqui.

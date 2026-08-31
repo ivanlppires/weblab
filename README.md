@@ -1,6 +1,6 @@
 # WebLab — Laboratório de Desenvolvimento Web
 
-Apostila online, gratuita e autocontida das disciplinas de desenvolvimento web da **UNEMAT — Campus Sinop (FACET)**, ministradas pelo Prof. Ivan Luiz Pedroso Pires.
+Apostila online, gratuita e autocontida de desenvolvimento web, escrita e revisada por professores da **UNEMAT — Campus Sinop (FACET)** (ver [autoria e créditos](https://weblab.ivanpires.dev/autores/)). Nasceu das disciplinas presenciais e é publicada aberta: serve a qualquer pessoa que queira aprender, em qualquer época — sem datas, notas ou prazos no material.
 
 **No ar em <https://weblab.ivanpires.dev>**
 
@@ -47,7 +47,7 @@ Para escrever ou alterar uma aula, siga `fontes/ESPECIFICACAO.md`. O lint rejeit
 
 Para adicionar uma aula ou trilha: inclua-a em `build/config.py`, crie o arquivo em `fontes/<trilha>/` e rode o build.
 
-O conteúdo é **atemporal** — nenhuma aula tem datas, semestre ou turma —, então ele serve a qualquer oferta sem edição. Para publicar o calendário de um semestre no índice das trilhas, preencha `SEMESTRE`, `CRONOGRAMA` e o `prazo` de cada avaliação em `build/config.py`; o formato e o calendário de 2026.2 estão em [`docs/calendario-2026-2.md`](docs/calendario-2026-2.md).
+O conteúdo é **atemporal e aberto** — nenhuma aula tem datas, semestre, turma, nota ou prazo; cada unidade fecha com um *marco do projeto*, não com uma avaliação. Para publicar o calendário de um semestre no índice das trilhas, preencha `SEMESTRE`, `CRONOGRAMA` e o `prazo` de cada avaliação em `build/config.py`; o formato e o calendário de 2026.2 estão em [`docs/calendario-2026-2.md`](docs/calendario-2026-2.md).
 
 ## Recursos do site
 
@@ -55,4 +55,6 @@ Tema claro/escuro · busca global · botão *Copiar* em todo código · sumário
 
 ## Licença
 
-Material didático de uso educacional. Livre para consulta, estudo e reuso com atribuição.
+Conteúdo sob **CC BY 4.0**; o gerador do site, sob **licença MIT**. Ver `LICENSE`.
+
+Como citar: veja `CITATION.cff` (o GitHub mostra o botão *Cite this repository*).

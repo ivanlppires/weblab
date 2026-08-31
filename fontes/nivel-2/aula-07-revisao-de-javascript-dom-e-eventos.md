@@ -1,8 +1,8 @@
 # Aula 07 — Revisão de JavaScript: objetos, funções, eventos e DOM
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 2: Web dinâmica client-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 06 você fechou a Unidade 1: o Café Cerrado tem HTML semântico, layout responsivo com Bootstrap, animação, SVG e uma auditoria de acessibilidade aprovada. É um site bonito e **imóvel** — tudo o que ele mostra está escrito à mão no HTML. Hoje começa a Unidade 2: o site ganha um cérebro. Você cria `js/app.js`, transforma o cardápio em **dados** e passa a desenhar a tela a partir desses dados, com eventos reagindo ao que a pessoa faz.
 
@@ -20,7 +20,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos
 
-Na aula passada você auditou a acessibilidade do Café Cerrado e entregou a Avaliação 1 — o site estático completo. Hoje o mesmo repositório ganha um arquivo novo, `js/app.js`, e o cardápio deixa de ser HTML fixo para virar um array de objetos renderizado por JavaScript. Nada do que você fez na Unidade 1 é descartado: o JS vai **ligar e desligar** classes e atributos que o seu CSS já sabe estilizar.
+Na aula passada você auditou a acessibilidade do Café Cerrado e fechou o Marco 1 — o site estático completo. Hoje o mesmo repositório ganha um arquivo novo, `js/app.js`, e o cardápio deixa de ser HTML fixo para virar um array de objetos renderizado por JavaScript. Nada do que você fez na Unidade 1 é descartado: o JS vai **ligar e desligar** classes e atributos que o seu CSS já sabe estilizar.
 
 Checklist antes de começar:
 
@@ -762,7 +762,7 @@ function mensagemDeErro(campo) {
 
 Para o erro ser **percebido** por quem usa leitor de tela, três atributos trabalham juntos: `aria-invalid` marca o campo como inválido, `aria-describedby` liga o campo ao parágrafo da mensagem, e a região com `aria-live="polite"` anuncia o resumo sem interromper. Você já preparou esse terreno na Aula 06 — hoje ele entra em uso.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Validação no cliente é **conveniência**, não segurança. Qualquer pessoa desliga o JavaScript, edita o HTML pelo DevTools ou manda a requisição direto pelo terminal. A validação que protege os dados é a do servidor, que você vai escrever na Aula 13. Toda regra precisa existir nos dois lados: no cliente para dar resposta rápida, no servidor para valer.
 
 ## 💻 Mão na massa — o Café Cerrado ganha comportamento
@@ -1063,7 +1063,7 @@ Três decisões que valem comentário. O estado inicial respeita a preferência 
 
 ### Passo 5 — validação acessível do formulário de contato
 
-O formulário de `contato.html` **não muda de estrutura**: continuam ali os dois `<fieldset>` com `<legend>`, o `<select>` de assunto com `<optgroup>`, telefone, CEP, pessoas, data, horário, os rádios de canal, o checkbox de novidades e o de consentimento — treze campos, os mesmos das Aulas 03, 04 e 06, que a Avaliação 1 cobra. Três acréscimos, e só:
+O formulário de `contato.html` **não muda de estrutura**: continuam ali os dois `<fieldset>` com `<legend>`, o `<select>` de assunto com `<optgroup>`, telefone, CEP, pessoas, data, horário, os rádios de canal, o checkbox de novidades e o de consentimento — treze campos, os mesmos das Aulas 03, 04 e 06, que o Marco 1 cobre. Três acréscimos, e só:
 
 1. `id="form-contato"` e `novalidate` no `<form>`;
 2. um `<p class="invalid-feedback d-block m-0" id="erro-…">` logo abaixo de cada campo que você vai validar, com o `id` do campo no nome (`erro-nome`, `erro-email`, `erro-mensagem`) e um `aria-describedby` no campo apontando para ele;
@@ -1282,7 +1282,7 @@ Resultado esperado: nenhum nome acentuado fica fora de lugar; a lista começa po
 `const comparador = new Intl.Collator("pt-BR");` e depois `[...produtos].sort((a, b) => comparador.compare(a.nome, b.nome))`. Copie o array antes de ordenar — a próxima aula explica por quê.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Renderização à prova de dados sujos. Alguém vai alimentar o array `produtos` a partir de uma planilha, e a planilha é bagunçada: pode faltar `descricao`, o `preco` pode vir como a string `"12,50"`, a `imagem` pode apontar para um arquivo inexistente e o `nome` pode conter `<script>alert(1)</script>`. Torne `criarCardProduto` resistente aos quatro casos, sem esconder problemas: campo ausente vira texto padrão, preço em string é convertido, imagem quebrada cai numa imagem genérica e o nome com HTML aparece **como texto**, sem executar nada.
 
@@ -1419,7 +1419,7 @@ Quem entra no Café Cerrado toda semana sempre pede as mesmas duas coisas. Dê a
 | O card do produto aparece vazio, sem erro no Console | `cloneNode()` sem `true` clonou o nó sem os filhos | Usar `molde.content.cloneNode(true)` |
 | As imagens não carregam no GitHub Pages, mas funcionam localmente | Diferença de maiúsculas/minúsculas no nome do arquivo | Padronizar nomes minúsculos, sem acento e sem espaço |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do **seu projeto autoral**:
 
@@ -1431,7 +1431,7 @@ No repositório do **seu projeto autoral**:
 
 **Critério de pronto:** o Console fica sem erros nas três páginas; os cards existem no DOM mas não no arquivo `.html`; o formulário mostra mensagem própria e não recarrega a página ao ser enviado vazio.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 **Leitura dirigida (Biblioteca Virtual da UNEMAT):** Queirós e Portela, capítulo da camada de comportamento (JavaScript); Purewal, capítulo de JavaScript e interatividade.
 

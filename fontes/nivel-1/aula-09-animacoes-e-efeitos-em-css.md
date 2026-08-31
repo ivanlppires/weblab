@@ -1,8 +1,8 @@
 # Aula 09 — Animações e efeitos em CSS
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -90,7 +90,7 @@ Passe o mouse sobre o botão: a cor muda suavemente e ele sobe 2 px. Tire o mous
 
 O atalho `transition` aceita várias transições separadas por vírgula, cada uma com sua duração e curva. Na prática você quase sempre usa o atalho.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > A `transition` deve ser declarada no **estado base** do elemento (`.botao`), não no estado de interação (`.botao:hover`). Se ficar no `:hover`, a entrada é suave e a saída é abrupta — porque ao tirar o mouse a regra `:hover` deixa de valer, e com ela a `transition`.
 
 ### Funções de tempo
@@ -713,7 +713,7 @@ document.querySelectorAll(".revelar").forEach((elemento) => observador.observe(e
 ```
 
 > **💡 Dica**
-> Repare na classe `.js` no `<html>`. Se o CSS escondesse `.revelar` incondicionalmente e o JavaScript falhasse (bloqueado, com erro, ou ainda carregando numa conexão lenta), o conteúdo ficaria **invisível para sempre**. Com o `.js` adicionado pelo próprio script, sem JavaScript a página é só uma página normal. Conteúdo nunca deve depender de animação para existir — esse é o padrão correto e cai em prova.
+> Repare na classe `.js` no `<html>`. Se o CSS escondesse `.revelar` incondicionalmente e o JavaScript falhasse (bloqueado, com erro, ou ainda carregando numa conexão lenta), o conteúdo ficaria **invisível para sempre**. Com o `.js` adicionado pelo próprio script, sem JavaScript a página é só uma página normal. Conteúdo nunca deve depender de animação para existir — esse é o padrão correto, sem exceção.
 
 ## 💻 Mão na massa — Polindo o site do evento
 
@@ -1351,7 +1351,7 @@ Use a animação `tremer` da §5. Para não tremer antes de o usuário digitar, 
 Faça a versão só com CSS primeiro: uma faixa `display: flex` com `transform: translateX(calc(var(--slide) * -100%))` e `transition: transform 500ms`. O avanço automático e o botão de pausa precisam de JavaScript (`setInterval` / `clearInterval` — o professor fornece). O botão de pausa é obrigatório pela WCAG 2.2.2 — sem ele, o exercício não está pronto.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** **Página de apresentação animada.** Construa uma landing page de um produto (ou do próprio evento) com: hero com gradiente animado ao fundo e texto que entra escalonado; menu que muda de aparência ao rolar (fica compacto e ganha sombra); seções que se revelam por `IntersectionObserver`; contadores animados; galeria com zoom; depoimentos em carrossel; formulário com validação animada; rodapé com links de sublinhado animado. Requisitos: todas as animações usam apenas `transform` e `opacity` onde for possível, `prefers-reduced-motion` respeitado, e a página mantém 60 fps na gravação do painel Performance com CPU 4×. Comece em sala com o hero e o menu; o restante pode ser terminado em casa e reaproveita os exercícios B6, B7, B9 e B10.
 
@@ -1416,7 +1416,7 @@ Um colega enviou o CSS abaixo dizendo "nada anima, o CSS deve estar bugado". Nã
 
 <details><summary>Pistas</summary>
 
-1. Releia o callout **📌 Na prova** da §2: onde a `transition` deve ser declarada?
+1. Releia o callout **📌 Vale gravar** da §2: onde a `transition` deve ser declarada?
 2. Na §3, `perspective` e `transform-style` ficam em elementos **diferentes** — qual vai no pai e qual no filho?
 3. A §4 tem um callout inteiro sobre a propriedade que "quase todo mundo esquece".
 4. A §2 mostra a dupla que substitui `display` quando você quer animar a entrada e a saída.
@@ -1513,11 +1513,11 @@ Bibliotecas como a Animate.css têm milhões de downloads por semana — e cabem
 
 **Para ir além:** publique a biblioteca no GitHub Pages (Aula 15) e use-a no seu projeto autoral no lugar das animações soltas.
 
-### 🔥 Boss — Site do evento pronto para a Avaliação 2
+### 🔥 Boss — Projeto pronto para o Marco 2
 
 Tags: css, layout, responsivo, animacao, projeto
 
-Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema de design, um layout de verdade, responde a qualquer tela e se move com propósito. O Boss desta unidade é fechar tudo isso em um site que você mostraria numa entrevista — e que é a base direta da Avaliação 2. Não há nada novo aqui: há tudo da Unidade 2, junto, funcionando ao mesmo tempo, no seu tema.
+Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema de design, um layout de verdade, responde a qualquer tela e se move com propósito. O Boss desta unidade é fechar tudo isso em um site que você mostraria numa entrevista — e que é a base direta do Marco 2. Não há nada novo aqui: há tudo da Unidade 2, junto, funcionando ao mesmo tempo, no seu tema.
 
 **Critérios de pronto**
 
@@ -1536,7 +1536,7 @@ Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema
 4. Deixe o tema escuro por último e teste-o com o menu aberto, no hero e nos cartões — é onde as cores "fixas" que escaparam das variáveis aparecem.
 </details>
 
-**Para ir além:** peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada ponto anotado é um item da rubrica da Avaliação 2 que você acabou de garantir.
+**Para ir além:** peça a um colega que use o seu site **só pelo teclado** por dois minutos e anote onde ele se perdeu. Cada ponto anotado é um item do checklist de qualidade do Marco 2 que você acabou de garantir.
 
 ## 🐛 Erros comuns
 
@@ -1558,7 +1558,7 @@ Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema
 | Seções com `.revelar` ficam invisíveis quando o JavaScript está desativado ou com erro | CSS esconde `.revelar` incondicionalmente | Esconda apenas `.js .revelar`, com a classe `js` adicionada pelo próprio script |
 | O hover de elevação do cartão parou de funcionar depois de adicionar uma animação | Duas regras disputam a mesma propriedade `transform`; a animação em execução vence | Não anime `transform` de forma infinita no mesmo elemento que usa `transform` no hover; ou anime um filho |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (15 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulo sobre efeitos e transformações. MDN: *Using CSS transitions* e *Using CSS animations* (links em "Para aprofundar"). Anote uma coisa que a MDN explica e esta aula não.
 
@@ -1577,9 +1577,9 @@ Quatro aulas atrás o seu projeto autoral era HTML puro. Hoje ele tem um sistema
 
 **Critério de pronto:** todos os dez itens presentes; emular `prefers-reduced-motion: reduce` no DevTools não esconde nem quebra nada; desativar o JavaScript não esconde nenhuma seção; a captura do painel Performance está no repositório.
 
-**Parte 3 — Fórum (5 min).** No fórum "Animação que ajuda e animação que atrapalha", traga um site com movimento bem empregado e outro com movimento excessivo, explicando tecnicamente a diferença (o que cada animação comunica, duração, propriedade animada). Comente a postagem de um colega.
+**Parte 3 — Discussão (5 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um site com movimento bem empregado e outro com movimento excessivo, explicando tecnicamente a diferença (o que cada animação comunica, duração, propriedade animada).
 
-**Entrega:** pasta `.zip` ou link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 
@@ -1611,4 +1611,4 @@ Ao fim desta aula — e da Unidade 2 — o repositório do seu projeto autoral p
 - SILVA, Maurício Samy. *Criando sites com HTML: sites de alta qualidade com HTML e CSS*. Novatec, 2008 — capítulo de efeitos e transformações.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo sobre CSS3 e efeitos visuais.
 
-Isso encerra a Unidade 2. Em quatro aulas o seu site saiu de HTML puro para um sistema de design em variáveis, um layout de verdade com Grid e Flexbox, responsividade em qualquer tela e movimento que comunica sem atrapalhar. A **Avaliação 2** é exatamente esse site — o Boss desta aula é o roteiro para fechá-la, e ela é entregue na próxima aula. Na próxima aula você abre a Unidade 3 com a **Introdução ao JavaScript**: um `js/app.js` novo entra na pasta `js/` ao lado do `menu.js` (Aula 08) e do `efeitos.js` (hoje), e você começa a ler linha a linha o código que até agora colou "sem entender" — a leitura completa dos dois arquivos se fecha na Aula 13, com funções e eventos. O site deixa de ser só apresentação e começa a reagir ao usuário.
+Isso encerra a Unidade 2. Em quatro aulas o seu site saiu de HTML puro para um sistema de design em variáveis, um layout de verdade com Grid e Flexbox, responsividade em qualquer tela e movimento que comunica sem atrapalhar. O **Marco 2** é exatamente esse site — o Boss desta aula é o roteiro para fechá-lo, e ele fecha na próxima aula. Na próxima aula você abre a Unidade 3 com a **Introdução ao JavaScript**: um `js/app.js` novo entra na pasta `js/` ao lado do `menu.js` (Aula 08) e do `efeitos.js` (hoje), e você começa a ler linha a linha o código que até agora colou "sem entender" — a leitura completa dos dois arquivos se fecha na Aula 13, com funções e eventos. O site deixa de ser só apresentação e começa a reagir ao usuário.

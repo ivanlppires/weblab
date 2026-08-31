@@ -1,8 +1,8 @@
 # Aula 11 — Integrando front-end com back-end: CRUD
 
 > **Nível 3 — Frameworks Modernos** · Unidade 3: Integração front-end/back-end
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -638,7 +638,7 @@ Duas estratégias para refletir uma mudança na interface depois de uma ação d
 
 A store acima implementa a **pessimista** de propósito: cada ação (`criar`, `atualizar`, `remover`) só atualiza `lista.value` depois do `await` na chamada de serviço resolver com sucesso. Para um CRUD acadêmico, essa é a escolha mais segura — evita o cenário em que o aluno vê "Evento criado!" na tela, mas na verdade a validação do back-end rejeitou e nada foi salvo.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Otimista = muda a tela antes de saber o resultado (rápido, mas exige lógica de desfazer). Pessimista = muda a tela só após confirmação do servidor (mais lento, mais seguro). Nesta disciplina, sempre pessimista.
 
 ## 6. Upload de imagem do evento com Firebase Storage
@@ -1224,7 +1224,7 @@ Resultado esperado: dois prints (um `422` com o `detalhes` visível na aba Respo
 Depois do teste de CORS, não esqueça de voltar o `origin` correto — é fácil esquecer e passar a aula seguinte "quebrada".
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Inscrição atômica, ponta a ponta. A função `verificarVagaEInscrever` do repositório (seção 2.1) abre a transação, trava a linha com `FOR UPDATE` e confere as vagas — mas ainda não insere a inscrição. Complete-a e exponha o recurso: `POST /api/eventos/:id/inscricoes` (autenticado) responde `201` com a inscrição, `404` se o evento não existe e `409` se não há vagas; no front, um botão "Inscrever-se" que some quando `vagasDisponiveis` chega a zero. Para fechar, prove a atomicidade: com um evento de 5 vagas, dispare 20 requisições simultâneas e confira no banco quantas inscrições existem.
 
@@ -1347,7 +1347,7 @@ Tags: mysql, performance, api, banco-de-dados
 | `curl` funciona mas o front não | Token não está sendo enviado pelo interceptor, ou front aponta para porta errada | Conferir `VITE_API_URL` e o cabeçalho `Authorization` na aba Network |
 | Paginação trava na página 2+ | `v-data-table-server` não está usando `items-length` vindo do back, ou store não repassa `paginacao.total` | Confirmar que `paginacao.total` reflete o total real, não o tamanho da página atual |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No seu projeto autoral: implemente o CRUD completo (os 5 endpoints do contrato) de uma **segunda entidade**, diferente da que você já trabalhou no laboratório de hoje. Ela deve ter, no mínimo, uma regra de negócio própria (ex.: não permitir dois registros com o mesmo nome, não excluir se estiver em uso por outra entidade). Documente o contrato dela em uma tabela, igual à da seção 1, e inclua no README do repositório.
 

@@ -1,8 +1,8 @@
 # Aula 12 — Estruturas sequenciais, condicionais e de repetição
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 3: JavaScript e interatividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -551,7 +551,7 @@ Uma armadilha escondida nesse encadeamento: `sort` **altera** o array em que atu
 | Precisa parar no meio (`break`) | `for` ou `for…of` — `forEach` não pode parar |
 | Precisa do índice e da lógica é complexa | `for` clássico |
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `map` transforma e devolve um array do **mesmo tamanho**; `filter` seleciona e devolve um array **de tamanho menor ou igual**; `forEach` percorre e devolve `undefined`. Usar `map` só para imprimir no console é erro de intenção — o array criado é jogado fora. Saiba dizer o que cada um devolve.
 
 ## 5. Objetos
@@ -1300,7 +1300,7 @@ Resultado esperado: um objeto com três chaves; `agruparPorDia(palestras)[2].len
 Um `reduce` com objeto acumulador resolve o agrupamento: se a chave do dia ainda não existe, crie um array vazio antes de dar `push`. Como `hora` é uma string no formato `"HH:MM"`, a comparação de texto já ordena corretamente — `"09:00" < "19:00"` é `true`. Isso só funciona porque o formato tem dois dígitos sempre; explique isso em um comentário.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Modele o **seu projeto autoral** como dados. Crie `js/dados.js` com pelo menos **doze** registros em um array de objetos, cada um com no mínimo seis propriedades (incluindo `id` único, um campo de categoria em código curto, um campo numérico e um campo de texto longo). Crie também o objeto-dicionário que traduz os códigos de categoria em nomes de exibição. Depois escreva `js/relatorios.js` com pelo menos seis relatórios diferentes no Console: um `console.table` filtrado, um total com `reduce`, uma contagem por categoria, um ranking ordenado, uma busca por texto parcial e um relatório que combine duas listas com `find`.
 
@@ -1437,17 +1437,17 @@ Você já agrupou atividades por dia e contou por área. Agora repare: os dois c
 | Alterar uma cópia alterou o original | `const copia = original` cria outro nome, não uma cópia | copie com spread: `[...lista]` ou `{ ...objeto }` |
 | `console.table` sai ilegível, com dez colunas | a tabela mostra todas as propriedades por padrão | passe o array de colunas: `console.table(lista, ["dia", "hora", "titulo"])` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** FLANAGAN, D. *JavaScript: o guia definitivo*, capítulos de estruturas de controle e de arrays. STEFANOV, S. *Padrões JavaScript*, capítulo sobre arrays e objetos. Na MDN, leia "Laços e iterações" e a página de `Array` (links em Para aprofundar). Anote dois métodos de array que existem na MDN e não apareceram nesta aula.
 
-**Parte 2 — Entrega (30 min).** Entregue os exercícios **B2** (`contarPalavras` e `topPalavras`) e **B5** (`analisarTurma`) em arquivos `.js` comentados, com pelo menos cinco casos de teste cada, demonstrados no Console. Entregue também o exercício **C1**: o `js/dados.js` do seu projeto autoral, com doze registros, e o `js/relatorios.js` com seis relatórios.
+**Parte 2 — Produção (30 min).** Produza os exercícios **B2** (`contarPalavras` e `topPalavras`) e **B5** (`analisarTurma`) em arquivos `.js` comentados, com pelo menos cinco casos de teste cada, demonstrados no Console. Produza também o exercício **C1**: o `js/dados.js` do seu projeto autoral, com doze registros, e o `js/relatorios.js` com seis relatórios.
 
 **Critério de pronto:** o `dados.js` do projeto autoral carrega em todas as páginas sem erro e imprime, na primeira linha do Console, a contagem de registros; os seis relatórios rodam sem nenhuma linha vermelha; nenhum relatório altera a ordem original do array de dados; nenhum dado do domínio continua digitado à mão no HTML das páginas que serão renderizadas na próxima aula.
 
-**Parte 3 — Fórum (10 min).** No fórum "Laço ou método" do SIGAA: discuta quando o `for` clássico ainda é preferível a `map`/`filter`/`reduce`, com um exemplo concreto de cada situação (um em que o laço vence, um em que o método vence). Comente a resposta de um colega apontando um caso que ele não considerou.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): discuta quando o `for` clássico ainda é preferível a `map`/`filter`/`reduce`, com um exemplo concreto de cada situação (um em que o laço vence, um em que o método vence).
 
-**Entrega:** commit + push e link do repositório (ou `.zip`) no SIGAA, no prazo anunciado em aula e publicado no Plano de Curso.
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto).
 
 ## ✅ Checkpoint do projeto
 

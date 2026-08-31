@@ -120,6 +120,14 @@ def gerar(parcial: bool = False, forcar: bool = False):
     _escrever(site / "links" / "index.html", paginas.pagina_links(links_html, itens))
     urls.append("/links/")
 
+    # autores
+    autores_md = fontes / "autores.md"
+    autores_html = render.enfeitar(render.converter(_ler(autores_md))) if autores_md.exists() else ""
+    _escrever(site / "autores" / "index.html", paginas.pagina_autores(autores_html))
+    urls.append("/autores/")
+    busca.append({"u": "autores/", "t": "Autores", "tr": "Autores",
+                  "h": [a["nome"] for a in config.AUTORES], "d": []})
+
     # home
     home_md = fontes / "home.md"
     home_html = render.enfeitar(render.converter(_ler(home_md))) if home_md.exists() else ""

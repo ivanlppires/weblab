@@ -1,8 +1,8 @@
 # Aula 03 — Vue: listas, computed e ciclo de vida
 
 > **Nível 3 — Frameworks Modernos** · Unidade 1: Fundamentos de front-end com Vue.js
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -440,7 +440,7 @@ function pararObservacao() {
 | Acesso ao valor antigo? | Sim (`(novo, antigo) => ...`) | Não |
 | Quando usar | Precisa saber o valor anterior, ou observar só uma fonte específica | Quer reagir a "qualquer coisa que a função usa", de forma mais enxuta |
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Regra prática: se você precisa **de um valor derivado** para usar no template, use `computed`. Se precisa **fazer algo** (chamar API, gravar em disco, mostrar um alerta) quando um dado muda, use `watch` ou `watchEffect`.
 
 ## 5. `onMounted()` e carregamento de dados
@@ -991,7 +991,7 @@ function limparFiltros() {
 </style>
 ```
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Observe que `eventosFiltrados` e `eventosOrdenados` são duas computed **encadeadas**, e `totalFiltrado`/`totalVagasLivres` dependem de `eventosFiltrados`. Se você mudar `busca`, o Vue recalcula `eventosFiltrados` (porque ela lê `busca`), o que por sua vez invalida o cache de `eventosOrdenados`, `totalFiltrado` e `totalVagasLivres` — tudo automático, seguindo a cadeia de dependências. Você não escreve nenhuma chamada manual de "atualizar".
 
 ### Como testar
@@ -1137,7 +1137,7 @@ Resultado esperado: você reproduz e depois corrige o estado de erro descrito na
 O `catch` do `try/catch` precisa capturar tanto falha de rede quanto `resposta.ok === false`.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Computed com getter e setter. Crie uma computed `buscaEmMaiusculas` que exiba `busca` sempre em maiúsculas ao ler, mas ao escrever converta para minúsculas antes de gravar em `busca`. Ligue essa computed a um segundo `<input>` (além do campo de busca normal) e prove que os dois campos ficam sincronizados nos dois sentidos.
 
@@ -1232,7 +1232,7 @@ Leve todo o padrão desta aula — computed encadeadas, `watch` persistindo uma 
 | Tela fica presa em "Carregando eventos..." para sempre | Esqueceu de setar `carregando.value = false` no `finally`, ou uma exceção interrompeu antes de chegar lá | Sempre use `try/catch/finally`, com `carregando.value = false` no `finally` |
 | Data aparece como `Invalid Date` | `dataIso` no formato errado, ou `new Date()` recebendo `undefined` | Confira o formato ISO (`YYYY-MM-DDTHH:mm:ss`) vindo do JSON |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do seu projeto autoral:
 
@@ -1258,7 +1258,7 @@ No repositório do seu projeto autoral:
 Na próxima aula você vai reestruturar seu projeto com **Vuetify** e **Vue Router** — os filtros e listas que você já tem hoje continuam valendo, só ganham um visual pronto e navegação entre telas.
 
 > **⚠️ Atenção**
-> O prazo da **Avaliação 1** é publicado no SIGAA (veja também o quadro de avaliações em [`../nivel-3/#avaliacao`](../nivel-3/#avaliacao)), e as instruções completas — escopo, rubrica e formato de entrega — estão na **Aula 04**.
+> O **Marco 1** do projeto fecha na próxima aula — veja o quadro de marcos em [`../nivel-3/#marcos`](../nivel-3/#marcos). Os requisitos completos estão na **Aula 04**.
 
 ## 📚 Para aprofundar
 
@@ -1272,4 +1272,4 @@ Na próxima aula você vai reestruturar seu projeto com **Vuetify** e **Vue Rout
 
 ---
 
-**Próxima aula (04):** introdução a **Vuetify** e **Vue Router**, transformando o UniEventos em uma SPA navegável com componentes visuais prontos — e publicação das instruções completas da **Avaliação 1**.
+**Próxima aula (04):** introdução a **Vuetify** e **Vue Router**, transformando o UniEventos em uma SPA navegável com componentes visuais prontos — e os requisitos completos do **Marco 1**.

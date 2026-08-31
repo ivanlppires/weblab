@@ -1,8 +1,8 @@
 # Aula 06 — CSS: sintaxe, seletores, classes, atributos e valores
 
 > **Nível 1 — Introdução ao Desenvolvimento Web** · Unidade 2: CSS: estilo, layout e responsividade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -21,9 +21,9 @@ Ao final desta aula você será capaz de:
 - [ ] Pasta `site-evento/` com as cinco páginas em HTML semântico validadas no W3C e `css/estilo.css` ligado em todas elas (Aula 05).
 - [ ] VS Code com Live Server e um navegador com DevTools. Hoje o painel **Styles** e a aba **Computed** são as ferramentas principais.
 - [ ] Revisar da Aula 05: sintaxe de uma regra CSS (seletor, declaração, bloco), o modelo de caixa, `box-sizing: border-box`, os valores de `display` e o gostinho de herança, `:hover` e variáveis da seção 6.
-- [ ] **Avaliação 1 pronta para envio** — o site em HTML puro. As instruções completas estão no fim desta aula.
+- [ ] **Marco 1 pronto** — o site em HTML puro. As instruções completas estão no fim desta aula.
 
-Na aula passada você deu ao site do evento um esqueleto semântico correto e escreveu a primeira folha de estilo: um reset com `box-sizing: border-box`, três variáveis, uma tipografia base e alguns componentes. Aquela folha funciona, mas não escala: as cores estão espalhadas, os seletores são genéricos demais e, quando duas regras brigam, você ainda não sabe explicar quem ganha. Hoje isso muda — e o site ganha um sistema de design de verdade. Esta aula abre a **Unidade 2** e é também o dia de envio da **Avaliação 1**.
+Na aula passada você deu ao site do evento um esqueleto semântico correto e escreveu a primeira folha de estilo: um reset com `box-sizing: border-box`, três variáveis, uma tipografia base e alguns componentes. Aquela folha funciona, mas não escala: as cores estão espalhadas, os seletores são genéricos demais e, quando duas regras brigam, você ainda não sabe explicar quem ganha. Hoje isso muda — e o site ganha um sistema de design de verdade. Esta aula abre a **Unidade 2** e é também o dia do **Marco 1**.
 
 ## 🗺️ Roteiro
 
@@ -31,7 +31,7 @@ Na aula passada você deu ao site do evento um esqueleto semântico correto e es
 |---|---|---|
 | 1 | 50 min | Seletores completos: tipo, classe, `id`, atributo, combinadores, pseudoclasses e pseudoelementos |
 | 2 | 50 min | Cascata, especificidade e herança; cores e contraste; unidades relativas; tipografia |
-| 3 | 50 min | Variáveis CSS e organização da folha; Mão na massa: o sistema de design do site; envio da Avaliação 1 |
+| 3 | 50 min | Variáveis CSS e organização da folha; Mão na massa: o sistema de design do site; Marco 1 do projeto |
 
 ## 1. Seletores
 
@@ -160,7 +160,7 @@ input:placeholder-shown { }
 > **⚠️ Atenção**
 > **Ordem obrigatória das pseudoclasses de link: LVHA** — `:link`, `:visited`, `:hover`, `:active`. Como todas têm a mesma especificidade, quem vem depois vence; escrever `:hover` antes de `:visited` faz o `:hover` "não funcionar" em links já visitados. O mnemônico clássico é *LoVe HAte*.
 
-**`:focus` ou `:focus-visible`?** Use `:focus-visible`. Ele mostra o anel de foco quando a navegação é por teclado e o esconde quando o foco veio de um clique de mouse — exatamente o comportamento que as pessoas esperam. E nunca escreva `outline: none` sem colocar outro indicador visível no lugar: um site sem foco visível é inutilizável por teclado e reprova na rubrica.
+**`:focus` ou `:focus-visible`?** Use `:focus-visible`. Ele mostra o anel de foco quando a navegação é por teclado e o esconde quando o foco veio de um clique de mouse — exatamente o comportamento que as pessoas esperam. E nunca escreva `outline: none` sem colocar outro indicador visível no lugar: um site sem foco visível é inutilizável por teclado, ponto.
 
 ### 1.7 Pseudoclasses estruturais
 
@@ -178,7 +178,7 @@ p:not(.destaque)    { }   /* todos os <p> que NÃO têm a classe destaque */
 
 `:nth-child(even)` é o que dá as **linhas alternadas** de uma tabela — o famoso "zebrado" que você vai aplicar na programação do evento. Já `:not()` evita regras duplicadas: em vez de escrever um estilo para todos os parágrafos e depois desfazê-lo em alguns, você exclui de uma vez.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > `:nth-child(n)` conta **todos os irmãos**, não só os do mesmo tipo. Em `<div><h2></h2><p>A</p><p>B</p></div>`, o parágrafo A é o **segundo** filho — `p:nth-child(1)` não pega nada. Quando você quer contar só os do mesmo tipo, existe `:nth-of-type(n)`. Essa diferença é pergunta certa de prova e bug certo na vida real.
 
 ### 1.8 Pseudoelementos: partes que não existem no HTML
@@ -387,7 +387,7 @@ Verifique em <https://webaim.org/resources/contrastchecker/> — dois campos, um
 Essa última linha é o tipo de descoberta que o verificador entrega e o olho não: `#1a7fb5` parece perfeitamente legível, e falha por pouco. Por isso `--cor-secundaria` é usada, no site do evento, em **bordas, ícones e estado `:hover`** — nunca como fundo de texto pequeno.
 
 > **⚠️ Atenção**
-> Nunca comunique uma informação **só** por cor. Campo inválido com borda vermelha e mais nada exclui quem tem daltonismo (cerca de 8% dos homens). Acrescente sempre um segundo sinal: um ícone, um texto, uma mudança de espessura de borda. Isso vale ponto na rubrica das Avaliações 2 e 3.
+> Nunca comunique uma informação **só** por cor. Campo inválido com borda vermelha e mais nada exclui quem tem daltonismo (cerca de 8% dos homens). Acrescente sempre um segundo sinal: um ícone, um texto, uma mudança de espessura de borda. Isso entra no checklist de qualidade dos Marcos 2 e 3.
 
 ## 4. Unidades
 
@@ -901,7 +901,7 @@ O menu horizontal com `display: inline-block` é um paliativo consciente: na Aul
 }
 ```
 
-Quatro estados em um componente só: repouso, `:hover`/`:focus-visible`, `:active` e desabilitado. Um botão que não muda de aparência ao receber foco é um botão quebrado para quem usa teclado — e é uma linha da rubrica.
+Quatro estados em um componente só: repouso, `:hover`/`:focus-visible`, `:active` e desabilitado. Um botão que não muda de aparência ao receber foco é um botão quebrado para quem usa teclado.
 
 **`site-evento/css/estilo.css` — seção 5, cartão**
 
@@ -1011,7 +1011,7 @@ Duas tabelas do site usam essas regras: a da programação, escrita na Aula 02, 
 ### Passo 8 — Verificar contraste e revisar
 
 1. Abra <https://webaim.org/resources/contrastchecker/> e teste os quatro pares da tabela da seção 3.4.
-2. Crie, na raiz do projeto, um arquivo `contraste.md` anotando cada par (texto × fundo), a razão obtida e onde ele é usado. Esse arquivo é entregue junto com a Avaliação 2.
+2. Crie, na raiz do projeto, um arquivo `contraste.md` anotando cada par (texto × fundo), a razão obtida e onde ele é usado. Esse arquivo faz parte do Marco 2 (Aula 10).
 3. No DevTools, selecione qualquer texto e abra a aba **Computed**: confira `font-size` (16 px no corpo), `line-height` (25,6 px = 1,6 × 16) e `color`.
 
 ### Como testar
@@ -1121,13 +1121,13 @@ Resultado esperado: a versão refatorada tem menos da metade das linhas, nenhuma
 `font-family` é herdada: declarar no `body` elimina as seis repetições de uma vez. As três cores viram duas variáveis (`--cor-superficie-escura` e `--cor-texto-claro`) mais uma variação. E `.header, .footer` agrupados resolvem as duas primeiras regras em uma.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Sistema de design documentado. Crie `design-system.css` e `design-system.html` no seu **projeto autoral**, documentando visualmente o seu sistema: paleta completa em variáveis (com o papel de cada cor), escala tipográfica (seis tamanhos, cada um com nome e valor em `rem`), escala de espaçamentos (três a cinco níveis), botões em quatro variações (primário, secundário, contorno, desabilitado) com os quatro estados cada, campos de formulário em todos os estados, um cartão e um alerta em quatro cores semânticas. Todos os contrastes precisam passar no WCAG AA — apresente a tabela de verificação.
 
 <details markdown="1"><summary>Dica</summary>
 
-Construa a página como um catálogo: uma seção por família de componente, com o exemplo visual à esquerda e o código que o produz à direita (dentro de `<pre><code>`). Essa página é o seu material de consulta pelo resto da disciplina e vale como item extra na Avaliação 2 — e é exatamente assim que sistemas de design profissionais são documentados.
+Construa a página como um catálogo: uma seção por família de componente, com o exemplo visual à esquerda e o código que o produz à direita (dentro de `<pre><code>`). Essa página é o seu material de consulta pelo resto da disciplina e entra bem no Marco 2 — e é exatamente assim que sistemas de design profissionais são documentados.
 </details>
 
 ## 🏆 Desafios
@@ -1248,17 +1248,17 @@ Escolha a página inicial de um site cuja identidade visual você admira e repro
 | As bordas da tabela ficam duplas e com espaço entre células | `border-collapse` continua no valor padrão `separate` | `table { border-collapse: collapse; }` |
 | Um `!important` novo foi preciso para vencer outro `!important` | Escalada de importância causada por má arquitetura de seletores | Remova os dois e resolva por especificidade ou por ordem na folha |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 **Parte 1 — Leitura (20 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulos de seletores e cascata. Na MDN em pt-BR: "Seletores CSS" e "Cascata, especificidade e herança" (links em Para aprofundar). Anote um seletor que apareceu na leitura e não nesta aula.
 
-**Parte 2 — Entrega (30 min).** A **Avaliação 1** é entregue nesta data pelo SIGAA, conforme as instruções abaixo. Além dela, entregue o exercício **B5** (refatoração com variáveis) aplicado ao **seu projeto autoral**: o bloco `:root` completo do seu sistema de design, com no mínimo dez variáveis, e a folha de estilo reorganizada nas sete seções.
+**Parte 2 — Produção (30 min).** Hoje fecha o **Marco 1** (instruções completas logo abaixo). Além dele, produza o exercício **B5** (refatoração com variáveis) aplicado ao **seu projeto autoral**: o bloco `:root` completo do seu sistema de design, com no mínimo dez variáveis, e a folha de estilo reorganizada nas sete seções.
 
-**Parte 3 — Fórum (10 min).** No fórum "Especificidade na prática" do SIGAA: traga um conflito de estilo real que você enfrentou (no site do evento ou no seu projeto), o cálculo de especificidade dos seletores envolvidos e como resolveu **sem** `!important`. Comente a solução de um colega propondo uma alternativa.
+**Parte 3 — Discussão (10 min).** Em texto próprio (ou no fórum da turma, se você cursa a disciplina): traga um conflito de estilo real que você enfrentou (no site do evento ou no seu projeto), o cálculo de especificidade dos seletores envolvidos e como resolveu **sem** `!important`. Se puder, compare a solução com a de um colega.
 
 **Critério de pronto:** o `css/estilo.css` do seu projeto abre com o comentário das sete seções, tem um `:root` com dez ou mais variáveis, nenhum valor de cor escrito solto fora do `:root`, nenhum `!important` e nenhum `id` usado como seletor de estilo.
 
-**Entrega:** commit + push e link do repositório no SIGAA (ou o `.zip` da pasta do projeto).
+**Guarde no seu repositório:** commit + push (ou a pasta do projeto, se ainda não usa Git).
 
 ## ✅ Checkpoint do projeto
 
@@ -1279,13 +1279,11 @@ Ao fim desta aula, o seu projeto autoral deve ter:
 - [ ] Arquivo `contraste.md` na raiz, com os pares de cor verificados no WebAIM.
 - [ ] Nenhum `!important` e nenhum `id` usado como seletor de estilo.
 
-## 📝 Avaliação 1 — instruções de entrega
+## 🎓 Marco do projeto — Unidade 1
 
-**Escopo.** A primeira avaliação verifica o domínio dos elementos HTML estudados na **Unidade 1** (Aulas 01 a 05). O objeto é o **seu projeto autoral**: um site em HTML puro, **sem CSS**, sobre o tema que você definiu na Aula 01. O escopo são os itens **não-CSS** do Checkpoint da Aula 05: as cinco páginas, o seccionamento semântico, a hierarquia de títulos, os `<article>`, a página de contato e a validação no W3C. Os itens de CSS daquele Checkpoint — `css/estilo.css` ligado nas páginas, o bloco `:root`, a regra base de imagens e o `.botao` com `:hover`/`:focus-visible` — **não entram nesta avaliação; eles são cobrados na Avaliação 2**, sobre este mesmo site. Trabalho **individual** (as três avaliações da trilha são individuais e recaem sobre o mesmo projeto autoral), peso 10,0, entrega pelo SIGAA no prazo publicado no Plano de Curso da sua turma.
+**Escopo.** Ao fim da Unidade 1, o seu projeto autoral precisa ser um site em HTML puro, **sem CSS**, sobre o tema que você definiu na Aula 01. O escopo são os itens **não-CSS** do Checkpoint da Aula 05: as cinco páginas, o seccionamento semântico, a hierarquia de títulos, os `<article>`, a página de contato e a validação no W3C. Os itens de CSS daquele Checkpoint — `css/estilo.css` ligado nas páginas, o bloco `:root`, a regra base de imagens e o `.botao` com `:hover`/`:focus-visible` — **não entram neste marco; eles fecham o Marco 2**, sobre este mesmo site. A página vai parecer crua, e isso é intencional: o que este marco mede é a **estrutura**. A estilização é o Marco 2, e a interatividade é o Marco 3 — mesmo site, três camadas.
 
-A página vai parecer crua, e isso é intencional: o que está sendo avaliado é a **estrutura**. A estilização é objeto da Avaliação 2, sobre este mesmo site, e a interatividade é a Avaliação 3. Escolha um tema que você aguente desenvolver até o fim do semestre.
-
-**Requisitos obrigatórios.**
+**Requisitos.**
 
 | # | Requisito | Onde foi estudado |
 |---|---|---|
@@ -1303,24 +1301,24 @@ A página vai parecer crua, e isso é intencional: o que está sendo avaliado é
 | 12 | Ao menos um link externo com `target="_blank"` e `rel="noopener noreferrer"` | Aula 02 |
 | 13 | Zero erros no validador do W3C, em todas as páginas | Aula 02 |
 
-**Formato de entrega.** Um arquivo `.zip` com a pasta completa do projeto, nomeado `av01-seunome.zip`, **ou** o link de um repositório público no GitHub com a mesma estrutura — as duas formas são aceitas. Não envie o `.zip` de um `.zip`, e não inclua a pasta `.git` nem arquivos de sistema. **Sem CSS nesta avaliação**: nenhum `<link rel="stylesheet">`, nenhum `<style>` e nenhum atributo `style`.
+**Checklist de qualidade.** O que separa um projeto pronto de um feito às pressas na última hora:
 
-**Rubrica.**
+- Validação W3C sem erros em nenhuma das cinco páginas.
+- Seccionamento semântico coerente e hierarquia de títulos sem saltos.
+- Formulário completo e acessível: todo campo com rótulo associado, agrupamento em `fieldset`, validação nativa funcionando.
+- Tabela, listas e elementos de texto usados pelo que significam, não só pela aparência.
+- Mídias com `alt` que descreve o que a imagem comunica (não o nome do arquivo), legendas de vídeo funcionando, `width`/`height` e `loading="lazy"` presentes.
+- Navegação funcional e idêntica entre todas as páginas, sem link quebrado.
+- Arquivos e pastas em minúsculas, sem espaço nem acento; nomes que dizem o que cada arquivo é.
+- Nenhum `<link rel="stylesheet">`, `<style>` ou atributo `style` — este marco é só estrutura.
 
-| Critério | Peso |
-|---|---|
-| Validação W3C sem erros em todas as páginas | 1,5 |
-| Seccionamento semântico e hierarquia de títulos | 2,0 |
-| Formulário completo e acessível (rótulos, agrupamento, validação nativa) | 2,0 |
-| Tabela, listas e elementos de texto usados com significado | 1,5 |
-| Mídias com `alt`, legendas e atributos de desempenho adequados | 1,0 |
-| Navegação funcional entre todas as páginas | 1,0 |
-| Organização dos arquivos, nomes e legibilidade do código | 1,0 |
-| **Total** | **10,0** |
+**Como saber que está pronto.**
 
-**Atraso.** Desconto de 1,0 ponto por dia corrido de atraso, até cinco dias; depois disso, a entrega não é aceita, salvo justificativa formal protocolada na coordenação do curso.
-
-**Plágio e uso de IA.** Ferramentas de IA são permitidas como apoio: explicar um erro, sugerir sintaxe, revisar o código. O trabalho, porém, precisa ser seu — você pode ser chamado a explicar qualquer trecho do HTML entregue, e não saber explicar equivale a não ter feito. Sites idênticos, copiados da internet ou copiados entre colegas (mesmo com o tema "trocado") recebem nota zero para todos os envolvidos.
+- Rode cada página no validador do W3C (upload de arquivo ou por URL, se já estiver publicada) e confira "Document checking completed. No errors or warnings to show."
+- No Console do DevTools, `document.querySelectorAll("main").length` deve retornar `1` em cada página.
+- Navegue pelo site inteiro só com <kbd>Tab</kbd> e <kbd>Enter</kbd>: todo link e todo campo do formulário precisa ser alcançável e visível em foco.
+- Peça para alguém (colega, familiar, ou você mesmo depois de um dia) abrir as cinco páginas sem explicação prévia e apontar qual link parece quebrado ou qual página parece fora do lugar.
+- Use IA para entender um erro do validador ou revisar uma dúvida de sintaxe — não para gerar o site inteiro no seu lugar. Se você não conseguir explicar uma linha do seu próprio HTML, ela ainda não é sua.
 
 ## 📚 Para aprofundar
 

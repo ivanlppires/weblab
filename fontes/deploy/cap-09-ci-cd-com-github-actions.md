@@ -1,8 +1,8 @@
 # Capítulo 09 — CI/CD com GitHub Actions
 
 > **Deploy & Ferramentas** · Unidade 3: Infraestrutura, automação e qualidade
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 2 a 3 h · estudo autônomo, em paralelo à sua trilha
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -751,7 +751,7 @@ Resultado esperado: uma tabela no `README.md` com os dois tempos e o percentual 
 O cache só existe a partir da segunda execução da mesma chave (que vem do `package-lock.json`). Compare a terceira execução com cache contra uma execução em que você removeu a linha `cache: npm` — e repare que o step passa a se chamar "Post Setup Node" quando o cache é salvo.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Faça o deploy acontecer **apenas** quando você criar uma tag de versão (`v1.2.0`), e não a cada push no `main`. A imagem precisa ser publicada com a tag da versão (`1.2.0`), com `1.2` e com `latest`, e o VPS precisa subir exatamente a versão criada.
 
@@ -864,7 +864,7 @@ Você tem CI, imagem publicada e deploy por SSH. Falta o que separa um pipeline 
 | O secret aparece como `***` mas o script falha na autenticação | segredo cadastrado com espaço ou quebra de linha a mais | recadastre colando sem espaços; teste com o tamanho (`echo -n "$TOKEN" \| wc -c`) |
 | A CI não roda em um PR aberto de um fork | política do repositório exige aprovação para colaboradores de primeira viagem | aprove a execução no botão da própria página do PR |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No repositório do seu **projeto autoral**:
 
@@ -876,7 +876,7 @@ No repositório do seu **projeto autoral**:
 
 **Critério de pronto:** a aba **Actions** tem pelo menos quatro execuções (duas vermelhas e duas verdes), o badge está verde, o `main` não aceita push direto e nenhum segredo aparece em log ou no código.
 
-**Entrega:** commit + push e link do repositório no SIGAA, junto com o link de uma execução vermelha e de uma verde.
+**Guarde no seu repositório:** commit + push, junto com o link de uma execução vermelha e de uma verde.
 
 ## ✅ Está no ar quando…
 

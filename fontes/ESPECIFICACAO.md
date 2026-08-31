@@ -5,7 +5,7 @@
 
 ## 1. O que é o WebLab
 
-**WebLab — Laboratório de Desenvolvimento Web** é a apostila online, pública e gratuita, das disciplinas de desenvolvimento web do curso de Tecnologia em Análise e Desenvolvimento de Sistemas / Sistemas de Informação da **UNEMAT — Campus Sinop (FACET)**, ministradas pelo **Prof. Ivan Luiz Pedroso Pires**. Ela é organizada em quatro trilhas:
+**WebLab — Laboratório de Desenvolvimento Web** é a apostila online, pública e gratuita, das disciplinas de desenvolvimento web do curso de Tecnologia em Análise e Desenvolvimento de Sistemas / Sistemas de Informação da **UNEMAT — Campus Sinop (FACET)**, escritas e revisadas por professores da instituição (ver `fontes/autores.md`). Ela é organizada em quatro trilhas, abertas a qualquer pessoa que queira aprender:
 
 | Trilha | Disciplina de origem | Aulas | Projeto fio-condutor |
 |---|---|---|---|
@@ -25,7 +25,7 @@ O objetivo declarado do WebLab é **instigar curiosidade e vontade de superaçã
 1. **💻 Mão na massa** — passo a passo guiado no projeto fio-condutor. Todo mundo faz junto.
 2. **🧪 Laboratório** — exercícios em sala em três níveis: **A (fixação)**, **B (aplicação)** e **C (desafio)**. Cada item tem resultado esperado; os B e C têm dica em `<details>`.
 3. **🏆 Desafios** — extras, opcionais, mais difíceis, com estrelas: `⭐` (1–2 h), `⭐⭐` (uma tarde), `⭐⭐⭐` (um fim de semana). Na última aula de cada unidade há um **🔥 Boss** — um mini-projeto que combina tudo da unidade. Os desafios de todas as aulas são reunidos automaticamente no **Banco de Desafios** do site.
-4. **🏠 Atividade assíncrona (1 h)** — tarefa objetiva com critério de pronto, ligada ao projeto autoral, entregue no SIGAA.
+4. **🏠 Para praticar depois da aula (1 h)** — tarefa objetiva com critério de pronto, ligada ao projeto autoral, guardada no repositório do estudante.
 
 ### 2.1 Como escrever um bom desafio
 
@@ -74,8 +74,8 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
 # Aula NN — <Título exatamente como em config.py>
 
 > **Nível N — <nome da trilha>** · Unidade N: <nome da unidade>
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 ## 🎯 Objetivos de aprendizagem
 (5 a 7 objetivos com verbos observáveis — "ao final desta aula você será capaz de…")
@@ -104,7 +104,7 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
 ## 🧪 Laboratório
 ### Nível A — Fixação        (≥ 4 itens: **A1.** … perguntas curtas / trechos para prever a saída / completar código)
 ### Nível B — Aplicação      (≥ 3 itens: **B1.** … construir algo pequeno; cada um com "Resultado esperado" e <details>Dica</details>)
-### Nível C — Desafio em sala (≥ 1 item: **C1.** … o mais difícil, para quem termina antes; <details>Dica</details>)
+### Nível C — Desafio         (≥ 1 item: **C1.** … o mais difícil, para quem termina antes; <details>Dica</details>)
 
 ## 🏆 Desafios
 (≥ 3 desafios no formato da §2.1: um ⭐, um ⭐⭐, um ⭐⭐⭐; na última aula de cada unidade, também um 🔥 Boss)
@@ -113,8 +113,8 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
 | Sintoma | Causa | Solução |
 (≥ 5 linhas; sintomas reais — mensagens de erro literais do console/terminal quando existirem)
 
-## 🏠 Atividade assíncrona (1 h)
-(tarefa objetiva, ligada ao projeto autoral; "Critério de pronto"; "Entrega: commit + push e link do repositório no SIGAA")
+## 🏠 Para praticar depois da aula (1 h)
+(tarefa objetiva, ligada ao projeto autoral; "Critério de pronto"; termina com "commit + push no seu repositório")
 
 ## ✅ Checkpoint do projeto             ← na trilha Deploy: "## ✅ Está no ar quando…"
 (checklist do que deve estar funcionando no repositório do estudante ao fim desta aula)
@@ -124,13 +124,16 @@ Arquivo: `fontes/<trilha>/aula-NN-slug.md` (nível) ou `fontes/deploy/cap-NN-slu
  capítulo(s) da bibliografia da disciplina, listada em config.py)
 ```
 
-Nas aulas que fecham unidade (**N1: 06, 10, 15 · N2: 06, 10, 16 · N3: 04, 08, 15**), acrescentar **antes** de "Para aprofundar" (sem prazo literal: "até o prazo publicado no SIGAA"):
+Nas aulas que fecham unidade (**N1: 06, 10, 15 · N2: 06, 10, 16 · N3: 04, 08, 15**), acrescentar **antes** de "Para aprofundar":
 
 ```
-## 📝 Avaliação N — instruções de entrega
-(escopo; requisitos obrigatórios numerados; formato de entrega no SIGAA — link do repositório público, sem .zip, salvo N1 que aceita .zip;
- rubrica em tabela com pesos somando 10,0; política de atraso: −1,0 por dia corrido até 5 dias; política de plágio e de uso de IA:
- IA permitida como apoio, estudante pode ser chamado a explicar o código, cópia entre colegas = zero para ambos)
+## 🎓 Marco do projeto — Unidade N
+(o que o projeto autoral do estudante precisa ter ao fim da unidade:
+ escopo em um parágrafo; requisitos obrigatórios numerados, cada um dizendo em que aula foi estudado;
+ um "checklist de qualidade" com o que separa um projeto pronto de um projeto entregue às pressas;
+ e "Como saber que está pronto": o que abrir, medir ou testar para ter certeza.
+ SEM nota, peso, rubrica pontuada, prazo, entrega institucional ou política de atraso —
+ quem cursa a disciplina recebe essas regras do professor; quem estuda sozinho usa o marco como meta.)
 ```
 
 Na trilha Deploy, `## 💻 Mão na massa` chama-se `## 🚀 Passo a passo — <o que vai ao ar>` e publica de verdade um projeto das trilhas.
@@ -209,6 +212,7 @@ Scaffold oficial do Nível 3 (testado): `npx create-vue@latest unieventos-web --
 - **Tom:** direto, prático, sem enrolação. Frases curtas. Voz ativa. Sem "vamos agora" repetido. Fale com o estudante na segunda pessoa ("você").
 - **Tamanho:** aulas de nível: 900 a 1.500 linhas de Markdown (o lint exige ≥ 600); capítulos de deploy: 600 a 1.000 (lint ≥ 400). Precisa sustentar 150 min de aula. Não resuma.
 - **Código:** completo e executável. Nada de `// ...resto do código`, `TODO`, `TBD`. Todo bloco com linguagem declarada: ```` ```html ````, ```` ```css ````, ```` ```js ````, ```` ```vue ````, ```` ```bash ````, ```` ```sql ````, ```` ```json ````, ```` ```http ````, ```` ```yaml ````, ```` ```dockerfile ````, ```` ```nginx ````, ```` ```text ````. Caminho do arquivo antes do bloco.
+- **Material aberto:** sem nota, peso, rubrica pontuada, prazo, entrega institucional (SIGAA), frequência ou exame — o WebLab serve tanto a quem cursa a disciplina quanto a quem estuda por conta própria, em qualquer lugar. Onde havia avaliação, há **marco do projeto**; onde havia entrega, há "commit + push no seu repositório".
 - **Sem datas, sem semestre, sem turma — em nenhuma aula, nem na 01.** O material serve a qualquer oferta: a Aula 01 apresenta a sequência das aulas e o escopo das avaliações **sem** datas, dizendo que o calendário e os prazos saem no SIGAA. Nada de `2026.2`, `Turma 01`, `dd/mm/aaaa` ou dia da semana fixo. O calendário de um semestre é opcional e vive só em `build/config.py` (`SEMESTRE`, `CRONOGRAMA`, `prazo` das avaliações) — ver `docs/calendario-2026-2.md`. Em dados de exemplo (eventos fictícios, `<time>`, seeds), use o ano **2030**; datas históricas e didáticas (1995, `31/02/2000`) permanecem.
 - **Continuidade:** cada aula retoma em 3 linhas onde a anterior parou e termina anunciando a próxima ("Na próxima aula…" sem data). Não reintroduza o que já foi ensinado — referencie ("como vimos na Aula 03").
 - **Sem invenção:** se não tiver certeza de uma API, use as versões e trechos deste documento. Prefira links para documentação oficial (MDN pt-BR: `https://developer.mozilla.org/pt-BR/docs/...`).

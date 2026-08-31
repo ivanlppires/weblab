@@ -1,8 +1,8 @@
 # Aula 13 — Rotas e controladores
 
 > **Nível 2 — Desenvolvimento Web** · Unidade 3: Web dinâmica server-side
-> WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
-> **Carga:** 3 aulas de 50 min (presencial) + 1 h (assíncrona)
+> WebLab · UNEMAT — Campus Sinop
+> **Tempo estimado:** 3 blocos de 50 min + 1 h de prática
 
 Na Aula 12 as rotas do Café Cerrado saíram do `server.js` e ganharam arquivo próprio com `express.Router`. Mas a lógica continua morando dentro delas: a rota sabe o endereço **e** faz o serviço. Hoje damos o último passo da arquitetura do back-end — a rota vira um índice de duas palavras por linha, o controlador executa, e uma terceira camada guarda os dados em disco. No fim da aula a API do Café Cerrado tem CRUD completo, busca por query string, validação de verdade e produtos que sobrevivem ao reinício do servidor.
 
@@ -148,7 +148,7 @@ Um método é **idempotente** quando repeti-lo produz o mesmo estado final que e
 
 Isso não é trivia de prova. É a razão pela qual navegadores e proxies podem repetir automaticamente um `GET` que falhou por timeout, mas nunca repetem um `POST` — e é por isso que aquele aviso "não atualize a página, seu pedido está sendo processado" existe em site de compra.
 
-> **📌 Na prova**
+> **📌 Vale gravar**
 > Saiba dizer, com exemplo, a diferença entre método **seguro** (não altera estado: `GET`, `HEAD`, `OPTIONS`) e método **idempotente** (repetir não muda o resultado: os seguros mais `PUT` e `DELETE`). Todo método seguro é idempotente; o contrário não vale — `DELETE` é idempotente e não é seguro.
 
 ### 2.2 `PUT` ou `PATCH`?
@@ -940,7 +940,7 @@ Resultado esperado: alguém que nunca viu o projeto consegue usar a API só lend
 Cinco linhas na tabela (mais as que você criou nos itens B1 e B2). Não esqueça de documentar os parâmetros de query string aceitos por `GET /api/produtos` — é a parte que o front da Aula 15 mais vai usar.
 </details>
 
-### Nível C — Desafio em sala
+### Nível C — Desafio
 
 **C1.** Paginação com metadados. Listar 12 produtos é fácil; listar 12 mil não é. Implemente paginação em `GET /api/produtos` com os parâmetros `pagina` (padrão 1) e `limite` (padrão 10, máximo 50), devolvendo um envelope com os dados e os metadados:
 
@@ -1070,7 +1070,7 @@ Seu `criar` faz três coisas em sequência: lê o arquivo, acrescenta um item, g
 | Resposta `404` chega como página HTML, não como JSON | A requisição caiu no `express.static` ou no 404 padrão do Express | Conferir se `app.all('/api/{*splat}', ...)` está registrado depois dos routers |
 | `Route.get() requires a callback function but got a [object Undefined]` | Nome exportado no controlador diferente do usado na rota (`exports.listar` × `controlador.listarTudo`) | Conferir a grafia dos dois lados; `module.exports` do controlador é o objeto `exports` |
 
-## 🏠 Atividade assíncrona (1 h)
+## 🏠 Para praticar depois da aula (1 h)
 
 No **seu projeto autoral**, refatore a API para a arquitetura de hoje e complete o CRUD:
 
@@ -1082,7 +1082,7 @@ No **seu projeto autoral**, refatore a API para a arquitetura de hoje e complete
 
 **Critério de pronto:** clonando o repositório em uma pasta limpa, `npm install && npm run dev` sobe a API; os 13 blocos equivalentes do seu `testes.http` devolvem os status esperados; e um produto criado continua existindo depois de reiniciar o servidor.
 
-**Entrega:** commit + push e link do repositório no SIGAA.
+**Guarde no seu repositório:** commit + push.
 
 ## ✅ Checkpoint do projeto
 
