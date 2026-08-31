@@ -15,7 +15,11 @@
     else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) raiz.setAttribute('data-tema', 'escuro');
     var bt = document.getElementById('tema');
     if (!bt) return;
-    function rotulo() { bt.textContent = raiz.getAttribute('data-tema') === 'escuro' ? '☼ Claro' : '☾ Escuro'; }
+    function rotulo() {
+      var escuro = raiz.getAttribute('data-tema') === 'escuro';
+      bt.innerHTML = '<span aria-hidden="true">' + (escuro ? '☼' : '☾') + '</span><span class="rotulo">' + (escuro ? 'Claro' : 'Escuro') + '</span>';
+      bt.setAttribute('aria-label', escuro ? 'Mudar para o tema claro' : 'Mudar para o tema escuro');
+    }
     bt.addEventListener('click', function () {
       var novo = raiz.getAttribute('data-tema') === 'escuro' ? 'claro' : 'escuro';
       raiz.setAttribute('data-tema', novo);
