@@ -18,10 +18,10 @@ Ao final desta aula você será capaz de:
 ## 📋 Pré-requisitos
 
 - [ ] VS Code com a extensão Live Server e o navegador com DevTools (<kbd>F12</kbd>) funcionando.
-- [ ] A pasta do projeto do evento com `index.html` (Aula 02) e `inscricao.html` (Aula 03) validados no W3C.
+- [ ] A pasta do projeto do evento com as **cinco** páginas validadas no W3C: `index.html`, `programacao.html`, `palestrantes.html` (Aula 02), `inscricao.html` com o formulário (Aula 03) e `contato.html` (esqueleto da Aula 02).
 - [ ] Três fotos suas (ou livres de direitos) e um vídeo curto em `.mp4` — usaremos para medir peso de página. Se não tiver, baixe amostras do Unsplash ou do Pexels.
 
-> Na Aula 03 você construiu a página de inscrição da Semana Acadêmica de Sistemas de Informação: `<form>`, tipos de `<input>`, `<label>`, `<select>`, `<datalist>`, `<fieldset>` e validação nativa. Hoje você fecha o capítulo de formulários com os campos que faltavam e passa para o que dá vida a uma página: listas bem estruturadas, imagens que carregam rápido, vídeo com legenda e conteúdo externo incorporado. Ao final, o site do evento ganha as páginas **programação** e **palestrantes**.
+> Na Aula 03 você construiu a página de inscrição da Semana Acadêmica de Sistemas de Informação: `<form>`, tipos de `<input>`, `<label>`, `<select>`, `<datalist>`, `<fieldset>` e validação nativa. Hoje você fecha o capítulo de formulários com os campos que faltavam e passa para o que dá vida a uma página: listas bem estruturadas, imagens que carregam rápido, vídeo com legenda e conteúdo externo incorporado. Ao final, as cinco páginas do site do evento — todas já existentes — ganham logo, banner responsivo, listas de dois níveis, vídeo legendado, áudio, mapa e os campos de formulário que faltavam.
 
 ## 🗺️ Roteiro
 
@@ -29,7 +29,7 @@ Ao final desta aula você será capaz de:
 |---|---|---|
 | 1 | 50 min | Formulários: campos avançados, `<output>`, `<meter>`, upload; listas `ul`, `ol`, `dl`, aninhamento e menus |
 | 2 | 50 min | Imagens: `alt` por situação, formatos, `figure`, `srcset`/`sizes`, `<picture>`, `loading="lazy"` |
-| 3 | 50 min | Áudio, vídeo, `<track>`, `<iframe>`; Mão na massa: programação e palestrantes; medição de peso no DevTools |
+| 3 | 50 min | Áudio, vídeo, `<track>`, `<iframe>`; Mão na massa: ampliando as cinco páginas do evento; medição de peso no DevTools |
 
 ## 1. Formulários: fechando o ciclo
 
@@ -266,8 +266,10 @@ Um menu de navegação é um conjunto de links relacionados. Marcá-lo como `<ul
 **`programacao.html` (trecho do cabeçalho)**
 
 ```html
-<header>
-  <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+<header id="topo">
+  <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+  <h1>Semana Acadêmica de Sistemas de Informação</h1>
+  <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
   <nav aria-label="Principal">
     <ul>
       <li><a href="index.html">Início</a></li>
@@ -407,7 +409,7 @@ Nem toda imagem deve ser `lazy`. A imagem principal do topo da página (o banner
      fetchpriority="high" decoding="async">
 
 <!-- Fotos da galeria, abaixo da dobra: lazy -->
-<img src="img/palestrante-01.jpg" alt="Ana Souza" width="400" height="400"
+<img src="img/palestrante-01.jpg" alt="Ana Lúcia Ferreira" width="400" height="400"
      loading="lazy" decoding="async">
 ```
 
@@ -559,21 +561,30 @@ Fluxo de otimização de uma imagem no **Squoosh** (squoosh.app, roda no navegad
 4. Repita em **AVIF** e **MozJPEG** para gerar os três formatos do `<picture>`.
 5. Anote o peso antes e depois — você fará isso na Mão na massa.
 
-## 💻 Mão na massa — Programação e palestrantes do evento
+## 💻 Mão na massa — Mídias, listas e campos avançados nas páginas do evento
 
-Continuando o site da Semana Acadêmica de Sistemas de Informação, hoje você constrói `programacao.html` e `palestrantes.html`. Ao final, a pasta do projeto ficará assim:
+As cinco páginas do site da **Semana Acadêmica de Sistemas de Informação** já existem: `index.html`, `programacao.html` e `palestrantes.html` nasceram na Aula 02, e `inscricao.html` recebeu o formulário completo na Aula 03. Hoje **nenhuma página é criada do zero** — você amplia o que já está lá.
+
+> **⚠️ Atenção**
+> Nada do que as Aulas 02 e 03 entregaram é jogado fora. O `<header id="topo">` com o `<h1>` do site, o `<h2>` que titula cada página, o rodapé de três parágrafos e a **tabela** da programação continuam exatamente onde estão. Todo o trabalho de hoje é *acrescentar* — se em algum passo você se pegar apagando conteúdo antigo, pare e releia o passo.
+
+Ao final, a pasta do projeto ficará assim:
 
 ```text
 site-evento/
-├── index.html
-├── inscricao.html
-├── programacao.html        ← hoje
-├── palestrantes.html       ← hoje
+├── index.html              ← ganha o banner responsivo
+├── programacao.html        ← ganha trilhas, vídeo, áudio e mapa
+├── inscricao.html          ← ganha os campos avançados da seção 1
+├── palestrantes.html       ← ganha as fotos e o elenco completo
+├── contato.html
 ├── img/
 │   ├── logo-sasi.svg
 │   ├── banner.avif
 │   ├── banner.webp
 │   ├── banner.jpg
+│   ├── banner-400.jpg
+│   ├── banner-800.jpg
+│   ├── banner-1600.jpg
 │   ├── capa-abertura.jpg
 │   └── palestrante-01.jpg  (até palestrante-06.jpg)
 ├── midia/
@@ -583,24 +594,17 @@ site-evento/
     └── abertura-pt.vtt
 ```
 
-### Passo 1 — esqueleto e cabeçalho de `programacao.html`
+### Passo 1 — Logo e navegação marcada nas cinco páginas
 
-Crie o arquivo com a mesma estrutura das páginas anteriores (Aula 02) e o menu como lista dentro de `<nav>`:
+O `<head>` de cada página **não muda** hoje: `charset`, `viewport`, `description`, `meta name="author"` e `title` continuam como você os escreveu na Aula 02. O que muda é o cabeçalho: entram o logo e dois atributos de acessibilidade do `<nav>`.
 
-**`programacao.html`**
+**`programacao.html` (trecho: `<header>`, depois da mudança)**
 
 ```html
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona.">
-  <title>Programação — Semana Acadêmica de Sistemas de Informação</title>
-</head>
-<body>
-  <header>
-    <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+  <header id="topo">
+    <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+    <h1>Semana Acadêmica de Sistemas de Informação</h1>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav aria-label="Principal">
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -611,136 +615,121 @@ Crie o arquivo com a mesma estrutura das páginas anteriores (Aula 02) e o menu 
       </ul>
     </nav>
   </header>
+```
 
+Três decisões deste passo:
+
+- **`alt=""` no logo.** Pela tabela da seção 3.2, um logotipo leva o nome da organização no `alt` — mas aqui o `<h1>` logo abaixo já diz exatamente esse nome. Repetir faria o leitor de tela anunciar o mesmo texto duas vezes seguidas; então a imagem é **decorativa** e recebe `alt` vazio (presente, e vazio). Na Aula 07, quando o logo virar um link para a página inicial, o `alt` passa a descrever o destino.
+- **`aria-label="Principal"`** distingue este `<nav>` de qualquer outro que a página venha a ter.
+- **`aria-current="page"`** muda em cada página: em `index.html` ele vai no link "Início", em `palestrantes.html` no link "Palestrantes", e assim por diante. Repita o cabeçalho nas **cinco** páginas, trocando só onde o atributo está.
+
+### Passo 2 — Banner responsivo na página inicial
+
+Em `index.html`, o banner entra como **primeiro** elemento do `<main>`, antes da lista "Nesta página". Ele combina as duas técnicas da seção 3: `<picture>` escolhe o **formato**, `srcset`/`sizes` escolhem o **tamanho**. Como é a primeira imagem visível, ela não leva `lazy`.
+
+**`index.html` (trecho: início do `<main>`)**
+
+```html
   <main>
-    <h1>Programação</h1>
-  </main>
+    <picture>
+      <source srcset="img/banner.avif" type="image/avif">
+      <source srcset="img/banner.webp" type="image/webp">
+      <img src="img/banner-800.jpg"
+           srcset="img/banner-400.jpg 400w,
+                   img/banner-800.jpg 800w,
+                   img/banner-1600.jpg 1600w"
+           sizes="(max-width: 700px) 100vw, 1100px"
+           alt="Auditório lotado na abertura da edição anterior da Semana Acadêmica"
+           width="1600" height="900"
+           fetchpriority="high" decoding="async">
+    </picture>
 
-  <footer>
-    <p>Semana Acadêmica de Sistemas de Informação · UNEMAT Sinop · <a href="contato.html">Fale com a organização</a></p>
-  </footer>
-</body>
-</html>
+    <p>Nesta página:</p>
 ```
 
-### Passo 2 — banner responsivo com `<picture>`
+Gere os seis arquivos no Squoosh a partir da mesma foto: três larguras em JPG e a versão de 1600 px também em WebP e AVIF. Anote o peso de cada um em um comentário HTML acima do `<picture>` — você vai comparar no Passo 10.
 
-Logo abaixo do `<h1>`, dentro de `<main>`, o banner em três formatos. Ele é a primeira imagem da página, então **não** leva `lazy`:
+### Passo 3 — Trilhas em lista aninhada
 
-**`programacao.html` (dentro de `<main>`, após o `<h1>`)**
+A tabela da programação continua sendo a fonte de horários. O que falta é uma visão **por assunto**, e ela é uma lista de dois níveis. Em `programacao.html`, logo **depois** do `</table>` e **antes** do parágrafo "Voltar ao topo", acrescente:
 
-```html
-<picture>
-  <source srcset="img/banner.avif" type="image/avif">
-  <source srcset="img/banner.webp" type="image/webp">
-  <img src="img/banner.jpg"
-       alt="Auditório lotado na abertura da edição anterior da Semana Acadêmica"
-       width="1600" height="900" fetchpriority="high">
-</picture>
-```
-
-Gere os três arquivos no Squoosh a partir da mesma foto. Anote o peso de cada um em um comentário HTML acima do `<picture>` — você vai comparar no final.
-
-### Passo 3 — a programação em listas ordenadas com `<time>`
-
-Cada dia é uma `<section>` com um `<ol>`; cada item traz o horário em `<time>` e o título da atividade. O atributo `datetime` guarda o valor legível por máquina:
-
-**`programacao.html` (continuação de `<main>`)**
+**`programacao.html` (trecho: novo `<section>` dentro do `<main>`)**
 
 ```html
-<section>
-  <h2>Primeiro dia</h2>
-  <ol>
-    <li><time datetime="19:00">19h00</time> — Credenciamento e abertura</li>
-    <li><time datetime="19:30">19h30</time> — Palestra: HTML semântico na prática</li>
-    <li><time datetime="20:30">20h30</time> — Intervalo</li>
-    <li><time datetime="20:50">20h50</time> — Minicurso: Git e GitHub do zero</li>
-  </ol>
-</section>
-
-<section>
-  <h2>Segundo dia</h2>
-  <ol>
-    <li><time datetime="19:00">19h00</time> — Palestra: Acessibilidade não é opcional</li>
-    <li><time datetime="20:00">20h00</time> — Mesa-redonda: mercado de trabalho em Sinop</li>
-    <li><time datetime="21:00">21h00</time> — Maratona de programação (primeira rodada)</li>
-  </ol>
-</section>
-```
-
-### Passo 4 — trilhas e sessões em lista aninhada
-
-**`programacao.html` (continuação de `<main>`)**
-
-```html
-<section>
-  <h2>Trilhas</h2>
-  <ul>
-    <li>Front-end
+    <section id="trilhas">
+      <h3>Trilhas do evento</h3>
+      <p>As mesmas atividades da tabela acima, agrupadas por assunto.</p>
       <ul>
-        <li>HTML semântico na prática</li>
-        <li>CSS moderno sem framework</li>
-        <li>JavaScript para quem nunca programou</li>
+        <li>Desenvolvimento Web
+          <ul>
+            <li>Abertura e palestra magna: o futuro do desenvolvimento web</li>
+            <li>Minicurso: Git e GitHub do zero</li>
+            <li>Minicurso: acessibilidade na prática</li>
+            <li>Maratona de programação</li>
+          </ul>
+        </li>
+        <li>Ciência de Dados
+          <ul>
+            <li>Dashboards que os produtores realmente usam</li>
+            <li>Dados abertos e cidades inteligentes</li>
+          </ul>
+        </li>
+        <li>Inteligência Artificial
+          <ul>
+            <li>Minicurso: primeiros passos com redes neurais</li>
+            <li>Visão computacional no controle de pragas</li>
+          </ul>
+        </li>
+        <li>Segurança
+          <ul>
+            <li>Segurança em aplicações web: dez erros comuns</li>
+            <li>Minicurso: phishing e engenharia social</li>
+          </ul>
+        </li>
       </ul>
-    </li>
-    <li>Back-end
-      <ul>
-        <li>APIs REST com Node e Express</li>
-        <li>Bancos de dados na nuvem</li>
-      </ul>
-    </li>
-    <li>Carreira
-      <ul>
-        <li>Como montar um portfólio</li>
-        <li>Estágio e primeiro emprego</li>
-      </ul>
-    </li>
-  </ul>
-</section>
+    </section>
 ```
 
-### Passo 5 — glossário em `<dl>`
+Repare que cada `<ul>` filho está **dentro** do `<li>` pai — é o erro da seção 2.3 que o validador sempre pega. O título é `<h3>` porque o `<h2>Programação</h2>` no topo do `<main>` é o título da página; as seções que vêm depois ficam um nível abaixo.
 
-**`programacao.html` (continuação de `<main>`)**
+### Passo 4 — As cinco mais procuradas, com `<ol reversed>`
+
+Ainda em `programacao.html`, depois da seção de trilhas, um ranking. Aqui os atributos da lista ordenada (seção 2.2) fazem trabalho semântico de verdade: a contagem é **decrescente**, e a marcação diz isso.
+
+**`programacao.html` (trecho: novo `<section>` dentro do `<main>`)**
 
 ```html
-<section>
-  <h2>Glossário do evento</h2>
-  <dl>
-    <dt>Minicurso</dt>
-    <dd>Atividade prática de duas horas, com computador, limitada a 40 vagas.</dd>
-
-    <dt>Maratona</dt>
-    <dd>Competição de programação em equipes de três pessoas, com problemas de lógica.</dd>
-
-    <dt>Mesa-redonda</dt>
-    <dd>Conversa entre convidados mediada pela organização, com perguntas do público.</dd>
-
-    <dt>Lightning talk</dt>
-    <dt>Palestra-relâmpago</dt>
-    <dd>Apresentação de cinco minutos, sem slides, feita por estudantes.</dd>
-  </dl>
-</section>
+    <section id="mais-procuradas">
+      <h3>As cinco atividades mais procuradas</h3>
+      <p>Posição pela procura na edição anterior, da quinta para a primeira.</p>
+      <ol reversed>
+        <li>Dados abertos e cidades inteligentes</li>
+        <li>Segurança em aplicações web: dez erros comuns</li>
+        <li>Maratona de programação</li>
+        <li>Minicurso: primeiros passos com redes neurais</li>
+        <li>Minicurso: Git e GitHub do zero</li>
+      </ol>
+    </section>
 ```
 
-Repare no último bloco: dois `<dt>` (sinônimos) compartilhando um `<dd>`.
+Com `reversed`, o navegador numera 5, 4, 3, 2, 1 — sem uma linha de CSS e sem digitar número nenhum. Se depois você inserir um item no meio, a contagem se reajusta sozinha.
 
-### Passo 6 — vídeo de abertura com legenda
+### Passo 5 — Vídeo de abertura com legenda
 
-**`programacao.html` (continuação de `<main>`)**
+**`programacao.html` (trecho: novo `<section>` dentro do `<main>`)**
 
 ```html
-<section>
-  <h2>Abertura da edição anterior</h2>
-  <video controls width="640" height="360"
-         poster="img/capa-abertura.jpg" preload="metadata" playsinline>
-    <source src="midia/abertura.mp4" type="video/mp4">
-    <track src="legendas/abertura-pt.vtt" kind="captions"
-           srclang="pt" label="Português" default>
-    Seu navegador não suporta vídeo HTML5.
-    <a href="midia/abertura.mp4">Baixe o vídeo</a>.
-  </video>
-</section>
+    <section id="abertura">
+      <h3>Abertura da edição anterior</h3>
+      <video controls width="640" height="360"
+             poster="img/capa-abertura.jpg" preload="metadata" playsinline>
+        <source src="midia/abertura.mp4" type="video/mp4">
+        <track src="legendas/abertura-pt.vtt" kind="captions"
+               srclang="pt" label="Português" default>
+        Seu navegador não suporta vídeo HTML5.
+        <a href="midia/abertura.mp4">Baixe o vídeo</a>.
+      </video>
+    </section>
 ```
 
 Crie o arquivo de legendas com pelo menos quatro blocos, seguindo o exemplo da seção 4.3. Se o vídeo for seu, transcreva as falas reais; se for um vídeo de amostra sem fala, descreva o que aparece e os sons.
@@ -763,121 +752,201 @@ Serão três noites de palestras, minicursos e maratona de programação.
 [aplausos]
 ```
 
-### Passo 7 — depoimento em áudio
+### Passo 6 — Depoimento em áudio dentro de `<figure>`
 
-**`programacao.html` (continuação de `<main>`)**
+**`programacao.html` (trecho: novo `<section>` dentro do `<main>`)**
 
 ```html
-<section>
-  <h2>Depoimento de uma participante</h2>
-  <figure>
-    <audio controls preload="metadata">
-      <source src="midia/depoimento.mp3" type="audio/mpeg">
-      Seu navegador não suporta áudio HTML5.
-      <a href="midia/depoimento.mp3">Baixe o áudio</a>.
-    </audio>
-    <figcaption>Maria Eduarda, estudante do 4º semestre, sobre o minicurso de Git.</figcaption>
-  </figure>
-</section>
+    <section id="depoimento">
+      <h3>Depoimento de uma participante</h3>
+      <figure>
+        <audio controls preload="metadata">
+          <source src="midia/depoimento.mp3" type="audio/mpeg">
+          Seu navegador não suporta áudio HTML5.
+          <a href="midia/depoimento.mp3">Baixe o áudio</a>.
+        </audio>
+        <figcaption>Maria Eduarda, estudante do 4º semestre, sobre o minicurso de Git.</figcaption>
+      </figure>
+    </section>
 ```
 
-### Passo 8 — mapa do local em `<iframe>`
+Este é o caso clássico de `<figure>`: um conteúdo autocontido (o áudio) com uma legenda visível que o identifica.
 
-**`programacao.html` (continuação de `<main>`)**
+### Passo 7 — Mapa do local em `<iframe>`
+
+**`programacao.html` (trecho: último `<section>` do `<main>`, antes do "Voltar ao topo")**
 
 ```html
-<section>
-  <h2>Onde acontece</h2>
-  <p>Auditório central do campus da UNEMAT em Sinop.</p>
-  <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
-          title="Mapa: campus da UNEMAT em Sinop"
-          width="600" height="450"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
-</section>
+    <section id="onde">
+      <h3>Onde acontece</h3>
+      <p>Auditório central do campus da UNEMAT em Sinop.</p>
+      <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
+              title="Mapa: campus da UNEMAT em Sinop"
+              width="600" height="450"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </section>
 ```
 
 Para obter o código: abra o Google Maps, pesquise "UNEMAT Sinop", clique em **Compartilhar → Incorporar um mapa → Copiar HTML** e substitua o `src` acima pelo que veio no código copiado. Mantenha o `title` — o código do Maps não o inclui.
 
-### Passo 9 — galeria de palestrantes em `palestrantes.html`
+### Passo 8 — Fotos e elenco completo em `palestrantes.html`
 
-Crie `palestrantes.html` com o mesmo `<head>`, o mesmo cabeçalho (mudando o `aria-current` para o link de Palestrantes) e o mesmo rodapé. O conteúdo principal é uma galeria de seis `<figure>`; as três primeiras ficam visíveis sem rolar e **não** levam `lazy`; as três últimas levam:
+A Aula 02 deixou três `<article>` nesta página, cada um com `<h3>`, dois parágrafos e um `<dl>` de atividades e contato. Hoje você faz duas coisas: acrescenta a **foto** dentro de cada `<article>` existente e **completa o elenco** com os três convidados que faltavam.
 
-**`palestrantes.html` (conteúdo de `<main>`)**
+Em cada um dos três artigos que já existem, a `<img>` entra logo depois do `<h3>`:
+
+**`palestrantes.html` (trecho: o artigo de Ana Lúcia Ferreira, depois da mudança)**
 
 ```html
-<main>
-  <h1>Palestrantes</h1>
-
-  <section>
-    <h2>Convidados desta edição</h2>
-
-    <figure>
+    <article id="ana-lucia-ferreira">
+      <h3>Ana Lúcia Ferreira</h3>
       <img src="img/palestrante-01.jpg"
-           alt="Ana Souza, mulher de cabelos curtos, sorrindo em frente a um quadro branco"
-           width="400" height="400">
-      <figcaption>
-        <strong>Ana Souza</strong> — Engenheira de front-end, mestre em IHC pela UFMT. Fala sobre HTML semântico.
-      </figcaption>
-    </figure>
-
-    <figure>
-      <img src="img/palestrante-02.jpg"
-           alt="Carlos Lima, homem de óculos, em pé em um auditório"
-           width="400" height="400">
-      <figcaption>
-        <strong>Carlos Lima</strong> — Desenvolvedor back-end em uma fintech de Cuiabá. Ministra o minicurso de APIs.
-      </figcaption>
-    </figure>
-
-    <figure>
-      <img src="img/palestrante-03.jpg"
-           alt="Beatriz Ramos, mulher de cabelos cacheados, segurando um notebook"
-           width="400" height="400">
-      <figcaption>
-        <strong>Beatriz Ramos</strong> — Consultora de acessibilidade digital. Palestra sobre WCAG na prática.
-      </figcaption>
-    </figure>
-
-    <figure>
-      <img src="img/palestrante-04.jpg"
-           alt="Diego Ferreira, homem de barba, sentado em frente a dois monitores"
-           width="400" height="400" loading="lazy">
-      <figcaption>
-        <strong>Diego Ferreira</strong> — Egresso do curso, hoje engenheiro de dados. Mesa-redonda sobre mercado.
-      </figcaption>
-    </figure>
-
-    <figure>
-      <img src="img/palestrante-05.jpg"
-           alt="Fernanda Costa, mulher de jaleco, em um laboratório de informática"
-           width="400" height="400" loading="lazy">
-      <figcaption>
-        <strong>Fernanda Costa</strong> — Professora de bancos de dados. Minicurso de SQL na nuvem.
-      </figcaption>
-    </figure>
-
-    <figure>
-      <img src="img/palestrante-06.jpg"
-           alt="Gustavo Almeida, homem jovem, com a camiseta da maratona de programação"
-           width="400" height="400" loading="lazy">
-      <figcaption>
-        <strong>Gustavo Almeida</strong> — Campeão da maratona da edição anterior. Lightning talk sobre lógica.
-      </figcaption>
-    </figure>
-  </section>
-</main>
+           alt="Ana Lúcia Ferreira em frente a um quadro com um diagrama de rede neural"
+           width="400" height="400" decoding="async">
+      <p><strong>Professora e pesquisadora</strong> da UNEMAT — Sinop, na área de inteligência artificial.</p>
 ```
 
-Cada `alt` descreve a pessoa (o que a foto mostra); a `figcaption` traz nome e minicurrículo (a informação que o texto acrescenta). Nada se repete.
+Faça o mesmo em Bruno Takahashi (`img/palestrante-02.jpg`) e Carla Mendes (`img/palestrante-03.jpg`), com `alt` que descreva **aquela** pessoa naquela foto. Esses três ficam visíveis sem rolar a página, então **não** levam `loading="lazy"`.
 
-### Passo 10 — validação e medição
+Depois do artigo de Carla Mendes, e antes do parágrafo "Voltar ao topo", acrescente os três novos — agora com `loading="lazy"`, porque estão abaixo da dobra:
 
-1. Valide as duas páginas em validator.w3.org (aba **Validate by File Upload**). Meta: **zero erros**.
-2. Abra `programacao.html` no Live Server, DevTools → **Network**, marque **Disable cache**, recarregue e anote o peso total no rodapé da aba (**transferred**).
+**`palestrantes.html` (trecho: os três novos `<article>`)**
+
+```html
+    <article id="diego-nascimento">
+      <h3>Diego Nascimento</h3>
+      <img src="img/palestrante-04.jpg"
+           alt="Diego Nascimento sentado em frente a dois monitores com um portal do governo aberto"
+           width="400" height="400" loading="lazy" decoding="async">
+      <p><strong>Desenvolvedor web</strong> na Prefeitura de Sinop, responsável pelos portais de serviços ao cidadão.</p>
+      <p>Trabalha com acessibilidade em portais públicos e conduz auditorias de conformidade com a WCAG.</p>
+      <dl>
+        <dt>Atividades</dt>
+        <dd><a href="programacao.html#dia-1">Minicurso: Git e GitHub do zero</a> (dia 1)</dd>
+        <dd><a href="programacao.html#dia-2">Minicurso: acessibilidade na prática</a> (dia 2)</dd>
+        <dt>Contato</dt>
+        <dd><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">Perfil no LinkedIn</a></dd>
+      </dl>
+    </article>
+
+    <article id="eduarda-ribeiro">
+      <h3>Eduarda Ribeiro</h3>
+      <img src="img/palestrante-05.jpg"
+           alt="Eduarda Ribeiro apresentando slides em um auditório"
+           width="400" height="400" loading="lazy" decoding="async">
+      <p><strong>Professora</strong> do curso de Sistemas de Informação da UNEMAT — Sinop.</p>
+      <p>Coordena a Semana Acadêmica e orienta projetos de extensão que levam estudantes do HTML ao deploy.</p>
+      <dl>
+        <dt>Atividades</dt>
+        <dd><a href="programacao.html#dia-1">Abertura e palestra magna: o futuro do desenvolvimento web</a> (dia 1)</dd>
+        <dd><a href="programacao.html#dia-3">Maratona de programação</a> (dia 3)</dd>
+        <dt>Contato</dt>
+        <dd><a href="mailto:eduarda@exemplo.com">eduarda@exemplo.com</a></dd>
+      </dl>
+    </article>
+
+    <article id="felipe-arruda">
+      <h3>Felipe Arruda</h3>
+      <img src="img/palestrante-06.jpg"
+           alt="Felipe Arruda em um canavial, segurando um tablet com imagens de drone"
+           width="400" height="400" loading="lazy" decoding="async">
+      <p><strong>Engenheiro de visão computacional</strong> na cooperativa Coopercana.</p>
+      <p>Usa imagens de drone e modelos de aprendizado profundo para detectar pragas antes que elas se espalhem.</p>
+      <dl>
+        <dt>Atividades</dt>
+        <dd><a href="programacao.html#dia-2">Visão computacional no controle de pragas</a> (dia 2)</dd>
+        <dt>Contato</dt>
+        <dd><a href="https://github.com/" target="_blank" rel="noopener noreferrer">Perfil no GitHub</a></dd>
+      </dl>
+    </article>
+```
+
+Cada `alt` descreve a pessoa — o que a foto mostra. O parágrafo abaixo traz o minicurrículo — a informação que o texto acrescenta. Nada se repete.
+
+> **💡 Dica**
+> Os seis nomes desta página são os mesmos que vão alimentar o `js/dados.js` na Aula 12 e a página gerada por JavaScript na Aula 13. Manter o elenco estável agora poupa retrabalho depois — e é exatamente o que acontece em um projeto real.
+
+### Passo 9 — Campos avançados em `inscricao.html`
+
+O formulário da Aula 03 tem quatro `<fieldset>` e nenhum arquivo para enviar. Hoje ele ganha o quinto grupo e o atributo que faz upload funcionar.
+
+Primeiro, no `<form>`, acrescente o `enctype`:
+
+**`inscricao.html` (trecho: abertura do `<form>`)**
+
+```html
+    <form action="/inscrever" method="post" id="form-inscricao"
+          enctype="multipart/form-data">
+```
+
+Depois, antes do `</form>`, o novo grupo:
+
+**`inscricao.html` (trecho: novo `<fieldset>`)**
+
+```html
+      <fieldset>
+        <legend>Comprovante e pagamento</legend>
+
+        <p>
+          <label for="comprovante">Comprovante de matrícula (PDF ou imagem, até 5 MB) — obrigatório</label>
+          <input type="file" id="comprovante" name="comprovante"
+                 accept=".pdf,image/*" required>
+        </p>
+
+        <p>
+          <label for="certificados">Certificados de edições anteriores (opcional, vários arquivos)</label>
+          <input type="file" id="certificados" name="certificados" accept=".pdf" multiple>
+        </p>
+
+        <p>
+          <label for="cpf">CPF — obrigatório</label>
+          <input type="text" id="cpf" name="cpf" inputmode="numeric" required
+                 pattern="[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}"
+                 placeholder="000.000.000-00" title="Formato: 000.000.000-00"
+                 autocomplete="off">
+        </p>
+
+        <p>
+          <label for="lote">Lote</label>
+          <select id="lote" name="lote">
+            <option value="30">1º lote — R$ 30</option>
+            <option value="45">2º lote — R$ 45</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="qtd">Quantidade de ingressos</label>
+          <input type="number" id="qtd" name="qtd" min="1" max="5" value="1">
+        </p>
+
+        <p>Total: <output id="total" for="lote qtd">R$ 30</output></p>
+
+        <p>
+          <label for="vagas">Vagas ocupadas no minicurso de Git</label>
+          <meter id="vagas" value="38" min="0" max="40" low="20" high="35" optimum="0">38 de 40</meter>
+        </p>
+      </fieldset>
+```
+
+E, junto ao botão de envio que já existe, um segundo botão que salva sem validar:
+
+**`inscricao.html` (trecho: os dois botões)**
+
+```html
+      <button type="submit">Enviar inscrição</button>
+      <button type="submit" formaction="/rascunho" formnovalidate>Salvar rascunho</button>
+```
+
+O `<output>` fica parado em "R$ 30" por enquanto: sem JavaScript ele não calcula nada. Na Aula 13, com eventos, ele passa a mudar sozinho quando o lote ou a quantidade mudam.
+
+### Passo 10 — Validação e medição
+
+1. Valide as **cinco** páginas em validator.w3.org (aba **Validate by File Upload**). Meta: **zero erros**.
+2. Abra `index.html` no Live Server, DevTools → **Network**, marque **Disable cache**, recarregue e anote o peso total no rodapé da aba (**transferred**). Repita em `programacao.html`.
 3. Ordene por **Size**. Otimize no Squoosh os três maiores arquivos que forem imagens; substitua-os na pasta `img/`.
-4. Recarregue e anote o novo peso. Registre os dois valores em um comentário HTML no topo do `<body>`:
+4. Recarregue e anote o novo peso. Registre os dois valores em um comentário HTML no topo do `<body>` de cada uma das duas páginas:
 
 ```html
 <!-- Peso da página antes da otimização: 7,8 MB · depois: 1,1 MB (redução de 86%) -->
@@ -885,14 +954,18 @@ Cada `alt` descreve a pessoa (o que a foto mostra); a `figcaption` traz nome e m
 
 ### Como testar
 
-- Menu: os cinco links levam às páginas certas (as que ainda não existem, `contato.html`, darão 404 — você a cria na Aula 05).
-- Programação: a lista ordenada numera automaticamente; a lista aninhada mostra as sessões recuadas sob cada trilha; o glossário mostra o termo e a definição recuada.
+- Menu: os cinco links levam às cinco páginas, **todas existentes** — nenhum 404. Em cada página, o item correspondente tem `aria-current="page"`.
+- `index.html`: na aba Network, filtrando por **Img**, o banner baixado é `.avif` (ou `.webp`, conforme o navegador). Estreitando a janela para 400 px e recarregando com **Disable cache**, o arquivo escolhido pelo `srcset` muda.
+- `programacao.html`: a tabela dos três dias continua lá, com `<caption>`, três `<tbody>` e `<tfoot>`; a lista de trilhas mostra as atividades recuadas sob cada assunto; o ranking numera de 5 para 1.
 - Vídeo: o `poster` aparece antes do play; ao dar play, o botão **CC** dos controles liga a legenda e o texto aparece nos tempos definidos.
-- Áudio: o player aparece com play, tempo e volume.
+- Áudio: o player aparece com play, tempo e volume, e a legenda da `<figure>` fica abaixo dele.
 - Mapa: o quadro mostra o campus; se estiver em branco, confira se o `src` é a URL de **embed** (contém `/maps/embed?`), não a URL normal do Maps.
-- Galeria: as seis fotos aparecem com legenda; na aba Network, as três últimas só são baixadas quando você rola até elas.
-- Validador: zero erros nas duas páginas.
-- Network: o peso total ficou abaixo de 2 MB (com o vídeo em `preload="metadata"`, ele não conta até o play).
+- `palestrantes.html`: seis artigos, cada um com foto e `<dl>`; na aba Network, as três últimas fotos só são baixadas quando você rola até elas.
+- `inscricao.html`: o seletor de arquivos filtra PDF e imagens; o botão "Enviar inscrição" bloqueia se o CPF estiver vazio ou fora do formato, e o "Salvar rascunho" envia mesmo assim.
+- Validador: zero erros nas cinco páginas.
+- Network: o peso de cada página ficou abaixo de 2 MB (com o vídeo em `preload="metadata"`, ele não conta até o play).
+
+**Resultado esperado:** o mesmo site de cinco páginas da Aula 02, agora com identidade visual (logo), navegação marcada, banner responsivo, listas de dois níveis, mídia acessível e o formulário completo — sem uma linha de CSS e sem ter descartado nada do que já estava pronto.
 
 ## 🧪 Laboratório
 
@@ -1100,8 +1173,9 @@ A WCAG exige, para vídeo pré-gravado: legendas (critério 1.2.2), audiodescri�
 
 Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 
-- [ ] Página de programação (ou equivalente do seu domínio) com `<ol>` usando `<time>`, uma `<ul>` aninhada e uma `<dl>`.
+- [ ] Página de programação (ou equivalente do seu domínio) com os horários em `<time>`, uma `<ul>` aninhada de dois níveis e uma `<ol>` usando pelo menos um dos atributos `start`, `reversed` ou `type`.
 - [ ] Menu de navegação como `<ul>` dentro de `<nav aria-label>`, com `aria-current="page"` na página atual.
+- [ ] Uma `<dl>` em uso (glossário, ficha de pessoa, cardápio — o que fizer sentido no seu domínio).
 - [ ] Página de galeria com seis `<figure>`/`<figcaption>`, `alt` descritivo, `width`/`height` e `loading="lazy"` nas imagens abaixo da dobra.
 - [ ] Banner em `<picture>` com AVIF, WebP e JPG, sem `lazy`.
 - [ ] Um `<video>` com `controls`, `poster`, `preload="metadata"` e `<track kind="captions">` apontando para um `.vtt` válido.
@@ -1110,8 +1184,6 @@ Ao fim desta aula, o repositório do seu projeto autoral deve ter:
 - [ ] Formulário de inscrição com `enctype`, campo de upload com `accept`, `inputmode` no CPF e um `<output>`.
 - [ ] Zero erros no validador W3C em todas as páginas.
 - [ ] Comentário no topo do `<body>` com o peso da página antes e depois da otimização.
-
-Na próxima aula você dá ao site o esqueleto de layout com `<header>`, `<main>`, `<section>`, `<article>` e `<aside>` — e escreve as primeiras linhas de CSS.
 
 ## 📚 Para aprofundar
 
@@ -1126,3 +1198,5 @@ Na próxima aula você dá ao site o esqueleto de layout com `<header>`, `<main>
 - W3C — WCAG 2.1, critérios 1.1.1 (conteúdo não textual), 1.2.2 (legendas) e 1.3.1 (informação e relações): <https://www.w3.org/Translations/WCAG21-ptbr/> — tradução oficial em português.
 - SILVA, Maurício Samy. *Criando sites com HTML: sites de alta qualidade com HTML e CSS*. Novatec, 2008 — capítulos sobre listas e imagens.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo sobre APIs de mídia.
+
+Na próxima aula você dá ao site o esqueleto de layout com `<header>`, `<main>`, `<section>`, `<article>` e `<aside>` — e escreve as primeiras linhas de CSS.

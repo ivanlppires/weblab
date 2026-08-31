@@ -716,10 +716,10 @@ A segunda metade da aula responde a outra pergunta: como deixar o usuário **enc
 A função que produz a lista visível é sempre a mesma sequência: **cópia → busca → filtro → ordenação**.
 
 ```js
-// Estado da consulta
+// Estado da consulta (os nomes dos campos vêm do js/dados.js da Aula 12)
 let termoBusca = "";
-let trilhaAtual = "todas";
-let ordenacao = "horario";
+let areaAtual = "todas";
+let ordenacaoAtual = "hora";
 
 function obterPalestrasVisiveis() {
   let resultado = [...palestras]; // 1. cópia: sort() modifica o array original
@@ -729,16 +729,16 @@ function obterPalestrasVisiveis() {
     resultado = resultado.filter((p) => normalizar(p.titulo).includes(termo));
   }
 
-  if (trilhaAtual !== "todas") {                          // 3. filtro por categoria
-    resultado = resultado.filter((p) => p.trilha === trilhaAtual);
+  if (areaAtual !== "todas") {                            // 3. filtro por categoria
+    resultado = resultado.filter((p) => p.area === areaAtual);
   }
 
   const ordenadores = {                                   // 4. ordenação
-    horario: (a, b) => a.dia - b.dia || a.horario.localeCompare(b.horario),
+    hora: (a, b) => a.dia - b.dia || a.hora.localeCompare(b.hora),
     titulo: (a, b) => a.titulo.localeCompare(b.titulo, "pt-BR"),
     vagas: (a, b) => b.vagas - b.inscritos - (a.vagas - a.inscritos),
   };
-  resultado.sort(ordenadores[ordenacao]);
+  resultado.sort(ordenadores[ordenacaoAtual]);
 
   return resultado;
 }
@@ -748,7 +748,7 @@ Três detalhes que separam código que funciona de código que funciona **sempre
 
 - **`[...palestras]`** cria uma cópia. `sort()` reordena o array **original**; sem a cópia, a ordem dos dados mudaria a cada renderização e o filtro seguinte partiria de outra base. É um bug sutil, difícil de encontrar e frequente.
 - **`localeCompare(b, "pt-BR")`** ordena corretamente palavras acentuadas. O `sort()` puro compara códigos de caractere e coloca "Ávila" **depois** de "Zampieri".
-- **`a.dia - b.dia || a.horario.localeCompare(b.horario)`** é ordenação em dois níveis: quando os dias são iguais, a subtração dá `0` (falso) e o `||` passa para o critério de desempate.
+- **`a.dia - b.dia || a.hora.localeCompare(b.hora)`** é ordenação em dois níveis: quando os dias são iguais, a subtração dá `0` (falso) e o `||` passa para o critério de desempate. Repare no nome do campo: `hora`, como no `dados.js` da Aula 12. Inventar um `horario` aqui daria `undefined.localeCompare` — `TypeError` na primeira ordenação.
 
 ### 9.2 Buscar ignorando acentos e caixa
 
@@ -799,11 +799,36 @@ Toda listagem filtrável precisa de duas coisas que iniciantes esquecem:
 
 ## 💻 Mão na massa — Inscrição validada e programação com busca
 
-Ao fim destes oito passos, o site da **Semana Acadêmica de Sistemas de Informação** terá um formulário de inscrição que valida campo a campo com mensagens acessíveis, salva rascunho e mostra confirmação; e uma página de programação com busca em tempo real, filtro por trilha e ordenação — tudo sobre o array `palestras` da Aula 12.
+Ao fim destes oito passos, o site da **Semana Acadêmica de Sistemas de Informação** terá um formulário de inscrição que valida campo a campo com mensagens acessíveis, salva rascunho e mostra confirmação; e uma página de programação com busca em tempo real, filtro por área e ordenação — tudo sobre o array `palestras` do `js/dados.js` da Aula 12, **sem mudar uma linha daquele arquivo**.
+
+> **⚠️ Atenção**
+> `js/dados.js` é a fonte única de dados do projeto desde a Aula 12, e o esquema dele é lei: `palestras` com `area`, `hora` e `palestranteId`; o array `palestrantes`; o dicionário `nomesDasAreas`. O `js/relatorios.js` (Aula 12) e o `js/palestrantes.js` (Aula 13) já dependem desses nomes. Hoje você **adapta a consulta aos dados**, não os dados à consulta.
 
 ### Passo 1 — o formulário de `inscricao.html`
 
-Substitua o `<main>` de `inscricao.html`. A estrutura repete o mesmo bloco para cada campo: `<label>`, campo, `<span class="erro" role="alert">`.
+Primeiro o `<head>`, com os quatro scripts na ordem que importa — `defer` executa na ordem das tags, e `inscricao.js` precisa que `debounce` (do `app.js`, Passo 4) já exista:
+
+**`inscricao.html` — `<head>` completo**
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inscrição gratuita na Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <title>Inscrição — Semana Acadêmica de Sistemas de Informação</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/menu.js" defer></script>
+  <script src="js/dados.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/inscricao.js" defer></script>
+</head>
+```
+
+Agora o `<main>`. A estrutura repete o mesmo bloco para cada campo: `<label>`, campo, `<span class="erro" role="alert">`.
+
+> **⚠️ Atenção**
+> A `<section class="vagas">` das Aulas 10 e 11 — com `#vagas-restantes`, `#vagas-totais`, `#percentual-ocupacao`, `#aviso-vagas` e `#valor-taxa` — **fica onde está**, acima do formulário. É ela que mostra o "Últimas vagas!" exigido no Checkpoint da Aula 11, e o código que a alimenta continua no `js/inscricao.js` (você o amplia no Passo 3, não o substitui). O que muda de lugar é só o `<form>`.
 
 **`inscricao.html` — conteúdo do `<main>`**
 
@@ -812,7 +837,24 @@ Substitua o `<main>` de `inscricao.html`. A estrutura repete o mesmo bloco para 
   <h1>Inscrição</h1>
   <p>Preencha os dados abaixo. Os campos marcados com * são obrigatórios.</p>
 
-  <p id="aviso-formulario" class="aviso" role="status" aria-live="polite"></p>
+  <!-- Seção de vagas das Aulas 10 e 11: continua exatamente como estava -->
+  <section class="vagas">
+    <h2>Vagas</h2>
+    <p>
+      Restam <strong id="vagas-restantes">—</strong> de
+      <span id="vagas-totais">—</span> vagas
+      (<span id="percentual-ocupacao">—</span>% ocupadas).
+    </p>
+
+    <p id="aviso-vagas" class="aviso" role="status"></p>
+
+    <p class="taxa">
+      Taxa de inscrição: <strong id="valor-taxa">—</strong>
+      <span id="observacao-taxa"></span>
+    </p>
+  </section>
+
+  <p id="aviso-formulario" class="aviso-formulario" role="status"></p>
 
   <form id="form-inscricao" novalidate>
     <fieldset>
@@ -889,15 +931,13 @@ Substitua o `<main>` de `inscricao.html`. A estrutura repete o mesmo bloco para 
 
     <div class="acoes-formulario">
       <button type="submit" class="botao">Enviar inscrição</button>
-      <button type="button" class="botao botao--secundario" id="limpar-rascunho">Limpar rascunho</button>
+      <button type="button" class="botao botao--contorno" id="limpar-rascunho">Limpar rascunho</button>
     </div>
   </form>
 </main>
-
-<script src="js/inscricao.js" defer></script>
 ```
 
-Três decisões que valem nota: `novalidate` no formulário (as mensagens são nossas), `inputmode` nos campos numéricos (o celular abre o teclado certo sem mudar o `type`, como na Aula 04) e o grupo de checkboxes dentro de um `role="group"` com `aria-labelledby` — assim o leitor de tela anuncia "Atividades de interesse, grupo" antes das opções.
+Quatro decisões que valem nota: `novalidate` no formulário (as mensagens são nossas), `inputmode` nos campos numéricos (o celular abre o teclado certo sem mudar o `type`, como na Aula 04), o grupo de checkboxes dentro de um `role="group"` com `aria-labelledby` — assim o leitor de tela anuncia "Atividades de interesse, grupo" antes das opções — e a classe **`.aviso-formulario`** no parágrafo de resposta do envio. Ela **não** é a `.aviso` da Aula 11: aquela é a caixa vermelha de "Últimas vagas!", com `.aviso:empty { display: none }`, e continua sendo usada pelo `#aviso-vagas` logo acima. Dois componentes diferentes, dois nomes diferentes — reaproveitar o nome faria as duas regras brigarem no mesmo `estilo.css`.
 
 ### Passo 2 — o CSS dos campos
 
@@ -930,18 +970,18 @@ Acrescente ao fim de `css/estilo.css` o bloco da seção 7 e mais estes compleme
   margin-top: 1rem;
 }
 
-.aviso {
+.aviso-formulario {
   min-height: 1.5em;
 }
 
-.aviso.sucesso {
+.aviso-formulario.sucesso {
   padding: 0.75rem 1rem;
   border-left: 4px solid #27ae60;
   background: #eafaf1;
   color: #14532d;
 }
 
-.aviso.falha {
+.aviso-formulario.falha {
   padding: 0.75rem 1rem;
   border-left: 4px solid #c0392b;
   background: #fdecea;
@@ -949,15 +989,26 @@ Acrescente ao fim de `css/estilo.css` o bloco da seção 7 e mais estes compleme
 }
 ```
 
-### Passo 3 — `js/inscricao.js` completo
+### Passo 3 — `js/inscricao.js` ampliado
+
+O `js/inscricao.js` já existe desde a Aula 10 e cresceu na Aula 11: é ele que calcula as vagas restantes, o percentual de ocupação, o aviso "Últimas vagas!" e o valor da taxa. **Esse bloco não sai** — ele continua no topo do arquivo, sob o comentário `// ===== VAGAS (Aulas 10 e 11) =====`, e tudo o que você escreve hoje vem **depois** dele.
 
 Este arquivo usa a função `debounce` para salvar o rascunho; ela é declarada no `js/app.js` no Passo 4, que toda página já carrega antes deste script.
 
-**`js/inscricao.js`**
+**`js/inscricao.js`** (topo do arquivo — o que já existe, apenas identificado com um comentário)
 
 ```js
-// js/inscricao.js — validação do formulário de inscrição do evento
+// js/inscricao.js — vagas (Aulas 10 e 11) e validação do formulário (Aula 14)
 
+// ===== VAGAS (Aulas 10 e 11) =====
+// As constantes VAGAS_TOTAIS e INSCRITOS, o cálculo do percentual, o aviso
+// de "Últimas vagas!" e o valor da taxa continuam exatamente como estavam.
+// Nada abaixo depende deles, e nada deles depende do que vem abaixo.
+```
+
+**`js/inscricao.js`** (acrescente a partir daqui)
+
+```js
 // ===== ESTADO =====
 const CHAVE_RASCUNHO = "inscricao:rascunho";
 const CAMPOS_DO_RASCUNHO = ["nome", "email", "curso"]; // sem CPF e sem telefone, de propósito
@@ -1119,7 +1170,7 @@ function mostrarErro(campo, mensagem) {
 
 function mostrarAviso(texto, tipo) {
   els.aviso.textContent = texto;
-  els.aviso.className = texto ? `aviso ${tipo}` : "aviso";
+  els.aviso.className = texto ? `aviso-formulario ${tipo}` : "aviso-formulario";
 }
 
 // ===== ORQUESTRAÇÃO =====
@@ -1281,7 +1332,7 @@ iniciar();
 
 ### Passo 4 — `debounce` disponível em todas as páginas
 
-O `debounce` é usado pelo rascunho e, no próximo passo, pela busca. Como todas as páginas carregam `js/app.js` **antes** do script específico (os dois com `defer`, e `defer` preserva a ordem das tags), basta declarar a função lá uma vez.
+O `debounce` é usado pelo rascunho e, no próximo passo, pela busca. Como todas as páginas carregam `js/app.js` **antes** do script específico (os dois com `defer`, e `defer` preserva a ordem das tags), basta declarar a função lá uma vez. Confira que o `<script src="js/app.js" defer>` está mesmo no `<head>` das **cinco** páginas — inclusive em `programacao.html`, que vai usar o `debounce` no Passo 7. Sem ele, a busca morre no primeiro caractere digitado com `Uncaught ReferenceError: debounce is not defined`.
 
 **`js/app.js` — acrescente ao fim**
 
@@ -1298,57 +1349,46 @@ function debounce(fn, atraso = 300) {
 }
 ```
 
-### Passo 5 — os dados da programação
+### Passo 5 — conferir (e não tocar) o `js/dados.js`
 
-Confira o `js/dados.js` criado na Aula 12 e garanta que ele tenha estes campos — a busca, o filtro e a ordenação dependem deles.
+Não há arquivo novo aqui: o `js/dados.js` da Aula 12 já tem tudo de que a consulta precisa. Abra-o e confirme os três nomes que os próximos passos vão usar:
 
-**`js/dados.js`**
+| Nome | O que é | Campos usados hoje |
+|---|---|---|
+| `palestras` | array com as 12 atividades | `id`, `titulo`, `tipo`, `area`, `dia`, `hora`, `local`, `vagas`, `inscritos`, `palestranteId` |
+| `palestrantes` | array com as 6 pessoas | `id`, `nome`, `instituicao` |
+| `nomesDasAreas` | dicionário código → nome | `web`, `dados`, `seguranca`, `ia` |
 
-```js
-// js/dados.js — dados da Semana Acadêmica de Sistemas de Informação
-const palestras = [
-  { id: 1, dia: 1, horario: "19:00", tipo: "palestra", trilha: "carreira",
-    titulo: "Abertura e palestra magna: o futuro do desenvolvimento web",
-    palestrante: "Ana Lúcia Ferreira", local: "Auditório Central", vagas: 200, inscritos: 154 },
-  { id: 2, dia: 1, horario: "20:00", tipo: "minicurso", trilha: "ferramentas",
-    titulo: "Minicurso: Git e GitHub do zero ao primeiro pull request",
-    palestrante: "Eduarda Ribeiro", local: "Laboratório 2", vagas: 40, inscritos: 40 },
-  { id: 3, dia: 1, horario: "20:00", tipo: "mesa-redonda", trilha: "carreira",
-    titulo: "Mesa-redonda: mercado de trabalho em Sinop",
-    palestrante: "Diego Nascimento", local: "Sala 105", vagas: 80, inscritos: 42 },
-  { id: 4, dia: 2, horario: "19:00", tipo: "minicurso", trilha: "front-end",
-    titulo: "Minicurso: acessibilidade na prática",
-    palestrante: "Carla Mendes", local: "Laboratório 1", vagas: 40, inscritos: 31 },
-  { id: 5, dia: 2, horario: "20:30", tipo: "palestra", trilha: "seguranca",
-    titulo: "Palestra: segurança em aplicações web",
-    palestrante: "Bruno Takahashi", local: "Auditório Central", vagas: 200, inscritos: 97 },
-  { id: 6, dia: 2, horario: "21:00", tipo: "palestra", trilha: "dados",
-    titulo: "Palestra: dashboards que os produtores realmente usam",
-    palestrante: "Felipe Arruda", local: "Sala 105", vagas: 80, inscritos: 25 },
-  { id: 7, dia: 3, horario: "18:30", tipo: "maratona", trilha: "back-end",
-    titulo: "Maratona de programação",
-    palestrante: "Organização", local: "Laboratórios 1 e 2", vagas: 60, inscritos: 57 },
-  { id: 8, dia: 3, horario: "19:30", tipo: "palestra", trilha: "back-end",
-    titulo: "Palestra: APIs REST com Node e Express",
-    palestrante: "Eduarda Ribeiro", local: "Auditório Central", vagas: 200, inscritos: 63 },
-  { id: 9, dia: 3, horario: "22:00", tipo: "palestra", trilha: "carreira",
-    titulo: "Encerramento e premiação da maratona",
-    palestrante: "Organização", local: "Auditório Central", vagas: 200, inscritos: 88 },
-];
+Duas armadilhas que este passo evita:
 
-const NOMES_DAS_TRILHAS = {
-  "front-end": "Front-end",
-  "back-end": "Back-end",
-  dados: "Dados",
-  seguranca: "Segurança",
-  carreira: "Carreira",
-  ferramentas: "Ferramentas",
-};
-```
+- **O campo do horário chama `hora`, não `horario`.** Um `p.horario` devolve `undefined`, e `undefined.localeCompare(…)` derruba a ordenação inteira com `TypeError`.
+- **A palestra não guarda o nome de quem apresenta, só o `palestranteId`.** Para buscar por nome, você precisa cruzar as duas listas — exatamente o que o relatório 7 da Aula 12 fazia com `find`. É a mesma ideia de chave estrangeira que você verá no Nível 2.
+
+Se você sentir vontade de "só ajustar um campinho" no `dados.js` para simplificar o filtro, resista: o `js/relatorios.js` (Aula 12) e o `js/palestrantes.js` (Aula 13) leem esse mesmo arquivo e quebram junto. Adaptar o consumidor ao dado é barato; adaptar o dado a um consumidor é como se perde a fonte única.
 
 ### Passo 6 — a interface de consulta em `programacao.html`
 
-Troque as listas escritas à mão (Aula 04) por um contêiner vazio e os controles de consulta.
+Troque os cartões escritos à mão (Aula 07) por um contêiner vazio e os controles de consulta. Antes, o `<head>` com os cinco scripts:
+
+**`programacao.html` — `<head>` completo**
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Programação completa da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <title>Programação — Semana Acadêmica de Sistemas de Informação</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/menu.js" defer></script>
+  <script src="js/dados.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/relatorios.js" defer></script>
+  <script src="js/programacao.js" defer></script>
+</head>
+```
+
+O `relatorios.js` da Aula 12 continua aqui: ele só escreve no Console e não atrapalha nada. E repare que `js/app.js` vem **antes** de `js/programacao.js`: é dele que sai o `debounce` do Passo 4.
 
 **`programacao.html` — conteúdo do `<main>`**
 
@@ -1365,58 +1405,57 @@ Troque as listas escritas à mão (Aula 04) por um contêiner vazio e os control
     </div>
 
     <div class="campo">
-      <label for="trilha">Trilha</label>
-      <select id="trilha" name="trilha">
-        <option value="todas">Todas as trilhas</option>
-        <option value="front-end">Front-end</option>
-        <option value="back-end">Back-end</option>
-        <option value="dados">Dados</option>
+      <label for="area">Área</label>
+      <select id="area" name="area">
+        <option value="todas">Todas as áreas</option>
+        <option value="web">Desenvolvimento Web</option>
+        <option value="dados">Ciência de Dados</option>
         <option value="seguranca">Segurança</option>
-        <option value="carreira">Carreira</option>
-        <option value="ferramentas">Ferramentas</option>
+        <option value="ia">Inteligência Artificial</option>
       </select>
     </div>
 
     <div class="campo">
       <label for="ordenacao">Ordenar por</label>
       <select id="ordenacao" name="ordenacao">
-        <option value="horario">Dia e horário</option>
+        <option value="hora">Dia e horário</option>
         <option value="titulo">Título (A–Z)</option>
         <option value="vagas">Vagas restantes</option>
       </select>
     </div>
 
-    <button type="button" class="botao botao--secundario" id="limpar-consulta">Limpar filtros</button>
+    <button type="button" class="botao botao--contorno" id="limpar-consulta">Limpar filtros</button>
   </form>
 
   <p id="contador-programacao" class="contador" role="status" aria-live="polite"></p>
 
   <ul id="lista-programacao" class="cartoes"></ul>
 </main>
-
-<script src="js/dados.js" defer></script>
-<script src="js/programacao.js" defer></script>
 ```
 
-O `<form role="search">` não envia nada: ele existe para agrupar os controles semanticamente (leitores de tela anunciam "busca") e para o `reset()` do botão "Limpar filtros" funcionar de graça. Os dois `<script>` precisam estar **nesta ordem**: `dados.js` declara `palestras`, e `programacao.js` usa.
+O `<form role="search">` não envia nada: ele existe para agrupar os controles semanticamente (leitores de tela anunciam "busca") e para o `reset()` do botão "Limpar filtros" funcionar de graça. Os cinco `<script>` precisam estar **na ordem do `<head>` acima**: `dados.js` declara `palestras` e `palestrantes`, `app.js` declara `debounce`, e só então `programacao.js` usa os três.
 
 ### Passo 7 — `js/programacao.js`
+
+Ele consome `palestras`, `palestrantes` e `nomesDasAreas` do `js/dados.js` — sem redeclarar nada — e `debounce` do `js/app.js`. Os nomes das constantes e funções levam o sufixo `Programacao` pelo mesmo motivo da Aula 13: scripts sem `type="module"` dividem o escopo global, e um `els` ou um `renderizar` genérico colide com o do arquivo vizinho no dia em que as duas páginas carregarem os dois.
 
 **`js/programacao.js`**
 
 ```js
-// js/programacao.js — busca, filtro e ordenação da programação
+// js/programacao.js — busca, filtro e ordenação da programação.
+// Depende de js/dados.js (palestras, palestrantes, nomesDasAreas) e de
+// js/app.js (debounce), ambos carregados antes deste arquivo.
 
 // ===== ESTADO =====
 let termoBusca = "";
-let trilhaAtual = "todas";
-let ordenacao = "horario";
+let areaAtualProgramacao = "todas";
+let ordenacaoAtual = "hora";
 
 // ===== ELEMENTOS =====
-const els = {
+const elementosProgramacao = {
   form: document.querySelector("#consulta-programacao"),
   busca: document.querySelector("#busca"),
-  trilha: document.querySelector("#trilha"),
+  area: document.querySelector("#area"),
   ordenacao: document.querySelector("#ordenacao"),
   limpar: document.querySelector("#limpar-consulta"),
   lista: document.querySelector("#lista-programacao"),
@@ -1432,6 +1471,21 @@ function normalizar(texto) {
     .trim();
 }
 
+/**
+ * Cruza a palestra com o array de palestrantes pelo palestranteId.
+ * É a mesma junção do relatório 7 da Aula 12: `find` + `?.` + `??`.
+ * @param {Object} palestra - item de `palestras`
+ * @returns {string} o nome de quem apresenta, ou "A definir"
+ */
+function nomeDoPalestrante(palestra) {
+  const pessoa = palestrantes.find((p) => p.id === palestra.palestranteId);
+  return pessoa?.nome ?? "A definir";
+}
+
+function vagasRestantes(palestra) {
+  return palestra.vagas - palestra.inscritos;
+}
+
 function obterPalestrasVisiveis() {
   let resultado = [...palestras]; // cópia: sort() altera o array original
 
@@ -1440,31 +1494,27 @@ function obterPalestrasVisiveis() {
     resultado = resultado.filter(
       (p) =>
         normalizar(p.titulo).includes(termo) ||
-        normalizar(p.palestrante).includes(termo) ||
+        normalizar(nomeDoPalestrante(p)).includes(termo) ||
         normalizar(p.local).includes(termo)
     );
   }
 
-  if (trilhaAtual !== "todas") {
-    resultado = resultado.filter((p) => p.trilha === trilhaAtual);
+  if (areaAtualProgramacao !== "todas") {
+    resultado = resultado.filter((p) => p.area === areaAtualProgramacao);
   }
 
   const ordenadores = {
-    horario: (a, b) => a.dia - b.dia || a.horario.localeCompare(b.horario),
+    hora: (a, b) => a.dia - b.dia || a.hora.localeCompare(b.hora),
     titulo: (a, b) => a.titulo.localeCompare(b.titulo, "pt-BR"),
-    vagas: (a, b) => b.vagas - b.inscritos - (a.vagas - a.inscritos),
+    vagas: (a, b) => vagasRestantes(b) - vagasRestantes(a),
   };
-  resultado.sort(ordenadores[ordenacao]);
+  resultado.sort(ordenadores[ordenacaoAtual]);
 
   return resultado;
 }
 
-function vagasRestantes(palestra) {
-  return palestra.vagas - palestra.inscritos;
-}
-
 // ===== RENDERIZAÇÃO =====
-function criarCartao(palestra) {
+function criarCartaoDePalestra(palestra) {
   const item = document.createElement("li");
   item.classList.add("cartao");
   item.dataset.id = palestra.id;
@@ -1482,14 +1532,14 @@ function criarCartao(palestra) {
 
   const meta = document.createElement("p");
   meta.classList.add("cartao__meta");
-  meta.textContent = `Dia ${palestra.dia} · ${palestra.horario} · ${palestra.local}`;
+  meta.textContent = `Dia ${palestra.dia} · ${palestra.hora} · ${palestra.local}`;
 
   const quem = document.createElement("p");
-  quem.textContent = palestra.palestrante;
+  quem.textContent = nomeDoPalestrante(palestra);
 
   const etiqueta = document.createElement("span");
   etiqueta.classList.add("etiqueta");
-  etiqueta.textContent = NOMES_DAS_TRILHAS[palestra.trilha];
+  etiqueta.textContent = nomesDasAreas[palestra.area];
 
   const vagas = document.createElement("p");
   vagas.classList.add("cartao__vagas");
@@ -1500,65 +1550,65 @@ function criarCartao(palestra) {
   return item;
 }
 
-function renderizar() {
+function renderizarProgramacao() {
   const visiveis = obterPalestrasVisiveis();
-  els.lista.innerHTML = "";
+  elementosProgramacao.lista.innerHTML = "";
 
   if (visiveis.length === 0) {
     const vazio = document.createElement("li");
     vazio.classList.add("vazio");
     vazio.textContent = termoBusca
       ? `Nenhuma atividade encontrada para "${termoBusca}". Tente outro termo ou limpe os filtros.`
-      : "Nenhuma atividade nesta trilha. Escolha outra ou limpe os filtros.";
-    els.lista.appendChild(vazio);
+      : "Nenhuma atividade nesta área. Escolha outra ou limpe os filtros.";
+    elementosProgramacao.lista.appendChild(vazio);
   } else {
     const fragmento = document.createDocumentFragment();
-    visiveis.forEach((p) => fragmento.appendChild(criarCartao(p)));
-    els.lista.appendChild(fragmento);
+    visiveis.forEach((p) => fragmento.appendChild(criarCartaoDePalestra(p)));
+    elementosProgramacao.lista.appendChild(fragmento);
   }
 
-  els.contador.textContent =
+  elementosProgramacao.contador.textContent =
     visiveis.length === 1 ? "1 atividade encontrada" : `${visiveis.length} atividades encontradas`;
 }
 
 // ===== EVENTOS =====
-function registrarEventos() {
-  els.busca.addEventListener(
+function registrarEventosDaProgramacao() {
+  elementosProgramacao.busca.addEventListener(
     "input",
     debounce((e) => {
       termoBusca = e.target.value;
-      renderizar();
+      renderizarProgramacao();
     }, 300)
   );
 
-  els.trilha.addEventListener("change", (e) => {
-    trilhaAtual = e.target.value;
-    renderizar();
+  elementosProgramacao.area.addEventListener("change", (e) => {
+    areaAtualProgramacao = e.target.value;
+    renderizarProgramacao();
   });
 
-  els.ordenacao.addEventListener("change", (e) => {
-    ordenacao = e.target.value;
-    renderizar();
+  elementosProgramacao.ordenacao.addEventListener("change", (e) => {
+    ordenacaoAtual = e.target.value;
+    renderizarProgramacao();
   });
 
-  els.limpar.addEventListener("click", () => {
-    els.form.reset();
+  elementosProgramacao.limpar.addEventListener("click", () => {
+    elementosProgramacao.form.reset();
     termoBusca = "";
-    trilhaAtual = "todas";
-    ordenacao = "horario";
-    renderizar();
-    els.busca.focus();
+    areaAtualProgramacao = "todas";
+    ordenacaoAtual = "hora";
+    renderizarProgramacao();
+    elementosProgramacao.busca.focus();
   });
 }
 
 // ===== INICIALIZAÇÃO =====
-function iniciar() {
-  if (!els.lista) return;
-  registrarEventos();
-  renderizar();
+function iniciarProgramacao() {
+  if (!elementosProgramacao.lista) return;
+  registrarEventosDaProgramacao();
+  renderizarProgramacao();
 }
 
-iniciar();
+iniciarProgramacao();
 ```
 
 ### Passo 8 — o CSS da consulta
@@ -1575,7 +1625,8 @@ iniciar();
   margin-block: 1.5rem;
   padding: 1rem;
   border-radius: 12px;
-  background: var(--cor-fundo-suave, #eef3f7);
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
 }
 
 .consulta .campo {
@@ -1584,7 +1635,6 @@ iniciar();
 
 .cartao__vagas {
   font-size: 0.875rem;
-  color: var(--cor-texto-suave, #555);
 }
 
 .contador {
@@ -1600,10 +1650,11 @@ iniciar();
 4. Clique em "Enviar inscrição" com o formulário vazio: todos os erros aparecem de uma vez, o foco vai para o primeiro campo inválido, a página rola até ele e o aviso do topo diz "Confira os campos destacados antes de enviar."
 5. Preencha tudo corretamente e envie: o console mostra o objeto com `cpf` e `telefone` **sem máscara**, `atividades` como array, e a página exibe a mensagem verde de sucesso.
 6. Preencha só o nome e o e-mail e recarregue a página (<kbd>F5</kbd>): os valores voltam e o aviso diz que o rascunho foi recuperado. Confira no DevTools → Application → Local Storage que a chave `inscricao:rascunho` **não** contém CPF nem telefone. Clique em "Limpar rascunho" e recarregue: o formulário volta vazio.
-7. Abra `programacao.html`: os nove cartões aparecem ordenados por dia e horário, e o contador diz "9 atividades encontradas".
-8. Digite `seguranca` (sem cedilha e sem acento) na busca: o cartão "segurança em aplicações web" aparece. Digite `xyz`: a mensagem de estado vazio explica o que fazer.
-9. Mude "Ordenar por" para "Vagas restantes": o minicurso de Git (esgotado) vai para o fim e ganha o selo "Esgotado". Mude para "Título (A–Z)" e confira que os acentos ficam na ordem correta.
-10. Percorra a página inteira com <kbd>Tab</kbd>: todo campo tem foco visível, o botão "Limpar filtros" devolve o foco à busca, e o console está sem nenhum erro em vermelho nas cinco páginas.
+7. Abra `programacao.html`: os **doze** cartões do `dados.js` aparecem ordenados por dia e horário, e o contador diz "12 atividades encontradas". Cada cartão mostra o nome de quem apresenta — resolvido pelo `palestranteId`, não digitado.
+8. Digite `seguranca` (sem cedilha e sem acento) na busca: aparece "Segurança em aplicações web: dez erros comuns". Digite `carla`: aparecem as duas atividades de Carla Mendes, provando que a busca cruza as duas listas. Digite `xyz`: a mensagem de estado vazio explica o que fazer.
+9. Mude "Ordenar por" para "Vagas restantes": o minicurso de Git e o de redes neurais (ambos esgotados) vão para o fim e ganham o selo "Esgotado". Mude para "Título (A–Z)" e confira que os acentos ficam na ordem correta. No filtro de área, "Segurança" deixa duas atividades e "Inteligência Artificial", outras duas.
+10. Percorra a página inteira com <kbd>Tab</kbd>: todo campo tem foco visível, o botão "Limpar filtros" devolve o foco à busca, e o console está sem nenhum erro em vermelho nas cinco páginas — em especial, nenhum `ReferenceError: debounce is not defined` e nenhum `Identifier … has already been declared`.
+11. Ainda em `inscricao.html`, confira que a seção de vagas continua no topo, com o número calculado e o aviso "Últimas vagas!" das Aulas 10 e 11 — e que ele é visualmente diferente do aviso verde/vermelho do envio do formulário.
 
 ## 🧪 Laboratório
 
@@ -1718,7 +1769,7 @@ Comece copiando a estrutura de `js/inscricao.js` e apagando o que não se aplica
 
 **B6.** Escreva e teste expressões regulares para validar: matrícula da UNEMAT (quatro dígitos de ano seguidos de cinco dígitos), placa Mercosul, código de rastreio dos Correios (duas letras, nove dígitos e `BR`), IPv4 e cartão com 16 dígitos com ou sem espaços e hífens.
 
-Resultado esperado: uma página `exercicios/aula-14/regex.html` com um campo por padrão, validação em tempo real e, ao lado de cada campo, três exemplos válidos e três inválidos que você testou.
+Resultado esperado: uma página `exercicios/aula14/regex.html` com um campo por padrão, validação em tempo real e, ao lado de cada campo, três exemplos válidos e três inválidos que você testou.
 
 <details><summary>Dica</summary>
 
@@ -1942,7 +1993,7 @@ Um formulário pode passar em todos os testes automáticos e ainda ser impossív
 1. O formulário principal com validação completa em JavaScript: pelo menos seis campos, mensagens específicas por campo, **ao menos uma validação por expressão regular** e uma regra de negócio que a regex não resolve (dígito verificador, idade mínima, data no calendário ou confirmação de senha).
 2. Mensagens acessíveis: `role="alert"`, `aria-invalid`, `aria-describedby`, indicação que não dependa só de cor e foco no primeiro campo inválido ao enviar.
 3. A listagem principal do seu domínio com **busca** (com `debounce` e normalização de acentos), **um filtro** e **uma ordenação**, com contador anunciado e estado vazio tratado.
-4. Os exercícios **B2** (medidor de força de senha) e **B7** (`gerarSlug`) em `exercicios/aula-14/`.
+4. Os exercícios **B2** (medidor de força de senha) e **B7** (`gerarSlug`) em `exercicios/aula14/`.
 
 **Critério de pronto:** enviar o formulário vazio destaca todos os campos com erro, leva o foco ao primeiro e não recarrega a página; digitar um termo sem acento encontra o item acentuado; o console fica limpo em todas as páginas.
 

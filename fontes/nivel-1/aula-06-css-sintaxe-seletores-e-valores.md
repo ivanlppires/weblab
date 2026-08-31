@@ -100,14 +100,14 @@ h2 + p {
 ```css
 p.destaque   { }   /* um <p> QUE TEM a classe destaque */
 p .destaque  { }   /* qualquer elemento com classe destaque DENTRO de um <p> */
-.card.ativo  { }   /* um elemento que tem AMBAS as classes */
-.card .ativo { }   /* um elemento com classe ativo dentro de um .card */
+.cartao.ativo  { }   /* um elemento que tem AMBAS as classes */
+.cartao .ativo { }   /* um elemento com classe ativo dentro de um .cartao */
 ```
 
 Esse espaço é o erro de digitação mais caro do CSS iniciante: o estilo "simplesmente não pega" e não há mensagem de erro nenhuma. Quando isso acontecer, o primeiro passo é ler o seletor em voz alta, palavra por palavra: "pê ponto destaque" (o mesmo elemento) ou "pê espaço ponto destaque" (um dentro do outro)?
 
 > **🔬 Investigue**
-> Abra `index.html` no Live Server e o DevTools. No painel **Elements**, selecione um `<h2>` e olhe a aba **Styles**: à direita de cada regra aparece o arquivo e a linha de origem; regras riscadas foram vencidas por outras. Agora, na aba **Console**, digite `document.querySelectorAll("main p").length` e depois `document.querySelectorAll("main > p").length`. Os números são diferentes — e a diferença é exatamente o que o combinador `>` exclui. Repita com `.card p`, `.card > p` e `h2 + p`. O `querySelectorAll` aceita **os mesmos seletores do CSS**, e é a maneira mais rápida de conferir se um seletor pega o que você acha que pega.
+> Abra `index.html` no Live Server e o DevTools. No painel **Elements**, selecione um `<h2>` e olhe a aba **Styles**: à direita de cada regra aparece o arquivo e a linha de origem; regras riscadas foram vencidas por outras. Agora, na aba **Console**, digite `document.querySelectorAll("main p").length` e depois `document.querySelectorAll("main > p").length`. Os números são diferentes — e a diferença é exatamente o que o combinador `>` exclui. Repita com `.cartao p`, `.cartao > p` e `h2 + p`. O `querySelectorAll` aceita **os mesmos seletores do CSS**, e é a maneira mais rápida de conferir se um seletor pega o que você acha que pega.
 
 ### 1.5 Seletores de atributo
 
@@ -230,7 +230,7 @@ Se duas regras têm a mesma origem, vence a **mais específica**. Conte cada sel
 | Peso | O que conta | Exemplos |
 |---|---|---|
 | **A** | `id` | `#menu` |
-| **B** | Classes, atributos e pseudoclasses | `.card`, `[type="text"]`, `:hover` |
+| **B** | Classes, atributos e pseudoclasses | `.cartao`, `[type="text"]`, `:hover` |
 | **C** | Elementos e pseudoelementos | `p`, `div`, `::before` |
 
 O universal (`*`) e os combinadores (`>`, `+`, `~`) valem **zero**. `:not()` não conta em si, mas o que está **dentro** dele conta.
@@ -562,15 +562,15 @@ Variáveis são **herdadas**, e é isso que as torna poderosas: você pode redef
 :root       { --cor-fundo-cartao: #ffffff; }
 .destaque   { --cor-fundo-cartao: #fff8e1; }   /* só dentro de .destaque */
 
-.card { background-color: var(--cor-fundo-cartao); }
+.cartao { background-color: var(--cor-fundo-cartao); }
 ```
 
-Um `.card` dentro de `.destaque` fica amarelado; os outros continuam brancos — e a regra do `.card` não foi tocada. É esse mecanismo que permite temas claro e escuro trocando poucas linhas (assunto da Aula 09 e requisito do projeto final).
+Um `.cartao` dentro de `.destaque` fica amarelado; os outros continuam brancos — e a regra do `.cartao` não foi tocada. É esse mecanismo que permite temas claro e escuro trocando poucas linhas (assunto da Aula 09 e requisito do projeto final).
 
 ### 6.3 Valor de reserva
 
 ```css
-.card { box-shadow: var(--sombra-card, 0 1px 4px rgba(0, 0, 0, 0.15)); }
+.cartao { box-shadow: var(--sombra-cartao, 0 1px 4px rgba(0, 0, 0, 0.15)); }
 ```
 
 O segundo argumento de `var()` é usado quando a variável não existe. Útil em componentes que podem ser copiados para outro projeto.
@@ -634,21 +634,24 @@ Repita nas cinco páginas. A ordem importa: a fonte precisa estar disponível qu
 
 ### Passo 2 — Simplificar o `<main>` das cinco páginas
 
-Na Aula 05, todas as regiões receberam um `<div class="container">`. O `<main>` não precisa dele: como o conteúdo principal não tem fundo colorido sangrando até as bordas da tela, o próprio `<main>` pode ser o contêiner. Em cada página, **remova o `<div class="container">` de dentro do `<main>`** (e o `</div>` correspondente), promovendo as seções um nível:
+Na Aula 05, todas as regiões receberam um `<div class="container">`. O `<main>` não precisa dele: como o conteúdo principal não tem fundo colorido sangrando até as bordas da tela, o próprio `<main>` pode assumir a largura máxima do projeto. Em cada página, **remova o `<div class="container">` de dentro do `<main>`** (e o `</div>` correspondente), promovendo as seções um nível:
 
 **`site-evento/index.html` (trecho do `<main>`, depois da mudança)**
 
 ```html
   <main>
     <section class="hero">
-      <h1>Semana Acadêmica de Sistemas de Informação</h1>
-      <p>Três noites de palestras, minicursos e maratona de programação na UNEMAT Sinop. Participação gratuita, com certificado.</p>
+      <h2>Três noites de palestras, minicursos e maratona de programação</h2>
+      <p>Participação gratuita, com certificado de 20 horas para quem comparecer a pelo menos 75% das atividades.</p>
       <a href="inscricao.html" class="botao">Inscreva-se</a>
     </section>
   </main>
 ```
 
-O `<div class="container">` continua no `<header>` e no `<footer>`, onde ele é necessário: essas duas regiões têm fundo azul de ponta a ponta da tela, e só o **conteúdo** delas fica limitado a 1100 px.
+O `<div class="container">` continua no `<header>` e no `<footer>`, onde ele é necessário: essas duas regiões têm fundo azul de ponta a ponta da tela, e só o **conteúdo** delas fica limitado a 1100 px — o mesmo 1100 px que a Aula 05 fixou.
+
+> **💡 Dica**
+> Guarde esse número. Na Aula 07 ele vira a variável `--largura-max`, e a classe `.container` volta ao `<main>` — não mais como uma `<div>` interna, mas aplicada ao próprio `<main>` ou à `<section>` de topo. A largura nunca muda; o que muda é **quem** carrega a classe.
 
 ### Passo 3 — Reset e variáveis
 
@@ -683,7 +686,7 @@ Abra `css/estilo.css` e substitua o arquivo inteiro. Comece pelas duas primeiras
   --espaco-medio: 16px;
   --espaco-grande: 32px;
   --raio-borda: 8px;
-  --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sombra-cartao: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 ```
 
@@ -815,7 +818,7 @@ header nav li {
 }
 
 main {
-  max-width: 1100px;
+  max-width: var(--largura-max, 1100px);
   margin: 0 auto;
   padding: var(--espaco-grande) var(--espaco-medio);
 }
@@ -903,20 +906,20 @@ Quatro estados em um componente só: repouso, `:hover`/`:focus-visible`, `:activ
 **`site-evento/css/estilo.css` — seção 5, cartão**
 
 ```css
-.card {
+.cartao {
   background-color: #ffffff;
   border: 1px solid #dfe6ec;
   border-radius: var(--raio-borda);
   padding: var(--espaco-medio);
   margin-bottom: var(--espaco-medio);
-  box-shadow: var(--sombra-card);
+  box-shadow: var(--sombra-cartao);
 }
 
-.card h3 {
+.cartao h3 {
   margin-bottom: var(--espaco-pequeno);
 }
 
-.card p:last-child {
+.cartao p:last-child {
   margin-bottom: 0;                   /* sem espaço sobrando no fim do cartão */
 }
 ```
@@ -969,6 +972,8 @@ tfoot td {
 ```
 
 Três seletores desta tabela vieram direto da teoria de hoje: `tbody tr:nth-child(even)` (pseudoclasse estrutural), `tbody th[scope="colgroup"]` (seletor de atributo, aproveitando a semântica que você escreveu na Aula 02) e `tbody tr:hover` (pseudoclasse de estado). Nenhuma classe nova foi necessária — o HTML bem marcado já dizia tudo.
+
+Duas tabelas do site usam essas regras: a da programação, escrita na Aula 02, e a de horário de atendimento em `contato.html`, escrita na Aula 05. Na Aula 07 a programação será redesenhada em cartões; a folha de estilo da tabela **continua valendo** para a de `contato.html`, então nada aqui é desperdício.
 
 > **⚠️ Atenção**
 > `border-collapse: collapse` é o que transforma a tabela padrão (com bordas duplas e um espaço entre as células) em uma tabela de aparência profissional. Ela precisa ir no elemento `table`, não nas células — e, com `collapse` ativo, `border-radius` na tabela deixa de ter efeito visível nas células das pontas.
@@ -1029,7 +1034,7 @@ Três seletores desta tabela vieram direto da teoria de hoje: `tbody tr:nth-chil
 
 **A2.** Qual é a diferença entre `p.destaque` e `p .destaque`? Escreva um trecho de HTML em que o primeiro pega um elemento e o segundo não pega nenhum.
 
-**A3.** Calcule a especificidade (A, B, C) de: (a) `p`; (b) `.card`; (c) `#menu a`; (d) `nav ul li a:hover`; (e) `.card .titulo span`; (f) `article > p.intro`.
+**A3.** Calcule a especificidade (A, B, C) de: (a) `p`; (b) `.cartao`; (c) `#menu a`; (d) `nav ul li a:hover`; (e) `.cartao .titulo span`; (f) `article > p.intro`.
 
 **A4.** Dado o CSS e o HTML abaixo, de que cor fica o parágrafo? Justifique com o cálculo das quatro especificidades.
 
@@ -1062,7 +1067,7 @@ p.texto     { color: orange; }
 
 ### Nível B — Aplicação
 
-**B1.** Estilize uma tabela de notas em `exercicios/aula-06/notas.html`: `border-collapse: collapse`, cabeçalho com fundo escuro e texto claro, linhas pares com fundo cinza-claro (`:nth-child(even)`), destaque no `:hover` da linha, colunas numéricas alinhadas à direita e `caption` estilizado acima da tabela.
+**B1.** Estilize uma tabela de notas em `exercicios/aula06/notas.html`: `border-collapse: collapse`, cabeçalho com fundo escuro e texto claro, linhas pares com fundo cinza-claro (`:nth-child(even)`), destaque no `:hover` da linha, colunas numéricas alinhadas à direita e `caption` estilizado acima da tabela.
 
 Resultado esperado: a tabela ocupa 100% da largura do contêiner; as bordas não são duplas; as linhas alternam visivelmente; passar o mouse muda o fundo da linha inteira; as notas ficam alinhadas à direita e os nomes à esquerda.
 
@@ -1071,7 +1076,7 @@ Resultado esperado: a tabela ocupa 100% da largura do contêiner; as bordas não
 Para alinhar só a coluna de notas, use um seletor de posição (`td:nth-child(3)`) ou uma classe nas células numéricas. A segunda opção é mais robusta: se você acrescentar uma coluna, o número muda e o `nth-child` mira a coluna errada.
 </details>
 
-**B2.** Construa uma paleta documentada em `exercicios/aula-06/paleta.html`: dez quadrados coloridos, cada um exibindo o nome da cor, o hexadecimal e o `hsl()`. Todas as cores declaradas como variáveis em `:root`. A paleta deve ser coerente: uma primária, uma secundária, uma de destaque, três neutros e as quatro cores semânticas (sucesso, alerta, erro, informação).
+**B2.** Construa uma paleta documentada em `exercicios/aula06/paleta.html`: dez quadrados coloridos, cada um exibindo o nome da cor, o hexadecimal e o `hsl()`. Todas as cores declaradas como variáveis em `:root`. A paleta deve ser coerente: uma primária, uma secundária, uma de destaque, três neutros e as quatro cores semânticas (sucesso, alerta, erro, informação).
 
 Resultado esperado: dez blocos, cada um com o nome do papel da cor (não o nome da cor), os dois valores e a razão de contraste com preto e com branco; as cores da mesma família compartilham o matiz (H) e variam a luminosidade (L).
 
@@ -1089,7 +1094,7 @@ Resultado esperado: a `inscricao.html` fica legível e agradável sem uma linha 
 `input:invalid` marca o campo como inválido desde o carregamento da página, o que assusta o usuário antes de ele digitar qualquer coisa. Combine com `:not(:placeholder-shown)` para só sinalizar depois que a pessoa começou a preencher. Para o segundo sinal, `::after` no rótulo ou um `border-left` mais grosso funcionam bem.
 </details>
 
-**B4.** Experimento de especificidade em `exercicios/aula-06/especificidade.html`: uma página com um único parágrafo e **seis** regras diferentes que o atingem, cada uma com uma cor distinta. Preveja no papel qual cor vencerá, teste no navegador e escreva um relatório explicando o resultado com a tabela (A, B, C) de cada seletor.
+**B4.** Experimento de especificidade em `exercicios/aula06/especificidade.html`: uma página com um único parágrafo e **seis** regras diferentes que o atingem, cada uma com uma cor distinta. Preveja no papel qual cor vencerá, teste no navegador e escreva um relatório explicando o resultado com a tabela (A, B, C) de cada seletor.
 
 Resultado esperado: as seis regras, a previsão escrita antes do teste, uma captura de tela do painel Styles mostrando as cinco regras riscadas, e a explicação de por que a vencedora venceu (etapa 2 ou etapa 3 da cascata).
 
@@ -1276,7 +1281,7 @@ Ao fim desta aula, o seu projeto autoral deve ter:
 
 ## 📝 Avaliação 1 — instruções de entrega
 
-**Escopo.** A primeira avaliação verifica o domínio dos elementos HTML estudados na **Unidade 1** (Aulas 01 a 05). O objeto é o **seu projeto autoral**: um site em HTML puro, **sem CSS**, sobre o tema que você definiu na Aula 01. O escopo é exatamente o Checkpoint da Aula 05 — você já sabe o que precisa estar pronto. Trabalho individual, peso 10,0, entrega pelo SIGAA no prazo do cronograma da trilha.
+**Escopo.** A primeira avaliação verifica o domínio dos elementos HTML estudados na **Unidade 1** (Aulas 01 a 05). O objeto é o **seu projeto autoral**: um site em HTML puro, **sem CSS**, sobre o tema que você definiu na Aula 01. O escopo são os itens **não-CSS** do Checkpoint da Aula 05: as cinco páginas, o seccionamento semântico, a hierarquia de títulos, os `<article>`, a página de contato e a validação no W3C. Os itens de CSS daquele Checkpoint — `css/estilo.css` ligado nas páginas, o bloco `:root`, a regra base de imagens e o `.botao` com `:hover`/`:focus-visible` — **não entram nesta avaliação; eles são cobrados na Avaliação 2**, sobre este mesmo site. Trabalho **individual** (as três avaliações da trilha são individuais e recaem sobre o mesmo projeto autoral), peso 10,0, entrega pelo SIGAA no prazo do cronograma da trilha.
 
 A página vai parecer crua, e isso é intencional: o que está sendo avaliado é a **estrutura**. A estilização é objeto da Avaliação 2, sobre este mesmo site, e a interatividade é a Avaliação 3. Escolha um tema que você aguente desenvolver até o fim do semestre.
 
@@ -1288,9 +1293,9 @@ A página vai parecer crua, e isso é intencional: o que está sendo avaliado é
 | 2 | Estrutura HTML5 válida em todas as páginas: `<!DOCTYPE>`, `lang="pt-BR"`, `charset`, `viewport`, `description` e `title` próprios | Aula 02 |
 | 3 | Seccionamento semântico: `header`, `nav`, `main` (um por página), `section`, `article`, `aside`, `footer` | Aulas 02 e 05 |
 | 4 | Hierarquia de títulos correta, com um único `<h1>` por página e sem pular níveis | Aula 02 |
-| 5 | Elementos de texto aplicados com significado: `strong`, `em`, `blockquote` com `cite`, `time`, `abbr`, `q` | Aula 02 |
+| 5 | Elementos de texto aplicados com significado: `strong`, `em`, `blockquote` com `cite`, `time` e `q` (o `<abbr>` é opcional e conta como item extra) | Aula 02 |
 | 6 | Os três tipos de lista em uso: `ul`, `ol` e `dl` | Aulas 02 e 04 |
-| 7 | Menu de navegação como `<ul>` dentro de `<nav aria-label>`, com `aria-current="page"` na página atual | Aulas 02 e 04 |
+| 7 | Menu de navegação como `<ul>` dentro de `<nav aria-label>`, com `aria-current="page"` na página atual | Aula 04 |
 | 8 | Uma tabela de dados com `caption`, `thead`, `tbody`, `tfoot` e `th scope` | Aula 02 |
 | 9 | Um formulário completo: mínimo de 10 campos de tipos diferentes, `<label>` associado a cada um, `fieldset`/`legend`, `<select>`, `<textarea>` e validação nativa | Aulas 03 e 04 |
 | 10 | Imagens com `alt` adequado a cada situação, ao menos uma em `figure`/`figcaption`, com `width`/`height` e `loading="lazy"` abaixo da dobra | Aula 04 |

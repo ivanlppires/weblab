@@ -412,7 +412,7 @@ O menu é o componente que mais aparece em avaliação e o que mais concentra er
 <header class="cabecalho">
   <div class="container cabecalho__interno">
     <a href="index.html" class="logo">
-      <img src="img/logo.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
+      <img src="img/logo-sasi.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
     </a>
 
     <nav aria-label="Principal">
@@ -428,13 +428,18 @@ O menu é o componente que mais aparece em avaliação e o que mais concentra er
 </header>
 ```
 
+> **⚠️ Atenção**
+> Este cabeçalho **substitui** o `<header id="topo">` das Aulas 02 a 06 (logo solto, `<h1>` do site, parágrafo de local e `<nav>` sem classe). Apague o bloco antigo inteiro nas cinco páginas e cole este no lugar. Junto com ele vão embora duas coisas: o parágrafo "UNEMAT Sinop · três noites de outubro · Auditório Central", que passa a viver no herói da página inicial e no rodapé, e o `<h1>` do cabeçalho — a partir de hoje o `<h1>` é o **título da página**, dentro do `<main>` (o que era `<h2>Programação</h2>` vira `<h1>Programação</h1>`, e assim por diante nas cinco páginas). O nome do evento continua acessível: ele está no `alt` do logo e no `<title>`.
+
 Três pontos que valem nota:
 
 1. **O menu é uma lista** (`ul`/`li`). Leitores de tela anunciam "lista com 5 itens" ao entrar nela — o usuário sabe o tamanho da navegação antes de percorrê-la. Uma sequência de `<a>` soltos não dá essa informação.
 2. **`<nav aria-label="Principal">`** distingue esta navegação de outras que a página pode ter (a do rodapé, uma trilha de "você está aqui", os filtros da programação). Sem o rótulo, o leitor de tela anuncia só "navegação", e o usuário não sabe qual.
 3. **`aria-current="page"`** marca a página atual **semanticamente**, não só com cor. Quem não enxerga a cor (por daltonismo ou por usar leitor de tela) recebe a mesma informação. Em cada página do site, o atributo vai no link correspondente — e o CSS usa o atributo como seletor, então o destaque visual vem de graça.
 
-O `alt` do logo diz para onde o link leva ("Página inicial") e o que a imagem é, porque um logo dentro de um link é, antes de tudo, um link.
+O `alt` do logo diz para onde o link leva ("Página inicial") e o que a imagem é, porque um logo dentro de um link é, antes de tudo, um link. Na Aula 04 esse mesmo logo tinha `alt=""`, porque o `<h1>` ao lado já dizia o nome do evento; agora que o logo virou link e o `<h1>` saiu do cabeçalho, o `alt` volta a carregar informação. O `alt` correto depende do contexto, não do arquivo.
+
+**Uma mudança de ordem, declarada.** O menu passa de cinco itens em ordem de "índice" (Início, Programação, Inscrição, Palestrantes, Contato) para quatro itens de navegação mais um **botão de ação** no fim: "Inscreva-se". A decisão é de experiência de uso — a ação que o site quer que a pessoa faça deve estar no fim da linha de leitura e visualmente distinta do resto, não perdida no meio do menu. O rótulo muda de "Inscrição" (substantivo, nome de página) para "Inscreva-se" (verbo, chamada para ação) pelo mesmo motivo. O arquivo continua sendo `inscricao.html`.
 
 ### 5.2 Estilo
 
@@ -542,7 +547,7 @@ Quem navega por teclado não deveria ter que percorrer o menu inteiro, em **toda
   <header class="cabecalho">
     <div class="container cabecalho__interno">
       <a href="index.html" class="logo">
-        <img src="img/logo.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
+        <img src="img/logo-sasi.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
       </a>
       <nav aria-label="Principal">
         <ul class="menu">
@@ -614,7 +619,7 @@ Abra `site-evento/css/estilo.css`. Na seção 2 (variáveis), acrescente três v
   --espaco-medio: 16px;
   --espaco-grande: 32px;
   --raio-borda: 8px;
-  --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sombra-cartao: 0 2px 8px rgba(0, 0, 0, 0.1);
   --largura-max: 1100px;       /* largura máxima do conteúdo */
 }
 
@@ -626,7 +631,7 @@ Abra `site-evento/css/estilo.css`. Na seção 2 (variáveis), acrescente três v
 
 ### Passo 2 — Rodapé no fim da tela e o contêiner central
 
-Na seção 4 (layout), substitua o `main { max-width: 1100px; margin: 0 auto; }` da Aula 06 pelo padrão do `body` em coluna e por uma classe `.container` reutilizável.
+Na seção 4 (layout), **apague** as três declarações do `main` que a Aula 06 escreveu (`max-width`, `margin` e `padding`) e ponha no lugar o padrão do `body` em coluna mais a classe `.container` reutilizável. A largura máxima continua sendo a mesma de sempre — 1100 px —, só que agora ela mora na variável `--largura-max` e é a `.container` que a aplica.
 
 **`site-evento/css/estilo.css` — seção 4 (layout), início**
 
@@ -652,6 +657,18 @@ main {
 
 `margin-inline` e `padding-inline` são as versões "lógicas" de `margin-left`/`margin-right` — funcionam também em idiomas escritos da direita para a esquerda. Use-as sempre que a intenção for "dos lados".
 
+**Onde a `.container` entra no HTML.** Na Aula 05 ela era uma `<div>` dentro de cada região; na Aula 06 a `<div>` saiu de dentro do `<main>`. Hoje ela volta ao conteúdo principal, mas como **classe do próprio elemento**, sem `<div>` extra. Percorra as **cinco** páginas e garanta que cada uma tenha exatamente um contêiner no conteúdo:
+
+| Página | Onde vai a `.container` |
+|---|---|
+| `index.html` | na `<section class="container hero">` (Passo 5) |
+| `programacao.html` | no `<main id="conteudo" tabindex="-1" class="container pagina">` (Passo 6) |
+| `palestrantes.html` | no `<main id="conteudo" tabindex="-1" class="container">` (Passo 7) |
+| `inscricao.html` | no `<main id="conteudo" tabindex="-1" class="container">` |
+| `contato.html` | no `<main id="conteudo" tabindex="-1" class="container">` |
+
+Sem esse passo, `inscricao.html` e `contato.html` ficam com o conteúdo colado nas bordas da janela em monitores largos — e é o erro mais comum desta aula.
+
 ### Passo 3 — Cabeçalho e menu em todas as páginas
 
 Coloque o cabeçalho da seção 5.1 nas **cinco** páginas, trocando o `aria-current="page"` para o link da página correspondente. Em `programacao.html`, por exemplo:
@@ -664,7 +681,7 @@ Coloque o cabeçalho da seção 5.1 nas **cinco** páginas, trocando o `aria-cur
 <header class="cabecalho">
   <div class="container cabecalho__interno">
     <a href="index.html" class="logo">
-      <img src="img/logo.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
+      <img src="img/logo-sasi.svg" alt="Página inicial — Semana Acadêmica de Sistemas de Informação">
     </a>
 
     <nav aria-label="Principal">
@@ -680,7 +697,9 @@ Coloque o cabeçalho da seção 5.1 nas **cinco** páginas, trocando o `aria-cur
 </header>
 ```
 
-Cole o CSS do cabeçalho e do menu da seção 5.2 na seção 4 da folha de estilo, e acrescente `flex-wrap: wrap` ao `.menu`, para que os links quebrem linha em vez de estourar o cabeçalho quando a janela for estreita — um paliativo até a Aula 08:
+Antes de colar o CSS novo, **apague da seção 4 da folha de estilo as três regras de cabeçalho que a Aula 06 escreveu**: `header { … }`, `header nav ul { … }` e `header nav li { display: inline-block; margin-right: var(--espaco-medio) }`. As regras `header h1, header h2` e `header a` também saem — o cabeçalho agora tem fundo claro, e texto branco nele ficaria invisível. Se você deixar o `margin-right` do `header nav li` no arquivo, ele soma com o `gap: 1.5rem` do `.menu` e o espaçamento entre os itens fica dobrado; é exatamente o primeiro sintoma da tabela de Erros comuns desta aula.
+
+Feito isso, cole o CSS do cabeçalho e do menu da seção 5.2 na seção 4 da folha de estilo, e acrescente `flex-wrap: wrap` ao `.menu`, para que os links quebrem linha em vez de estourar o cabeçalho quando a janela for estreita — um paliativo até a Aula 08:
 
 **`site-evento/css/estilo.css` — ajuste no `.menu`**
 
@@ -702,6 +721,9 @@ Adicione o `<a href="#conteudo" class="salto">` como primeiro filho do `<body>` 
 
 A página inicial abre com um "herói": título, texto de chamada, dois botões e a imagem do evento. Em telas largas, texto e imagem ficam lado a lado; em telas estreitas, empilham — e o `auto-fit` decide sozinho.
 
+> **⚠️ Atenção**
+> Este bloco **substitui** a `<section class="hero">` que a Aula 05 criou (aquela com o `<h2>`, um parágrafo e um botão só) e também o `<picture>` do banner da Aula 04, cuja imagem passa a ser a do herói. Apague os dois e cole o `<main>` abaixo no lugar. As seções "Sobre o evento", "Como participar", "Glossário", "Destaques desta edição" e "O evento em números" continuam onde estão, logo depois do herói, dentro do `<main>`.
+
 **`site-evento/index.html` — conteúdo do `<main>`**
 
 ```html
@@ -712,7 +734,7 @@ A página inicial abre com um "herói": título, texto de chamada, dois botões 
       <p>Três dias de palestras, minicursos e maratona de programação no campus de Sinop. Aberto a estudantes de todos os cursos.</p>
       <div class="hero__acoes">
         <a class="botao" href="inscricao.html">Inscreva-se</a>
-        <a class="botao botao--secundario" href="programacao.html">Ver programação</a>
+        <a class="botao botao--contorno" href="programacao.html">Ver programação</a>
       </div>
     </div>
     <img src="img/banner.jpg" alt="Auditório lotado durante a abertura da edição anterior" width="1200" height="800">
@@ -745,47 +767,36 @@ A página inicial abre com um "herói": título, texto de chamada, dois botões 
 }
 ```
 
-Se o `.botao--secundario` ainda não existir, crie-o na seção 5 (componentes) como uma variação com fundo transparente e borda na cor primária:
-
-**`site-evento/css/estilo.css` — seção 5 (componentes)**
-
-```css
-.botao--secundario {
-  background-color: transparent;
-  color: var(--cor-primaria);
-  border: 2px solid var(--cor-primaria);
-}
-
-.botao--secundario:hover,
-.botao--secundario:focus-visible {
-  background-color: var(--cor-primaria);
-  color: #fff;
-}
-```
+O segundo botão usa `.botao--contorno`, o modificador que **você já escreveu na Aula 06** — fundo transparente, texto na cor primária e inversão no `:hover`/`:focus-visible`. Não crie um `.botao--secundario`: seria o mesmo componente com outro nome, e componentes duplicados é como uma folha de estilo começa a apodrecer. Se você não encontrar o `.botao--contorno` na seção 5 da sua folha, é sinal de que o Passo 6 da Aula 06 ficou pela metade — volte lá antes de seguir.
 
 ### Passo 6 — Programação: lateral de filtros e grade de cartões
 
 A programação é a página mais rica do site. Em telas largas, ela tem uma **lateral** com filtros por dia e uma área de **conteúdo** com os cartões de cada atividade. É Grid para a estrutura (lateral + conteúdo) e Grid de novo, com `auto-fit`, para os cartões — e Flexbox dentro de cada cartão.
 
+> **⚠️ Atenção**
+> Este `<main>` **substitui** o conteúdo da `programacao.html` das Aulas 02 e 04: a `<table>` dos três dias, a seção "Trilhas do evento" e a seção "As cinco atividades mais procuradas" saem daqui e dão lugar aos cartões. As seções de vídeo, áudio e mapa (Passos 5 a 7 da Aula 04) continuam, depois dos cartões, dentro da `<section class="conteudo">`. E as regras de `table`, `caption`, `th`, `td`, `thead`, `tbody` e `tfoot` que você escreveu na Aula 06 **ficam na folha de estilo**: elas continuam servindo a tabela de horário de atendimento de `contato.html`.
+
+Repare também em onde o `<h1>` está: **fora** da `<section class="conteudo">`, como primeiro filho do `<main>`. Se ele ficasse depois do `<aside>`, a página abriria com um `<h2>` ("Filtrar por dia") antes do `<h1>` — hierarquia quebrada, e uma reprovação certa na auditoria de acessibilidade do Lighthouse.
+
 **`site-evento/programacao.html` — conteúdo do `<main>`**
 
 ```html
 <main id="conteudo" tabindex="-1" class="container pagina">
+  <h1>Programação</h1>
+
   <aside class="lateral">
     <h2>Filtrar por dia</h2>
     <nav aria-label="Dias do evento">
       <ul class="lista-filtros">
-        <li><a href="#dia-1">Dia 1 — Segunda-feira</a></li>
-        <li><a href="#dia-2">Dia 2 — Terça-feira</a></li>
-        <li><a href="#dia-3">Dia 3 — Quarta-feira</a></li>
+        <li><a href="#dia-1">Dia 1</a></li>
+        <li><a href="#dia-2">Dia 2</a></li>
+        <li><a href="#dia-3">Dia 3</a></li>
       </ul>
     </nav>
   </aside>
 
   <section class="conteudo">
-    <h1>Programação</h1>
-
-    <h2 id="dia-1">Dia 1 — Segunda-feira</h2>
+    <h2 id="dia-1">Dia 1</h2>
     <ul class="cartoes">
       <li class="cartao">
         <h3>Abertura e palestra magna</h3>
@@ -808,7 +819,7 @@ A programação é a página mais rica do site. Em telas largas, ela tem uma **l
       </li>
     </ul>
 
-    <h2 id="dia-2">Dia 2 — Terça-feira</h2>
+    <h2 id="dia-2">Dia 2</h2>
     <ul class="cartoes">
       <li class="cartao">
         <h3>Minicurso: acessibilidade na prática</h3>
@@ -824,7 +835,7 @@ A programação é a página mais rica do site. Em telas largas, ela tem uma **l
       </li>
     </ul>
 
-    <h2 id="dia-3">Dia 3 — Quarta-feira</h2>
+    <h2 id="dia-3">Dia 3</h2>
     <ul class="cartoes">
       <li class="cartao">
         <h3>Maratona de programação</h3>
@@ -850,13 +861,16 @@ A programação é a página mais rica do site. Em telas largas, ela tem uma **l
 .pagina {
   display: grid;
   grid-template-columns: 240px 1fr;
-  grid-template-areas: "lateral conteudo";
+  grid-template-areas:
+    "titulo  titulo"
+    "lateral conteudo";
   gap: var(--espaco-grande);
   padding-block: var(--espaco-grande);
 }
 
-.lateral  { grid-area: lateral; }
-.conteudo { grid-area: conteudo; }
+.pagina > h1 { grid-area: titulo; }
+.lateral     { grid-area: lateral; }
+.conteudo    { grid-area: conteudo; }
 
 .lateral {
   align-self: start;           /* não estica até o fim da coluna */
@@ -904,7 +918,7 @@ A programação é a página mais rica do site. Em telas largas, ela tem uma **l
   background: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-borda);
-  box-shadow: var(--sombra-card);
+  box-shadow: var(--sombra-cartao);
 }
 
 .cartao .botao {
@@ -939,6 +953,9 @@ Repare no truque `margin-top: auto` dentro de um contêiner flex em coluna: a ma
 
 A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação para a foto.
 
+> **⚠️ Atenção**
+> Este `<main>` **substitui** os seis `<article>` que as Aulas 02 e 04 escreveram (nome em `<h3>`, dois parágrafos e um `<dl>` de atividades e contato). Os nomes e as fotos são exatamente os mesmos — muda a marcação, que passa a ser uma `<ul class="cartoes">` com um `<li class="cartao">` por pessoa. Mostramos quatro aqui para o exemplo caber; repita o padrão para os seis do elenco.
+
 **`site-evento/palestrantes.html` — conteúdo do `<main>`**
 
 ```html
@@ -948,28 +965,28 @@ A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação
 
   <ul class="cartoes">
     <li class="cartao cartao--palestrante">
-      <img class="cartao__foto" src="img/ana-souza.jpg" alt="Ana Souza" width="400" height="400">
-      <h2>Ana Souza</h2>
-      <p class="cartao__meta">Engenheira de software · Palestra magna</p>
-      <p>Trabalha com plataformas web de grande escala e mantém projetos de código aberto.</p>
+      <img class="cartao__foto" src="img/palestrante-01.jpg" alt="Ana Lúcia Ferreira" width="400" height="400">
+      <h2>Ana Lúcia Ferreira</h2>
+      <p class="cartao__meta">UNEMAT — Sinop · Inteligência Artificial</p>
+      <p>Pesquisa redes neurais para prever a safra de soja e ministra o minicurso de redes neurais.</p>
     </li>
     <li class="cartao cartao--palestrante">
-      <img class="cartao__foto" src="img/bruno-lima.jpg" alt="Bruno Lima" width="400" height="400">
-      <h2>Bruno Lima</h2>
-      <p class="cartao__meta">Analista de segurança · Palestra</p>
-      <p>Atua com resposta a incidentes e treina equipes de desenvolvimento em segurança.</p>
+      <img class="cartao__foto" src="img/palestrante-02.jpg" alt="Bruno Takahashi" width="400" height="400">
+      <h2>Bruno Takahashi</h2>
+      <p class="cartao__meta">Startup AgroData · Ciência de Dados</p>
+      <p>Constrói dashboards que os produtores realmente usam e fala sobre dados abertos.</p>
     </li>
     <li class="cartao cartao--palestrante">
-      <img class="cartao__foto" src="img/carla-mendes.jpg" alt="Carla Mendes" width="400" height="400">
+      <img class="cartao__foto" src="img/palestrante-03.jpg" alt="Carla Mendes" width="400" height="400">
       <h2>Carla Mendes</h2>
-      <p class="cartao__meta">Professora · Minicurso de acessibilidade</p>
-      <p>Pesquisa interação humano-computador e tecnologias assistivas.</p>
+      <p class="cartao__meta">UFMT · Segurança</p>
+      <p>Pesquisa o que um ataque de phishing ensina sobre experiência de uso.</p>
     </li>
     <li class="cartao cartao--palestrante">
-      <img class="cartao__foto" src="img/diego-rocha.jpg" alt="Diego Rocha" width="400" height="400">
-      <h2>Diego Rocha</h2>
-      <p class="cartao__meta">Egresso · Mesa-redonda</p>
-      <p>Formou-se no campus e hoje lidera um time de front-end em uma empresa de Sinop.</p>
+      <img class="cartao__foto" src="img/palestrante-04.jpg" alt="Diego Nascimento" width="400" height="400">
+      <h2>Diego Nascimento</h2>
+      <p class="cartao__meta">Prefeitura de Sinop · Desenvolvimento Web</p>
+      <p>Trabalha com acessibilidade em portais públicos e conta os erros que a equipe já viu.</p>
     </li>
   </ul>
 </main>
@@ -992,6 +1009,9 @@ A página de palestrantes reaproveita `.cartoes` e `.cartao`, com uma variação
 ```
 
 ### Passo 8 — Rodapé em três colunas
+
+> **⚠️ Atenção**
+> Este rodapé **substitui** o `<footer>` de três parágrafos da Aula 02 (realização, e-mail/telefone e linha de copyright). Nenhuma informação se perde: a realização vira a coluna "Sobre o evento", o e-mail vai para o `<address>` da coluna "Contato" e a linha de copyright vira o `.rodape__creditos`. Apague o bloco antigo nas cinco páginas e cole este no lugar — inclusive o `<nav aria-label="Rodapé">` que a Aula 05 acrescentou em `index.html`, cujos links agora vivem na coluna "Links".
 
 **`site-evento/index.html` — antes de `</body>`, em todas as páginas**
 
@@ -1075,6 +1095,7 @@ A grade de cartões e o rodapé já se adaptam sozinhos graças ao `auto-fit`. A
   .pagina {
     grid-template-columns: 1fr;
     grid-template-areas:
+      "titulo"
       "conteudo"
       "lateral";               /* no celular, os filtros vão para depois do conteúdo */
   }
@@ -1089,10 +1110,11 @@ A grade de cartões e o rodapé já se adaptam sozinhos graças ao `auto-fit`. A
 
 1. Abra `index.html` com o Live Server. O cabeçalho deve ficar grudado no topo ao rolar, com o logo à esquerda e o menu à direita, e o link "Início" destacado com o sublinhado na cor primária.
 2. Pressione <kbd>Tab</kbd> uma vez: o botão "Pular para o conteúdo" deve aparecer no canto superior esquerdo. Pressione <kbd>Enter</kbd>: o foco vai para o `<main>`. Continue com <kbd>Tab</kbd>: cada link do menu mostra o sublinhado crescendo.
-3. Abra `contato.html` (a página com menos conteúdo): o rodapé deve estar colado no fim da janela, não flutuando no meio.
-4. Em `programacao.html`, a lateral fica à esquerda e os cartões à direita, em colunas de no mínimo 280 px; o selo "Esgotado" aparece no canto superior direito do minicurso de Git; todos os botões de uma mesma linha ficam alinhados na base. Redimensione a janela: abaixo de 1024 px, tudo vira uma coluna e a lateral vai para o fim.
-5. Em `palestrantes.html`, as fotos são redondas e os cartões se reorganizam de 4 para 3, 2 e 1 coluna conforme você estreita a janela — sem nenhuma media query.
-6. No DevTools, clique no selo **grid** ao lado de `<ul class="cartoes">` e no selo **flex** ao lado de `<div class="cabecalho__interno">` e confira, com o overlay, que a estrutura é a que você desenhou.
+3. Abra `contato.html` (a página com menos conteúdo): o rodapé deve estar colado no fim da janela, não flutuando no meio, e o conteúdo deve parar em 1100 px no centro — se ele encostar nas bordas, faltou a `.container` no `<main>` desta página. Confira o mesmo em `inscricao.html`.
+4. Passe o mouse entre dois itens do menu e meça o espaço no DevTools: ele deve ser um único `gap` de 24 px. Se parecer o dobro, a regra `header nav li` da Aula 06 continua na folha — apague-a.
+5. Em `programacao.html`, a lateral fica à esquerda e os cartões à direita, em colunas de no mínimo 280 px; o selo "Esgotado" aparece no canto superior direito do minicurso de Git; todos os botões de uma mesma linha ficam alinhados na base. Redimensione a janela: abaixo de 1024 px, tudo vira uma coluna e a lateral vai para o fim.
+6. Em `palestrantes.html`, as fotos são redondas e os cartões se reorganizam de 4 para 3, 2 e 1 coluna conforme você estreita a janela — sem nenhuma media query.
+7. No DevTools, clique no selo **grid** ao lado de `<ul class="cartoes">` e no selo **flex** ao lado de `<div class="cabecalho__interno">` e confira, com o overlay, que a estrutura é a que você desenhou.
 
 ## 🧪 Laboratório
 
@@ -1325,7 +1347,7 @@ Você consegue reproduzir a página inicial de um site que usa todo dia? Escolha
 
 **Parte 2 — Entrega (30 min).** No seu **projeto autoral**:
 
-1. Exercícios **B1** (barra de navegação) e **B5** (dashboard), em arquivos separados na pasta `exercicios/aula-07/`.
+1. Exercícios **B1** (barra de navegação) e **B5** (dashboard), em arquivos separados na pasta `exercicios/aula07/`.
 2. O layout principal do projeto construído com Grid e áreas nomeadas em pelo menos uma página (a mais complexa), com Flexbox no interior dos componentes.
 3. O menu de navegação completo em **todas** as páginas: lista semântica, `nav aria-label`, `aria-current` na página atual, `:focus-visible` em todos os links e link de salto funcionando.
 

@@ -778,7 +778,7 @@ Abra `inscricao.html` e acrescente, logo abaixo da seção de vagas criada na Au
 **`site-evento/inscricao.html`** — trecho dentro do `<main>`, antes do formulário
 
 ```html
-<section class="vagas" aria-live="polite">
+<section class="vagas">
   <h2>Vagas</h2>
   <p>
     Restam <strong id="vagas-restantes">—</strong> de
@@ -794,6 +794,8 @@ Abra `inscricao.html` e acrescente, logo abaixo da seção de vagas criada na Au
   </p>
 </section>
 ```
+
+Repare que o `aria-live="polite"` **saiu** do `<section class="vagas">` — apague-o do seu HTML. Ele estava ali desde a Aula 10, quando a seção inteira era o que mudava; agora quem muda é o parágrafo `#aviso-vagas`, e ele já tem `role="status"`, que implica `aria-live="polite"`. Duas regiões vivas aninhadas fazem o leitor de tela anunciar a mesma coisa duas vezes, ou anunciar a seção inteira (título, contagem e taxa) a cada mudança de uma palavra. **Uma região viva, no menor elemento que muda** — essa é a regra.
 
 O parágrafo `#aviso-vagas` nasce **vazio**. Quando o script não tiver nada a dizer, ele continua vazio — e o CSS do Passo 6 esconde parágrafos vazios, então nada aparece na tela. O `role="status"` faz leitores de tela anunciarem a mensagem quando ela surgir, sem interromper o que o usuário está fazendo.
 

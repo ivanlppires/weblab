@@ -419,7 +419,7 @@ trilhas.forEach((trilha, indice) => {
 const precos = [25, 50, 12.5];
 
 const comAumento = precos.map((preco) => preco * 1.1);
-console.log(comAumento); // [27.5, 55.00000000000001, 13.75]
+console.log(comAumento); // [27.500000000000004, 55.00000000000001, 13.750000000000002]
 console.log(precos);     // [25, 50, 12.5] — intacto
 
 const formatados = precos.map((preco) => `R$ ${preco.toFixed(2)}`);
@@ -427,6 +427,8 @@ console.log(formatados); // ["R$ 25.00", "R$ 50.00", "R$ 12.50"]
 ```
 
 `map` devolve um array **novo, do mesmo tamanho**, com cada item transformado. É a ferramenta que, na Aula 13, transforma dados em cartões de HTML.
+
+E olhe de novo para o primeiro resultado: `27.500000000000004`, e não `27.5`. É o ponto flutuante da Aula 11 aparecendo de novo — `1.1` não tem representação exata em binário, e o erro se propaga item a item. Por isso a segunda linha existe: `toFixed(2)` (ou o `Intl.NumberFormat` da Aula 11) é o que você mostra na tela; o número cru fica para as contas.
 
 ### 4.3 `filter` — selecionar
 
@@ -827,7 +829,7 @@ const palestrantes = [
     instituicao: "UNEMAT — Sinop",
     area: "ia",
     tema: "Redes neurais para prever a safra de soja",
-    foto: "img/palestrantes/ana-lucia.webp",
+    foto: "img/palestrante-01.jpg",
   },
   {
     id: 2,
@@ -835,7 +837,7 @@ const palestrantes = [
     instituicao: "Startup AgroData",
     area: "dados",
     tema: "Dashboards que os produtores realmente usam",
-    foto: "img/palestrantes/bruno.webp",
+    foto: "img/palestrante-02.jpg",
   },
   {
     id: 3,
@@ -843,7 +845,7 @@ const palestrantes = [
     instituicao: "UFMT",
     area: "seguranca",
     tema: "O que um ataque de phishing ensina sobre UX",
-    foto: "img/palestrantes/carla.webp",
+    foto: "img/palestrante-03.jpg",
   },
   {
     id: 4,
@@ -851,7 +853,7 @@ const palestrantes = [
     instituicao: "Prefeitura de Sinop",
     area: "web",
     tema: "Acessibilidade em portais públicos: erros que vimos",
-    foto: "img/palestrantes/diego.webp",
+    foto: "img/palestrante-04.jpg",
   },
   {
     id: 5,
@@ -859,7 +861,7 @@ const palestrantes = [
     instituicao: "UNEMAT — Sinop",
     area: "web",
     tema: "Do HTML ao deploy: o caminho do estudante",
-    foto: "img/palestrantes/eduarda.webp",
+    foto: "img/palestrante-05.jpg",
   },
   {
     id: 6,
@@ -867,7 +869,7 @@ const palestrantes = [
     instituicao: "Cooperativa Coopercana",
     area: "ia",
     tema: "Visão computacional no controle de pragas",
-    foto: "img/palestrantes/felipe.webp",
+    foto: "img/palestrante-06.jpg",
   },
 ];
 ```
@@ -1169,7 +1171,7 @@ Três detalhes valem atenção:
 
 1. Abra `programacao.html` no Live Server e o Console (<kbd>F12</kbd>). Devem aparecer oito grupos, todos recolhíveis, e **nenhuma** linha vermelha.
 2. A primeira linha do Console deve ser `dados.js carregado: 12 atividades, 6 palestrantes.`, provando que a ordem dos scripts está certa.
-3. Em "Totais gerais": 2.130 vagas, 1.005 inscrições e ocupação de 47,2%.
+3. Em "Totais gerais": 1.830 vagas, 935 inscrições e ocupação de 51,1%.
 4. Em "Resumo por dia": 4 atividades em cada um dos três dias.
 5. Em "Alertas": duas atividades esgotadas (o minicurso de Git e o de redes neurais) e a resposta `false` para "Alguma atividade sem inscritos?".
 6. Em "Quem apresenta o quê": nenhum "A definir". Troque o `palestranteId` de uma palestra para `99`, recarregue e confira que aparece "A definir" — sem erro. Desfaça.

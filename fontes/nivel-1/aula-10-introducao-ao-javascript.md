@@ -53,7 +53,7 @@ JavaScript é uma linguagem **interpretada**, de **tipagem dinâmica**, **multip
 
 - **Interpretada** — você não compila nada antes de rodar. O navegador lê o arquivo `.js` e executa na hora. (Por baixo do capô, os motores modernos compilam trechos "quentes" para código de máquina em tempo real, a chamada compilação JIT; para você, o efeito é que salvar o arquivo e recarregar a página já basta.)
 - **Tipagem dinâmica** — uma variável não tem tipo fixo; o *valor* tem tipo. A mesma variável pode guardar um número agora e um texto depois. Isso dá agilidade e também é a origem de boa parte dos bugs que você vai caçar nesta unidade.
-- **Multiparadigma** — dá para programar de forma imperativa (sequência de comandos), funcional (funções que recebem e devolvem funções, Aula 12) e orientada a objetos (classes, que você verá no Nível 2).
+- **Multiparadigma** — dá para programar de forma imperativa (sequência de comandos), funcional (funções que recebem e devolvem funções, Aula 13) e orientada a objetos (classes, que você verá no Nível 2).
 - **Padronizada** — a especificação da linguagem chama-se **ECMAScript** e é mantida pelo comitê **TC39** da Ecma International. "JavaScript" é o nome popular; "ECMAScript" é o nome do padrão. Na prática, são sinônimos.
 
 É a única linguagem executada nativamente por todos os navegadores: Chrome, Firefox, Safari e Edge entendem JavaScript sem instalar nada.
@@ -419,14 +419,14 @@ console.log(`Situação: ${inscritos >= vagasTotais ? "lotado" : "aberto"}`);
 
 ### Multilinha
 
-Um template literal pode ocupar várias linhas, preservando as quebras — perfeito para montar trechos de HTML, como você fará na Aula 12:
+Um template literal pode ocupar várias linhas, preservando as quebras — perfeito para montar trechos de HTML, como você fará na Aula 13:
 
 ```js
 const nome = "Maria";
 const idade = 20;
 
 const html = `
-  <div class="card">
+  <div class="cartao">
     <h3>${nome}</h3>
     <p>Idade: ${idade}</p>
   </div>
@@ -615,9 +615,11 @@ Um `SyntaxError` impede **todo** o arquivo de rodar, mesmo as linhas corretas. S
 
 O site da Semana Acadêmica de Sistemas de Informação tem cinco páginas prontas em HTML e CSS. Hoje ele recebe dois arquivos JavaScript: um compartilhado por todas as páginas e um só para a página de inscrição, que passa a calcular sozinha as vagas restantes.
 
-### Passo 1 — criar a pasta `js` e incluir o script em todas as páginas
+### Passo 1 — criar `js/app.js` e incluí-lo em todas as páginas
 
-Crie a pasta `js` na raiz do projeto (ao lado de `css` e `img`) e, dentro dela, o arquivo `app.js`. Depois, inclua o script no `<head>` das **cinco** páginas, sempre com `defer`, logo após a folha de estilo:
+A pasta `js/` já existe desde a Aula 08, quando você colou ali o `menu.js` do hambúrguer, e na Aula 09 ela ganhou o `efeitos.js` do `IntersectionObserver`. Hoje entra o terceiro arquivo: `js/app.js`, o script compartilhado por todas as páginas.
+
+Inclua-o no `<head>` das **cinco** páginas, sempre com `defer`, logo após a folha de estilo — e **sem apagar** os dois `<script>` que já estavam lá:
 
 **Arquivo:** `index.html` (repita o mesmo `<head>` em `programacao.html`, `inscricao.html`, `palestrantes.html` e `contato.html`, trocando só o `<title>`)
 
@@ -627,11 +629,21 @@ Crie a pasta `js` na raiz do projeto (ao lado de `css` e `img`) e, dentro dela, 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona de programação.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/menu.js" defer></script>
+  <script src="js/efeitos.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 ```
+
+O `efeitos.js` (Aula 09) foi incluído só em `index.html`; nas outras quatro páginas ficam apenas `menu.js` e `app.js`. A ordem entre eles não importa hoje — nenhum depende do outro —, mas a partir da Aula 12 vai importar muito, e é por isso que os três estão declarados com `defer` no `<head>`, e não espalhados pelo `<body>`.
 
 Estrutura de pastas resultante:
 
@@ -646,7 +658,9 @@ site-evento/
 │   └── estilo.css
 ├── img/
 └── js/
-    └── app.js
+    ├── menu.js       (Aula 08)
+    ├── efeitos.js    (Aula 09)
+    └── app.js        (hoje)
 ```
 
 ### Passo 2 — a mensagem de boas-vindas e os dados do evento
@@ -752,8 +766,8 @@ console.log(`Resumo: ${inscritos} inscritos, ${vagasRestantes} vagas livres.`);
 .vagas {
   background: var(--cor-fundo-destaque);
   border-left: 4px solid var(--cor-primaria);
-  padding: var(--espaco-m);
-  border-radius: var(--raio);
+  padding: var(--espaco-medio);
+  border-radius: var(--raio-borda);
 }
 
 .vagas strong {
@@ -762,7 +776,7 @@ console.log(`Resumo: ${inscritos} inscritos, ${vagasRestantes} vagas livres.`);
 }
 ```
 
-Use os nomes de variáveis do **seu** sistema de design da Aula 06; os acima são ilustrativos.
+Os nomes das variáveis são os do sistema de design que você montou na Aula 06 (`--espaco-medio`, `--raio-borda`, `--cor-primaria`). A única nova é `--cor-fundo-destaque` — declare-a no `:root`, junto das outras, em vez de escrever a cor solta aqui.
 
 ### Como testar
 
@@ -902,7 +916,7 @@ null == false;
 - Um arquivo `coercao.js` com as doze expressões, cada uma precedida por um comentário com a sua previsão e seguida por um `console.log` que mostra o resultado real.
 - Ao lado de cada expressão errada, um comentário de uma linha explicando a regra que você não conhecia.
 - Uma linha final no arquivo com a contagem: `// Acertos: N de 12`.
-- Nenhum `==` sobreviveu no seu `js/inscricao.js` após este exercício — troque todos por `===`.
+- Nenhum `==` sobreviveu em **nenhum** dos seus arquivos `.js` após este exercício — busque no VS Code com <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> e troque todos por `===`.
 
 <details><summary>Pistas</summary>
 

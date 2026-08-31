@@ -246,7 +246,7 @@ Com `perspective` no contêiner pai, o navegador passa a projetar as transforma�
   backface-visibility: hidden;    /* esconde a face que está de costas para você */
   border-radius: var(--raio-borda);
   background: var(--cor-superficie);
-  box-shadow: var(--sombra-card);
+  box-shadow: var(--sombra-cartao);
 }
 
 .virador__verso {
@@ -390,7 +390,10 @@ Cinco animações que aparecem em quase todo projeto. Copie para o seu `css/esti
 }
 
 .esqueleto {
-  background: linear-gradient(90deg, #eeeeee 40%, #f7f7f7 50%, #eeeeee 60%);
+  background: linear-gradient(90deg,
+    var(--cor-esqueleto) 40%,
+    var(--cor-esqueleto-brilho) 50%,
+    var(--cor-esqueleto) 60%);
   background-size: 200% 100%;
   border-radius: var(--raio-borda);
   animation: brilho 1.4s linear infinite;
@@ -728,8 +731,23 @@ Assim como as cores e os espaçamentos, as durações e curvas do projeto viram 
   --duracao-media: 250ms;
   --duracao-longa: 400ms;
   --curva-padrao: ease-out;
+  --cor-esqueleto: #e4e9ee;         /* fundo do cartão-esqueleto */
+  --cor-esqueleto-brilho: #f2f5f8;  /* faixa clara que percorre o esqueleto */
 }
 ```
+
+E, no bloco `@media (prefers-color-scheme: dark)` que você escreveu na Aula 08, os dois valores escuros correspondentes — sem eles, o esqueleto vira uma mancha branca no tema escuro:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor-esqueleto: #1e2a3a;
+    --cor-esqueleto-brilho: #2a3948;
+  }
+}
+```
+
+As duas cores do esqueleto entram como variáveis pelo mesmo motivo de todas as outras: o Boss desta aula exige "nenhuma cor solta na folha", e um valor fixo aqui quebraria o tema escuro exatamente no componente que mais aparece durante o carregamento.
 
 **`css/estilo.css`** (seção 5 — componentes; substitua as regras de `.botao`, links e campos da Aula 06)
 
@@ -867,7 +885,7 @@ Os cartões de `programacao.html` e `palestrantes.html` (grade `.cartoes` da Aul
   position: relative;               /* já existia: ancora o selo absolute */
   background: var(--cor-superficie);
   border-radius: var(--raio-borda);
-  box-shadow: var(--sombra-card);
+  box-shadow: var(--sombra-cartao);
   overflow: hidden;                 /* corta o zoom da imagem */
   transition:
     transform var(--duracao-media) var(--curva-padrao),
@@ -1112,11 +1130,12 @@ Na Aula 08 o menu no celular alternava entre `display: none` e `display: flex`. 
 }
 
 /* O ícone do botão gira 90° quando o menu está aberto */
-.menu-botao {
+.menu-botao__icone {
+  display: inline-block;
   transition: transform var(--duracao-media) var(--curva-padrao);
 }
 
-.menu-botao[aria-expanded="true"] {
+.menu-botao[aria-expanded="true"] .menu-botao__icone {
   transform: rotate(90deg);
 }
 ```
@@ -1592,4 +1611,4 @@ Ao fim desta aula — e da Unidade 2 — o repositório do seu projeto autoral p
 - SILVA, Maurício Samy. *Criando sites com HTML: sites de alta qualidade com HTML e CSS*. Novatec, 2008 — capítulo de efeitos e transformações.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo sobre CSS3 e efeitos visuais.
 
-Isso encerra a Unidade 2. Em quatro aulas o seu site saiu de HTML puro para um sistema de design em variáveis, um layout de verdade com Grid e Flexbox, responsividade em qualquer tela e movimento que comunica sem atrapalhar. A **Avaliação 2** é exatamente esse site — o Boss desta aula é o roteiro para fechá-la, e ela é entregue na próxima aula. Na próxima aula você abre a Unidade 3 com a **Introdução ao JavaScript**: o `js/menu.js` e o `js/efeitos.js` que você usou "sem entender" hoje vão finalmente fazer sentido, e o site deixa de ser só apresentação para começar a reagir ao usuário.
+Isso encerra a Unidade 2. Em quatro aulas o seu site saiu de HTML puro para um sistema de design em variáveis, um layout de verdade com Grid e Flexbox, responsividade em qualquer tela e movimento que comunica sem atrapalhar. A **Avaliação 2** é exatamente esse site — o Boss desta aula é o roteiro para fechá-la, e ela é entregue na próxima aula. Na próxima aula você abre a Unidade 3 com a **Introdução ao JavaScript**: um `js/app.js` novo entra na pasta `js/` ao lado do `menu.js` (Aula 08) e do `efeitos.js` (hoje), e você começa a ler linha a linha o código que até agora colou "sem entender" — a leitura completa dos dois arquivos se fecha na Aula 13, com funções e eventos. O site deixa de ser só apresentação e começa a reagir ao usuário.

@@ -575,7 +575,7 @@ Abra `inscricao.html` e substitua o conteúdo inteiro por este esqueleto. O `<he
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · Auditório Central · três noites de palestras e minicursos</p>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -936,7 +936,7 @@ Abra <https://validator.w3.org/#validate_by_input>, cole a página inteira e cor
 
 ### Nível B — Aplicação
 
-**B1.** Construa `exercicios/aula-03/login.html`: um formulário de login com e-mail, senha (mínimo 8 caracteres), caixa de seleção "manter conectado", botão "Entrar" e um link "Esqueci minha senha". Todos os campos com `<label>`, `autocomplete` correto (`email` e `current-password`) e validação nativa. O método precisa ser `post`.
+**B1.** Construa `exercicios/aula03/login.html`: um formulário de login com e-mail, senha (mínimo 8 caracteres), caixa de seleção "manter conectado", botão "Entrar" e um link "Esqueci minha senha". Todos os campos com `<label>`, `autocomplete` correto (`email` e `current-password`) e validação nativa. O método precisa ser `post`.
 
 Resultado esperado: enviar com os campos vazios mostra a mensagem do navegador no e-mail; digitar uma senha de 5 caracteres mostra a mensagem de tamanho mínimo; clicar no texto "Manter conectado" marca a caixa; a aba Network mostra a senha no corpo da requisição, e nunca na URL.
 
@@ -945,7 +945,7 @@ Resultado esperado: enviar com os campos vazios mostra a mensagem do navegador n
 O `autocomplete` de senha tem dois valores diferentes: `current-password` em telas de login e `new-password` em cadastro e troca de senha. Usar o valor certo é o que faz o gerenciador de senhas do celular oferecer a senha salva em vez de sugerir uma nova.
 </details>
 
-**B2.** Construa `exercicios/aula-03/matricula.html`: um formulário de matrícula em disciplinas com dados do aluno (nome, matrícula, curso), seleção múltipla de disciplinas (caixas de seleção, no mínimo seis opções, com a carga horária no texto do rótulo), turno preferencial (rádios), observações (`<textarea>` de 500 caracteres) e aceite do regulamento (obrigatório). Use um `<fieldset>` por grupo.
+**B2.** Construa `exercicios/aula03/matricula.html`: um formulário de matrícula em disciplinas com dados do aluno (nome, matrícula, curso), seleção múltipla de disciplinas (caixas de seleção, no mínimo seis opções, com a carga horária no texto do rótulo), turno preferencial (rádios), observações (`<textarea>` de 500 caracteres) e aceite do regulamento (obrigatório). Use um `<fieldset>` por grupo.
 
 Resultado esperado: quatro `<fieldset>` com `<legend>`; marcar três disciplinas gera três pares `disciplinas=…` na aba Network; o envio é bloqueado enquanto o aceite não estiver marcado; zero erros no validador do W3C.
 
@@ -954,7 +954,7 @@ Resultado esperado: quatro `<fieldset>` com `<legend>`; marcar três disciplinas
 Todas as caixas de seleção de disciplinas usam o **mesmo** `name` (`disciplinas`) e `value` diferentes — é assim que o servidor recebe uma lista. Cada uma precisa, ainda assim, de um `id` único para o seu `<label>`.
 </details>
 
-**B3.** Construa `exercicios/aula-03/busca.html`: um formulário de busca com `method="get"`, um campo `name="q"`, um `<select>` de categoria (palestras, minicursos, oficinas) e um `<select>` de ordenação (por horário, por título). Envie e **transcreva a URL gerada**, explicando em uma frase cada parte da *query string* e por que este formulário usa `GET` e não `POST`.
+**B3.** Construa `exercicios/aula03/busca.html`: um formulário de busca com `method="get"`, um campo `name="q"`, um `<select>` de categoria (palestras, minicursos, oficinas) e um `<select>` de ordenação (por horário, por título). Envie e **transcreva a URL gerada**, explicando em uma frase cada parte da *query string* e por que este formulário usa `GET` e não `POST`.
 
 Resultado esperado: a URL final tem a forma `busca.html?q=acessibilidade&categoria=oficinas&ordem=titulo`; o texto explica os três pares, o papel do `?` e do `&`, e argumenta que a busca é idempotente e compartilhável.
 
@@ -965,7 +965,7 @@ Use `action="busca.html"` (a própria página) para não cair em 404. Depois de 
 
 **B4.** Caça aos problemas. O formulário abaixo tem **pelo menos oito** problemas de acessibilidade, semântica e funcionamento. Encontre todos, reescreva o formulário corrigido e entregue um documento listando cada problema, a correção e o motivo.
 
-**`exercicios/aula-03/formulario-quebrado.html` (trecho)**
+**`exercicios/aula03/formulario-quebrado.html` (trecho)**
 
 ```html
 <form>
@@ -1121,13 +1121,13 @@ Formulários longos assustam. A solução clássica é dividir em etapas ("Etapa
 
 **Parte 1 — Leitura (20 min).** SILVA, Maurício Samy. *Criando sites com HTML*, capítulo de formulários. TERUEL, Evandro C. *HTML 5 — Guia Prático*, capítulo de formulários HTML5. Na MDN em pt-BR, o guia "Seu primeiro formulário" e a referência de `<input>`. Anote dois atributos que aparecem nas leituras e não apareceram nesta aula.
 
-**Parte 2 — Entrega (30 min).** Exercícios **B2** (matrícula em disciplinas) e **B4** (caça aos problemas), em arquivos `.html` comentados dentro de `exercicios/aula-03/`. Para o B4, entregue também o documento listando cada problema identificado, a correção aplicada e a justificativa.
+**Parte 2 — Entrega (30 min).** Exercícios **B2** (matrícula em disciplinas) e **B4** (caça aos problemas), em arquivos `.html` comentados dentro de `exercicios/aula03/`. Para o B4, entregue também o documento listando cada problema identificado, a correção aplicada e a justificativa.
 
 **Parte 3 — Fórum (10 min).** No fórum "Dados de qualidade" do SIGAA: em 10 a 15 linhas, explique como a escolha do tipo de campo e das restrições de validação influencia a qualidade do que chega ao banco de dados. Traga um exemplo concreto de dado sujo que você já viu (um telefone impossível, um nome em caixa alta, uma data no futuro) e diga qual atributo desta aula teria evitado. Comente a resposta de um colega.
 
 **Critério de pronto:** os dois arquivos abrem no navegador, validam sem erros no W3C, permitem envio apenas com os campos obrigatórios preenchidos e podem ser percorridos inteiramente pelo teclado, com o rótulo de cada campo funcionando ao clique.
 
-**Entrega:** commit + push e link do repositório no SIGAA (ou o `.zip` da pasta do projeto).
+**Entrega:** o `.zip` da pasta do projeto no SIGAA (se você já usa Git — assunto do capítulo 02 da trilha Deploy e da Aula 15 —, o link do repositório também é aceito).
 
 ## ✅ Checkpoint do projeto
 

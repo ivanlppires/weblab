@@ -110,7 +110,7 @@ A primeira diferença é a mais cruel. O Windows e o macOS, por padrão, tratam 
 **As três regras que evitam quase todos os problemas:**
 
 1. **Tudo em minúsculas, sem espaços e sem acentos**, em arquivos e em pastas. `foto-do-palestrante.webp`, nunca `Foto do Palestrante.WEBP`.
-2. **Sempre caminhos relativos**: `css/estilo.css`, `img/logo.svg`, `../index.html`. Nunca comece um caminho com `/` em um site que vai para subdiretório, e nunca use caminho de disco.
+2. **Sempre caminhos relativos**: `css/estilo.css`, `img/logo-sasi.svg`, `../index.html`. Nunca comece um caminho com `/` em um site que vai para subdiretório, e nunca use caminho de disco.
 3. **O arquivo de entrada se chama `index.html` e fica na raiz** do repositório. É o nome que todo servidor procura quando a URL termina em `/`.
 
 > **🔎 Por baixo do capô**
@@ -138,15 +138,20 @@ site-evento/
 ├── css/
 │   └── estilo.css
 ├── js/
-│   ├── app.js
+│   ├── menu.js
+│   ├── efeitos.js
 │   ├── dados.js
+│   ├── app.js
+│   ├── relatorios.js
+│   ├── palestrantes.js
 │   ├── inscricao.js
 │   └── programacao.js
 ├── img/
 │   ├── favicon.svg
-│   ├── logo.svg
+│   ├── logo-sasi.svg
 │   ├── preview.jpg
-│   └── palestrantes/
+│   ├── banner.jpg
+│   └── palestrante-01.webp  (até palestrante-06.webp)
 ├── .gitignore
 ├── .nojekyll
 └── README.md
@@ -155,7 +160,7 @@ site-evento/
 Regras dessa estrutura:
 
 - **HTML na raiz.** Colocar as páginas dentro de uma pasta `paginas/` quebra todos os caminhos relativos e não traz benefício algum em um site de cinco páginas.
-- **Uma pasta por tipo de recurso**: `css/`, `js/`, `img/`. Se as imagens forem muitas, subpastas por seção (`img/palestrantes/`).
+- **Uma pasta por tipo de recurso**: `css/`, `js/`, `img/`. Se as imagens forem muitas, subpastas por seção (`img/palestrantes/`) — no site do evento elas são poucas e ficam direto em `img/`, com os nomes numerados que o `js/dados.js` referencia desde a Aula 12.
 - **Nada de arquivos órfãos.** `teste.html`, `estilo-antigo.css`, `Nova pasta/`, `index - Cópia.html`: apague. Se der medo, é para isso que serve o Git — depois do primeiro commit, nada se perde de verdade.
 
 ### 3.2 A limpeza obrigatória
@@ -171,12 +176,14 @@ Percorra esta lista antes de publicar. Ela leva vinte minutos e evita metade dos
 
 ### 3.3 Depuração que não suja o console
 
-Apagar todos os `console.log` na véspera da entrega é péssimo: você perde as ferramentas justo quando mais precisa delas. A solução é uma chave única, no topo do `js/app.js`:
+Apagar todos os `console.log` na véspera da entrega é péssimo: você perde as ferramentas justo quando mais precisa delas. A solução é uma chave única e uma função que a consulta.
 
-**`site-evento/js/app.js`** (acrescente no início do bloco ESTADO)
+Ela precisa ficar **no topo do `js/dados.js`**, não do `app.js`. Desde a Aula 12, `dados.js` é o primeiro script do projeto que declara coisas usadas pelos outros — e ele mesmo tem um `console.log` no fim, que você vai querer trocar por `depurar`. Se a função morasse no `app.js`, que é carregado **depois**, essa troca daria `Uncaught ReferenceError: depurar is not defined` na primeira linha do site.
+
+**`site-evento/js/dados.js`** (acrescente no início do arquivo, antes dos arrays)
 
 ```js
-// ---------- ESTADO ----------
+// ---------- DEPURAÇÃO ----------
 // Chave de depuração: deixe true enquanto desenvolve, false antes de publicar.
 const DEPURAR = false;
 
@@ -192,12 +199,12 @@ function depurar(...mensagens) {
 }
 ```
 
-A partir daí, troque `console.log(palestras)` por `depurar(palestras)`. Ligar e desligar a depuração inteira vira uma edição de uma linha.
+A partir daí, troque todo `console.log` de desenvolvimento por `depurar` — a começar pela última linha do próprio `dados.js`, que passa a ser `depurar(\`dados.js carregado: ${palestras.length} atividades, ${palestrantes.length} palestrantes.\`)`. Ligar e desligar a depuração inteira vira uma edição de uma linha.
 
 Duas ressalvas importantes:
 
 - `console.error` **fica**. Erros de verdade — uma imagem que não carregou, um dado inválido — devem aparecer sempre, inclusive em produção.
-- `depurar` precisa estar declarado antes de ser usado pelos outros scripts. Como `js/app.js` é o primeiro `<script defer>` de todas as páginas, isso já acontece naturalmente.
+- `depurar` precisa estar declarado antes de ser usado pelos outros scripts. Com ele no topo do `js/dados.js`, isso vale para `app.js`, `relatorios.js`, `palestrantes.js`, `inscricao.js` e `programacao.js` — todos carregados depois, e `defer` garante a ordem das tags. O único que vem antes é o `js/menu.js`, que não escreve nada no console; se um dia precisar, mova a função para um `js/util.js` carregado em primeiro lugar.
 
 ### 3.4 Imagens: o maior peso do seu site
 
@@ -217,8 +224,8 @@ A marcação final de uma imagem otimizada:
 
 ```html
 <img
-  src="img/palestrantes/ana-souza.webp"
-  alt="Ana Souza, palestrante da trilha de segurança, sorrindo em frente a um quadro branco"
+  src="img/palestrante-03.webp"
+  alt="Carla Mendes, palestrante da área de segurança, sorrindo em frente a um quadro branco"
   width="400"
   height="400"
   loading="lazy"
@@ -244,7 +251,7 @@ O `<head>` de cada página carrega informações que não aparecem na tela, mas 
   <title>Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop</title>
   <meta name="description" content="Três dias de palestras, minicursos e maratona de programação no campus de Sinop. Programação completa, inscrição gratuita e certificado.">
   <meta name="author" content="Semana Acadêmica de Sistemas de Informação">
-  <meta name="theme-color" content="#1b4332">
+  <meta name="theme-color" content="#0b3d5c">
 
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="canonical" href="https://usuario.github.io/site-evento/">
@@ -257,9 +264,14 @@ O `<head>` de cada página carrega informações que não aparecem na tela, mas 
   <meta property="og:locale" content="pt_BR">
 
   <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/menu.js" defer></script>
+  <script src="js/dados.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/efeitos.js" defer></script>
 </head>
 ```
+
+A ordem dos `<script>` é a mesma fixada nas Aulas 13 e 14 — `menu.js`, `dados.js`, `app.js` e, por último, o script específico da página (aqui o `efeitos.js` da Aula 09; em `programacao.html` seriam `relatorios.js` e `programacao.js`, e em `inscricao.html` o `inscricao.js`). É por isso que o `depurar()` da seção 3.3 mora no topo do `dados.js`: assim ele já existe quando o `app.js` e os scripts de página rodam.
 
 O que cada bloco faz:
 
@@ -696,10 +708,15 @@ HTML5 semântico, CSS3 (variáveis, Flexbox, Grid, media queries) e JavaScript
   `contato.html` — as cinco páginas
 - `404.html` — página de erro
 - `css/estilo.css` — folha de estilo única, organizada por seções comentadas
-- `js/app.js` — comportamento comum a todas as páginas
-- `js/dados.js` — dados das palestras e dos palestrantes
-- `js/inscricao.js` — validação do formulário
-- `js/programacao.js` — busca, filtro e ordenação
+- `js/menu.js` — abre e fecha o menu hambúrguer (Aulas 08, 09 e 13)
+- `js/efeitos.js` — revelação ao rolar com IntersectionObserver (Aula 09)
+- `js/dados.js` — fonte única de dados: palestras, palestrantes e áreas
+- `js/app.js` — comportamento comum a todas as páginas (contagem regressiva,
+  `aria-current` e `debounce`)
+- `js/relatorios.js` — relatórios do evento no console (Aula 12)
+- `js/palestrantes.js` — lista de palestrantes com filtro por área (Aula 13)
+- `js/inscricao.js` — vagas restantes e validação do formulário
+- `js/programacao.js` — busca, filtro e ordenação da programação
 - `img/` — imagens otimizadas em WebP e SVG
 
 ## Como executar localmente
@@ -733,7 +750,7 @@ Ao fim deste roteiro, o site do evento acadêmico estará acessível em `https:/
 
 Com o projeto aberto no VS Code:
 
-1. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> e procure por `console.log`. Substitua cada ocorrência de depuração por `depurar(`, depois de acrescentar o bloco da seção 3.3 ao `js/app.js`. Mantenha os `console.error`.
+1. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> e procure por `console.log`. Substitua cada ocorrência de depuração por `depurar(`, depois de acrescentar o bloco da seção 3.3 ao **topo** do `js/dados.js`. Mantenha os `console.error`.
 2. Procure por `href="/` e por `src="/`. Cada resultado é um caminho absoluto que vai quebrar no Pages: remova a barra inicial.
 3. Procure por `href="#"`. Todo link de menu ou de rodapé precisa apontar para uma página real.
 4. Apague arquivos órfãos: testes, cópias, folhas antigas, pastas de rascunho.
@@ -748,7 +765,7 @@ Crie um favicon vetorial simples com as iniciais do evento. Um SVG resolve todos
 
 ```html
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SASI">
-  <rect width="64" height="64" rx="14" fill="#1b4332"></rect>
+  <rect width="64" height="64" rx="14" fill="#0b3d5c"></rect>
   <text x="32" y="42" text-anchor="middle"
         font-family="Segoe UI, Roboto, sans-serif"
         font-size="26" font-weight="700" fill="#ffffff">SA</text>
@@ -806,42 +823,34 @@ Crie `404.html` na raiz com o conteúdo da seção 3.6 e acrescente ao fim de `c
 3. Salve o resultado em `img/`, com nome em minúsculas e hífens.
 4. Atualize os `src` no HTML e acrescente `width`, `height` e `loading="lazy"` no que estiver abaixo da dobra:
 
-**`site-evento/palestrantes.html`**
+As fotos dos palestrantes não estão mais no HTML desde a Aula 13 — quem as escreve é o `js/palestrantes.js`, a partir do campo `foto` do `js/dados.js`. Então o ajuste acontece **em um lugar só**: no array de dados, trocando a extensão dos seis caminhos de `.jpg` para `.webp`. Nada mais do arquivo muda — os nomes, as áreas, os `id` e os `palestranteId` são os mesmos desde a Aula 12, e o `relatorios.js` e o `programacao.js` continuam lendo os mesmos campos.
 
-```html
-<img
-  src="img/palestrantes/ana-souza.webp"
-  alt="Retrato de Ana Souza, palestrante da trilha de segurança"
-  width="400"
-  height="400"
-  loading="lazy"
->
-```
-
-5. Se o `js/dados.js` guarda caminhos de imagem, atualize-os lá também:
-
-**`site-evento/js/dados.js`**
+**`site-evento/js/dados.js`** (trecho: só o campo `foto` de cada pessoa)
 
 ```js
 const palestrantes = [
-  {
-    id: 1,
-    nome: "Ana Souza",
-    cargo: "Analista de segurança da informação",
-    trilha: "seguranca",
-    foto: "img/palestrantes/ana-souza.webp",
-    bio: "Trabalha com resposta a incidentes há oito anos e é egressa do curso.",
-  },
-  {
-    id: 2,
-    nome: "Bruno Lima",
-    cargo: "Desenvolvedor front-end",
-    trilha: "front",
-    foto: "img/palestrantes/bruno-lima.webp",
-    bio: "Constrói interfaces acessíveis para o setor público desde a graduação.",
-  },
+  { id: 1, nome: "Ana Lúcia Ferreira", instituicao: "UNEMAT — Sinop", area: "ia",
+    tema: "Redes neurais para prever a safra de soja",
+    foto: "img/palestrante-01.webp" },
+  { id: 2, nome: "Bruno Takahashi", instituicao: "Startup AgroData", area: "dados",
+    tema: "Dashboards que os produtores realmente usam",
+    foto: "img/palestrante-02.webp" },
+  { id: 3, nome: "Carla Mendes", instituicao: "UFMT", area: "seguranca",
+    tema: "O que um ataque de phishing ensina sobre UX",
+    foto: "img/palestrante-03.webp" },
+  { id: 4, nome: "Diego Nascimento", instituicao: "Prefeitura de Sinop", area: "web",
+    tema: "Acessibilidade em portais públicos: erros que vimos",
+    foto: "img/palestrante-04.webp" },
+  { id: 5, nome: "Eduarda Ribeiro", instituicao: "UNEMAT — Sinop", area: "web",
+    tema: "Do HTML ao deploy: o caminho do estudante",
+    foto: "img/palestrante-05.webp" },
+  { id: 6, nome: "Felipe Arruda", instituicao: "Cooperativa Coopercana", area: "ia",
+    tema: "Visão computacional no controle de pragas",
+    foto: "img/palestrante-06.webp" },
 ];
 ```
+
+Recarregue `palestrantes.html`: os seis cartões continuam lá, agora com as fotos em WebP. Se algum ficar com o ícone de imagem quebrada, o nome do arquivo em `img/` não bate com o do array — o Linux do GitHub Pages diferencia maiúsculas de minúsculas, e o seu Windows não.
 
 6. Compare o peso da página na aba **Network** antes e depois. Anote os dois números: eles entram na atividade assíncrona.
 

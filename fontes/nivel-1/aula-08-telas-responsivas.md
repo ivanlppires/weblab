@@ -384,7 +384,7 @@ Servir uma foto de 1600 px para um celular de 360 px desperdiça dados e tempo d
 ```html
 <img
   src="img/banner-800.jpg"
-  srcset="img/banner-480.jpg 480w,
+  srcset="img/banner-400.jpg 400w,
           img/banner-800.jpg 800w,
           img/banner-1600.jpg 1600w"
   sizes="(min-width: 1024px) 1100px, 100vw"
@@ -561,7 +561,7 @@ Três detalhes:
   list-style: none;
   background: var(--cor-superficie);
   border-bottom: 1px solid var(--cor-borda);
-  box-shadow: var(--sombra-card);
+  box-shadow: var(--sombra-cartao);
 }
 
 /* O atributo que o JavaScript troca é o que abre a lista */
@@ -679,7 +679,7 @@ Como todas as cores do site vivem em variáveis desde a Aula 06, um tema escuro 
   --espaco-medio: 16px;
   --espaco-grande: 32px;
   --raio-borda: 8px;
-  --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --sombra-cartao: 0 2px 8px rgba(0, 0, 0, 0.1);
   --largura-max: 1100px;
   color-scheme: light dark;
 }
@@ -693,7 +693,7 @@ Como todas as cores do site vivem em variáveis desde a Aula 06, um tema escuro 
     --cor-fundo: #0f1720;
     --cor-superficie: #172231;
     --cor-borda: #2a3948;
-    --sombra-card: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --sombra-cartao: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 }
 ```
@@ -877,7 +877,7 @@ video {
 }
 ```
 
-E, na seção 5 (componentes), a foto do cartão com proporção fixa:
+E, na seção 5 (componentes), a foto do cartão com proporção fixa. Antes de colar, **apague a regra `.cartao__foto` da Aula 07** (a que fixava `width: 120px`, `height: 120px`, `border-radius: 50%` e `object-fit: cover`): `.cartao img` tem especificidade 0-1-1 e venceria `.cartao__foto` (0-1-0) de qualquer jeito, e duas regras disputando a mesma foto é exatamente o tipo de lixo que faz uma folha de estilo parar de ser previsível. Você pode manter a classe `cartao__foto` no HTML ou removê-la; o que não pode é deixar a regra órfã no CSS.
 
 **`site-evento/css/estilo.css`** (seção 5)
 
@@ -890,13 +890,17 @@ E, na seção 5 (componentes), a foto do cartão com proporção fixa:
   border-radius: var(--raio-borda) var(--raio-borda) 0 0;
 }
 
+/* A foto do palestrante: quadrada, redonda e com o rosto preservado */
 .cartao--palestrante img {
+  width: 120px;
   aspect-ratio: 1 / 1;
+  border-radius: 50%;
   object-position: top;
+  align-self: center;
 }
 ```
 
-Nos cartões de `palestrantes.html`, acrescente a classe `cartao--palestrante` ao lado de `cartao` para as fotos ficarem quadradas e com o rosto preservado.
+Os cartões de `palestrantes.html` já têm a classe `cartao--palestrante` ao lado de `cartao` desde a Aula 07 — confira que ela está lá nos seis, porque é ela que devolve a foto redonda de 120 px que a regra genérica acabou de sobrescrever.
 
 **Como verificar:** em 360 px a grade de programação mostra um cartão por linha; em 768 px, dois; em 1100 px ou mais, três. Nenhuma media query foi escrita para isso.
 
@@ -958,11 +962,18 @@ Substitua o `<nav>` das **cinco** páginas pela marcação da seção 5, mantend
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona de programação.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
   <title>Início — Semana Acadêmica de Sistemas de Informação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
   <link rel="stylesheet" href="css/estilo.css">
   <script src="js/menu.js" defer></script>
 </head>
 ```
+
+Os três `<link>` da fonte Inter e o `<meta name="author">` vêm das Aulas 02 e 06 — eles continuam aqui. Quem copiar este bloco por cima do `<head>` antigo sem eles perde a tipografia do projeto inteiro.
 
 **Como verificar:** em 360 px aparece o botão "Menu"; um clique abre a lista abaixo do cabeçalho, outro fecha. No DevTools, aba *Elements*, observe o atributo `aria-expanded` mudando a cada clique. Com <kbd>Tab</kbd> o botão recebe o anel de foco e <kbd>Enter</kbd> abre o menu. A partir de 768 px o botão some e os cinco links ficam em linha, como na Aula 07.
 
@@ -1016,12 +1027,15 @@ Na `index.html`, a seção de abertura ganha uma classe e uma altura que acompan
 </section>
 ```
 
-**`site-evento/css/estilo.css`** (seção 5)
+**`site-evento/css/estilo.css`** (seção 5) — **substitua o bloco `.hero` da Aula 07**
+
+> **⚠️ Atenção**
+> O herói muda de forma: sai o Grid de duas colunas com texto de um lado e `<img>` do outro (Aula 07, Passo 5) e entra um banner de largura total com a foto como imagem de fundo. Apague as três regras antigas — `.hero`, `.hero img` e `.hero__acoes` — antes de colar as de baixo, e apague também o `<div class="hero__texto">`, a `<img>` e o segundo botão da marcação. Se as duas versões coexistirem, o `display: grid` da antiga briga com o `text-align: center` da nova e o resultado não é nem um nem outro.
 
 ```css
 .hero {
   background: var(--cor-primaria) url("../img/banner.jpg") center / cover no-repeat;
-  color: #ffffff;
+  color: var(--cor-sobre-primaria);
   padding-block: clamp(3rem, 10vw, 8rem);
   text-align: center;
 }
@@ -1158,7 +1172,7 @@ Depois, os três testes da seção 7: modo dispositivo em "Pixel 7" e "iPad", o 
 Para o zoom não vazar da moldura, o elemento que envolve a imagem precisa de `overflow: hidden`. A transição vai no `img` (estado normal), não no `:hover`, senão a volta é abrupta — a Aula 09 explica por quê. Replique o efeito em `:focus-within` se cada imagem for um link.
 </details>
 
-**B2.** Pegue o site institucional que você criou nas Aulas 02 e 04 e torne-o totalmente responsivo, com pelo menos 3 breakpoints. Documente em comentários no CSS por que escolheu cada breakpoint — qual elemento quebrou e em que largura.
+**B2.** Pegue o site institucional que você criou no exercício C1 da Aula 02 (`exercicios/aula02/curso/`) e torne-o totalmente responsivo, com pelo menos 3 breakpoints. Documente em comentários no CSS por que escolheu cada breakpoint — qual elemento quebrou e em que largura.
 
 **Resultado esperado:** nenhuma rolagem horizontal entre 320 px e 1920 px; menu, tabela, formulário e imagens legíveis e usáveis no celular; três blocos `@media (min-width)` em ordem crescente, cada um com um comentário de uma linha justificando a largura.
 
@@ -1333,7 +1347,7 @@ Rode o Lighthouse Mobile no `index.html` do seu projeto autoral agora, antes de 
 
 1. Abra o relatório "antes" e clique em cada alerta: o Lighthouse mostra o elemento exato e um link "Learn more" para a explicação oficial — comece pelos itens marcados em vermelho.
 2. Para gerar as três larguras de cada foto sem software pago, o Squoosh (`https://squoosh.app`) redimensiona e converte para WebP no navegador; guarde a versão JPG como reserva no `src`.
-3. Fontes do Google carregadas com `<link>` costumam derrubar Performance; teste com `font-display: swap` ou, no Nível 1, fique com a pilha de fontes do sistema (`Arial, sans-serif`) e veja a diferença na nota.
+3. Fontes do Google carregadas com `<link>` custam requisições e podem derrubar Performance. **Meça** antes de decidir: rode o Lighthouse com a Inter do projeto (que já vem com `display=swap` e `preconnect` desde a Aula 06) e depois com a `font-family` trocada por `Arial, sans-serif`, e registre a diferença em pontos e em milissegundos de LCP. Se a perda for pequena, a identidade visual vale o preço — a decisão é sua, mas com número.
 4. Alvos de toque menores que 48 × 48 px aparecem em "Tap targets": aumente o `padding` dos links do menu e do rodapé em vez de aumentar a fonte.
 </details>
 

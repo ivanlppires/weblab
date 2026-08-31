@@ -435,7 +435,7 @@ Uma **API** (Application Programming Interface) é um contrato pelo qual dois si
 | `PUT` / `PATCH` | Atualizar | `PUT /api/alunos/42` |
 | `DELETE` | Remover | `DELETE /api/alunos/42` |
 
-Perceba que essas quatro operações são exatamente o **CRUD** (Create, Read, Update, Delete) que você vai implementar em JavaScript nas Aulas 13 e 14.
+Perceba que essas quatro operações são exatamente o **CRUD** (Create, Read, Update, Delete). Neste nível você vai reconhecer o CRUD nas requisições que o navegador faz; a leitura de dados aparece nas consultas dinâmicas da Aula 14, e a escrita no servidor é assunto do Nível 2.
 
 O formato de troca padrão é o **JSON** (JavaScript Object Notation) — texto, legível, com pares `chave: valor`:
 
@@ -703,7 +703,7 @@ Toda resposta HTTP carrega cabeçalhos que contam quem a produziu — e muitos s
 ### ⭐⭐ Linha do tempo da Web, só com HTML
 Tags: html, projeto
 
-A tabela da §2 resume meio século em dez linhas. Ela merece mais: crie uma página HTML com uma linha do tempo de **pelo menos 10 marcos** da história da Web (1969 até hoje), cada um com ano, título e um parágrafo de 2 a 3 linhas explicando sua importância. Use apenas HTML nesta etapa — o CSS virá na Aula 06 e você vai reaproveitar exatamente esta página para estilizá-la.
+A tabela da §2 resume meio século em dez linhas. Ela merece mais: crie uma página HTML com uma linha do tempo de **pelo menos 10 marcos** da história da Web (1969 até hoje), cada um com ano, título e um parágrafo de 2 a 3 linhas explicando sua importância. Use apenas HTML nesta etapa — o CSS entra a partir da Aula 05 e você vai reaproveitar exatamente esta página para estilizá-la.
 
 **Critérios de pronto**
 

@@ -18,7 +18,7 @@ Ao final desta aula você será capaz de:
 
 ## 📋 Pré-requisitos
 
-- [ ] As quatro páginas do site do evento (`index.html`, `inscricao.html`, `programacao.html`, `palestrantes.html`) validando com zero erros no W3C.
+- [ ] As cinco páginas do site do evento (`index.html`, `programacao.html`, `inscricao.html`, `palestrantes.html`, `contato.html`) validando com zero erros no W3C.
 - [ ] VS Code com Live Server e DevTools abertos na aba **Elements** — hoje você usará muito o painel **Styles** e a aba **Computed**.
 - [ ] Revisar da Aula 02 a estrutura mínima de um documento (`<!DOCTYPE html>`, `lang`, `charset`, `viewport`).
 
@@ -42,8 +42,10 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
 
 ```html
 <body>
-  <header>
-    <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+  <header id="topo">
+    <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+    <h1>Semana Acadêmica de Sistemas de Informação</h1>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav aria-label="Principal">
       <ul>
         <li><a href="index.html" aria-current="page">Início</a></li>
@@ -57,17 +59,17 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
 
   <main>
     <section class="hero">
-      <h1>Semana Acadêmica de Sistemas de Informação</h1>
-      <p>Três noites de palestras, minicursos e maratona de programação na UNEMAT Sinop.</p>
+      <h2>Três noites de palestras, minicursos e maratona de programação</h2>
+      <p>Participação gratuita, na UNEMAT Sinop, com certificado para quem comparecer.</p>
     </section>
 
     <section class="destaques">
       <h2>Destaques</h2>
-      <article class="card">
+      <article class="cartao">
         <h3>Minicurso de Git e GitHub</h3>
         <p>Do primeiro commit ao pull request, em duas horas.</p>
       </article>
-      <article class="card">
+      <article class="cartao">
         <h3>Maratona de programação</h3>
         <p>Equipes de três, problemas de lógica, premiação no encerramento.</p>
       </article>
@@ -80,10 +82,17 @@ Até a Aula 02 você usou `<header>`, `<nav>`, `<main>` e `<footer>` como "as pa
   </aside>
 
   <footer>
-    <p>Semana Acadêmica de Sistemas de Informação · UNEMAT Sinop</p>
+    <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+    <p>
+      <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+      <a href="tel:+556635111000">(66) 3511-1000</a>
+    </p>
+    <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
   </footer>
 </body>
 ```
+
+O `<h1>` continua no `<header>`, como na Aula 02: ele nomeia **o site**, é o mesmo nas cinco páginas, e o título de cada página é o `<h2>` do topo do `<main>`. Só na Aula 07, quando o site for redesenhado, o `<h1>` desce para dentro do `<main>`.
 
 | Elemento | Papel | Quantidade por página |
 |---|---|---|
@@ -112,7 +121,7 @@ A dúvida mais comum desta aula é "isso é uma `section` ou um `article`?". Tr�
 Um `<article>` pode ter seu próprio `<header>` e `<footer>` — e é comum:
 
 ```html
-<article class="card">
+<article class="cartao">
   <header>
     <h3>Minicurso de Git e GitHub</h3>
     <p><time datetime="19:30">19h30</time> · Laboratório 2 · 40 vagas</p>
@@ -165,9 +174,10 @@ Abra qualquer site profissional: o cabeçalho tem uma cor de fundo que vai de um
 **`index.html` (trecho)**
 
 ```html
-<header>
+<header id="topo">
   <div class="container">
-    <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+    <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+    <h1>Semana Acadêmica de Sistemas de Informação</h1>
     <nav aria-label="Principal">
       <ul>
         <li><a href="index.html" aria-current="page">Início</a></li>
@@ -182,12 +192,14 @@ Abra qualquer site profissional: o cabeçalho tem uma cor de fundo que vai de um
 
 ```css
 .container {
-  width: min(1200px, 100% - 2rem);
+  width: 100%;
+  max-width: 1100px;
   margin-inline: auto;
+  padding-inline: 1rem;
 }
 ```
 
-Leia a regra assim: "a largura é o **menor** valor entre 1200 px e a largura disponível menos 2 rem de respiro; e as margens laterais automáticas dividem a sobra igualmente, centralizando". Em um monitor largo, o conteúdo para em 1200 px; em um celular, ocupa toda a largura menos 1 rem de cada lado. O elemento semântico (`<header>`) continua ocupando 100% — útil para a cor de fundo que sangra até as bordas.
+Leia a regra assim: "ocupe toda a largura disponível, mas nunca passe de 1100 px; as margens laterais automáticas dividem a sobra igualmente, centralizando; e sempre reserve 1 rem de respiro de cada lado". Em um monitor largo, o conteúdo para em 1100 px; em um celular, ocupa toda a largura menos o respiro. **Esse número, 1100 px, é o do projeto e não muda mais** — nas Aulas 06 e 07 ele vira a variável `--largura-max`. O elemento semântico (`<header>`) continua ocupando 100% — útil para a cor de fundo que sangra até as bordas.
 
 Esse é o esqueleto de praticamente todo site que você já visitou. Guarde-o: você o usará em todas as páginas hoje e em todos os projetos da trilha.
 
@@ -448,7 +460,7 @@ Estilos disponíveis: `solid`, `dashed`, `dotted`, `double`, `none`. A borda só
   min-height: 120px;    /* nunca menor que isso, mesmo com pouco texto */
 }
 
-.card {
+.cartao {
   overflow: hidden;     /* corta o que passar da caixa (auto: barra de rolagem; visible: vaza) */
 }
 ```
@@ -568,7 +580,7 @@ Você verá na Aula 06 que o navegador decide conflitos entre regras por **espec
 
 ## 💻 Mão na massa — Esqueleto semântico das cinco páginas e a primeira folha de estilo
 
-Hoje o site do evento ganha a quinta página (`contato.html`), o esqueleto semântico correto em todas as páginas e o arquivo `css/estilo.css` — que crescerá a cada aula da Unidade 2.
+Hoje as cinco páginas do site do evento — todas já existentes desde as Aulas 02 e 03 — ganham o esqueleto semântico correto, `contato.html` é **reestruturada** (o formulário do B5 da Aula 03 continua lá) e nasce o arquivo `css/estilo.css`, que crescerá a cada aula da Unidade 2.
 
 ### Passo 1 — criar `css/estilo.css` com reset, contêiner e base
 
@@ -617,8 +629,10 @@ video {
 
 /* 4. Layout */
 .container {
-  width: min(1200px, 100% - 2rem);
+  width: 100%;
+  max-width: 1100px;               /* largura do projeto, fixada de vez */
   margin-inline: auto;
+  padding-inline: 1rem;
 }
 
 header {
@@ -656,7 +670,7 @@ footer a {
 }
 
 /* 5. Componentes */
-.card {
+.cartao {
   background-color: #ffffff;
   border: 1px solid #d9e0e7;
   border-radius: 8px;
@@ -699,7 +713,7 @@ Salve e olhe o Live Server: o cabeçalho fica azul-escuro, a fonte muda, as marg
 
 ### Passo 3 — reestruturar `index.html`
 
-Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com o contêiner em cada região:
+A página inicial já tem conteúdo desde a Aula 02 (as seções "Sobre o evento", "Como participar" e "Glossário") e o banner responsivo da Aula 04. **Nada disso sai.** O que muda é o esqueleto em volta: cada região ganha o seu `<div class="container">`, nasce uma seção de abertura (`.hero`), nascem os cartões de destaque, e o conteúdo tangencial vai para um `<aside>`.
 
 **`index.html`**
 
@@ -709,14 +723,17 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: palestras, minicursos e maratona de programação.">
-  <title>Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop</title>
+  <meta name="description" content="Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop: três dias de palestras, minicursos e oficinas para estudantes e profissionais de tecnologia.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <title>Início — Semana Acadêmica de Sistemas de Informação</title>
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-  <header>
+  <header id="topo">
     <div class="container">
-      <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+      <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+      <h1>Semana Acadêmica de Sistemas de Informação</h1>
+      <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
       <nav aria-label="Principal">
         <ul>
           <li><a href="index.html" aria-current="page">Início</a></li>
@@ -732,18 +749,22 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
   <main>
     <div class="container">
       <section class="hero">
-        <h1>Semana Acadêmica de Sistemas de Informação</h1>
-        <p>Três noites de palestras, minicursos e maratona de programação na UNEMAT Sinop. Participação gratuita, com certificado.</p>
+        <h2>Três noites de palestras, minicursos e maratona de programação</h2>
+        <p>Participação gratuita, com certificado de 20 horas para quem comparecer a pelo menos 75% das atividades.</p>
         <a href="inscricao.html" class="botao">Inscreva-se</a>
       </section>
+
+      <!-- O <picture> do banner (Aula 04) e as seções "Sobre o evento",
+           "Como participar" e "Glossário" (Aula 02) continuam aqui,
+           exatamente como estavam. -->
 
       <section class="destaques">
         <h2>Destaques desta edição</h2>
 
-        <article class="card">
+        <article class="cartao">
           <header>
-            <h3>Minicurso de Git e GitHub</h3>
-            <p><time datetime="19:30">19h30</time> · Laboratório 2 · 40 vagas</p>
+            <h3>Minicurso: Git e GitHub do zero</h3>
+            <p><time datetime="20:00">20h00</time> · Laboratório 2 · 30 vagas</p>
           </header>
           <p>Do primeiro commit ao pull request, em duas horas de prática.</p>
           <footer>
@@ -751,10 +772,10 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
           </footer>
         </article>
 
-        <article class="card">
+        <article class="cartao">
           <header>
             <h3>Maratona de programação</h3>
-            <p><time datetime="21:00">21h00</time> · Auditório · equipes de três</p>
+            <p><time datetime="18:30">18h30</time> · Laboratórios 1 e 2 · equipes de três</p>
           </header>
           <p>Problemas de lógica, ranking em tempo real e premiação no encerramento.</p>
           <footer>
@@ -762,10 +783,10 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
           </footer>
         </article>
 
-        <article class="card">
+        <article class="cartao">
           <header>
-            <h3>Mesa-redonda: mercado em Sinop</h3>
-            <p><time datetime="20:00">20h00</time> · Auditório</p>
+            <h3>Mesa-redonda: mercado de trabalho em Sinop</h3>
+            <p><time datetime="20:00">20h00</time> · Sala 105</p>
           </header>
           <p>Egressos do curso contam como conseguiram o primeiro emprego na região.</p>
           <footer>
@@ -797,7 +818,12 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
 
   <footer>
     <div class="container">
-      <p>Semana Acadêmica de Sistemas de Informação · UNEMAT Sinop</p>
+      <p>Realização: Curso de Sistemas de Informação — UNEMAT, Campus Sinop.</p>
+      <p>
+        <a href="mailto:semana.si@unemat.br">semana.si@unemat.br</a> ·
+        <a href="tel:+556635111000">(66) 3511-1000</a>
+      </p>
+      <p>&copy; Curso de Sistemas de Informação &mdash; UNEMAT Sinop. Todos os direitos reservados.</p>
       <nav aria-label="Rodapé">
         <ul>
           <li><a href="contato.html">Contato</a></li>
@@ -810,9 +836,11 @@ Substitua o `<body>` da página inicial pelo esqueleto semântico completo, com 
 </html>
 ```
 
-### Passo 4 — criar `contato.html`
+Três observações sobre o que **não** mudou: o `<h1>` continua no `<header>` (ele nomeia o site, não a página), o rodapé continua com os três parágrafos da Aula 02 — agora com um `<nav>` a mais — e as seções que a Aula 02 escreveu continuam no `<main>`, só que dentro do contêiner.
 
-A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulário, links `tel:`/`mailto:` e mapa em `<iframe>`.
+### Passo 4 — reestruturar `contato.html`
+
+A quinta página existe desde a Aula 02 (esqueleto) e recebeu o formulário de mensagem no exercício **B5 da Aula 03** — com nome, e-mail, assunto, mensagem e a escolha da forma de resposta em rádios. **Esse formulário não é reescrito**: ele é transplantado para dentro do novo esqueleto, ganhando apenas o `<div class="container">` em volta e a classe `.botao` no botão de envio. O resto da página junta o que você aprendeu nas Aulas 02 a 04: tabela, links `tel:`/`mailto:` e mapa em `<iframe>`.
 
 **`contato.html`**
 
@@ -827,9 +855,11 @@ A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulár
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-  <header>
+  <header id="topo">
     <div class="container">
-      <img src="img/logo-sasi.svg" alt="Semana Acadêmica de Sistemas de Informação" width="160" height="48">
+      <img src="img/logo-sasi.svg" alt="" width="160" height="48">
+      <h1>Semana Acadêmica de Sistemas de Informação</h1>
+      <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
       <nav aria-label="Principal">
         <ul>
           <li><a href="index.html">Início</a></li>
@@ -844,10 +874,10 @@ A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulár
 
   <main>
     <div class="container">
-      <h1>Contato</h1>
+      <h2>Contato</h2>
 
       <section>
-        <h2>Fale com a organização</h2>
+        <h3>Fale com a organização</h3>
         <address>
           <p>Telefone: <a href="tel:+5566999990000">(66) 99999-0000</a></p>
           <p>E-mail: <a href="mailto:sasi@unemat.br?subject=Contato%20pelo%20site">sasi@unemat.br</a></p>
@@ -856,7 +886,7 @@ A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulár
       </section>
 
       <section>
-        <h2>Horário de atendimento</h2>
+        <h3>Horário de atendimento</h3>
         <table>
           <caption>Atendimento presencial na sala da organização</caption>
           <thead>
@@ -882,7 +912,7 @@ A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulár
       </section>
 
       <section>
-        <h2>Envie uma mensagem</h2>
+        <h3>Envie uma mensagem</h3>
         <form action="/contato" method="post">
           <p>
             <label for="nome">Nome completo</label>
@@ -904,14 +934,33 @@ A quinta página junta o que você aprendeu nas Aulas 02 a 04: tabela, formulár
           </p>
           <p>
             <label for="mensagem">Mensagem</label>
-            <textarea id="mensagem" name="mensagem" rows="6" maxlength="1000" required></textarea>
+            <textarea id="mensagem" name="mensagem" rows="6" maxlength="600" required></textarea>
           </p>
+
+          <fieldset>
+            <legend>Como prefere receber a resposta?</legend>
+            <p>
+              <input type="radio" id="resposta-email" name="resposta" value="email" checked>
+              <label for="resposta-email">Por e-mail</label>
+            </p>
+            <p>
+              <input type="radio" id="resposta-telefone" name="resposta" value="telefone">
+              <label for="resposta-telefone">Por telefone</label>
+            </p>
+          </fieldset>
+
+          <p>
+            <label for="telefone">Telefone (opcional, necessário se escolher resposta por telefone)</label>
+            <input type="tel" id="telefone" name="telefone" autocomplete="tel"
+                   placeholder="(66) 99999-0000">
+          </p>
+
           <button type="submit" class="botao">Enviar mensagem</button>
         </form>
       </section>
 
       <section>
-        <h2>Como chegar</h2>
+        <h3>Como chegar</h3>
         <iframe src="https://www.google.com/maps/embed?pb=CODIGO_GERADO_PELO_MAPS"
                 title="Mapa: campus da UNEMAT em Sinop"
                 width="600" height="450"
@@ -937,12 +986,12 @@ Repare no `<address>`: é o elemento semântico para informações de contato do
 
 Em `programacao.html`, `inscricao.html` e `palestrantes.html`, envolva o conteúdo de `<header>`, `<main>` e `<footer>` com `<div class="container">`, como no Passo 3. O conteúdo em si não muda. Esse é um trabalho mecânico de cinco minutos — use a busca e substituição do VS Code (<kbd>Ctrl</kbd>+<kbd>H</kbd>) para o cabeçalho e o rodapé, que são idênticos em todas.
 
-Aproveite para conferir, em cada página: há um único `<h1>`? As seções têm `<h2>`? Os cartões de palestrantes em `palestrantes.html` deveriam ser `<article>`? (Sim: cada palestrante faz sentido isolado. Troque `<figure>` por `<article class="card">` envolvendo a `<figure>`, e o nome vai para um `<h3>` no `<header>` do artigo.)
+Aproveite para conferir, em cada página: há um único `<h1>` (o do `<header>`)? O título da página é o `<h2>` no topo do `<main>`? Em `palestrantes.html`, cada convidado já é um `<article>` desde a Aula 02 — acrescente a ele a classe `cartao`, que a folha de estilo do Passo 1 acabou de definir, e o `<h3>` continua sendo o nome da pessoa. Em `programacao.html`, a tabela permanece como está; ela ganha estilo na Aula 06.
 
 ### Passo 6 — diagnóstico e validação
 
 1. Cole o comando de contorno da seção 1 no console de cada página e procure: conteúdo fora de `<main>`, `<section>` sem título, `<div>` que poderia ser um elemento semântico.
-2. Na aba **Elements**, selecione o `.container` do `<main>` e confira no painel Styles que `width` resolve para no máximo 1200 px e que as margens laterais são iguais.
+2. Na aba **Elements**, selecione o `.container` do `<main>` e confira no painel Styles que `width` resolve para no máximo 1100 px e que as margens laterais são iguais.
 3. Redimensione a janela até 400 px: o conteúdo deve manter 1 rem de respiro em cada lado, sem barra de rolagem horizontal.
 4. Valide as cinco páginas no W3C. Meta: zero erros.
 
@@ -997,13 +1046,13 @@ h1 {
 
 ### Nível B — Aplicação
 
-**B1.** Crie três cartões (`article.card`) com: fundo branco, `border-radius`, `box-shadow`, padding interno, título, parágrafo e um link com classe `.botao`. No `:hover`, o cartão deve mudar de sombra e o botão de cor. Use **apenas variáveis CSS** para todas as cores e espaçamentos.
+**B1.** Crie três cartões (`article.cartao`) com: fundo branco, `border-radius`, `box-shadow`, padding interno, título, parágrafo e um link com classe `.botao`. No `:hover`, o cartão deve mudar de sombra e o botão de cor. Use **apenas variáveis CSS** para todas as cores e espaçamentos.
 
 **Resultado esperado:** três cartões idênticos em estrutura, com sombra suave; ao passar o mouse, a sombra fica mais forte e o botão muda de cor; nenhum valor de cor ou espaçamento aparece fora de `:root`; o foco do botão via <kbd>Tab</kbd> é visível.
 
 <details><summary>Dica</summary>
 
-`box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)` é uma sombra discreta; no `:hover`, troque por `0 6px 16px rgba(0, 0, 0, 0.2)`. Declare as duas como variáveis (`--sombra-card` e `--sombra-card-hover`). O `:hover` do cartão é `.card:hover`; o do botão dentro do cartão em hover é `.card:hover .botao`.
+`box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)` é uma sombra discreta; no `:hover`, troque por `0 6px 16px rgba(0, 0, 0, 0.2)`. Declare as duas como variáveis (`--sombra-cartao` e `--sombra-cartao-hover`). O `:hover` do cartão é `.cartao:hover`; o do botão dentro do cartão em hover é `.cartao:hover .botao`.
 </details>
 
 **B2.** Crie um menu de navegação horizontal usando `display: inline-block` nos itens (Flexbox só na Aula 07), com espaçamento entre eles, `:hover` com mudança de cor de fundo, `:focus-visible` visível e o item ativo destacado por uma classe `.ativo` (ou pelo atributo `aria-current`).
@@ -1102,7 +1151,7 @@ nav a {
   color: white;
 }
 
-.card {
+.cartao {
   border: 2px #0b3d5c;
   padding: 16px;
 }
@@ -1223,7 +1272,7 @@ Sites institucionais brasileiros — de prefeituras, secretarias, campi — cost
 
 **Entrega:** commit + push e link do repositório no SIGAA (ou o `.zip` da pasta do projeto).
 
-**Parte 3 — Fórum (10 min).** No fórum "Formação dos grupos", publique o tema do projeto, os integrantes do grupo (três a quatro pessoas) e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. Esta é a definição oficial dos grupos da Avaliação 3; cada integrante precisa de contribuição identificável no histórico do repositório a partir de agora.
+**Parte 3 — Fórum (10 min).** No fórum "Projetos autorais", publique o tema do seu projeto e o wireframe das páginas nas três larguras (celular, tablet, desktop) — pode ser desenhado à mão e fotografado. **As três avaliações da trilha são individuais e recaem sobre este mesmo projeto**, cada uma acrescentando uma camada (HTML na Avaliação 1, CSS na 2, JavaScript na 3). Comente o wireframe de dois colegas apontando um problema de hierarquia visual em cada.
 
 ## ✅ Checkpoint do projeto
 
@@ -1239,9 +1288,9 @@ Ao fim desta aula — e da Unidade 1 — o repositório do seu projeto autoral d
 - [ ] Um `.botao` com `:hover` e `:focus-visible` visíveis.
 - [ ] Página de contato com `<address>`, links `tel:`/`mailto:`, tabela com `caption` e formulário com `label` em todos os campos.
 - [ ] Zero erros no validador W3C nas cinco páginas.
-- [ ] Tema, grupo e wireframe publicados no fórum.
+- [ ] Tema e wireframe do projeto autoral publicados no fórum.
 
-Isso encerra a Unidade 1. Na próxima aula você entra no CSS de verdade — seletores, cascata, especificidade, cores, unidades, tipografia e variáveis — e é também o dia de envio da **Avaliação 1**: o site em HTML puro, com tudo o que a unidade ensinou. As instruções completas estão na Aula 06; o escopo você já conhece, porque é exatamente o Checkpoint acima.
+Isso encerra a Unidade 1.
 
 ## 📚 Para aprofundar
 
@@ -1255,3 +1304,5 @@ Isso encerra a Unidade 1. Na próxima aula você entra no CSS de verdade — sel
 - W3C — CSS, site oficial de padronização: <https://www.w3.org/Style/CSS/> — onde as especificações vivem.
 - SILVA, Maurício Samy. *Criando sites com HTML: sites de alta qualidade com HTML e CSS*. Novatec, 2008 — capítulos sobre estrutura de página e introdução ao CSS.
 - TERUEL, Evandro C. *HTML 5 — Guia Prático*. Saraiva, 2014 — capítulo sobre os novos elementos estruturais do HTML5.
+
+Na próxima aula você entra no CSS de verdade — seletores, cascata, especificidade, cores, unidades, tipografia e variáveis — e é também o dia de envio da **Avaliação 1**: o site em HTML puro, com tudo o que a Unidade 1 ensinou. As instruções completas estão na Aula 06, e o escopo são os itens **não-CSS** do Checkpoint acima.

@@ -20,6 +20,7 @@ Ao final desta aula você será capaz de:
 
 - [ ] VS Code com a extensão Live Server funcionando e o DevTools do navegador aberto na aba **Console**.
 - [ ] O site do evento acadêmico com as cinco páginas estilizadas e responsivas (Unidade 2) e o `js/app.js` ligado com `defer`.
+- [ ] `js/dados.js` e `js/relatorios.js` (Aula 12) no projeto, com os arrays `palestrantes` e `palestras` e o objeto `nomesDasAreas` — hoje eles saem do console e vão para a tela.
 - [ ] Conforto com arrays e objetos: `forEach`, `map`, `filter`, `find` e a notação `{ chave: valor }` (Aula 12).
 - [ ] Seletores CSS (Aula 06): `#id`, `.classe`, `elemento`, `[atributo]`, descendente e `:checked` — `querySelector` usa exatamente essa sintaxe.
 
@@ -952,7 +953,10 @@ Regra: se algo é **clicável**, use `<button>`. Se **navega** para outro lugar,
 Antes de ir para o projeto, um esqueleto que vale para qualquer aplicação front-end — do menu de hoje ao CRUD do fim da unidade:
 
 ```js
-// js/app.js — esqueleto de organização
+// Esqueleto genérico de organização — não é o js/app.js do projeto.
+// Os nomes abaixo (els, renderizar, tarefas) são de exemplo; no seu código,
+// use nomes específicos, porque scripts sem type="module" dividem o mesmo
+// escopo global e nomes genéricos colidem entre arquivos.
 // ===== ESTADO: a fonte única da verdade =====
 let tarefas = [];
 let filtroAtual = "todas";
@@ -1022,159 +1026,142 @@ iniciar();
 
 O fluxo é sempre o mesmo: **usuário age → evento → função altera o estado → `renderizar()` redesenha**. Nunca altere o DOM "na mão" para refletir uma mudança de dado: se o usuário conclui uma tarefa, não risque o `<li>` — mude o array e renderize de novo. Quando DOM e dados divergem, os bugs se tornam impossíveis de rastrear. Frameworks como Vue e React (Nível 3) apenas automatizam essa mesma ideia.
 
-## 💻 Mão na massa — Menu mobile e lista de palestrantes
+## 💻 Mão na massa — O menu que você já tinha, agora entendido, e a lista de palestrantes
 
-O site do evento acadêmico tem um menu que, em telas estreitas, ocupa a tela inteira, e uma página de palestrantes escrita à mão, card por card. Hoje o menu ganha um botão "hambúrguer" que abre e fecha por clique, teclado e clique fora — e a página de palestrantes passa a ser **renderizada a partir de um array**, com filtro por área usando delegação.
+O site do evento já tem um menu hambúrguer que abre e fecha desde a Aula 08, com oito linhas de JavaScript que você colou "sem entender", e uma página de palestrantes escrita à mão, artigo por artigo. Hoje o `js/menu.js` cresce com o que você aprendeu (fechar com <kbd>Esc</kbd>, fechar ao clicar fora, reagir ao `resize`), o `js/app.js` ganha uma seção nova sem perder nada do que já fazia, e a página de palestrantes passa a ser **renderizada a partir do `js/dados.js` da Aula 12**, com filtro por área usando delegação.
 
-### Passo 1 — o botão do menu no cabeçalho (todas as páginas)
+> **⚠️ Atenção**
+> Três coisas que **não** acontecem hoje: (1) a marcação do cabeçalho não muda — o `<button class="menu-botao">` com o `<span class="menu-botao__icone">` e a `<ul id="menu-principal" class="menu">` são os da Aula 08, com o `.menu__cta` de "Inscreva-se" no fim; (2) o CSS do menu não muda — a abertura continua sendo a animação de `opacity` + `visibility` + `transform` da Aula 09, sem `display: none`; (3) nenhum arquivo é apagado nem reescrito do zero. `menu.js`, `efeitos.js`, `app.js`, `dados.js` e `relatorios.js` continuam existindo, cada um com a sua responsabilidade.
 
-O cabeçalho é o mesmo nas cinco páginas; altere-o em cada uma. O botão vem **antes** do `<nav>`, com `aria-expanded` (estado) e `aria-controls` (o que ele controla):
+### Passo 1 — Reler e ampliar o `js/menu.js`
 
-**`index.html`** (trecho do `<header>`; repita em `programacao.html`, `palestrantes.html`, `inscricao.html` e `contato.html`)
+Abra `js/menu.js`. Ele tem isto desde a Aula 08:
 
-```html
-<header class="cabecalho">
-  <a class="logo" href="index.html">Semana Acadêmica de Sistemas de Informação</a>
-
-  <button class="menu-toggle" type="button"
-          aria-expanded="false" aria-controls="menu-principal"
-          aria-label="Abrir menu">
-    <span class="menu-toggle__barra"></span>
-    <span class="menu-toggle__barra"></span>
-    <span class="menu-toggle__barra"></span>
-  </button>
-
-  <nav id="menu-principal" class="menu" aria-label="Principal">
-    <ul>
-      <li><a href="index.html">Início</a></li>
-      <li><a href="programacao.html">Programação</a></li>
-      <li><a href="palestrantes.html">Palestrantes</a></li>
-      <li><a href="inscricao.html">Inscrição</a></li>
-      <li><a href="contato.html">Contato</a></li>
-    </ul>
-  </nav>
-</header>
-```
-
-E, no `<head>` de todas as páginas, o script comum com `defer`:
-
-```html
-<script src="js/app.js" defer></script>
-```
-
-### Passo 2 — o CSS do menu fechado e aberto
-
-**`css/estilo.css`** (acrescente ao fim)
-
-```css
-/* ===== Menu mobile ===== */
-.menu-toggle {
-  display: none; /* escondido no desktop */
-}
-
-@media (max-width: 47.99rem) {
-  .cabecalho {
-    position: relative;
-  }
-
-  .menu-toggle {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 0.5rem;
-    background: none;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-  }
-
-  .menu-toggle__barra {
-    width: 26px;
-    height: 3px;
-    border-radius: 2px;
-    background: currentColor;
-    transition: transform 0.2s, opacity 0.2s;
-  }
-
-  /* O botão vira um "X" quando o menu está aberto */
-  .menu-toggle[aria-expanded="true"] .menu-toggle__barra:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-  }
-  .menu-toggle[aria-expanded="true"] .menu-toggle__barra:nth-child(2) {
-    opacity: 0;
-  }
-  .menu-toggle[aria-expanded="true"] .menu-toggle__barra:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-  }
-
-  .menu {
-    display: none; /* o CSS define o que é "fechado" */
-    position: absolute;
-    inset: 100% 0 auto 0;
-    background: var(--cor-fundo-cabecalho, #0b3d5c);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  .menu.aberto {
-    display: block; /* o JS só decide quando */
-  }
-
-  .menu ul {
-    flex-direction: column;
-  }
-
-  .menu a {
-    display: block;
-    padding: 0.9rem 1.25rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .menu-toggle__barra {
-    transition: none;
-  }
-}
-```
-
-### Passo 3 — o comportamento do menu
-
-**`js/app.js`**
+**`site-evento/js/menu.js`** (como está)
 
 ```js
-// js/app.js — comportamento comum a todas as páginas do site do evento
-const botaoMenu = document.querySelector(".menu-toggle");
-const menu = document.querySelector("#menu-principal");
-const LARGURA_DESKTOP = 768; // mesmo ponto de quebra do CSS (48rem)
+// Seleciona o botão e a lista pelo seletor CSS
+const botao = document.querySelector('.menu-botao');
+const menu = document.querySelector('#menu-principal');
 
-function abrirMenu() {
-  menu.classList.add("aberto");
-  botaoMenu.setAttribute("aria-expanded", "true");
-  botaoMenu.setAttribute("aria-label", "Fechar menu");
+// A cada clique, inverte o valor de aria-expanded
+botao.addEventListener('click', () => {
+  const aberto = botao.getAttribute('aria-expanded') === 'true';
+  botao.setAttribute('aria-expanded', String(!aberto));
+});
+```
+
+Agora você consegue ler cada linha: `document.querySelector` é a seleção da seção 3; `addEventListener('click', …)` é o registro de tratador da seção 10; a arrow function é a forma da seção 1. E consegue ver o que falta — as três melhorias que ficaram como exercício B3 da Aula 08.
+
+Substitua o conteúdo do arquivo por esta versão. **Os nomes `botao` e `menu` continuam os mesmos**: eles pertencem a este arquivo e a mais nenhum. Se você declarar um `const menu` também no `app.js`, o navegador para tudo com `Identifier 'menu' has already been declared` — dois `<script>` sem `type="module"` compartilham o mesmo escopo global.
+
+**`site-evento/js/menu.js`** (versão desta aula)
+
+```js
+// menu.js — comportamento do menu hambúrguer (marcação e CSS: Aulas 08 e 09)
+
+// ===== ELEMENTOS =====
+const botao = document.querySelector(".menu-botao");
+const menu = document.querySelector("#menu-principal");
+const LARGURA_DESKTOP = 768; // o mesmo ponto de quebra do CSS da Aula 08
+
+// ===== FUNÇÕES DE ESTADO =====
+// O estado mora no atributo aria-expanded do botão: uma fonte só, que o CSS
+// também lê (.menu-botao[aria-expanded="true"] + .menu). Nada de classe .aberto.
+function menuEstaAberto() {
+  return botao.getAttribute("aria-expanded") === "true";
+}
+
+function definirMenu(aberto) {
+  botao.setAttribute("aria-expanded", String(aberto));
 }
 
 function fecharMenu() {
-  menu.classList.remove("aberto");
-  botaoMenu.setAttribute("aria-expanded", "false");
-  botaoMenu.setAttribute("aria-label", "Abrir menu");
-}
-
-function menuEstaAberto() {
-  return menu.classList.contains("aberto");
+  definirMenu(false);
 }
 
 function alternarMenu() {
-  if (menuEstaAberto()) {
-    fecharMenu();
-  } else {
-    abrirMenu();
-  }
+  definirMenu(!menuEstaAberto());
 }
 
-// Marca o link da página atual (aria-current) sem editar cada HTML
-function marcarPaginaAtual() {
-  const arquivoAtual = location.pathname.split("/").pop() || "index.html";
+// ===== EVENTOS =====
+function registrarEventosDoMenu() {
+  // 1. Clique no botão: abre ou fecha
+  botao.addEventListener("click", alternarMenu);
 
-  menu.querySelectorAll("a").forEach((link) => {
+  // 2. Esc fecha e devolve o foco ao botão (seção 17: nunca perca o foco)
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menuEstaAberto()) {
+      fecharMenu();
+      botao.focus();
+    }
+  });
+
+  // 3. Clique fora do menu e do botão: fecha (um ouvinte só, no document)
+  document.addEventListener("click", (e) => {
+    const clicouDentro = menu.contains(e.target) || botao.contains(e.target);
+    if (!clicouDentro && menuEstaAberto()) {
+      fecharMenu();
+    }
+  });
+
+  // 4. Ao alargar a janela para desktop, garante o estado fechado
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= LARGURA_DESKTOP && menuEstaAberto()) {
+      fecharMenu();
+    }
+  });
+}
+
+// ===== INICIALIZAÇÃO =====
+// Se uma página não tiver cabeçalho (a 404.html da Aula 15, por exemplo),
+// querySelector devolve null e o script não deve quebrar.
+if (botao && menu) {
+  registrarEventosDoMenu();
+}
+```
+
+Três observações:
+
+- **O estado continua no `aria-expanded`.** Não existe classe `.aberto` neste projeto: o CSS das Aulas 08 e 09 já reage ao atributo, e o atributo é o que o leitor de tela anuncia. Um estado, um lugar.
+- **O clique fora usa o `document`** — é delegação (seção 14) aplicada à página inteira. Repare que ele funciona *porque* o clique no botão também chega ao `document` na fase de bolha; por isso a verificação `botao.contains(e.target)`, senão o menu abriria e fecharia no mesmo clique.
+- **`resize` dispara dezenas de vezes por segundo** ao arrastar a janela. Aqui o trabalho é baratíssimo (uma comparação e, no máximo, um `setAttribute`), então não vale a pena um `throttle`. Na Aula 14 você vai encontrar um caso em que vale.
+
+### Passo 2 — Acrescentar ao `js/app.js` (sem apagar nada)
+
+O `js/app.js` já tem, das Aulas 10 e 11: as constantes do evento, a saudação no console, o `console.group`, o `console.table` das cinco páginas e a contagem regressiva do `index.html`. **Nada disso sai.** Você só organiza o arquivo em blocos e acrescenta uma seção no fim.
+
+Comece pondo os comentários de seção sobre o que já existe, na ordem da seção 18 desta aula:
+
+**`site-evento/js/app.js`** (topo do arquivo, comentários acrescentados)
+
+```js
+// app.js — comportamento comum a todas as páginas do site do evento
+
+// ===== ESTADO =====
+const NOME_EVENTO = "Semana Acadêmica de Sistemas de Informação";
+const EDICAO = 12;
+const LOCAL_EVENTO = "UNEMAT — Campus Sinop";
+const TRILHAS = "Desenvolvimento Web, Dados, Segurança";
+```
+
+Deixe a saudação, o `console.group`, o `console.table` e todo o bloco `===== CONTAGEM REGRESSIVA PARA A ABERTURA =====` exatamente onde estão. Depois, **no fim do arquivo**, acrescente:
+
+**`site-evento/js/app.js`** (acrescente ao fim)
+
+```js
+// ===== NAVEGAÇÃO: marcar a página atual =====
+/**
+ * Marca com aria-current="page" o link do menu que aponta para a página aberta.
+ * @param {string} [padrao="index.html"] - arquivo assumido quando a URL termina em "/"
+ */
+function marcarPaginaAtual(padrao = "index.html") {
+  const listaDoMenu = document.querySelector("#menu-principal");
+  if (listaDoMenu === null) return;
+
+  const arquivoAtual = location.pathname.split("/").pop() || padrao;
+
+  listaDoMenu.querySelectorAll("a").forEach((link) => {
     const destino = link.getAttribute("href");
     if (destino === arquivoAtual) {
       link.setAttribute("aria-current", "page");
@@ -1184,134 +1171,70 @@ function marcarPaginaAtual() {
   });
 }
 
-function registrarEventosDoMenu() {
-  // 1. Clique no botão: abre/fecha
-  botaoMenu.addEventListener("click", alternarMenu);
-
-  // 2. Escape fecha e devolve o foco ao botão
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && menuEstaAberto()) {
-      fecharMenu();
-      botaoMenu.focus();
-    }
-  });
-
-  // 3. Clique fora do menu e do botão: fecha (delegação em document)
-  document.addEventListener("click", (e) => {
-    const clicouDentro = menu.contains(e.target) || botaoMenu.contains(e.target);
-    if (!clicouDentro && menuEstaAberto()) fecharMenu();
-  });
-
-  // 4. Ao alargar a janela para desktop, garante o estado fechado
-  window.addEventListener("resize", () => {
-    if (window.innerWidth >= LARGURA_DESKTOP && menuEstaAberto()) fecharMenu();
-  });
-}
-
-// Só liga o comportamento se os elementos existem nesta página
-if (botaoMenu && menu) {
-  marcarPaginaAtual();
-  registrarEventosDoMenu();
-}
+marcarPaginaAtual();
 ```
 
-Repare no `if (botaoMenu && menu)` do fim: se uma página não tiver o cabeçalho (uma página de erro, por exemplo), o script não quebra com `Cannot read properties of null`.
+> **⚠️ Atenção**
+> Isto é uma **troca declarada**, não um acréscimo: até a Aula 08 o `aria-current="page"` era escrito à mão no HTML de cada página. Agora ele passa a ser aplicado pelo JavaScript, então **apague o atributo das cinco páginas** — se você deixar os dois, um link renomeado vai ficar marcado em dois lugares e a função vai remover o atributo que o HTML afirmava. Uma informação, uma fonte.
+>
+> O preço dessa troca é real e você precisa conhecê-lo: sem JavaScript, o destaque da página atual some. Ele é aceitável aqui porque `aria-current` é reforço — o menu continua navegável, os links continuam funcionando e o `<title>` continua dizendo onde a pessoa está. Se o atributo fosse a **única** forma de saber a página atual, o certo seria mantê-lo no HTML.
 
-### Passo 4 — a página de palestrantes renderizada do array
+### Passo 3 — A página de palestrantes renderizada a partir do `dados.js`
 
-Substitua os cards escritos à mão por um contêiner vazio, os botões de filtro e um contador:
+O `js/dados.js` da Aula 12 já tem o array `palestrantes` (seis pessoas, com `id`, `nome`, `instituicao`, `area`, `tema` e `foto`) e o dicionário `nomesDasAreas`. O `js/palestrantes.js` de hoje **consome** os dois: ele não redeclara nem copia nada. Se você redeclarar aqui o array com `const`, as duas declarações colidem no escopo global e o navegador derruba o script inteiro com `Uncaught SyntaxError: Identifier 'palestrantes' has already been declared`.
 
-**`palestrantes.html`** (trecho do `<main>`)
+Substitua o `<main>` de `palestrantes.html` pelo contêiner vazio, os botões de filtro e o contador — os seis `<article>` escritos à mão nas Aulas 02 e 04 saem daqui, porque a partir de agora quem os escreve é o JavaScript:
+
+**`palestrantes.html`** (trecho: `<head>` e `<main>`)
 
 ```html
-<main class="conteudo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conheça os palestrantes da Semana Acadêmica de Sistemas de Informação da UNEMAT Sinop.">
+  <meta name="author" content="Curso de Sistemas de Informação — UNEMAT Sinop">
+  <title>Palestrantes — Semana Acadêmica de Sistemas de Informação</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="js/menu.js" defer></script>
+  <script src="js/dados.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/palestrantes.js" defer></script>
+</head>
+```
+
+```html
+<main id="conteudo" tabindex="-1" class="container">
   <h1>Palestrantes</h1>
   <p>Conheça quem vai compartilhar conhecimento nesta edição.</p>
 
   <div id="filtros-area" class="filtros" role="group" aria-label="Filtrar por área">
     <button type="button" class="ativo" data-area="todas" aria-pressed="true">Todas</button>
-    <button type="button" data-area="ia" aria-pressed="false">Inteligência Artificial</button>
     <button type="button" data-area="web" aria-pressed="false">Desenvolvimento Web</button>
-    <button type="button" data-area="seguranca" aria-pressed="false">Segurança</button>
     <button type="button" data-area="dados" aria-pressed="false">Ciência de Dados</button>
+    <button type="button" data-area="seguranca" aria-pressed="false">Segurança</button>
+    <button type="button" data-area="ia" aria-pressed="false">Inteligência Artificial</button>
   </div>
 
-  <p id="contador-palestrantes" class="contador" aria-live="polite"></p>
+  <p id="contador-palestrantes" class="contador" role="status"></p>
 
-  <section id="lista-palestrantes" class="grade-palestrantes"></section>
+  <ul id="lista-palestrantes" class="cartoes"></ul>
 </main>
-
-<script src="js/palestrantes.js" defer></script>
 ```
 
-**`js/palestrantes.js`**
+Os quatro `data-area` são exatamente os códigos de `nomesDasAreas` (`web`, `dados`, `seguranca`, `ia`) — os mesmos que a Aula 12 usou nos relatórios do console. Repare também na ordem dos `<script>` no `<head>`: `dados.js` **antes** de `palestrantes.js`, senão o array ainda não existe quando o segundo arquivo roda. Com `defer`, a ordem de execução é a ordem em que os `<script>` aparecem.
+
+**`site-evento/js/palestrantes.js`**
 
 ```js
-// js/palestrantes.js — lista de palestrantes renderizada a partir de dados
+// palestrantes.js — a lista de palestrantes renderizada a partir de js/dados.js.
+// Depende de js/dados.js (arrays `palestrantes` e objeto `nomesDasAreas`),
+// que precisa ser carregado antes. Nada é redeclarado aqui.
 
 // ===== ESTADO =====
-const palestrantes = [
-  {
-    id: 1,
-    nome: "Ana Lúcia Ferreira",
-    instituicao: "UNEMAT — Sinop",
-    area: "ia",
-    tema: "Redes neurais para prever a safra de soja",
-    foto: "img/palestrantes/ana-lucia.webp",
-  },
-  {
-    id: 2,
-    nome: "Bruno Takahashi",
-    instituicao: "Startup AgroData",
-    area: "dados",
-    tema: "Dashboards que os produtores realmente usam",
-    foto: "img/palestrantes/bruno.webp",
-  },
-  {
-    id: 3,
-    nome: "Carla Mendes",
-    instituicao: "UFMT",
-    area: "seguranca",
-    tema: "O que um ataque de phishing ensina sobre UX",
-    foto: "img/palestrantes/carla.webp",
-  },
-  {
-    id: 4,
-    nome: "Diego Nascimento",
-    instituicao: "Prefeitura de Sinop",
-    area: "web",
-    tema: "Acessibilidade em portais públicos: erros que vimos",
-    foto: "img/palestrantes/diego.webp",
-  },
-  {
-    id: 5,
-    nome: "Eduarda Ribeiro",
-    instituicao: "UNEMAT — Sinop",
-    area: "web",
-    tema: "Do HTML ao deploy: o caminho do estudante",
-    foto: "img/palestrantes/eduarda.webp",
-  },
-  {
-    id: 6,
-    nome: "Felipe Arruda",
-    instituicao: "Cooperativa Coopercana",
-    area: "ia",
-    tema: "Visão computacional no controle de pragas",
-    foto: "img/palestrantes/felipe.webp",
-  },
-];
-
-const NOMES_DAS_AREAS = {
-  ia: "Inteligência Artificial",
-  web: "Desenvolvimento Web",
-  seguranca: "Segurança",
-  dados: "Ciência de Dados",
-};
-
 let areaAtual = "todas";
 
-// ===== SELEÇÃO DE ELEMENTOS =====
-const els = {
+// ===== SELEÇÃO DE ELEMENTOS (uma vez só) =====
+const elementosPalestrantes = {
   lista: document.querySelector("#lista-palestrantes"),
   filtros: document.querySelector("#filtros-area"),
   contador: document.querySelector("#contador-palestrantes"),
@@ -1319,181 +1242,164 @@ const els = {
 
 // ===== FUNÇÕES DE DADOS =====
 function obterPalestrantesVisiveis() {
-  if (areaAtual === "todas") return [...palestrantes];
-  return palestrantes.filter((p) => p.area === areaAtual);
+  if (areaAtual === "todas") {
+    return [...palestrantes];
+  }
+  return palestrantes.filter((pessoa) => pessoa.area === areaAtual);
 }
 
 // ===== RENDERIZAÇÃO =====
-function criarCard(p) {
-  const card = document.createElement("article");
-  card.classList.add("card-palestrante");
-  card.dataset.id = p.id;
+/**
+ * Monta o cartão de um palestrante.
+ * @param {Object} pessoa - um item do array `palestrantes` de dados.js
+ * @returns {HTMLLIElement} o <li> pronto para entrar na lista
+ */
+function criarCartaoDePalestrante(pessoa) {
+  const item = document.createElement("li");
+  item.classList.add("cartao", "cartao--palestrante");
+  item.dataset.id = pessoa.id;
 
   const foto = document.createElement("img");
-  foto.src = p.foto;
-  foto.alt = `Foto de ${p.nome}`;
+  foto.src = pessoa.foto;
+  foto.alt = `Foto de ${pessoa.nome}`;
   foto.width = 240;
   foto.height = 240;
   foto.loading = "lazy";
 
   const nome = document.createElement("h2");
-  nome.textContent = p.nome; // textContent: seguro
+  nome.textContent = pessoa.nome; // textContent: nunca innerHTML para dados
 
   const instituicao = document.createElement("p");
-  instituicao.classList.add("instituicao");
-  instituicao.textContent = p.instituicao;
+  instituicao.classList.add("cartao__meta");
+  instituicao.textContent = pessoa.instituicao;
 
-  const area = document.createElement("span");
-  area.classList.add("etiqueta");
-  area.textContent = NOMES_DAS_AREAS[p.area];
+  const etiqueta = document.createElement("span");
+  etiqueta.classList.add("etiqueta");
+  etiqueta.textContent = nomesDasAreas[pessoa.area];
 
   const tema = document.createElement("p");
-  tema.classList.add("tema");
-  tema.textContent = p.tema;
+  tema.textContent = pessoa.tema;
 
-  card.append(foto, nome, instituicao, area, tema);
-  return card;
+  item.append(foto, nome, instituicao, etiqueta, tema);
+  return item;
 }
 
-function renderizar() {
+function renderizarPalestrantes() {
   const visiveis = obterPalestrantesVisiveis();
-  els.lista.innerHTML = "";
+  elementosPalestrantes.lista.innerHTML = "";
 
   if (visiveis.length === 0) {
-    const aviso = document.createElement("p");
+    const aviso = document.createElement("li");
     aviso.classList.add("vazio");
     aviso.textContent = "Nenhum palestrante nesta área ainda. Volte em breve!";
-    els.lista.appendChild(aviso);
+    elementosPalestrantes.lista.appendChild(aviso);
   } else {
     const fragmento = document.createDocumentFragment();
-    visiveis.forEach((p) => fragmento.appendChild(criarCard(p)));
-    els.lista.appendChild(fragmento);
+    visiveis.forEach((pessoa) => fragmento.appendChild(criarCartaoDePalestrante(pessoa)));
+    elementosPalestrantes.lista.appendChild(fragmento);
   }
 
   const total = visiveis.length;
-  els.contador.textContent =
+  elementosPalestrantes.contador.textContent =
     total === 1 ? "1 palestrante" : `${total} palestrantes`;
 }
 
 function atualizarBotoesDeFiltro() {
-  els.filtros.querySelectorAll("button[data-area]").forEach((botao) => {
-    const ativo = botao.dataset.area === areaAtual;
-    botao.classList.toggle("ativo", ativo);
-    botao.setAttribute("aria-pressed", String(ativo));
+  elementosPalestrantes.filtros.querySelectorAll("button[data-area]").forEach((botaoFiltro) => {
+    const ativo = botaoFiltro.dataset.area === areaAtual;
+    botaoFiltro.classList.toggle("ativo", ativo);
+    botaoFiltro.setAttribute("aria-pressed", String(ativo));
   });
 }
 
 // ===== EVENTOS =====
-function registrarEventos() {
-  // Um único ouvinte para todos os botões de filtro (delegação)
-  els.filtros.addEventListener("click", (e) => {
-    const botao = e.target.closest("button[data-area]");
-    if (!botao) return;
+function registrarEventosDePalestrantes() {
+  // Um único ouvinte para todos os botões de filtro (delegação, seção 14)
+  elementosPalestrantes.filtros.addEventListener("click", (e) => {
+    const botaoFiltro = e.target.closest("button[data-area]");
+    if (!botaoFiltro) return;
 
-    areaAtual = botao.dataset.area;
+    areaAtual = botaoFiltro.dataset.area;
     atualizarBotoesDeFiltro();
-    renderizar();
+    renderizarPalestrantes();
   });
 }
 
 // ===== INICIALIZAÇÃO =====
-function iniciar() {
-  registrarEventos();
-  renderizar();
+function iniciarPalestrantes() {
+  registrarEventosDePalestrantes();
+  renderizarPalestrantes();
 }
 
-iniciar();
+iniciarPalestrantes();
 ```
 
-### Passo 5 — o estilo dos cards e dos filtros
+Duas escolhas de nome merecem explicação. Primeiro, `elementosPalestrantes` em vez de um genérico `els`: como todos os scripts sem `type="module"` dividem o mesmo escopo global, um nome curto e óbvio é justamente o que vai colidir com o de outro arquivo — na Aula 14 nasce um `js/programacao.js` que precisaria do mesmo `els`. Segundo, `renderizarPalestrantes` em vez de `renderizar`: pelo mesmo motivo. Nome específico é seguro; nome genérico é uma bomba-relógio.
 
-**`css/estilo.css`** (acrescente ao fim)
+### Passo 4 — O estilo dos filtros e da etiqueta
+
+Os cartões **não** precisam de CSS novo: `<li class="cartao cartao--palestrante">` dentro de `<ul class="cartoes">` reaproveita a grade `repeat(auto-fit, minmax(280px, 1fr))` da Aula 07 e a foto redonda da Aula 08. Só os filtros, o contador, a etiqueta e o estado vazio são novos.
+
+**`css/estilo.css`** (seção 5 — componentes)
 
 ```css
-/* ===== Palestrantes ===== */
+/* ===== Filtros de área (Aula 13) ===== */
 .filtros {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-block: 1rem;
+  gap: var(--espaco-pequeno);
+  margin-block: var(--espaco-medio);
 }
 
 .filtros button {
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--cor-primaria, #0b3d5c);
+  padding: var(--espaco-pequeno) var(--espaco-medio);
+  border: 2px solid var(--cor-primaria);
   border-radius: 999px;
   background: transparent;
-  color: var(--cor-primaria, #0b3d5c);
+  color: var(--cor-primaria);
+  font: inherit;
   cursor: pointer;
 }
 
 .filtros button.ativo {
-  background: var(--cor-primaria, #0b3d5c);
-  color: #fff;
-}
-
-.filtros button:focus-visible {
-  outline: 3px solid var(--cor-destaque, #e67e22);
-  outline-offset: 2px;
+  background: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
 }
 
 .contador {
-  color: var(--cor-texto-suave, #555);
-}
-
-.grade-palestrantes {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  gap: 1.5rem;
-}
-
-.card-palestrante {
-  display: grid;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 12px;
-  background: var(--cor-superficie, #fff);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.card-palestrante img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.card-palestrante h2 {
-  font-size: 1.15rem;
-  margin: 0;
+  color: var(--cor-texto);
+  font-size: .875rem;
 }
 
 .etiqueta {
-  justify-self: start;
-  padding: 0.15rem 0.6rem;
+  justify-self: center;
+  padding: 2px 10px;
   border-radius: 999px;
-  background: var(--cor-fundo-suave, #eef3f7);
-  font-size: 0.8rem;
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  font-size: .8rem;
 }
 
 .vazio {
   grid-column: 1 / -1;
-  padding: 2rem;
+  padding: var(--espaco-grande);
   text-align: center;
-  color: var(--cor-texto-suave, #555);
 }
 ```
 
+Nenhuma cor escrita à mão: todas saem do sistema de design da Aula 06 mais as variáveis que as Aulas 07 e 08 acrescentaram (`--cor-superficie`, `--cor-borda`, `--cor-sobre-primaria`). O `:focus-visible` global da Aula 06 já cuida do foco dos botões — não é preciso repeti-lo aqui.
+
 ### Como testar
 
-1. Abra `index.html` com o Live Server e estreite a janela para menos de 768 px (ou use o modo dispositivo do DevTools, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>). O botão hambúrguer aparece; o menu, não.
-2. Clique no botão: o menu abre, as barras viram um "X" e, na aba **Elements**, `aria-expanded` muda para `"true"`.
-3. Pressione <kbd>Esc</kbd>: o menu fecha e o foco volta ao botão (o contorno de foco aparece nele). Abra de novo e clique fora do menu: fecha.
-4. Alargue a janela: o menu fecha sozinho e o botão desaparece.
-5. Vá a `palestrantes.html`: os seis cards aparecem gerados pelo JavaScript (confira em **Elements** que o `<section>` está cheio, enquanto em "Exibir código-fonte" ele está vazio). O contador mostra "6 palestrantes".
-6. Clique em "Segurança": só a Carla aparece e o contador diz "1 palestrante". Clique em "Todas": tudo volta. Navegue pelos filtros com <kbd>Tab</kbd> e acione com <kbd>Enter</kbd> — funciona igual.
-7. Console limpo: nenhum erro em vermelho em nenhuma das cinco páginas.
+1. Abra `index.html` com o Live Server e estreite a janela para menos de 768 px (ou use o modo dispositivo do DevTools, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd>). O botão "Menu" aparece; a lista, não.
+2. Clique no botão: a lista desliza e aparece com a animação da Aula 09 e, na aba **Elements**, `aria-expanded` muda para `"true"`. O ícone gira 90°.
+3. Pressione <kbd>Esc</kbd>: o menu fecha e o foco volta ao botão (o anel de foco aparece nele). Abra de novo e clique fora do menu: fecha.
+4. Alargue a janela para além de 768 px: o menu fecha sozinho e o botão desaparece.
+5. Ainda no `index.html`, confira que a contagem regressiva continua na tela e que o Console ainda mostra a saudação, o grupo "Dados do evento" e a tabela das cinco páginas — se algo sumiu, o `app.js` foi sobrescrito em vez de ampliado.
+6. Em qualquer página, na aba **Elements**, o link do menu correspondente à página aberta tem `aria-current="page"`; os outros quatro, não. Navegue para outra página e confira que o atributo mudou de lugar.
+7. Vá a `palestrantes.html`: os seis cartões aparecem gerados pelo JavaScript (em **Elements** o `<ul>` está cheio; em "Exibir código-fonte", vazio). O contador mostra "6 palestrantes" e as fotos são as `img/palestrante-01.jpg` a `img/palestrante-06.jpg`.
+8. Clique em "Segurança": só a Carla Mendes aparece e o contador diz "1 palestrante". Clique em "Desenvolvimento Web": aparecem Diego Nascimento e Eduarda Ribeiro. Clique em "Todas": tudo volta. Navegue pelos filtros com <kbd>Tab</kbd> e acione com <kbd>Enter</kbd> — funciona igual.
+9. Console limpo nas cinco páginas: nenhuma linha vermelha e, em especial, nenhum `Identifier 'palestrantes' has already been declared` nem `Identifier 'menu' has already been declared`.
 
 ## 🧪 Laboratório
 
@@ -1639,7 +1545,7 @@ Cada cartão tem `draggable="true"` e `data-id`. No `dragstart`, guarde o id em 
 ### ⭐ O botão que só funciona uma vez
 Tags: javascript, eventos, bug, devtools
 
-Um colega enviou o código abaixo dizendo que "o contador funciona uma vez e depois para, e às vezes nem começa". Rode-o, reproduza os dois sintomas e encontre os **três** bugs plantados — sem reescrever do zero. Cada um é um erro clássico visto nesta aula.
+Um colega enviou o código abaixo dizendo que "o contador funciona uma vez e depois para, e às vezes nem começa". Rode-o, reproduza os dois sintomas e encontre os **quatro** bugs plantados — sem reescrever do zero. Cada um é um erro clássico visto nesta aula.
 
 ```html
 <!-- bug-contador.html -->
@@ -1770,7 +1676,7 @@ Sites de evento costumam ter um "quiz de conhecimentos" para engajar quem se ins
 1. O menu mobile funcionando com clique, <kbd>Esc</kbd> e clique fora, com `aria-expanded` sincronizado (como no Mão na massa).
 2. A listagem principal do seu domínio (produtos, quadras, vagas, pratos, pescarias) **renderizada a partir de um array** de pelo menos 6 objetos, com estado vazio tratado.
 3. Ao menos um filtro por botões usando delegação de eventos.
-4. Os exercícios **B7** (contador de caracteres, aplicado ao seu formulário de contato) e **B8** (lista com subir/descer/excluir) em uma pasta `exercicios/aula-13/`.
+4. Os exercícios **B7** (contador de caracteres, aplicado ao seu formulário de contato) e **B8** (lista com subir/descer/excluir) em uma pasta `exercicios/aula13/`.
 
 **Critério de pronto:** nenhuma página do projeto mostra erro no Console; a listagem some do "Exibir código-fonte" e aparece na aba Elements; o menu abre e fecha só com o teclado.
 
@@ -1780,9 +1686,10 @@ Sites de evento costumam ter um "quiz de conhecimentos" para engajar quem se ins
 
 ## ✅ Checkpoint do projeto
 
-- [ ] `js/app.js` carregado com `defer` em todas as páginas, sem erro no Console.
-- [ ] Botão hambúrguer com `aria-expanded`, `aria-controls` e `aria-label`; menu abre/fecha por clique, <kbd>Esc</kbd>, clique fora e `resize`.
-- [ ] Link da página atual marcado com `aria-current="page"` pelo JavaScript.
+- [ ] `js/menu.js`, `js/dados.js` e `js/app.js` carregados com `defer` em todas as páginas, nessa ordem, sem erro no Console — e nenhum identificador declarado em dois arquivos.
+- [ ] `js/app.js` **ampliado**, não reescrito: a saudação e o `console.table` da Aula 10 e a contagem regressiva da Aula 11 continuam funcionando.
+- [ ] Botão hambúrguer com `aria-expanded` e `aria-controls`; menu abre/fecha por clique, <kbd>Esc</kbd>, clique fora e `resize`, sem classe `.aberto` e sem `display: none`.
+- [ ] Link da página atual marcado com `aria-current="page"` pelo JavaScript, e o atributo removido do HTML das cinco páginas.
 - [ ] Listagem principal renderizada a partir de um array de objetos, com `textContent` (nunca `innerHTML` para dados) e estado vazio tratado.
 - [ ] Filtro por botões com um único ouvinte (delegação) e `aria-pressed` atualizado.
 - [ ] Nenhum `var`, nenhum `onclick` no HTML, nenhum `<div>` clicável.

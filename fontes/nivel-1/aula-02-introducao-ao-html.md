@@ -464,7 +464,7 @@ O cabeçalho é **idêntico nas cinco páginas** — é o que faz o site parecer
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · <time datetime="2026-10-14">14</time> a <time datetime="2026-10-16">16 de outubro</time> · Auditório Central</p>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -585,7 +585,7 @@ Crie `site-evento/programacao.html`. Copie o `<head>` (trocando o `<title>` e a 
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · <time datetime="2026-10-14">14</time> a <time datetime="2026-10-16">16 de outubro</time> · Auditório Central</p>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -613,74 +613,80 @@ Crie `site-evento/programacao.html`. Copie o `<head>` (trocando o `<title>` e a 
       </thead>
       <tbody id="dia-1">
         <tr>
-          <th colspan="4" scope="colgroup">Dia 1 — terça-feira</th>
+          <th colspan="4" scope="colgroup">Dia 1</th>
         </tr>
         <tr>
-          <th scope="row">18h30</th>
+          <th scope="row"><time datetime="18:30">18h30</time></th>
           <td>Credenciamento</td>
           <td>Comissão organizadora</td>
           <td>Saguão</td>
         </tr>
         <tr>
-          <th scope="row">19h00</th>
-          <td>Abertura oficial</td>
-          <td>Coordenação do curso</td>
+          <th scope="row"><time datetime="19:00">19h00</time></th>
+          <td>Abertura e palestra magna: o futuro do desenvolvimento web</td>
+          <td>Eduarda Ribeiro</td>
           <td>Auditório Central</td>
         </tr>
         <tr>
-          <th scope="row">19h30</th>
-          <td>Palestra: A Web como plataforma universal</td>
-          <td>Ana Beatriz Rocha</td>
-          <td>Auditório Central</td>
+          <th scope="row"><time datetime="20:00">20h00</time></th>
+          <td>Minicurso: Git e GitHub do zero</td>
+          <td>Diego Nascimento</td>
+          <td>Laboratório 2</td>
         </tr>
         <tr>
-          <th scope="row">21h00</th>
-          <td>Mesa-redonda: Carreiras em tecnologia no interior</td>
-          <td>Convidados das empresas parceiras</td>
+          <th scope="row"><time datetime="21:00">21h00</time></th>
+          <td>Dashboards que os produtores realmente usam</td>
+          <td>Bruno Takahashi</td>
           <td>Auditório Central</td>
         </tr>
       </tbody>
       <tbody id="dia-2">
         <tr>
-          <th colspan="4" scope="colgroup">Dia 2 — quarta-feira</th>
+          <th colspan="4" scope="colgroup">Dia 2</th>
         </tr>
         <tr>
-          <th scope="row">19h00</th>
-          <td>Minicurso: Do zero ao primeiro site com HTML e CSS</td>
-          <td>Carlos Eduardo Lima</td>
-          <td>Laboratório 2</td>
+          <th scope="row"><time datetime="19:00">19h00</time></th>
+          <td>Minicurso: acessibilidade na prática</td>
+          <td>Diego Nascimento</td>
+          <td>Laboratório 1</td>
         </tr>
         <tr>
-          <th scope="row">19h00</th>
-          <td>Minicurso: Introdução a APIs REST</td>
-          <td>Fernanda Yamamoto</td>
+          <th scope="row"><time datetime="19:00">19h00</time></th>
+          <td>Minicurso: primeiros passos com redes neurais</td>
+          <td>Ana Lúcia Ferreira</td>
           <td>Laboratório 3</td>
         </tr>
         <tr>
-          <th scope="row">21h30</th>
+          <th scope="row"><time datetime="20:30">20h30</time></th>
+          <td>Segurança em aplicações web: dez erros comuns</td>
+          <td>Carla Mendes</td>
+          <td>Auditório Central</td>
+        </tr>
+        <tr>
+          <th scope="row"><time datetime="21:30">21h30</time></th>
           <td colspan="3">Confraternização com coffee break — saguão</td>
         </tr>
       </tbody>
       <tbody id="dia-3">
         <tr>
-          <th colspan="4" scope="colgroup">Dia 3 — quinta-feira</th>
+          <th colspan="4" scope="colgroup">Dia 3</th>
         </tr>
         <tr>
-          <th scope="row">19h00</th>
-          <td>Oficina: Acessibilidade na prática</td>
-          <td>Ana Beatriz Rocha</td>
-          <td>Laboratório 2</td>
+          <th scope="row"><time datetime="18:30">18h30</time></th>
+          <td>Maratona de programação</td>
+          <td>Eduarda Ribeiro</td>
+          <td>Laboratórios 1 e 2</td>
         </tr>
         <tr>
-          <th scope="row">20h30</th>
-          <td>Apresentação dos projetos dos estudantes</td>
-          <td>Turmas de Desenvolvimento Web</td>
-          <td>Auditório Central</td>
+          <th scope="row"><time datetime="19:00">19h00</time></th>
+          <td>Minicurso: phishing e engenharia social</td>
+          <td>Carla Mendes</td>
+          <td>Laboratório 3</td>
         </tr>
         <tr>
-          <th scope="row">21h30</th>
-          <td>Encerramento e sorteio de brindes</td>
-          <td>Comissão organizadora</td>
+          <th scope="row"><time datetime="22:00">22h00</time></th>
+          <td>Encerramento e premiação</td>
+          <td>Eduarda Ribeiro</td>
           <td>Auditório Central</td>
         </tr>
       </tbody>
@@ -729,7 +735,7 @@ Três detalhes importantes nessa tabela:
 <body>
   <header id="topo">
     <h1>Semana Acadêmica de Sistemas de Informação</h1>
-    <p>UNEMAT Sinop · <time datetime="2026-10-14">14</time> a <time datetime="2026-10-16">16 de outubro</time> · Auditório Central</p>
+    <p>UNEMAT Sinop · três noites de outubro · Auditório Central</p>
     <nav>
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -743,42 +749,43 @@ Três detalhes importantes nessa tabela:
 
   <main>
     <h2>Palestrantes e ministrantes</h2>
-    <p>Convidados desta edição, em ordem alfabética.</p>
+    <p>Convidados desta edição, em ordem alfabética. Os demais entram na Aula 04, quando a página ganhar fotos.</p>
 
-    <article id="ana-rocha">
-      <h3>Ana Beatriz Rocha</h3>
-      <p><strong>Engenheira de front-end</strong> em uma cooperativa de crédito de Sinop, especialista em acessibilidade digital.</p>
-      <p>Trabalha há oito anos com interfaces web e é auditora certificada em WCAG. Mantém um blog sobre acessibilidade em português.</p>
+    <article id="ana-lucia-ferreira">
+      <h3>Ana Lúcia Ferreira</h3>
+      <p><strong>Professora e pesquisadora</strong> da UNEMAT — Sinop, na área de inteligência artificial.</p>
+      <p>Pesquisa redes neurais aplicadas à previsão de safra de soja e coordena um grupo de estudos em aprendizado de máquina.</p>
       <dl>
         <dt>Atividades</dt>
-        <dd><a href="programacao.html#dia-1">Palestra: A Web como plataforma universal</a> (dia 1)</dd>
-        <dd><a href="programacao.html#dia-3">Oficina: Acessibilidade na prática</a> (dia 3)</dd>
+        <dd><a href="programacao.html#dia-2">Minicurso: primeiros passos com redes neurais</a> (dia 2)</dd>
         <dt>Contato</dt>
         <dd><a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">Perfil no LinkedIn</a></dd>
       </dl>
     </article>
 
-    <article id="carlos-lima">
-      <h3>Carlos Eduardo Lima</h3>
-      <p><strong>Desenvolvedor web</strong> e egresso do curso de Sistemas de Informação da UNEMAT.</p>
-      <p>Atua em uma software house de Cuiabá e dá aulas de introdução à programação em projetos de extensão.</p>
+    <article id="bruno-takahashi">
+      <h3>Bruno Takahashi</h3>
+      <p><strong>Cientista de dados</strong> na startup AgroData, especialista em visualização de dados.</p>
+      <p>Constrói painéis que produtores rurais realmente usam no dia a dia e escreve sobre dados abertos e cidades inteligentes.</p>
       <dl>
         <dt>Atividades</dt>
-        <dd><a href="programacao.html#dia-2">Minicurso: Do zero ao primeiro site com HTML e CSS</a> (dia 2)</dd>
+        <dd><a href="programacao.html#dia-1">Dashboards que os produtores realmente usam</a> (dia 1)</dd>
+        <dd><a href="programacao.html#dia-3">Dados abertos e cidades inteligentes</a> (dia 3)</dd>
         <dt>Contato</dt>
         <dd><a href="https://github.com/" target="_blank" rel="noopener noreferrer">Perfil no GitHub</a></dd>
       </dl>
     </article>
 
-    <article id="fernanda-yamamoto">
-      <h3>Fernanda Yamamoto</h3>
-      <p><strong>Arquiteta de software</strong> em uma empresa de tecnologia para o agronegócio.</p>
-      <p>Projeta APIs que integram máquinas agrícolas, sensores e sistemas de gestão. Mestre em Ciência da Computação.</p>
+    <article id="carla-mendes">
+      <h3>Carla Mendes</h3>
+      <p><strong>Pesquisadora em segurança da informação</strong> na UFMT.</p>
+      <p>Estuda a relação entre experiência de uso e ataques de engenharia social, e treina equipes de desenvolvimento em segurança.</p>
       <dl>
         <dt>Atividades</dt>
-        <dd><a href="programacao.html#dia-2">Minicurso: Introdução a APIs REST</a> (dia 2)</dd>
+        <dd><a href="programacao.html#dia-2">Segurança em aplicações web: dez erros comuns</a> (dia 2)</dd>
+        <dd><a href="programacao.html#dia-3">Minicurso: phishing e engenharia social</a> (dia 3)</dd>
         <dt>Contato</dt>
-        <dd><a href="mailto:fernanda@exemplo.com">fernanda@exemplo.com</a></dd>
+        <dd><a href="mailto:carla@exemplo.com">carla@exemplo.com</a></dd>
       </dl>
     </article>
 
@@ -822,7 +829,7 @@ Abra <https://validator.w3.org/#validate_by_input>, cole o código de cada pági
 
 - As cinco páginas abrem no Live Server e o menu leva de uma para outra sem `404`.
 - Em `index.html`, os links "Nesta página" rolam até a seção e a URL ganha `#sobre`, `#como-participar`, `#glossario`.
-- Em `palestrantes.html`, clicar em "Minicurso: Introdução a APIs REST" abre `programacao.html` já posicionada no Dia 2.
+- Em `palestrantes.html`, clicar em "Minicurso: primeiros passos com redes neurais" abre `programacao.html` já posicionada no Dia 2.
 - Na aba Elements, a tabela mostra três `<tbody>` e um `<tfoot>`; cada `<tr>` soma 4 colunas.
 - O validador não acusa nenhum erro em nenhuma das cinco páginas.
 
@@ -850,7 +857,7 @@ Os itens A1 a A6 revisam a arquitetura da Aula 01; os demais são sobre o HTML d
 
 ```html
 <p>Texto <strong>importante <em>e enfático</strong></em>.
-<img src=foto.jpg>
+<a href=programacao.html>Programação</a>
 <ul>
   <li>Um
   <li>Dois
@@ -1033,7 +1040,7 @@ Boa parte das pessoas que usam a Web não usa mouse: quem navega por teclado, qu
 - No `index.html` do site do evento, navegue **só com o teclado** (<kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>): registre a ordem em que os links recebem foco e se algum ficou inalcançável.
 - No Firefox, abra um site real (o da UNEMAT ou um jornal), desligue os estilos (*Exibir → Estilo da página → Sem estilo*) e responda: a página ainda faz sentido lida de cima a baixo? Onde a ordem do conteúdo surpreendeu você?
 - Um parágrafo comparando as duas experiências e apontando **uma** melhoria concreta que você faria no site real, com o elemento HTML que usaria.
-- No site do evento, uma melhoria implementada a partir do que você observou (por exemplo: um link "pular para o conteúdo" no topo, apontando para `#conteudo` no `<main>`).
+- No site do evento, uma melhoria implementada a partir do que você observou. Sugestão: acrescente `id="conteudo"` ao `<main>` das cinco páginas (ele ainda não tem) e, como primeiro elemento do `<body>`, um link `<a href="#conteudo">Pular para o conteúdo</a>` — sem CSS ele fica visível o tempo todo, e está tudo bem: escondê-lo até receber foco é assunto da Aula 07.
 
 <details><summary>Pistas</summary>
 
