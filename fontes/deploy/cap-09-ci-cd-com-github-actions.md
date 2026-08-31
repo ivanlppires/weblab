@@ -4,8 +4,6 @@
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
 > **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
 
-No Capítulo 08 o banco saiu do servidor e a `unieventos-api` ficou **sem estado**: uma imagem Docker que pode ser destruída e recriada sem perder nada. Só que o caminho até o ar ainda é manual — você constrói a imagem no notebook, faz `docker push`, abre o SSH, roda `docker compose pull` e torce. São seis comandos em três máquinas, na ordem certa, sempre que muda uma linha. Alguém vai esquecer um deles em uma sexta-feira à noite. Neste capítulo o GitHub passa a fazer tudo: a cada push, ele instala as dependências, roda o lint e os testes, publica o site estático, constrói a imagem, envia para o GHCR e atualiza o VPS por SSH — e recusa o código que não passar por essa esteira.
-
 ## 🎯 Objetivos de aprendizagem
 
 Ao final deste capítulo você será capaz de:
@@ -26,7 +24,7 @@ Ao final deste capítulo você será capaz de:
 - [ ] VPS acessível por SSH com o usuário `deploy`, `docker compose` instalado e `compose.prod.yaml` funcionando (Capítulos 06 e 07).
 - [ ] `unieventos-web` (ou o `site-evento` do Nível 1) gerando `dist/` com `npm run build`.
 
-> No Capítulo 07 você construiu a imagem na sua máquina e a subiu no GHCR digitando os comandos; no Capítulo 08 o banco virou um serviço externo, e o servidor deixou de guardar qualquer coisa insubstituível. Hoje esses dois trabalhos passam a ser feitos por um robô a cada `git push`, e a branch `main` ganha um porteiro. No Capítulo 10 essa mesma esteira ganha medidas de qualidade — cobertura, Lighthouse e monitoramento de erros em produção.
+> No Capítulo 07 você construiu a imagem na sua máquina e a subiu no GHCR digitando os comandos; no Capítulo 08 o banco saiu do servidor e a `unieventos-api` ficou **sem estado** — uma imagem Docker que pode ser destruída e recriada sem perder nada. Só que o caminho até o ar ainda é manual: você constrói a imagem no notebook, faz `docker push`, abre o SSH, roda `docker compose pull` e torce. São seis comandos em três máquinas, na ordem certa, sempre que muda uma linha — e alguém vai esquecer um deles em uma sexta-feira à noite. Hoje esse trabalho passa a ser feito por um robô a cada `git push`: instalar dependências, rodar lint e testes, publicar o site estático, construir a imagem, enviar para o GHCR e atualizar o VPS por SSH — e a branch `main` ganha um porteiro, que recusa o código que não passar pela esteira. No Capítulo 10 essa mesma esteira ganha medidas de qualidade — cobertura, Lighthouse e monitoramento de erros em produção.
 
 ## 🗺️ Roteiro
 
@@ -508,7 +506,7 @@ services:
 `${TAG_IMAGEM:-latest}` significa "use a variável `TAG_IMAGEM`; se ela não existir, use `latest`". Como o script do deploy exporta `TAG_IMAGEM` com o SHA do commit, o servidor sobe exatamente a imagem daquele commit — e o **rollback** vira um comando só, com o SHA do commit anterior:
 
 ```bash
-ssh deploy@seu-vps
+ssh meuvps
 cd /srv/unieventos-api
 TAG_IMAGEM=<sha-do-commit-anterior> docker compose -f compose.prod.yaml up -d
 ```
@@ -525,7 +523,7 @@ Não use a sua chave pessoal. Gere um par dedicado, sem senha (o robô não tem 
 ssh-keygen -t ed25519 -C "github actions unieventos" -f chave-deploy -N ""
 
 # envia a chave PÚBLICA para o VPS
-ssh-copy-id -i chave-deploy.pub deploy@seu-vps
+ssh-copy-id -i chave-deploy.pub meuvps
 
 # mostra a chave PRIVADA para copiar (inteira, com as linhas BEGIN e END)
 cat chave-deploy
@@ -606,6 +604,8 @@ updates:
 
 Ao final destes passos, empurrar um commit no `main` da `unieventos-api` vai rodar os testes, construir a imagem, publicá-la no GHCR e atualizar o VPS sozinho — e um pull request que quebra os testes não vai conseguir ser mesclado.
 
+Está no **Nível 2**? Aplique o mesmo passo na `cafe-cerrado-api`: troque o nome do repositório e o da imagem no GHCR, e o resto dos workflows — `ci.yml`, `imagem.yml` e `deploy.yml` — vale linha por linha.
+
 ### Passo 1 — a CI antes de tudo
 
 ```bash
@@ -662,7 +662,7 @@ Gere a chave dedicada (§6.2) e cadastre em **Settings → Secrets and variables
 No VPS, ajuste o `compose.prod.yaml` para usar `${TAG_IMAGEM:-latest}` (§6.1) e confirme que o deploy manual ainda funciona:
 
 ```bash
-ssh deploy@seu-vps
+ssh meuvps
 cd /srv/unieventos-api
 TAG_IMAGEM=latest docker compose -f compose.prod.yaml up -d
 curl -fsS http://127.0.0.1:3000/health
@@ -675,7 +675,7 @@ Se o pacote no GHCR for privado, faça um `docker login ghcr.io` no VPS com um t
 Crie `.github/workflows/deploy.yml` com o conteúdo da §6, abra o PR, espere a CI e mescle. Assim que o merge entra no `main`, abra a aba **Actions**: o job `imagem` leva uns 2 minutos (na primeira vez; depois o cache derruba para menos de 1) e o `implantar` termina em segundos.
 
 ```bash
-curl -s https://api.seu-dominio.com.br/health
+curl -s https://api.seudominio.dev/health
 ```
 
 ### Passo 7 — o site estático
@@ -684,7 +684,7 @@ No `unieventos-web`, crie `.github/workflows/publicar-site.yml` (§5), ligue **S
 
 ### Passo 8 — mudar algo de verdade
 
-Altere uma mensagem visível da API (por exemplo, o texto de erro 404), commite em uma branch, abra o PR, espere o verde, mescle — e **não faça mais nada**. Em três minutos, `curl https://api.seu-dominio.com.br/rota-que-nao-existe` mostra o texto novo.
+Altere uma mensagem visível da API (por exemplo, o texto de erro 404), commite em uma branch, abra o PR, espere o verde, mescle — e **não faça mais nada**. Em três minutos, `curl https://api.seudominio.dev/rota-que-nao-existe` mostra o texto novo.
 
 ### Como conferir
 
@@ -692,7 +692,7 @@ Altere uma mensagem visível da API (por exemplo, o texto de erro 404), commite 
 2. O `README.md` exibe o badge da CI, e ele está verde.
 3. Um PR com teste quebrado não pode ser mesclado.
 4. **Packages** no GitHub lista a imagem com uma tag `latest` e uma tag por commit.
-5. `ssh deploy@seu-vps 'docker ps --format "{{.Image}}"'` mostra a imagem com o SHA do último commit.
+5. `ssh meuvps 'docker ps --format "{{.Image}}"'` mostra a imagem com o SHA do último commit.
 6. Um `TAG_IMAGEM=<sha anterior> docker compose up -d` volta a versão anterior em segundos.
 
 **Resultado esperado:** você não digita mais nenhum comando de deploy. Digita código, abre PR, mescla — e o resto acontece.
@@ -709,7 +709,7 @@ Altere uma mensagem visível da API (por exemplo, o texto de erro 404), commite 
 
 **A4.** Este step está errado: `- run: cd unieventos-api` seguido de `- run: npm test`. Explique por que o segundo step não roda dentro da pasta e escreva a correção.
 
-**A5.** Você precisa guardar a URL pública da API (`https://api.seu-dominio.com.br`) e o token do Netlify. Qual dos dois vai em *secret* e qual em *variable*? Justifique com uma frase.
+**A5.** Você precisa guardar a URL pública da API (`https://api.seudominio.dev`) e o token do Netlify. Qual dos dois vai em *secret* e qual em *variable*? Justifique com uma frase.
 
 **A6.** O que o bloco `permissions: contents: read, packages: write` autoriza e o que ele impede? Por que declarar isso é melhor do que deixar o padrão?
 
@@ -830,7 +830,7 @@ Você tem CI, imagem publicada e deploy por SSH. Falta o que separa um pipeline 
 **Critérios de pronto**
 
 - Um push no `main` da API dispara, em ordem: testes → build da imagem com tag por commit → publicação no GHCR → deploy no VPS → verificação de saúde.
-- A verificação de saúde consulta `https://api.seu-dominio.com.br/health` **de fora** do servidor (não só `127.0.0.1`) por até 60 segundos.
+- A verificação de saúde consulta `https://api.seudominio.dev/health` **de fora** do servidor (não só `127.0.0.1`) por até 60 segundos.
 - Se a verificação falhar, o próprio workflow refaz o deploy da versão anterior e termina em vermelho, com a versão anterior no ar e funcionando.
 - Um push no `main` do front publica o site e invalida o cache, e o site publicado consome a API publicada (sem erro de CORS e sem conteúdo misto, Capítulo 04).
 - O `main` é protegido: PR obrigatório, CI verde obrigatória, sem `force push`.

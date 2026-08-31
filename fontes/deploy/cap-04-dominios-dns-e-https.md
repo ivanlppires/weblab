@@ -186,7 +186,7 @@ Repare no **ponto final** depois de `usuario.github.io.` — em arquivos de zona
 Um `CNAME` diz "para saber o IP deste nome, consulte aquele outro nome". Quando o GitHub troca os IPs do Pages, `usuario.github.io` passa a resolver para os novos endereços e o seu `CNAME` continua válido sem que você faça nada. É por isso que as plataformas pedem `CNAME` para subdomínios.
 
 > **⚠️ Atenção**
-> **`CNAME` não pode ficar no apex** (`seudominio.dev` sem nada na frente) nem coexistir com outros registros no mesmo nome — é uma regra do protocolo, porque o apex sempre tem `NS` e `SOA`. Para o apex, use registros `A`/`AAAA` com os IPs fixos que a plataforma publica, ou um provedor de DNS que ofereça `ALIAS`/"CNAME flattening" (Cloudflare, Netlify DNS e o DNS do Registro.br não; Cloudflare sim). Painéis que "aceitam" um `CNAME` no apex costumam quebrar o e-mail do domínio.
+> **`CNAME` não pode ficar no apex** (`seudominio.dev` sem nada na frente) nem coexistir com outros registros no mesmo nome — é uma regra do protocolo, porque o apex sempre tem `NS` e `SOA`. Para o apex, use registros `A`/`AAAA` com os IPs fixos que a plataforma publica, ou um provedor de DNS que ofereça `ALIAS`/"CNAME flattening" — o Cloudflare (que faz o *flattening*) e o Netlify DNS oferecem; o DNS do Registro.br, não. Painéis que "aceitam" um `CNAME` no apex costumam quebrar o e-mail do domínio.
 
 ## 4. Apontando o domínio para cada hospedagem
 
@@ -467,7 +467,7 @@ dig +short evento.seudominio.dev CNAME @1.1.1.1
 dig +short evento.seudominio.dev A @1.1.1.1
 ```
 
-Resultado esperado: a primeira linha devolve `usuario.github.io.`; a segunda, os quatro IPs `185.199.108.153` a `185.199.111.153`. Se voltar vazio, espere alguns minutos e repita — e confira o Passo 2. Não abra o navegador ainda (cache negativo, §1.3).
+Resultado esperado: a primeira consulta devolve `usuario.github.io.`; a segunda mostra a cadeia inteira — `usuario.github.io.` na primeira linha e, abaixo dele, os quatro IPs `185.199.108.153` a `185.199.111.153`. Se voltar vazio, espere alguns minutos e repita — e confira o Passo 2. Não abra o navegador ainda (cache negativo, §1.3).
 
 ### Passo 5 — informe o domínio ao GitHub
 

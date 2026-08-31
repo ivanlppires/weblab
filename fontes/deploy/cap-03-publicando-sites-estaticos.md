@@ -304,7 +304,7 @@ Três arquivos cobrem tudo o que importa hoje: um `.ico` de 32×32 para navegado
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semana Acadêmica de Computação — UNEMAT Sinop</title>
+  <title>Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop</title>
 
   <!-- Ícone clássico, para a aba e para navegadores antigos -->
   <link rel="icon" href="favicon.ico" sizes="32x32">
@@ -326,7 +326,7 @@ Repare que **nenhum caminho começa com barra**. É a regra da §3 aplicada aos 
 
 ```json
 {
-  "name": "Semana Acadêmica de Computação — UNEMAT Sinop",
+  "name": "Semana Acadêmica de Sistemas de Informação — UNEMAT Sinop",
   "short_name": "Semana Acadêmica",
   "start_url": "./",
   "display": "standalone",
@@ -347,7 +347,7 @@ Comece por um SVG quadrado simples — ícone bom é ícone que se reconhece a 1
 
 `img/favicon.svg`
 
-```svg
+```html
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Semana Academica">
   <rect width="64" height="64" rx="12" fill="#0b3d2e"/>
   <text x="32" y="43" font-family="system-ui, sans-serif" font-size="34"

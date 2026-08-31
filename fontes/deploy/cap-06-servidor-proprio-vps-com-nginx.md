@@ -217,12 +217,11 @@ O `ufw` é a interface amigável do firewall do Linux. A ordem dos comandos é v
 
 ```bash
 sudo ufw allow OpenSSH
-sudo ufw allow 'Nginx Full'
 sudo ufw enable
 sudo ufw status numbered
 ```
 
-Se você rodar `ufw enable` **antes** de liberar o OpenSSH, a sua sessão cai e você fica sem acesso — recuperável só pelo console de emergência do painel do provedor. `Nginx Full` é um perfil que abre as portas 80 e 443 de uma vez; ele só existe depois que o nginx é instalado (§7), então rode essa linha novamente lá.
+Se você rodar `ufw enable` **antes** de liberar o OpenSSH, a sua sessão cai e você fica sem acesso — recuperável só pelo console de emergência do painel do provedor. Falta abrir as portas 80 e 443, e para isso existe o perfil `Nginx Full`; ele só passa a existir **depois** que o nginx é instalado — rodá-lo agora responde `ERROR: Could not find a profile matching 'Nginx Full'`. Por isso o `sudo ufw allow 'Nginx Full'` fica na §7.1, junto da instalação do nginx.
 
 Para ver quem está batendo na porta:
 
@@ -389,10 +388,11 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Arquivos com hash no nome (gerados pelo Vite) podem ser cacheados para sempre.
+    # Arquivos com hash no nome (gerados pelo Vite) podem ser cacheados para sempre:
+    # se o conteúdo mudar, o nome do arquivo muda junto.
     location ~* \.(css|js|woff2|png|jpg|jpeg|svg|webp|ico)$ {
-        expires 30d;
-        add_header Cache-Control "public";
+        expires 1y;
+        add_header Cache-Control "public, immutable";
         access_log off;
     }
 
@@ -530,6 +530,9 @@ module.exports = {
       name: 'unieventos-api',
       script: 'src/server.js',
       cwd: '/home/deploy/apps/unieventos-api',
+      // Carrega o .env que está ao lado do código: é ele que traz
+      // DB_USER, DB_PASSWORD, DB_NAME e as demais chaves.
+      node_args: '--env-file=.env',
       instances: 1,
       exec_mode: 'fork',
       env: {
@@ -555,7 +558,7 @@ pm2 start ecosystem.config.cjs
 pm2 save
 ```
 
-Os segredos (senha do banco, chaves) **não** entram aqui: este arquivo vai para o Git. Eles ficam no `.env` do servidor, lido pelo `--env-file` ou pelo próprio código, com permissão `chmod 600`.
+Os segredos (senha do banco, chaves) **não** entram aqui: este arquivo vai para o Git. Eles ficam no `.env` do servidor, com permissão `chmod 600`, e quem os carrega é o `node_args: '--env-file=.env'` acima — sem essa linha o pm2 sobe o processo só com `NODE_ENV`, `HOST` e `PORT`, e a API morre na validação da configuração por falta de `DB_USER`/`DB_PASSWORD`/`DB_NAME`.
 
 ### 8.4 A alternativa nativa: `systemd`
 
@@ -909,7 +912,7 @@ npm run migrar
 
 `~/apps/unieventos-api/.env`
 
-```env
+```text
 NODE_ENV=production
 HOST=127.0.0.1
 PORT=3000
@@ -928,6 +931,8 @@ node --env-file=.env src/server.js
 ```
 
 Em outro terminal do servidor: `curl -s http://127.0.0.1:3000/api/saude` deve responder `{"status":"ok"}` (a mesma rota do Capítulo 05 §6.1, que também atende em `/health`). Encerre com <kbd>Ctrl</kbd>+<kbd>C</kbd>.
+
+Ainda no Passo 7, **crie o `ecosystem.config.cjs`** da §8.3 na raiz do projeto — na sua máquina, com `git add ecosystem.config.cjs`, commit e push, e depois `git pull` no servidor; ou direto no servidor com `nano ecosystem.config.cjs`, lembrando de levá-lo para o repositório em seguida. Ele não guarda segredo nenhum (é o `node_args: '--env-file=.env'` que lê o `.env` do servidor), então **deve** ficar versionado: é a descrição do processo, e sem ele o Passo 8 não tem o que iniciar.
 
 ### Passo 8 — pm2
 
@@ -1132,7 +1137,7 @@ Hoje o seu deploy é uma sequência de comandos digitados à mão que deixa o si
 
 <details><summary>Pistas</summary>
 
-1. `ln -sfn /var/www/unieventos-web/releases/2026-01 /var/www/unieventos-web/current` troca o alvo de um link de forma atômica; o `-n` evita criar um link dentro do diretório apontado.
+1. `ln -sfn /var/www/unieventos-web/releases/<data-hora> /var/www/unieventos-web/current` troca o alvo de um link de forma atômica; o `-n` evita criar um link dentro do diretório apontado.
 2. O nginx segue o link a cada requisição, então não precisa de `reload` para ver a versão nova — mas confira se `root` aponta para `current` e não para o caminho real.
 3. Para a verificação, um laço `for` com `curl -fsS URL/api/saude` e `sleep 2`; a opção `-f` faz o `curl` sair com erro em status HTTP de falha, o que combina com o `set -e`.
 4. `pm2 reload` (em vez de `restart`) e um `trap` no shell para executar o rollback quando o script sair com erro são as duas peças que fecham o desafio.

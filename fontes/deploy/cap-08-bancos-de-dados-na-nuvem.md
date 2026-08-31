@@ -4,8 +4,6 @@
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
 > **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
 
-No Capítulo 07 a `unieventos-api` e o MySQL viraram contêineres, e o volume `dados-mysql` guardou os dados no disco do VPS. Funciona — mas repare no que você comprou junto: se aquele VPS morrer, os dados morrem com ele; se o disco encher, o MySQL para; se você quiser rodar a API em dois lugares (um teste no Render e a produção no VPS), são dois bancos diferentes, cada um com uma verdade. Backup, atualização de versão, ajuste de memória e monitoramento também passaram a ser trabalho seu. Neste capítulo o banco sai do servidor: você vai levá-lo para um **serviço gerenciado** — Supabase, Neon ou um MySQL na nuvem — conectar a API por TLS, versionar o schema com migrations, popular com um seed e, principalmente, aprender a fazer e **testar** um backup.
-
 ## 🎯 Objetivos de aprendizagem
 
 Ao final deste capítulo você será capaz de:
@@ -26,7 +24,7 @@ Ao final deste capítulo você será capaz de:
 - [ ] Cliente de linha de comando do banco: `psql` (pacote `postgresql-client`) e/ou `mysql` + `mysqldump` (pacote `mysql-client`).
 - [ ] Um `.env` local funcionando, e a certeza de que ele **não** está no Git (Capítulo 02) nem na imagem (Capítulo 07).
 
-> No Capítulo 07 o banco era um contêiner ao lado da API, com os dados em um volume do VPS. Hoje ele passa a ser um serviço externo, acessível pela internet, com backup automático e uma URL só sua — e a API deixa de ter vizinho no servidor. No Capítulo 09 o GitHub Actions vai construir a imagem, rodar os testes e publicar tudo sozinho, e um banco gerenciado é o que torna esse deploy automático seguro: a máquina pode ser recriada do zero sem levar os dados junto.
+> No Capítulo 07 a `unieventos-api` e o MySQL viraram contêineres, e o volume `dados-mysql` guardou os dados no disco do VPS. Funciona — mas repare no que você comprou junto: se aquele VPS morrer, os dados morrem com ele; se o disco encher, o MySQL para; se você quiser rodar a API em dois lugares (um teste no Render e a produção no VPS), são dois bancos diferentes, cada um com uma verdade. Backup, atualização de versão, ajuste de memória e monitoramento também passaram a ser trabalho seu. Hoje o banco sai do servidor e vira um **serviço gerenciado** — Supabase, Neon ou um MySQL na nuvem —, acessível pela internet, com backup automático e uma URL só sua: você vai conectar a API por TLS, versionar o schema com migrations, popular com um seed e, principalmente, aprender a fazer e **testar** um backup. No Capítulo 09 o GitHub Actions vai construir a imagem, rodar os testes e publicar tudo sozinho, e um banco gerenciado é o que torna esse deploy automático seguro: a máquina pode ser recriada do zero sem levar os dados junto.
 
 ## 🗺️ Roteiro
 
@@ -221,7 +219,7 @@ const esquemaDeAmbiente = z.object({
 })
 ```
 
-```bash
+```text
 # .env.example — copie para .env e preencha; o .env NUNCA vai para o Git
 NODE_ENV=development
 PORT=3000
@@ -496,7 +494,7 @@ import { config } from '../src/config/index.js'
 
 const EVENTOS = [
   {
-    titulo: 'Semana Acadêmica de Computação',
+    titulo: 'Semana Acadêmica de Sistemas de Informação',
     categoria: 'palestra',
     local: 'Auditório da FACET',
     vagas: 120,
@@ -669,6 +667,8 @@ docker stop pg-teste
 
 Ao final destes passos a `unieventos-api` (na sua máquina e no VPS do Capítulo 07) vai falar com um Postgres gerenciado em São Paulo, com o schema aplicado por migrations, dados de exemplo e um backup restaurado com sucesso em um banco descartável.
 
+Está no **Nível 2**? Aplique o mesmo passo na `cafe-cerrado-api`: troque `unieventos` por `cafe_cerrado` nos nomes de banco e de tabela, e o seed de eventos pelo cardápio de produtos. A URL gerenciada, o TLS, as migrations e o teste de restauração são idênticos.
+
 ### Passo 1 — criar o projeto e guardar a URL
 
 No painel do Supabase, crie o projeto `unieventos` na região São Paulo. Em **Settings → Database**, copie a string do **pooler de sessão** (porta 5432) e baixe o certificado.
@@ -729,8 +729,11 @@ curl http://localhost:3000/api/eventos
 No VPS do Capítulo 07, o serviço `db` do `compose.prod.yaml` deixa de existir. Antes de removê-lo, leve os dados que já estavam lá:
 
 ```bash
-ssh deploy@seu-vps
+ssh meuvps
 cd /srv/unieventos-api
+# O compose lê o .env sozinho; o seu shell, não. Sem esta linha o -p fica
+# sem valor, o mysqldump abre um prompt e o arquivo sai vazio.
+set -a; . ./.env; set +a
 docker compose -f compose.prod.yaml exec -T db \
   mysqldump -u root -p"$DB_ROOT_PASSWORD" --single-transaction unieventos > dados-antigos.sql
 ```
@@ -740,7 +743,7 @@ Edite `compose.prod.yaml`: apague o serviço `db`, a seção `volumes:` e o `dep
 ```bash
 docker compose -f compose.prod.yaml up -d
 docker compose -f compose.prod.yaml logs --tail 30 api
-curl -s https://api.seu-dominio.com.br/api/eventos | head -c 200
+curl -s https://api.seudominio.dev/api/eventos | head -c 200
 ```
 
 A API agora é **sem estado**: pode ser destruída e recriada sem perder nada. É exatamente o que o Capítulo 09 precisa para fazer deploy automático.
@@ -756,7 +759,7 @@ Restaure em um Postgres descartável e compare as contagens (§8). Anote os dois
 
 ### Como conferir
 
-1. `curl https://api.seu-dominio.com.br/api/eventos` devolve os eventos, e o painel do Supabase mostra a conexão ativa em **Settings → Database**.
+1. `curl https://api.seudominio.dev/api/eventos` devolve os eventos, e o painel do Supabase mostra a conexão ativa em **Settings → Database**.
 2. `docker compose -f compose.prod.yaml ps` no VPS mostra **um** serviço só (`api`).
 3. `npm run migrar` rodado duas vezes seguidas não aplica nada na segunda.
 4. `npm run semear` rodado duas vezes não duplica eventos.

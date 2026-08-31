@@ -4,8 +4,6 @@
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
 > **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
 
-O capítulo anterior transformou "acho que está bom" em número: linter, testes, Lighthouse, Sentry. Este fecha a trilha com a ferramenta mais nova da caixa e, de longe, a mais mal usada — o assistente de inteligência artificial. Ele acelera muito quem já sabe o que está fazendo e atrapalha silenciosamente quem não sabe, porque escreve com a mesma confiança um trecho correto e um trecho inventado. A diferença entre os dois casos não está na ferramenta: está no que você faz **depois** que a resposta aparece na tela. É esse "depois" que você vai aprender aqui.
-
 ## 🎯 Objetivos de aprendizagem
 
 Ao final deste capítulo você será capaz de:
@@ -26,7 +24,7 @@ Ao final deste capítulo você será capaz de:
 - [ ] Uma conta em pelo menos um assistente de chat com plano gratuito, e o navegador com a documentação oficial da sua stack aberta em outra aba.
 - [ ] Git limpo (`git status` sem alterações pendentes) antes de começar o Passo a passo.
 
-> No Capítulo 10 você instrumentou o projeto: linter, testes, medição de performance e monitoramento de erros. Hoje você usa exatamente essas ferramentas como **rede de verificação** para tudo o que um assistente sugerir — porque a única maneira honesta de aceitar código de IA é ter como provar que ele funciona. Este é o último capítulo da trilha: ao fim dele, o ciclo completo (escrever, versionar, publicar, medir, revisar) fecha.
+> No Capítulo 10 você instrumentou o projeto e transformou "acho que está bom" em número: linter, testes, Lighthouse e monitoramento de erros. Hoje a trilha fecha com a ferramenta mais nova da caixa e, de longe, a mais mal usada — o assistente de inteligência artificial. Ele acelera muito quem já sabe o que está fazendo e atrapalha silenciosamente quem não sabe, porque escreve com a mesma confiança um trecho correto e um trecho inventado; a diferença entre os dois casos não está na ferramenta, e sim no que você faz **depois** que a resposta aparece na tela. É esse "depois" que você vai aprender aqui, usando exatamente aquelas ferramentas como **rede de verificação** para tudo o que o assistente sugerir — porque a única maneira honesta de aceitar código de IA é ter como provar que ele funciona. Ao fim deste capítulo, o ciclo completo (escrever, versionar, publicar, medir, revisar) fecha.
 
 ## 🗺️ Roteiro
 
@@ -133,7 +131,7 @@ Stack: Node 22 LTS, Express 5.1, mysql2 3 (mysql2/promise, createPool), ESM.
 Arquivo unieventos-api/src/rotas/inscricoes.js:
 
 import { Router } from 'express';
-import { pool } from '../banco.js';
+import { pool } from '../db/pool.js';
 
 export const rotasInscricoes = Router();
 
@@ -188,7 +186,7 @@ Aqui a IA rende porque a tarefa é procurar padrões ruins, e padrões ruins sã
 ```js
 // unieventos-api/src/rotas/inscricoes.js — versão antes da revisão
 import { Router } from 'express';
-import { pool } from '../banco.js';
+import { pool } from '../db/pool.js';
 
 export const rotasInscricoes = Router();
 
@@ -229,7 +227,7 @@ A versão corrigida, que você escreve **entendendo cada linha**:
 ```js
 // unieventos-api/src/rotas/inscricoes.js — versão revisada
 import { Router } from 'express';
-import { pool } from '../banco.js';
+import { pool } from '../db/pool.js';
 
 export const rotasInscricoes = Router();
 
@@ -270,13 +268,14 @@ Escrever o **primeiro** teste é chato; escrever o décimo é mecânico. A IA é
 2. **Quebrar de propósito.** Mude a regra no código (`length < 3` para `length < 0`) e confirme que o teste **falha**. Teste que passa com o código quebrado não testa nada — é o erro número um de suíte gerada por IA, porque o modelo tende a escrever asserções frouxas.
 3. **Acrescentar o caso que ele não pensou.** Ele cobre o caminho feliz e o campo faltando; raramente cobre o seu caso de negócio (evento lotado, inscrição duplicada, e-mail já cadastrado).
 
-Prompt que produz teste utilizável, no formato do Capítulo 10:
+Prompt que produz teste utilizável, no formato do runner embutido apresentado no Capítulo 10 §3.1 — a alternativa sem dependências, apropriada aqui porque o pedido é justamente não instalar nada:
 
 ```text
 Gere testes com node:test (Node 22, ESM) para a rota POST /api/inscricoes abaixo.
-Suba o Express de verdade com listen(0) e use fetch. Cubra: criação válida (201),
-nome ausente (400), nome com 2 caracteres (400) e evento inexistente (404).
-Feche o servidor e o pool no after. Não use nenhuma biblioteca externa.
+O app é exportado nomeado em src/app.js (export const app) e não chama listen:
+suba-o no teste com app.listen(0) e faça as requisições com fetch. Cubra: criação
+válida (201), nome ausente (400), nome com 2 caracteres (400) e evento inexistente
+(404). Feche o servidor e o pool no after. Não use nenhuma biblioteca externa.
 [cole a rota revisada]
 ```
 
@@ -286,14 +285,14 @@ E o resultado, depois de você conferir e completar:
 // unieventos-api/tests/inscricoes.test.js
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { criarApp } from '../src/app.js';
-import { pool } from '../src/banco.js';
+import { app } from '../src/app.js';
+import { pool } from '../src/db/pool.js';
 
 let servidor;
 let base;
 
 before(async () => {
-  servidor = criarApp().listen(0);
+  servidor = app.listen(0);
   await new Promise((pronto) => servidor.once('listening', pronto));
   base = `http://127.0.0.1:${servidor.address().port}`;
   await pool.query('DELETE FROM inscricoes');
@@ -467,7 +466,7 @@ Tudo que você cola em um assistente sai do seu computador. Dependendo do servi�
 Como redigir um trecho antes de colar, sem perder o contexto:
 
 ```js
-// unieventos-api/src/banco.js — versão segura para colar em um prompt
+// unieventos-api/src/db/pool.js — versão segura para colar em um prompt
 import mysql from 'mysql2/promise';
 
 export const pool = mysql.createPool({
@@ -551,6 +550,8 @@ Duas regras operacionais que fazem essa política funcionar na prática:
 ## 🚀 Passo a passo — Revisão assistida do projeto autoral, com tudo verificado
 
 Ao final destes passos o seu projeto autoral terá **três problemas reais corrigidos** (cada um com o commit que prova a correção), **uma suíte de testes** que falha quando o código quebra, um **`README.md`** que descreve o que existe de verdade e um **`IA.md`** registrando como a IA foi usada.
+
+Está no **Nível 2**? Aplique o mesmo passo na `cafe-cerrado-api`: o projeto autoral pode ser o Café Cerrado estendido, e todo o roteiro — contexto, revisão, teste, commit — vale sem alteração.
 
 ### Passo 1 — Preparar o terreno
 

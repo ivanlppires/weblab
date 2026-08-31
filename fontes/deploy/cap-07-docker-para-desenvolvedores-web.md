@@ -4,8 +4,6 @@
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
 > **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
 
-No Capítulo 06 você alugou um VPS, instalou Node, MySQL e nginx na mão, e deixou a API rodando com pm2. Funcionou — mas repare em quanta coisa ficou "instalada no servidor": versão do Node, versão do MySQL, pacotes do sistema, o usuário que roda o processo. Se amanhã você precisar de um segundo servidor, ou um colega precisar rodar o mesmo ambiente na máquina dele, tudo isso precisa ser refeito, na mesma ordem, sem esquecer nada. Este capítulo resolve exatamente esse problema: você vai empacotar a `unieventos-api` (e o MySQL, e o site Vue) em **contêineres**, que rodam idênticos no seu notebook, no do colega e no VPS.
-
 ## 🎯 Objetivos de aprendizagem
 
 Ao final deste capítulo você será capaz de:
@@ -21,11 +19,11 @@ Ao final deste capítulo você será capaz de:
 
 - [ ] `unieventos-api` na forma final da trilha do Nível 3: `src/app.js` + `src/server.js`, configuração validada em `src/config/index.js`, `npm run migrar` aplicando `migrations/*.sql` e `GET /health` respondendo `{ "status": "ok" }`.
 - [ ] `unieventos-web` (Vue 3 + Vite) gerando `dist/` com `npm run build`.
-- [ ] VPS do Capítulo 06 acessível por SSH, com nginx fazendo proxy reverso para `127.0.0.1:3000`.
+- [ ] VPS do Capítulo 06 acessível por SSH — o mesmo servidor, pelo mesmo alias `meuvps` (usuário `deploy`) do `~/.ssh/config` —, com nginx fazendo proxy reverso para `127.0.0.1:3000`.
 - [ ] Conta no GitHub (Capítulo 02) — o registro de imagens fica lá.
 - [ ] 4 GB de disco livres e permissão de administrador na sua máquina para instalar o Docker.
 
-> No Capítulo 06 a API subiu "na mão" no VPS: `apt install`, `npm ci`, `pm2 start`. Hoje o mesmo VPS passa a rodar a API e o MySQL como contêineres, a partir de uma imagem construída na sua máquina e publicada no GitHub. No Capítulo 08 o banco sai do VPS e vai para um serviço gerenciado; no Capítulo 09 o GitHub Actions passa a construir e publicar essa imagem sozinho a cada push.
+> No Capítulo 06 você alugou um VPS e subiu a API "na mão": `apt install`, `npm ci`, `pm2 start`. Funcionou — mas repare em quanta coisa ficou "instalada no servidor": versão do Node, versão do MySQL, pacotes do sistema, o usuário que roda o processo. Se amanhã você precisar de um segundo servidor, ou um colega precisar rodar o mesmo ambiente na máquina dele, tudo isso precisa ser refeito, na mesma ordem, sem esquecer nada. Hoje o **mesmo** VPS passa a rodar a API e o MySQL como **contêineres** — idênticos no seu notebook, no do colega e no servidor —, a partir de uma imagem construída na sua máquina e publicada no GitHub. No Capítulo 08 o banco sai do VPS e vai para um serviço gerenciado; no Capítulo 09 o GitHub Actions passa a construir e publicar essa imagem sozinho a cada push.
 
 ## 🗺️ Roteiro
 
@@ -345,7 +343,7 @@ server {
 
 ```bash
 cd unieventos-web
-docker build --build-arg VITE_API_URL=https://api.seu-dominio.com.br -t unieventos-web:dev .
+docker build --build-arg VITE_API_URL=https://api.seudominio.dev -t unieventos-web:dev .
 docker run -d --rm --name web-teste -p 8080:80 unieventos-web:dev
 docker images unieventos-web
 ```
@@ -408,7 +406,7 @@ volumes:
   dados-mysql:
 ```
 
-```env
+```text
 # unieventos-api/.env — nunca commitado; copie de .env.example
 NODE_ENV=production
 PORT=3000
@@ -564,10 +562,10 @@ docker push ghcr.io/seu-usuario/unieventos-api:1.0.0
 
 ### Passo 6 — preparar o VPS
 
-No VPS, instale o Docker (§3) e libere o usuário `deploy`:
+É **o mesmo VPS do Capítulo 06** — o alias `meuvps` do seu `~/.ssh/config`, que entra como usuário `deploy`. Não crie máquina nova: o nginx, o firewall e o certificado que você configurou lá continuam valendo, e o domínio `seudominio.dev` é o mesmo do Capítulo 04. Instale o Docker (§3) e libere o usuário `deploy`:
 
 ```bash
-ssh deploy@seu-vps
+ssh meuvps
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo usermod -aG docker $USER
@@ -637,7 +635,10 @@ volumes:
 Crie o `.env` de produção ao lado (com senhas **diferentes** das de desenvolvimento e `CORS_ORIGEM_PERMITIDA` apontando para o domínio do site), com permissão restrita:
 
 ```bash
-mkdir -p /srv/unieventos-api && cd /srv/unieventos-api
+# /srv pertence ao root: sem o sudo, o mkdir responde "Permission denied".
+sudo mkdir -p /srv/unieventos-api
+sudo chown deploy:deploy /srv/unieventos-api
+cd /srv/unieventos-api
 nano .env
 chmod 600 .env
 ```
@@ -657,7 +658,11 @@ docker compose -f compose.prod.yaml run --rm api npm run migrar
 Se você exportou dados no Passo 6, importe agora:
 
 ```bash
-docker compose -f compose.prod.yaml exec -T db mysql -u root -p"$DB_ROOT_PASSWORD" unieventos < unieventos-backup.sql
+# O compose lê o .env sozinho; o seu shell, não. Carregue-o antes,
+# senão o -p fica sem valor, vira prompt e a senha sai da primeira linha do .sql.
+set -a; . ./.env; set +a
+docker compose -f compose.prod.yaml exec -T db \
+  mysql -u root -p"$DB_ROOT_PASSWORD" unieventos < unieventos-backup.sql
 ```
 
 O nginx do Capítulo 06 continua fazendo proxy para `127.0.0.1:3000` — não precisa mudar nada nele.
@@ -665,11 +670,11 @@ O nginx do Capítulo 06 continua fazendo proxy para `127.0.0.1:3000` — não pr
 ### Como conferir
 
 1. No VPS: `docker compose -f compose.prod.yaml ps` mostra `api` e `db` com `healthy`.
-2. Da sua máquina: `curl https://api.seu-dominio.com.br/health` responde `{"status":"ok"}` e `curl https://api.seu-dominio.com.br/api/eventos` devolve a lista.
+2. Da sua máquina: `curl https://api.seudominio.dev/health` responde `{"status":"ok"}` e `curl https://api.seudominio.dev/api/eventos` devolve a lista.
 3. `docker compose -f compose.prod.yaml logs --tail 20 api` mostra as requisições que você acabou de fazer.
 4. Reinicie o VPS (`sudo reboot`), espere um minuto e repita o item 2 — `restart: unless-stopped` trouxe os dois contêineres de volta sem você fazer nada.
 
-**Resultado esperado:** a mesma imagem `ghcr.io/seu-usuario/unieventos-api:1.0.0` rodando no seu notebook e no VPS, com o `unieventos-web` publicado apontando para `https://api.seu-dominio.com.br` e funcionando de ponta a ponta.
+**Resultado esperado:** a mesma imagem `ghcr.io/seu-usuario/unieventos-api:1.0.0` rodando no seu notebook e no VPS, com o `unieventos-web` publicado apontando para `https://api.seudominio.dev` e funcionando de ponta a ponta.
 
 ## 🧪 Laboratório
 
@@ -834,7 +839,7 @@ No repositório da API do seu **projeto autoral**:
 - [ ] `docker compose down` seguido de `up -d` preserva os dados (volume nomeado).
 - [ ] Imagem publicada em `ghcr.io/seu-usuario/unieventos-api:1.0.0`, pacote público.
 - [ ] No VPS, `compose.prod.yaml` roda a imagem do GHCR com a API em `127.0.0.1:3000` e sem porta do MySQL publicada.
-- [ ] `https://api.seu-dominio.com.br/health` responde `{"status":"ok"}` depois de um `sudo reboot` do VPS, sem intervenção.
+- [ ] `https://api.seudominio.dev/health` responde `{"status":"ok"}` depois de um `sudo reboot` do VPS, sem intervenção.
 - [ ] `Dockerfile` multi-stage do `unieventos-web` gera uma imagem nginx de ~50 MB que serve o site com fallback para `index.html`.
 
 ## 📚 Para aprofundar

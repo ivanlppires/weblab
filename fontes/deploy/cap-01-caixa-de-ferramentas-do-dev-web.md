@@ -345,7 +345,7 @@ Na barra de baixo, o resumo: número de requisições, total transferido, tempo 
 
 ### 4.4 Device toolbar — o site no celular
 
-<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> liga o **modo de dispositivo**: a página é renderizada nas dimensões de um celular ou tablet, com toque simulado. Escolha um aparelho na lista ou digite largura e altura. É a ferramenta central da aula de telas responsivas do Nível 1 — mas lembre que é uma simulação: fontes, desempenho e o teclado virtual só se vêem em um celular de verdade.
+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> liga o **modo de dispositivo**: a página é renderizada nas dimensões de um celular ou tablet, com toque simulado. Escolha um aparelho na lista ou digite largura e altura. É a ferramenta central da aula de telas responsivas do Nível 1 — mas lembre que é uma simulação: fontes, desempenho e o teclado virtual só se veem em um celular de verdade.
 
 ### 4.5 Lighthouse — a nota do seu site
 
@@ -806,7 +806,7 @@ Você instalou **um** pacote — `prettier` — e a pasta `node_modules` aparece
 ### ⭐⭐ Dotfiles: seu VS Code em um comando
 Tags: terminal, projeto
 
-Formatou o computador? Vai usar a máquina do laboratório? Profissionais guardam suas configurações em um repositório de **dotfiles** e reinstalam tudo com um script. Monte o seu: uma pasta `dotfiles` com um `instalar.sh` que, em uma máquina limpa, deixa o VS Code exatamente como o seu — extensões, `settings.json`, `.prettierrc` e `.editorconfig` padrão.
+Formatou o computador? Vai usar a máquina do laboratório? Profissionais guardam suas configurações em um repositório de **dotfiles** e reinstalam tudo com um script. Monte o seu: uma pasta `bancada` com um `instalar.sh` que, em uma máquina limpa, deixa o VS Code exatamente como o seu — extensões, `settings.json`, `.prettierrc` e `.editorconfig` padrão.
 
 **Critérios de pronto**
 
@@ -814,7 +814,7 @@ Formatou o computador? Vai usar a máquina do laboratório? Profissionais guarda
 - `bash instalar.sh` instala todas as extensões da lista e copia o `settings.json` para o lugar certo **no sistema em que está rodando** (Linux, macOS ou Windows/Git Bash), sem perguntar nada.
 - Rodar o script duas vezes seguidas não dá erro nem duplica nada.
 - Testado na máquina de um colega (ou em um usuário novo do seu sistema), com o resultado de `code --list-extensions` colado no `README.md` da pasta.
-- No Capítulo 02 você vai publicar essa pasta como seu primeiro repositório no GitHub.
+- No Capítulo 02 você vai publicar essa pasta como o repositório `bancada` — é exatamente o material que o Boss daquele capítulo pede.
 
 <details><summary>Pistas</summary>
 
@@ -859,7 +859,7 @@ Por que um site de notícias demora oito segundos no 4G e o WebLab demora um? Ho
 | A página não recarrega ao salvar | Arquivo não salvo (bolinha na aba), ou a página foi aberta por dois cliques (`file://`) em vez do Go Live | Salve com <kbd>Ctrl</kbd>+<kbd>S</kbd>; confira que a URL começa com `http://127.0.0.1:5500` |
 | `Get-ChildItem : A parameter cannot be found that matches parameter name 'la'` | `ls -la` no PowerShell, que só imita o `ls` do Linux | Use o Git Bash (ou `Get-ChildItem -Force` no PowerShell) |
 | Prettier não formata ao salvar | `editor.defaultFormatter` não definido, ou outra extensão formata aquela linguagem | Paleta → **Format Document With…** → **Configure Default Formatter** → Prettier |
-| `warning: LF will be replaced by CRLF` em todo `git add` (Windows) | Fim de linha do Windows (CRLF) em conflito com o do projeto (LF) | `files.eol: "\n"` no VS Code e `git config --global core.autocrlf true`; a Capítulo 02 explica |
+| `warning: LF will be replaced by CRLF` em todo `git add` (Windows) | Fim de linha do Windows (CRLF) em conflito com o do projeto (LF) | `files.eol: "\n"` no VS Code e `git config --global core.autocrlf true`; o Capítulo 02 explica |
 
 ## 🏠 Atividade assíncrona (1 h)
 

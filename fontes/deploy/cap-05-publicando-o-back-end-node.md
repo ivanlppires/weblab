@@ -251,7 +251,7 @@ Por que tratar `SIGTERM`? Porque é assim que toda plataforma pede que o process
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch --env-file=.env src/server.js",
-    "teste": "node --test"
+    "test": "node --test"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -304,7 +304,7 @@ Na sua máquina, um arquivo `.env` na raiz do projeto guarda os valores. Ele **n
 
 `.gitignore`
 
-```gitignore
+```text
 node_modules/
 .env
 .env.local
@@ -323,7 +323,7 @@ E, para documentar quais variáveis existem sem vazar valor nenhum, versiona-se 
 
 `.env.example`
 
-```env
+```text
 # Copie este arquivo para .env e preencha. O .env NUNCA vai para o Git.
 
 # Porta local. Em produção a plataforma define esta variável sozinha.
@@ -526,7 +526,7 @@ app.use(
 
 E, no painel do Render:
 
-```env
+```text
 CORS_ORIGENS=https://cafe-cerrado.netlify.app,https://cafe.seudominio.dev
 ```
 
@@ -607,7 +607,7 @@ Instance Type:     Free
 
 Ainda na tela de criação, em **Environment Variables**:
 
-```env
+```text
 NODE_ENV=production
 NODE_VERSION=22
 CORS_ORIGENS=https://cafe-cerrado.netlify.app

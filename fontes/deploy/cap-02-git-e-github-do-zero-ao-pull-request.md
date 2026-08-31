@@ -105,7 +105,7 @@ git config --global user.email "ana.souza@unemat.br"
 
 Use o **mesmo e-mail** da sua conta do GitHub; é assim que o site liga os commits ao seu perfil e conta as contribuições.
 
-Mais quatro ajustes que evitam problemas conhecidos (no **Windows**, a última linha vira `core.autocrlf true`):
+Mais quatro ajustes que evitam problemas conhecidos (no **Windows**, a chave `core.autocrlf` recebe `true` em vez de `input`):
 
 ```bash
 git config --global init.defaultBranch main       # nome da branch inicial
@@ -540,7 +540,7 @@ Três estratégias, e quando usar cada uma:
 | `--squash` | Junta todos os commits da branch em **um só** na `main` | O padrão do WebLab: `main` fica com um commit por funcionalidade |
 | `--rebase` | Reaplica os commits da branch por cima da `main`, sem commit de mesclagem | Histórico linear, em times que exigem isso |
 
-Depois do merge, atualize sua máquina com `git switch main`, `git pull` e `git branch -d menu-responsivo` (a branch local; a remota o `--delete-branch` já apagou).
+Depois do merge, atualize sua máquina com `git switch main` e `git pull`. O `--delete-branch` do `gh` apaga as **duas** cópias da branch — a do GitHub e a da sua máquina —, então não sobra nada para um `git branch -d` apagar depois. Se você mesclar pelo site, sem o `--delete-branch`, aí sim: `git push origin --delete menu-responsivo` remove a remota e `git branch -d menu-responsivo` remove a local.
 
 ### 9.5 Proteção de branch
 
@@ -771,7 +771,6 @@ Se você estiver em dupla, quem **não** abriu o PR roda `gh pr checkout <numero
 gh pr merge --squash --delete-branch
 git switch main
 git pull
-git branch -d menu-responsivo
 git log --oneline --graph --decorate --all
 git tag -a v1.0.0 -m "Site do evento com as cinco páginas e menu responsivo"
 git push origin v1.0.0

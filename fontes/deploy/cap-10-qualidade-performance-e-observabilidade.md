@@ -4,14 +4,12 @@
 > WebLab · UNEMAT Sinop · Prof. Ivan Luiz Pedroso Pires
 > **Carga:** capítulo de estudo autônomo · use em paralelo à sua trilha
 
-No capítulo anterior o GitHub Actions passou a testar e publicar o projeto sozinho a cada push. Ficou uma pergunta em aberto, e ela é grande: **testar o quê?** Um pipeline que roda `npm test` sem nenhum teste escrito é um carimbo verde que não significa nada. Este capítulo preenche esse vazio com quatro instrumentos — linter, testes, Lighthouse e observabilidade — e transforma "o código está bom", "o site parece rápido" e "acho que está no ar" em números que você consegue mostrar para outra pessoa.
-
 ## 🎯 Objetivos de aprendizagem
 
 Ao final deste capítulo você será capaz de:
 
 - Configurar o ESLint 9 em *flat config* (`eslint.config.js`) para uma API Node e para um projeto Vue, e combiná-lo com o Prettier sem que um desfaça o trabalho do outro.
-- Escrever e executar testes automatizados da API com o `node:test` embutido no Node 22, incluindo um teste de integração que sobe o Express de verdade, e medir a cobertura.
+- Escrever e executar testes automatizados da API com **Vitest e supertest** — a mesma pilha da Aula 13 do Nível 3 —, incluindo um teste de integração que sobe o Express de verdade, e medir a cobertura.
 - Escrever testes de componente e de store com o Vitest e o Vue Test Utils.
 - Explicar as três métricas do Core Web Vitals (LCP, INP e CLS) e medir uma página publicada com o Lighthouse no DevTools, na linha de comando e no CI.
 - Aplicar melhorias concretas de performance — imagens, fontes, divisão de código, cache e compressão no nginx — e comprovar o ganho com uma medição antes e depois.
@@ -23,17 +21,17 @@ Ao final deste capítulo você será capaz de:
 - [ ] `unieventos-api` (Express 5) e `unieventos-web` (Vue 3 + Vite) rodando localmente, com `GET /health` respondendo `{ "status": "ok" }`.
 - [ ] Os dois projetos publicados: o site em um endereço HTTPS e a API no Render ou no VPS com nginx (Capítulos 03, 05 e 06).
 - [ ] Workflows do GitHub Actions funcionando no repositório (Capítulo 09).
-- [ ] Node 22 LTS na máquina (`node -v`) — tudo aqui usa o executor de testes embutido.
+- [ ] Node 22 LTS na máquina (`node -v`) e a API já com `vitest` e `supertest` instalados (Aula 13 do Nível 3); se ainda não estiverem, a §3.1 mostra o `npm install`.
 - [ ] Uma conta de e-mail para criar contas gratuitas no Sentry e em um serviço de uptime.
 
-> No Capítulo 09 o GitHub Actions passou a testar e publicar a cada push, e o `npm test` do repositório ainda era quase decorativo. Hoje você preenche o pipeline com conteúdo: linter configurado, testes de verdade, medição de performance com número antes e depois, e um painel que avisa quando a produção quebra. Este é o último capítulo técnico da trilha; o próximo trata de usar assistentes de IA sem terceirizar o seu aprendizado.
+> No Capítulo 09 o GitHub Actions passou a testar e publicar o projeto sozinho a cada push, e ficou uma pergunta em aberto — grande: **testar o quê?** Um pipeline que roda `npm test` sem nenhum teste escrito é um carimbo verde que não significa nada. Hoje você preenche esse vazio com quatro instrumentos — linter, testes, Lighthouse e observabilidade — e transforma "o código está bom", "o site parece rápido" e "acho que está no ar" em números que você consegue mostrar para outra pessoa: medição de performance com valor antes e depois, e um painel que avisa quando a produção quebra. Este é o último capítulo técnico da trilha; o próximo trata de usar assistentes de IA sem terceirizar o seu aprendizado.
 
 ## 🗺️ Roteiro
 
 | Bloco | Tempo | Atividade |
 |---|---|---|
 | 1 | 50 min | Por que medir; ESLint 9 flat config e Prettier nos dois projetos; scripts npm de qualidade |
-| 2 | 50 min | Testes com `node:test` e Vitest; Core Web Vitals; Lighthouse no DevTools, na CLI e no CI |
+| 2 | 50 min | Testes de API e de componente com Vitest; Core Web Vitals; Lighthouse no DevTools, na CLI e no CI |
 | 3 | 50 min | Melhorias de performance com medição antes/depois; Sentry, pino, uptime, `robots.txt` e `sitemap.xml` |
 
 ## 1. Qualidade não é opinião
@@ -43,7 +41,7 @@ Ao final deste capítulo você será capaz de:
 | Instrumento | Pergunta que responde | Quando roda |
 |---|---|---|
 | Linter (ESLint) | O código tem erro ou mau hábito **sem precisar executá-lo**? | Ao digitar, ao salvar, no CI |
-| Testes (`node:test`, Vitest) | O código faz o que eu disse que faz? | Antes de cada commit e no CI |
+| Testes (Vitest, supertest) | O código faz o que eu disse que faz? | Antes de cada commit e no CI |
 | Lighthouse / Core Web Vitals | A página é rápida e utilizável para quem acessa? | Em cada publicação |
 | Observabilidade (Sentry, pino, uptime) | O que está acontecendo **agora**, na produção? | O tempo todo, sem você pedir |
 
@@ -52,7 +50,7 @@ Repare no que cada um **não** faz. O linter não sabe se a sua conta está erra
 Um detalhe que separa quem programa há um mês de quem programa há um ano: **os quatro são baratos de instalar e caros de instalar tarde**. Configurar ESLint em um projeto de 40 arquivos leva dez minutos e gera três avisos; em um de 400 arquivos, gera oitocentos avisos e vira um dia de trabalho que ninguém quer fazer.
 
 > **🧠 Você sabia?**
-> O executor de testes do Node — o módulo `node:test` — só se tornou estável na linha 20. Antes disso, todo projeto Node precisava de uma biblioteca externa (Mocha, Jest, AVA, Tape) e arrastava dezenas de dependências só para escrever um `assert`. Hoje `node --test` roda um arquivo de teste sem nenhum `npm install`. Você ainda vai achar tutoriais recentes mandando instalar Jest para testar cinco funções; para uma API do nosso tamanho, isso deixou de ser necessário.
+> O Node passou a ter **executor de testes embutido**: o módulo `node:test`, estável desde a linha 20. Antes disso, todo projeto Node precisava de uma biblioteca externa (Mocha, Jest, AVA, Tape) e arrastava dezenas de dependências só para escrever um `assert`. Hoje `node --test` roda um arquivo de teste sem nenhum `npm install`. A trilha continua usando o Vitest na API — porque é ele que o Nível 3 instalou e é o mesmo executor do front —, mas saber que o runner nativo existe muda a resposta para "vale a pena testar este script de 40 linhas?".
 
 ## 2. ESLint 9 e Prettier
 
@@ -162,8 +160,9 @@ Com tudo no lugar, o `package.json` da API ganha os scripts de qualidade:
     "lint:corrigir": "eslint . --fix",
     "formatar": "prettier --write .",
     "formatar:conferir": "prettier --check .",
-    "test": "node --test",
-    "test:cobertura": "node --test --experimental-test-coverage",
+    "test": "vitest run",
+    "test:observar": "vitest",
+    "test:cobertura": "vitest run --coverage",
     "qualidade": "npm run lint && npm run formatar:conferir && npm test"
   }
 }
@@ -177,9 +176,19 @@ Com tudo no lugar, o `package.json` da API ganha os scripts de qualidade:
 > **⚠️ Atenção**
 > A extensão ESLint do VS Code usa o `eslint.config.js` da **pasta aberta no editor**. Se você abrir uma pasta que contém `unieventos-web` e `unieventos-api` lado a lado, ela procura um único arquivo na raiz e não acha nenhum dos dois. Abra um projeto por janela.
 
-## 3. Testes da API com `node:test`
+## 3. Testes da API com Vitest e supertest
 
 ### 3.1 O que testar quando o tempo é curto
+
+A pilha de testes da API é a mesma desde a Aula 13 do Nível 3 — **Vitest** como executor e **supertest** para bater nas rotas —, e é a mesma do front (§4): um executor só para o projeto inteiro, uma configuração só, um `npm test` só. Se a sua API ainda não tem os dois:
+
+```bash
+cd ~/weblab/unieventos-api
+npm install --save-dev vitest supertest @vitest/coverage-v8
+```
+
+> **💡 Dica**
+> Para projetos sem dependência nenhuma — um script de manutenção, um utilitário de linha de comando —, o Node 22 traz um runner embutido: `import { describe, it } from 'node:test'`, `import assert from 'node:assert/strict'` e `node --test` para executar, sem `npm install`. A API da trilha fica no Vitest (é o que o Nível 3 instalou e o que o front usa), mas o `node:test` é a alternativa certa quando adicionar uma devDependency não compensa.
 
 Você não vai testar tudo, e não precisa. A ordem que rende mais por hora investida: primeiro as **funções puras com regra de negócio** (paginação, cálculo de vagas, validação, normalização de texto) — baratas de testar e onde moram os bugs sutis; depois as **rotas da API pelo contrato** (o `GET` devolve 200 e um array? o `POST` sem título devolve 400 com mensagem?), que pegam quase todo erro de integração; e sempre a regra de ouro: **todo bug corrigido vira um teste** — antes de arrumar, escreva o teste que falha por causa dele.
 
@@ -200,13 +209,12 @@ export function paginar(lista, pagina = 1, porPagina = 10) {
 }
 ```
 
-O teste vive em `tests/`, com a terminação `.test.js` — um dos padrões que o `node --test` encontra sozinho:
+O teste vive em `tests/`, com a terminação `.test.js` — um dos padrões que o Vitest encontra sozinho:
 
 `unieventos-api/tests/paginacao.test.js`
 
 ```js
-import { describe, it } from 'node:test'
-import assert from 'node:assert/strict'
+import { describe, it, expect } from 'vitest'
 import { paginar } from '../src/util/paginacao.js'
 
 const trinta = Array.from({ length: 30 }, (_, i) => ({ id: i + 1 }))
@@ -214,94 +222,80 @@ const trinta = Array.from({ length: 30 }, (_, i) => ({ id: i + 1 }))
 describe('paginar', () => {
   it('devolve os 10 primeiros itens na página 1', () => {
     const r = paginar(trinta, 1, 10)
-    assert.equal(r.itens.length, 10)
-    assert.equal(r.itens[0].id, 1)
-    assert.equal(r.paginas, 3)
-    assert.equal(r.total, 30)
+    expect(r.itens).toHaveLength(10)
+    expect(r.itens[0].id).toBe(1)
+    expect(r.paginas).toBe(3)
+    expect(r.total).toBe(30)
   })
 
   it('trata lista vazia sem quebrar', () => {
     const r = paginar([], 5, 10)
-    assert.deepEqual(r.itens, [])
-    assert.equal(r.pagina, 1)
-    assert.equal(r.paginas, 1)
+    expect(r.itens).toEqual([])
+    expect(r.pagina).toBe(1)
+    expect(r.paginas).toBe(1)
   })
 
   it('grampeia páginas fora do intervalo e entradas inválidas', () => {
-    assert.equal(paginar(trinta, 99, 10).pagina, 3)
-    assert.equal(paginar(trinta, 'abacaxi', 10).pagina, 1)
+    expect(paginar(trinta, 99, 10).pagina).toBe(3)
+    expect(paginar(trinta, 'abacaxi', 10).pagina).toBe(1)
   })
 })
 ```
 
-`node:assert/strict` é a versão em que `equal` compara com `===` e `deepEqual` compara estruturas sem coerção. Use sempre a variante estrita: na frouxa, `assert.equal('1', 1)` passa — e um teste que passa por engano é pior do que nenhum teste.
+`toBe` compara com `Object.is` (na prática, `===`) e `toEqual` compara estruturas campo a campo. Prefira sempre a comparação estrita: em um `expect('1').toEqual(1)` o teste falha, e é isso que você quer — um teste que passa por engano é pior do que nenhum teste.
 
 ### 3.3 Teste de integração da rota
 
-Este vale por dez: sobe o Express de verdade em uma porta livre, faz uma requisição HTTP real com o `fetch` global do Node e derruba tudo no fim. Ele exige que `src/app.js` **exporte o app** sem chamar `listen` — a separação que a `unieventos-api` já tem desde o Nível 3, e que existe justamente para isto.
+Este vale por dez: o supertest sobe o Express de verdade em uma porta livre, faz uma requisição HTTP real e derruba tudo no fim, sem você administrar servidor nem porta. Ele exige que `src/app.js` **exporte o app** sem chamar `listen` — a separação que a `unieventos-api` já tem desde o Nível 3 (`export const app`), e que existe justamente para isto; quem chama `listen` é o `src/server.js`.
 
 `unieventos-api/tests/eventos.test.js`
 
 ```js
-import { after, before, describe, it } from 'node:test'
-import assert from 'node:assert/strict'
-import app from '../src/app.js'
-
-let servidor
-let base
-
-before(async () => {
-  // Porta 0 = "sistema, escolha uma porta livre". Testes nunca devem brigar por porta fixa.
-  servidor = app.listen(0)
-  await new Promise((resolve) => servidor.once('listening', resolve))
-  base = `http://127.0.0.1:${servidor.address().port}`
-})
-
-after(async () => {
-  await new Promise((resolve) => servidor.close(resolve))
-})
+import { describe, it, expect } from 'vitest'
+import request from 'supertest'
+import { app } from '../src/app.js'
 
 describe('GET /api/eventos', () => {
   it('responde 200, JSON e uma lista', async () => {
-    const resposta = await fetch(`${base}/api/eventos`)
-    assert.equal(resposta.status, 200)
-    assert.equal(resposta.headers.get('content-type')?.includes('application/json'), true)
-    assert.equal(Array.isArray((await resposta.json()).itens), true)
+    const resposta = await request(app).get('/api/eventos')
+
+    expect(resposta.status).toBe(200)
+    expect(resposta.headers['content-type']).toMatch(/application\/json/)
+    expect(Array.isArray(resposta.body.itens)).toBe(true)
   })
 })
 
 describe('POST /api/eventos', () => {
   it('recusa evento sem título com 400 e mensagem', async () => {
-    const resposta = await fetch(`${base}/api/eventos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ local: 'Anfiteatro' }),
-    })
-    assert.equal(resposta.status, 400)
-    assert.match((await resposta.json()).erro, /t[íi]tulo/i)
+    const resposta = await request(app)
+      .post('/api/eventos')
+      .send({ local: 'Anfiteatro' })
+
+    expect(resposta.status).toBe(400)
+    expect(resposta.body.erro).toMatch(/t[íi]tulo/i)
   })
 })
 ```
 
-Quatro asserções cobrem o contrato inteiro de uma rota: código de status, tipo de conteúdo, formato do corpo e comportamento com entrada errada.
+O `request(app)` abre um servidor em uma porta efêmera, dispara a requisição e fecha tudo sozinho — testes nunca devem brigar por porta fixa. Quatro asserções cobrem o contrato inteiro de uma rota: código de status, tipo de conteúdo, formato do corpo e comportamento com entrada errada.
 
 ### 3.4 Executando e medindo cobertura
 
 ```bash
-node --test                                 # roda tudo que parece teste
-node --test --watch                         # reexecuta ao salvar
-node --test --test-name-pattern="paginar"   # só os testes cujo nome bate
-node --test --experimental-test-coverage    # com relatório de cobertura
+npx vitest run                     # roda tudo que parece teste e sai
+npx vitest                         # modo interativo: reexecuta ao salvar
+npx vitest run -t "paginar"        # só os testes cujo nome bate
+npx vitest run --coverage          # com relatório de cobertura
 ```
 
-A cobertura sai em tabela no fim, com a porcentagem de linhas, ramos e funções por arquivo e as linhas não cobertas. Use-a como **mapa**, não como meta: 100 % com asserções fracas não prova nada, e 60 % nas rotas certas já protege o essencial.
+`vitest run` executa uma vez e sai — é a forma que o CI precisa, porque o modo interativo nunca terminaria. A cobertura sai em tabela no fim, com a porcentagem de linhas, ramos e funções por arquivo e as linhas não cobertas. Use-a como **mapa**, não como meta: 100 % com asserções fracas não prova nada, e 60 % nas rotas certas já protege o essencial.
 
 > **🔬 Investigue**
 > Rode `npm run test:cobertura` na sua API e olhe a coluna de linhas não cobertas do arquivo de rotas. Escolha **uma** linha não coberta que trate erro (um `if` de validação, um `catch`) e escreva o teste que a executa. Rode de novo e veja a porcentagem subir. Cronometre: quase sempre são menos de cinco minutos por teste — e essa é a resposta para "não tenho tempo de testar".
 
 ## 4. Testes de componente com Vitest
 
-O `node:test` não sabe montar componentes Vue nem entender `<template>`. No front a ferramenta é o **Vitest**, que reaproveita a configuração do Vite (aliases, plugins, variáveis de ambiente).
+No front o executor é o mesmo — **Vitest** —, mas a configuração muda: ele reaproveita a do Vite (aliases, plugins, variáveis de ambiente) e precisa de um DOM de mentira para montar componentes Vue.
 
 ```bash
 cd ~/weblab/unieventos-web
@@ -408,7 +402,7 @@ Há duas fontes de dado, bem diferentes. **Laboratório:** o Lighthouse roda a p
 **Na linha de comando**, que é o que permite guardar um relatório e comparar depois:
 
 ```bash
-npx lighthouse@latest https://unieventos.seu-dominio.com.br \
+npx lighthouse@latest https://eventos.seudominio.dev \
   --only-categories=performance,accessibility,best-practices,seo \
   --output=html --output=json --output-path=./relatorios/antes \
   --chrome-flags="--headless" --quiet
@@ -569,7 +563,7 @@ gzip_types text/plain text/css text/xml application/javascript application/json 
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
-curl -sI -H 'Accept-Encoding: gzip, br' https://unieventos.seu-dominio.com.br/assets/index.js | grep -i -E 'content-encoding|cache-control'
+curl -sI -H 'Accept-Encoding: gzip, br' https://eventos.seudominio.dev/assets/index.js | grep -i -E 'content-encoding|cache-control'
 ```
 
 > **🔬 Investigue**
@@ -618,7 +612,9 @@ Sentry.setupExpressErrorHandler(app)
 
 app.use((erro, req, res, _next) => {
   const status = erro.status ?? 500
-  req.log.error({ err: erro }, 'erro não tratado')
+  // Por enquanto, console.error; na §7.2 o pino-http cria req.log e esta
+  // linha vira req.log.error({ err: erro }, 'erro não tratado').
+  console.error('erro não tratado', erro)
   res.status(status).json({ erro: status === 500 ? 'Erro interno' : erro.message })
 })
 ```
@@ -674,7 +670,7 @@ export const log = pino({
 })
 ```
 
-No `src/app.js`, `app.use(pinoHttp({ logger: log }))` antes de tudo gera uma linha por requisição, com método, rota, status e duração. Dentro de qualquer rota, `req.log` é um logger já preenchido com o identificador daquela requisição: `req.log.info({ inscricaoId: inscricao.id }, 'inscrição criada')` produz uma linha JSON com `level`, `time`, `servico`, `reqId`, `inscricaoId` e `msg`. Os níveis são numéricos: `trace` 10, `debug` 20, `info` 30, `warn` 40, `error` 50, `fatal` 60. Definir `LOG_LEVEL=warn` faz o pino descartar tudo abaixo de 40 **sem nem formatar a mensagem** — por isso ele é rápido o bastante para ficar ligado em produção.
+Com o middleware registrado, o `console.error` do tratador de erro da §7.1 vira `req.log.error({ err: erro }, 'erro não tratado')` — a mesma linha, agora amarrada ao identificador da requisição. No `src/app.js`, `app.use(pinoHttp({ logger: log }))` antes de tudo gera uma linha por requisição, com método, rota, status e duração. Dentro de qualquer rota, `req.log` é um logger já preenchido com o identificador daquela requisição: `req.log.info({ inscricaoId: inscricao.id }, 'inscrição criada')` produz uma linha JSON com `level`, `time`, `servico`, `reqId`, `inscricaoId` e `msg`. Os níveis são numéricos: `trace` 10, `debug` 20, `info` 30, `warn` 40, `error` 50, `fatal` 60. Definir `LOG_LEVEL=warn` faz o pino descartar tudo abaixo de 40 **sem nem formatar a mensagem** — por isso ele é rápido o bastante para ficar ligado em produção.
 
 ```bash
 node src/server.js | npx pino-pretty                              # legível no desenvolvimento
@@ -712,7 +708,7 @@ pm2 set pm2-logrotate:compress true
 
 ## 8. Uptime, `robots.txt` e `sitemap.xml`
 
-Um monitor de disponibilidade chama uma URL em intervalos fixos e avisa quando a resposta muda. Configuração mínima: **alvo** `https://api.seu-dominio.com.br/health` (não a home do site — uma home estática continua respondendo 200 com a API caída); **intervalo** de 5 minutos, que é o do plano gratuito do UptimeRobot; **condição de alerta** status diferente de 200 **ou** corpo sem a palavra `ok`, o que pega o caso em que o processo responde mas o banco caiu; e pelo menos um canal que apite no celular. O UptimeRobot dá 50 monitores no plano gratuito; o Better Stack dá menos monitores, intervalo menor e uma página de status pública — detalhe profissional barato, que deixa qualquer pessoa descobrir se o problema é o sistema ou a internet dela.
+Um monitor de disponibilidade chama uma URL em intervalos fixos e avisa quando a resposta muda. Configuração mínima: **alvo** `https://api.seudominio.dev/health` (não a home do site — uma home estática continua respondendo 200 com a API caída); **intervalo** de 5 minutos, que é o do plano gratuito do UptimeRobot; **condição de alerta** status diferente de 200 **ou** corpo sem a palavra `ok`, o que pega o caso em que o processo responde mas o banco caiu; e pelo menos um canal que apite no celular. O UptimeRobot dá 50 monitores no plano gratuito; o Better Stack dá menos monitores, intervalo menor e uma página de status pública — detalhe profissional barato, que deixa qualquer pessoa descobrir se o problema é o sistema ou a internet dela.
 
 Vale melhorar o `/health` para que ele signifique alguma coisa:
 
@@ -720,7 +716,7 @@ Vale melhorar o `/health` para que ele signifique alguma coisa:
 
 ```js
 import { Router } from 'express'
-import { pool } from '../db.js'
+import { pool } from '../db/pool.js'
 
 const rotas = Router()
 
@@ -747,7 +743,7 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://unieventos.seu-dominio.com.br/sitemap.xml
+Sitemap: https://eventos.seudominio.dev/sitemap.xml
 ```
 
 Em um ambiente de teste ou homologação o arquivo é outro (`User-agent: *` seguido de `Disallow: /`) — esquecer disso é como um endereço de rascunho aparece no Google. O sitemap lista as URLs que você quer indexadas; em um site pequeno pode ser escrito à mão:
@@ -758,7 +754,7 @@ Em um ambiente de teste ou homologação o arquivo é outro (`User-agent: *` seg
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://unieventos.seu-dominio.com.br/</loc>
+    <loc>https://eventos.seudominio.dev/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -774,12 +770,14 @@ Se o seu site tem páginas geradas a partir do banco (uma por evento), escreva u
 
 Ao fim destes passos você tem: linter e formatador nos dois projetos, testes rodando local e no CI, um relatório Lighthouse **antes** e outro **depois** com a diferença explicada, erros de produção chegando ao seu e-mail e um monitor apitando se a API cair.
 
+Está no **Nível 2**? Aplique o mesmo passo na `cafe-cerrado-api` e no front do Café Cerrado: o linter, os testes com Vitest e supertest, o Lighthouse e o Sentry não dependem do domínio do projeto — só das rotas que você tem.
+
 ### Passo 1 — Linha de base (faça antes de mexer em qualquer coisa)
 
 ```bash
 cd ~/weblab/unieventos-web
 mkdir -p relatorios
-npx lighthouse@latest https://unieventos.seu-dominio.com.br \
+npx lighthouse@latest https://eventos.seudominio.dev \
   --output=html --output=json --output-path=./relatorios/antes \
   --chrome-flags="--headless" --quiet
 ```
@@ -801,7 +799,7 @@ Esperado: a primeira execução lista problemas; a última não lista nenhum. Le
 
 ### Passo 3 — Testes dos dois projetos
 
-Na API, crie `tests/paginacao.test.js` e `tests/eventos.test.js` (§3), adaptando os nomes de rota. No front, instale `vitest`, `@vue/test-utils`, `jsdom` e `@vitest/coverage-v8` e crie `vitest.config.js`, `vitest.setup.js` e o teste de componente da §4.
+Na API, garanta `vitest`, `supertest` e `@vitest/coverage-v8` instalados e crie `tests/paginacao.test.js` e `tests/eventos.test.js` (§3), adaptando os nomes de rota. No front, instale `vitest`, `@vue/test-utils`, `jsdom` e `@vitest/coverage-v8` e crie `vitest.config.js`, `vitest.setup.js` e o teste de componente da §4.
 
 ```bash
 cd ~/weblab/unieventos-api && npm test && npm run test:cobertura
@@ -822,7 +820,7 @@ Aplique nesta ordem, rodando `npm run build` antes e depois do item 4:
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
-curl -sI -H 'Accept-Encoding: gzip' https://unieventos.seu-dominio.com.br/ | grep -i -E 'content-encoding|cache-control'
+curl -sI -H 'Accept-Encoding: gzip' https://eventos.seudominio.dev/ | grep -i -E 'content-encoding|cache-control'
 ```
 
 ### Passo 5 — Publique e meça de novo
@@ -830,8 +828,8 @@ curl -sI -H 'Accept-Encoding: gzip' https://unieventos.seu-dominio.com.br/ | gre
 ```bash
 cd ~/weblab/unieventos-web
 npm run build
-rsync -avz --delete dist/ deploy@seu-servidor:/var/www/unieventos/
-npx lighthouse@latest https://unieventos.seu-dominio.com.br \
+rsync -avz --delete dist/ meuvps:/var/www/unieventos-web/
+npx lighthouse@latest https://eventos.seudominio.dev \
   --output=html --output=json --output-path=./relatorios/depois \
   --chrome-flags="--headless" --quiet
 ```
@@ -867,7 +865,7 @@ Instale `pino` e `pino-http`, crie `src/log.js`, registre o middleware e troque 
 
 **A2.** Classifique cada problema como "o linter pega", "o teste pega", "o Lighthouse pega" ou "só a observabilidade pega": (a) `if (idade = 18)` com um só sinal de igual; (b) a paginação devolve a página 0 com lista vazia; (c) a imagem do topo tem 2,4 MB; (d) a API devolve 500 apenas quando o usuário tem acento no nome.
 
-**A3.** `assert.equal('3', 3)` passa ou falha com `node:assert/strict`? E com `node:assert` comum? Por que a versão estrita é a recomendada em testes?
+**A3.** `expect('3').toBe(3)` passa ou falha no Vitest? E `assert.equal('3', 3)` com `node:assert/strict` e com o `node:assert` comum? Explique por que um comparador que coage tipos torna um teste perigoso.
 
 **A4.** Uma página tem LCP de 1,8 s, INP de 90 ms e CLS de 0,32. Quais métricas estão na faixa boa e qual é o provável culpado do valor ruim?
 
@@ -976,7 +974,7 @@ Sistemas profissionais têm uma página que responde, em cinco segundos de olhad
 1. `import { onLCP, onINP, onCLS } from 'web-vitals'` e, no callback, `navigator.sendBeacon('/api/metricas', JSON.stringify(metrica))` — o `sendBeacon` sobrevive ao fechamento da aba.
 2. Grave as métricas em uma tabela simples (`nome`, `valor`, `rota`, `dispositivo`) e calcule a mediana em SQL com `ORDER BY` e `LIMIT`/`OFFSET`, ou em JavaScript mesmo.
 3. Para os source maps, o plugin oficial do Sentry para Vite recebe organização, projeto e um token de autenticação — que vive em um secret do GitHub Actions, nunca no repositório.
-5. Vale como item extra na rubrica da avaliação final da sua trilha.
+4. Vale como item extra na rubrica da avaliação final da sua trilha.
 </details>
 
 ## 🐛 Erros comuns
@@ -986,8 +984,8 @@ Sistemas profissionais têm uma página que responde, em cinco segundos de olhad
 | `ESLint couldn't find an eslint.config.js file` | ESLint 9 procura flat config na pasta em que foi executado; o projeto ainda tem `.eslintrc.json` | Crie o `eslint.config.js` na raiz e apague o `.eslintrc*`; rode o ESLint de dentro da pasta certa |
 | `'process' is not defined  no-undef` no back-end | `globals.node` não foi declarado em `languageOptions.globals` | Acrescente `globals: { ...globals.node }` ao objeto que casa com aqueles arquivos |
 | O editor formata ao salvar e o ESLint sublinha a mesma linha em vermelho | Regras de estilo do ESLint brigando com o Prettier | Instale `eslint-config-prettier` e deixe-o como **último** item do array |
-| `node --test` não encontra nenhum teste | Os arquivos não seguem os padrões reconhecidos (`*.test.js`, `test-*.js`, pasta `test/`) | Renomeie para `tests/algo.test.js` ou passe o caminho: `node --test tests/` |
-| Os testes passam mas o processo nunca sai | Um servidor, um pool de banco ou um `setInterval` continua aberto | Feche tudo no `after`: `servidor.close()`, `pool.end()`, `clearInterval` |
+| `No test files found` no `vitest run` | Os arquivos não seguem o padrão de nome esperado (`*.test.js`, `*.spec.js`) | Renomeie para `tests/algo.test.js` ou passe o caminho: `npx vitest run tests/` |
+| Os testes passam mas o processo nunca sai | Um pool de banco, um servidor ou um `setInterval` continua aberto | Feche tudo em um `afterAll` do Vitest: `pool.end()`, `servidor.close()`, `clearInterval` |
 | `ReferenceError: ResizeObserver is not defined` no Vitest | O jsdom não implementa `ResizeObserver`, que o Vuetify usa | Declare o substituto em `vitest.setup.js` e registre o arquivo em `test.setupFiles` |
 | `[Vue warn]: Failed to resolve component: v-btn` no teste | Componente montado sem o plugin do Vuetify | `mount(C, { global: { plugins: [createVuetify({ components, directives })] } })` |
 | A nota do Lighthouse muda 15 pontos entre duas execuções seguidas | Medição única, com CPU e rede compartilhadas | Rode três vezes e use a mediana; no CI, `numberOfRuns: 3` |
@@ -1022,14 +1020,14 @@ No repositório do seu **projeto autoral** (front e API):
 - [ ] Um erro proposital na API aparece no painel do Sentry em menos de um minuto, com pilha legível.
 - [ ] Uma linha de log da API é JSON válido, tem `servico` e `level`, e não contém token nem senha.
 - [ ] Um monitor de uptime vigia `/health` e você recebeu ao menos um alerta de teste.
-- [ ] `https://seu-dominio/robots.txt` e `/sitemap.xml` respondem 200 com o conteúdo correto para produção.
+- [ ] `https://eventos.seudominio.dev/robots.txt` e `/sitemap.xml` respondem 200 com o conteúdo correto para produção.
 
 ## 📚 Para aprofundar
 
 - [ESLint — Configuration Files](https://eslint.org/docs/latest/use/configure/configuration-files) — o flat config item a item, com a ordem de precedência.
 - [eslint-plugin-vue](https://eslint.vuejs.org/) — os presets `flat/essential` e `flat/recommended` e o que cada regra verifica.
 - [Prettier — Integrating with Linters](https://prettier.io/docs/integrating-with-linters) — por que o `eslint-config-prettier` existe e como configurá-lo.
-- [Node.js — Test runner](https://nodejs.org/api/test.html) — a API completa de `node:test`, incluindo `mock`, `--watch` e cobertura.
+- [Node.js — Test runner](https://nodejs.org/api/test.html) — a API completa de `node:test`, o executor embutido: a alternativa sem dependências citada na §3.1.
 - [Vitest — Getting Started](https://vitest.dev/guide/) — configuração, modo de observação e cobertura.
 - [Vue Test Utils](https://test-utils.vuejs.org/) — `mount`, `props`, `emitted`, `trigger` e testes assíncronos de componente.
 - [web.dev — Core Web Vitals](https://web.dev/articles/vitals?hl=pt-br) — definição, limites e a diferença entre dado de campo e de laboratório.
