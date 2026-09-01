@@ -1,6 +1,6 @@
-# Registro de programa de computador — dossiê para o NIT/UNEMAT
+# Registro de programa de computador — dossiê para a AGINOV/UNEMAT
 
-Documento de apoio ao pedido de **Registro de Programa de Computador (RPC)** do WebLab junto ao INPI, com a UNEMAT como depositante, via Núcleo de Inovação Tecnológica.
+Documento de apoio ao pedido de **Registro de Programa de Computador (RPC)** do WebLab junto ao INPI, com a UNEMAT como depositante, via **AGINOV — Agência de Inovação da UNEMAT**, que é o Núcleo de Inovação Tecnológica da universidade (Resolução 043/2019 do CONSUNI, vinculada à PRPPG) e mantém formulário próprio para registro de software: <https://unemat.br/site/aginov>.
 
 Os campos marcados com **[preencher]** dependem de dados pessoais ou de decisões do NIT e não podem ser inferidos do repositório. Os demais foram extraídos do próprio código e são reproduzíveis pelos comandos indicados.
 
@@ -13,6 +13,7 @@ Os campos marcados com **[preencher]** dependem de dados pessoais ou de decisõe
 | Data de criação | 29/08/2026 (primeiro commit do repositório) |
 | Situação | Publicado e em operação em https://weblab.aprendabit.com |
 | Repositório | https://github.com/ivanlppires/weblab |
+| DOI | 10.5281/zenodo.22220024 (conceitual); 10.5281/zenodo.22220025 (v1.0.0) |
 
 ## 2. Autoria e titularidade
 
@@ -20,7 +21,7 @@ Os campos marcados com **[preencher]** dependem de dados pessoais ou de decisõe
 
 **Coautores:** conforme a página de créditos do sistema (`/autores/`, gerada de `build/config.py → AUTORES`). Cada pessoa tem papel e escopo registrados. **[preencher quando houver coautores de código]** — note que o registro no INPI cobre o *programa*; quem contribui apenas com revisão de conteúdo didático é coautor da obra literária, não do software.
 
-**Titular:** **[decisão do NIT]**. Pela Lei 9.609/98, art. 4º, programa desenvolvido no âmbito de vínculo funcional tem, em regra, titularidade do empregador — no caso, a UNEMAT, com o autor mantendo os direitos morais. O depósito pela instituição é o caminho usual e permite que a produção seja contabilizada institucionalmente.
+**Titular:** **[decisão da AGINOV]**. Pela Lei 9.609/98, art. 4º, programa desenvolvido no âmbito de vínculo funcional tem, em regra, titularidade do empregador — no caso, a UNEMAT, com o autor mantendo os direitos morais. O depósito pela instituição é o caminho usual e permite que a produção seja contabilizada institucionalmente.
 
 ## 3. Dados técnicos
 
@@ -31,7 +32,8 @@ Os campos marcados com **[preencher]** dependem de dados pessoais ou de decisõe
 | Tipo de programa | Aplicativo — gerador de sítio estático com validação de conteúdo **[confirmar o código da tabela do INPI com o NIT]** |
 | Campo de aplicação | Educação / ensino a distância **[confirmar o código da tabela do INPI com o NIT]** |
 | Plataforma | Linux (geração); qualquer navegador moderno (uso do sistema publicado) |
-| Linhas de código depositadas | 3.170, em 16 arquivos (ver `registro/weblab-listagem.txt`) |
+| Versão depositada | `v1.0.0` — commit `06ff0f1`, o mesmo estado que recebeu o DOI |
+| Linhas de código depositadas | 3.434, em 17 arquivos (ver `registro/weblab-listagem.txt`) |
 
 ## 4. O que é depositado — e o que fica de fora
 
@@ -56,8 +58,10 @@ A interface publicada oferece tema claro/escuro persistente, busca instantânea 
 O e-Software do INPI exige o resumo digital do arquivo depositado. Gere-o com:
 
 ```bash
-.venv/bin/python build/empacotar_registro.py
+.venv/bin/python build/empacotar_registro.py v1.0.0
 ```
+
+Sem argumento, o script empacota a árvore de trabalho; com uma tag, lê os arquivos direto do repositório naquele ponto — que é o que amarra o hash a um estado verificável.
 
 O script produz, na pasta `registro/`:
 
@@ -65,7 +69,13 @@ O script produz, na pasta `registro/`:
 - `weblab-codigo-fonte.hash.txt` — os resumos SHA-512 e SHA-256;
 - `weblab-listagem.txt` — inventário com linhas e bytes por arquivo.
 
-O `.zip` é **determinístico** (ordem e datas fixas): rodar o script de novo, sem alterar o código, produz exatamente o mesmo arquivo e o mesmo hash — o que permite ao NIT conferir de forma independente. Confira com `sha512sum registro/weblab-codigo-fonte.zip`.
+O `.zip` é **determinístico** (ordem e datas fixas): rodar o script de novo produz exatamente o mesmo arquivo e o mesmo hash — o que permite à AGINOV conferir de forma independente, a partir do repositório público, sem depender do arquivo que recebeu. Confira com `sha512sum registro/weblab-codigo-fonte.zip`.
+
+Estado atual do pacote da `v1.0.0` (commit `06ff0f1`), 17 arquivos e 3.434 linhas:
+
+```
+SHA-256  2c2d4c3e35d96ddb61b9ff4d743331480ff4affaf7d13a172e9c2380cea1036f
+```
 
 ## 7. Procedimento e custos (confirmar antes de protocolar)
 
@@ -91,7 +101,23 @@ O caminho mais completo usa os dois, e cada um rende um registro distinto no Cur
 
 ## 9. Pendências antes de protocolar
 
+- [x] Congelar a versão a registrar — tag `v1.0.0` publicada, pacote gerado a partir dela, hash amarrado ao commit `06ff0f1`. É o mesmo estado que recebeu o DOI.
 - [ ] Dados pessoais do autor (e de coautores de código, se houver) — item 2.
-- [ ] Decisão do NIT sobre titularidade e sobre quem assina com certificado ICP-Brasil.
+- [ ] Decisão da AGINOV sobre titularidade e sobre quem assina com certificado ICP-Brasil.
 - [ ] Códigos de "tipo de programa" e "campo de aplicação" conforme a tabela vigente do INPI.
-- [ ] Congelar a versão a registrar (sugestão: criar a *tag* `v1.0.0` no repositório e gerar o pacote a partir dela, para que o hash corresponda a um ponto identificável da história).
+
+## 10. O que levar para a AGINOV
+
+Tudo o que depende do repositório já está pronto. Ao abrir o processo, leve:
+
+| Item | Onde está |
+|---|---|
+| Descrição funcional do programa | item 5 deste documento |
+| Dados técnicos (linguagens, bibliotecas, plataforma) | item 3 |
+| Pacote do código-fonte | `registro/weblab-codigo-fonte.zip` |
+| Resumo digital SHA-512/SHA-256 | `registro/weblab-codigo-fonte.hash.txt` |
+| Inventário de arquivos e linhas | `registro/weblab-listagem.txt` |
+| Prova de publicação e anterioridade | DOI 10.5281/zenodo.22220024, de 31/08/2026 |
+| Repositório público com a tag | https://github.com/ivanlppires/weblab/tree/v1.0.0 |
+
+O DOI ajuda na conversa com a AGINOV por um motivo prático: ele data e fixa publicamente o material antes do protocolo, e o registro no INPI não substitui isso — as duas proteções cobrem coisas diferentes, como explica o item 8.
