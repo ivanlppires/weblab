@@ -1,6 +1,6 @@
 ## Quem escreve
 
-O WebLab é escrito e revisado por um grupo de professores universitários de computação de Sinop, Mato Grosso. Seis atuam na **UNEMAT — Universidade do Estado de Mato Grosso, Campus Sinop**, e uma no **IFMT — Instituto Federal de Mato Grosso, Campus Sinop**; todos são doutores, com exceção de um mestre. As afiliações estão listadas ao lado de cada nome, acima.
+O WebLab é escrito e revisado por um grupo de professores universitários de computação de Sinop, Mato Grosso. Sete atuam na **UNEMAT — Universidade do Estado de Mato Grosso, Campus Sinop**, e uma no **IFMT — Instituto Federal de Mato Grosso, Campus Sinop**. As afiliações estão listadas ao lado de cada nome, acima.
 
 O material, porém, **não é institucional**: não representa a posição das instituições onde os autores trabalham, não depende de matrícula e não pressupõe vínculo com nenhuma delas. Nasceu de disciplinas de graduação e foi reescrito para servir a qualquer pessoa que queira aprender desenvolvimento web — sozinha, em grupo de estudo ou em sala de aula de qualquer instituição.
 
