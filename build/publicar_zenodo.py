@@ -26,7 +26,6 @@ Publicar é irreversível: o DOI é registrado e os arquivos não podem mais ser
 trocados (os metadados, sim). Para conferir antes, use --rascunho ou --sandbox.
 """
 import json
-import mimetypes
 import os
 import subprocess
 import sys
@@ -138,9 +137,9 @@ def main(argv):
     dep_id = dep["id"]
     print(f"depósito {dep_id} criado em {base.removesuffix('/api')}")
 
-    tipo = mimetypes.guess_type(zip_path.name)[0] or "application/zip"
+    # o bucket recusa qualquer outro Content-Type, inclusive application/zip
     pedir(f"{dep['links']['bucket']}/{zip_path.name}", tk, "PUT",
-          binario=zip_path.read_bytes(), tipo=tipo)
+          binario=zip_path.read_bytes(), tipo="application/octet-stream")
     print(f"arquivo enviado: {zip_path.name}")
 
     dep = pedir(f"{base}/deposit/depositions/{dep_id}", tk, "PUT", {"metadata": meta})
