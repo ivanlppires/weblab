@@ -37,9 +37,11 @@ O material inteiro vive em [github.com/ivanlppires/weblab](https://github.com/iv
 
 ## Como citar
 
-Ao usar o WebLab em aula, em um trabalho ou em outro material, cite a versão que você consultou. O arquivo `CITATION.cff` no repositório mantém os dados sempre atualizados, e o site tem endereço fixo:
+Ao usar o WebLab em aula, em um trabalho ou em outro material, cite pelo **DOI** — identificador permanente que continua funcionando mesmo se o endereço do site mudar:
 
-> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. Disponível em: https://weblab.aprendabit.com.
+> PIRES, Ivan Luiz Pedroso *et al.* **WebLab — Laboratório de Desenvolvimento Web**. Zenodo, 2026. DOI: 10.5281/zenodo.22220024. Disponível em: https://weblab.aprendabit.com.
+
+Esse DOI é *conceitual*: aponta sempre para a versão mais recente. Para citar um estado exato do material, use o DOI da versão que você consultou — a 1.0.0 é `10.5281/zenodo.22220025`. O arquivo `CITATION.cff` no repositório traz os dois, e o GitHub monta a citação pronta no botão *Cite this repository*.
 
 ## Licença
 

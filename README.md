@@ -1,5 +1,7 @@
 # WebLab — Laboratório de Desenvolvimento Web
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22220024.svg)](https://doi.org/10.5281/zenodo.22220024)
+
 Apostila online, gratuita e autocontida de desenvolvimento web, escrita e revisada por professores da **UNEMAT — Campus Sinop (FACET)** (ver [autoria e créditos](https://weblab.aprendabit.com/autores/)). Nasceu das disciplinas presenciais e é publicada aberta: serve a qualquer pessoa que queira aprender, em qualquer época — sem datas, notas ou prazos no material.
 
 **No ar em <https://weblab.aprendabit.com>**
@@ -57,4 +59,4 @@ Tema claro/escuro · busca global · botão *Copiar* em todo código · sumário
 
 Conteúdo sob **CC BY 4.0**; o gerador do site, sob **licença MIT**. Ver `LICENSE`.
 
-Como citar: veja `CITATION.cff` (o GitHub mostra o botão *Cite this repository*).
+Como citar: pelo DOI conceitual **10.5281/zenodo.22220024**, que resolve sempre para a versão mais recente. Veja `CITATION.cff` — o GitHub monta a citação no botão *Cite this repository*. O roteiro do depósito está em `docs/doi-zenodo.md`.

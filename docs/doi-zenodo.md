@@ -8,10 +8,12 @@ O depósito é feito pela **API do Zenodo**, por `build/publicar_zenodo.py`: o s
 
 São dois DOIs, e vale entender a diferença:
 
-| DOI | O que identifica | Onde usar |
-|---|---|---|
-| **Concept DOI** | a obra como um todo — resolve sempre para a versão mais recente | citação geral, Lattes, ORCID, rodapé do site |
-| **Version DOI** | uma versão específica (v1.0.0, v1.1.0…) | quando o texto precisa apontar para o estado exato consultado |
+| DOI | Valor | O que identifica | Onde usar |
+|---|---|---|---|
+| **Concept DOI** | `10.5281/zenodo.22220024` | a obra como um todo — resolve sempre para a versão mais recente | citação geral, Lattes, ORCID, rodapé do site |
+| **Version DOI** | `10.5281/zenodo.22220025` (v1.0.0) | uma versão específica | quando o texto precisa apontar para o estado exato consultado |
+
+Ambos vivem em `build/config.py` (`DOI`, `DOI_VERSAO`, `VERSAO`, `DATA_VERSAO`) e de lá alimentam o `CITATION.cff` e o rodapé do site. A cada novo depósito, atualize `DOI_VERSAO`, `VERSAO` e `DATA_VERSAO` — o conceitual não muda nunca.
 
 O *concept DOI* só nasce a partir da primeira versão publicada, e é ele que vai para o Lattes, o ORCID e o rodapé do site.
 
@@ -76,13 +78,17 @@ O Zenodo permite **editar os metadados depois** sem gerar novo DOI — o que nã
 
 ### 5. Espalhar o DOI
 
-Depois de emitido, com o *concept DOI* em mãos:
+Feito na v1.0.0:
 
-- [ ] crachá no `README.md`: `[![DOI](https://zenodo.org/badge/DOI/<doi>.svg)](https://doi.org/<doi>)`;
-- [ ] `doi:` e `identifiers:` no `CITATION.cff` — pela geração, em `build/citacao.py`, não no arquivo;
-- [ ] "Como citar" no rodapé do site (`build/config.py` + `build/paginas.py`);
-- [ ] ORCID — entra sozinho se o perfil do Zenodo estiver vinculado; conferir;
-- [ ] Currículo Lattes, em *Material didático ou instrucional* (o registro no INPI, quando sair, vira uma entrada separada em *Software*).
+- [x] crachá no `README.md`;
+- [x] `doi:` e `identifiers:` no `CITATION.cff`, gerados de `config.DOI` por `build/citacao.py`;
+- [x] "Como citar" no rodapé de toda página e na seção *Como citar* de `fontes/autores.md`.
+
+Ainda a fazer, fora do repositório:
+
+- [ ] **ORCID** — entra sozinho se o perfil do Zenodo estiver vinculado ao ORCID; conferir em <https://orcid.org/0000-0002-1380-082X>;
+- [ ] **Currículo Lattes**, em *Material didático ou instrucional* (o registro no INPI, quando sair, vira uma entrada separada em *Software*);
+- [ ] avisar os sete coautores de que o depósito saiu, com o DOI para o Lattes de cada um.
 
 ## Decisões tomadas
 

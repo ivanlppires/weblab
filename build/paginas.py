@@ -76,6 +76,7 @@ def pagina_base(titulo, descricao, corpo, lateral_html="", toc_html="", trilha_i
     <div class="rodape">
       <strong>WebLab</strong> — {e(config.SUBTITULO)}<br>
       Conteúdo sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" rel="license noopener">CC BY 4.0</a>; o gerador do site, sob licença MIT. Reuso livre com atribuição.<br>
+      Como citar: <a href="https://doi.org/{config.DOI}">doi.org/{config.DOI}</a><br>
       <a href="{raiz_rel}">Início</a> · <a href="{raiz_rel}autores/">Autoria e créditos</a> · <a href="{raiz_rel}desafios/">Banco de Desafios</a> · <a href="{raiz_rel}links/">Links úteis</a> · <a href="https://github.com/ivanlppires/weblab">Fontes no GitHub</a>
     </div>
   </main>

@@ -85,7 +85,17 @@ def cff():
             linhas.append(f'    affiliation: "{a["affiliation"]}"')
         if "orcid" in a:
             linhas.append(f'    orcid: "{a["orcid"]}"')
-    linhas += [f'url: "{config.URL_BASE}"',
+    linhas += [f'version: "{config.VERSAO}"',
+               f'date-released: "{config.DATA_VERSAO}"',
+               f'doi: "{config.DOI}"',
+               "identifiers:",
+               "  - type: doi",
+               f'    value: "{config.DOI}"',
+               '    description: "DOI conceitual — resolve sempre para a versão mais recente"',
+               "  - type: doi",
+               f'    value: "{config.DOI_VERSAO}"',
+               f'    description: "DOI da versão {config.VERSAO}"',
+               f'url: "{config.URL_BASE}"',
                'repository-code: "https://github.com/ivanlppires/weblab"',
                'license: CC-BY-4.0',
                "keywords:"] + [f'  - "{k}"' for k in PALAVRAS]

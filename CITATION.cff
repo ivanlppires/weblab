@@ -36,6 +36,16 @@ authors:
     family-names: "Bogoni"
     affiliation: "UNEMAT — Campus Sinop"
     orcid: "https://orcid.org/0000-0002-6877-2934"
+version: "1.0.0"
+date-released: "2026-08-31"
+doi: "10.5281/zenodo.22220024"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22220024"
+    description: "DOI conceitual — resolve sempre para a versão mais recente"
+  - type: doi
+    value: "10.5281/zenodo.22220025"
+    description: "DOI da versão 1.0.0"
 url: "https://weblab.aprendabit.com"
 repository-code: "https://github.com/ivanlppires/weblab"
 license: CC-BY-4.0

@@ -25,6 +25,14 @@ INSTITUICAO = ""  # o material não é institucional; a filiação dos autores v
 PROFESSOR = "Prof. Ivan Luiz Pedroso Pires"
 SEMESTRE = ""  # ex.: "2027.1"; vazio deixa o site atemporal
 
+# Depósito no Zenodo (ver docs/doi-zenodo.md). O DOI conceitual resolve sempre
+# para a versão mais recente e é o que se usa para citar o WebLab; o de versão
+# aponta para um estado exato. Atualize DOI_VERSAO/VERSAO a cada novo depósito.
+DOI = "10.5281/zenodo.22220024"
+DOI_VERSAO = "10.5281/zenodo.22220025"
+VERSAO = "1.0.0"
+DATA_VERSAO = "2026-08-31"
+
 
 def _aulas(trilha, prefixo, itens, unidades, marcos):
     """Monta a lista de aulas de uma trilha a partir de (num, slug, título)."""
