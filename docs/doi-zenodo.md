@@ -1,10 +1,10 @@
 # DOI no Zenodo — roteiro de depósito
 
-Como o WebLab ganha um **DOI** (identificador persistente e citável) pelo Zenodo, a partir de uma *release* do GitHub. Complementa `docs/registro-inpi.md`: o INPI protege o *software*, o DOI dá citabilidade acadêmica ao *material publicado*. Os dois convivem.
+Como o WebLab ganha um **DOI** (identificador persistente e citável) no Zenodo, a partir de uma tag do repositório. Complementa `docs/registro-inpi.md`: o INPI protege o *software*, o DOI dá citabilidade acadêmica ao *material publicado*. Os dois convivem.
 
 ## Como funciona
 
-O Zenodo mantém uma integração com o GitHub: ao ligar a chave para um repositório público, ele instala um *webhook*. A cada **release publicada**, o Zenodo baixa o `.zip` da tag, lê o `.zenodo.json` da raiz para preencher os metadados e emite um DOI.
+O depósito é feito pela **API do Zenodo**, por `build/publicar_zenodo.py`: o script empacota a tag, envia os metadados do `.zenodo.json` e publica, recebendo o DOI de volta. É o mesmo que a integração GitHub↔Zenodo faria sozinha — ela existe, mas está quebrada para esta conta (ver passo 1).
 
 São dois DOIs, e vale entender a diferença:
 
@@ -13,7 +13,7 @@ São dois DOIs, e vale entender a diferença:
 | **Concept DOI** | a obra como um todo — resolve sempre para a versão mais recente | citação geral, Lattes, ORCID, rodapé do site |
 | **Version DOI** | uma versão específica (v1.0.0, v1.1.0…) | quando o texto precisa apontar para o estado exato consultado |
 
-O Zenodo só recebe releases **publicadas depois** de a chave ser ligada. Ligar a chave é, portanto, o primeiro passo — não o último.
+O *concept DOI* só nasce a partir da primeira versão publicada, e é ele que vai para o Lattes, o ORCID e o rodapé do site.
 
 ## Fontes dos metadados
 
@@ -26,20 +26,21 @@ Nada é digitado à mão no Zenodo. Tudo sai de `build/config.py → AUTORES`:
 - `.zenodo.json` — título, resumo em HTML, os 8 autores com ORCID e afiliação, `upload_type: software`, licença CC BY 4.0, idioma `por`, palavras-chave e o enlace para <https://weblab.aprendabit.com>.
 - `CITATION.cff` — o botão *Cite this repository* do GitHub.
 
-Se a autoria mudar, edite `config.AUTORES`, rode `citacao.py` de novo e faça uma nova release: o Zenodo relê o `.zenodo.json` a cada versão.
+Se a autoria mudar, edite `config.AUTORES`, rode `citacao.py` de novo e deposite uma versão nova: o `.zenodo.json` é lido a cada depósito.
 
 ## Passo a passo
 
-### 1. Ligar a chave no Zenodo — *feito no navegador, uma única vez*
+### 1. Obter o token — *feito no navegador, uma única vez*
 
-1. <https://zenodo.org/signup/> — entrar **com a conta do GitHub** (o vínculo é o que autoriza o webhook). Se já houver conta Zenodo criada por e-mail, ligar o GitHub em *Settings → Linked accounts*.
-2. Ir em <https://zenodo.org/account/settings/github/> e autorizar o acesso aos repositórios.
-3. Achar `ivanlppires/weblab` na lista e **virar a chave para ON**. Se não aparecer, usar *Sync now* — o Zenodo só lista repositórios públicos em que a conta tem permissão de administração.
-4. Aproveitar e preencher o perfil do Zenodo com o **ORCID** (`0000-0002-1380-082X`) — assim o depósito entra automaticamente no ORCID.
+A integração automática do GitHub **não funcionou** para esta conta: o `Sync now` de <https://zenodo.org/account/settings/github/> falha com 504 e a lista de repositórios continua congelada em um cache antigo, sem o `weblab`. É bug conhecido do InvenioRDM, não da conta. O depósito é feito, então, pela API — o que sai no mesmo lugar e ainda fica reprodutível.
+
+1. Criar um token em <https://zenodo.org/account/settings/applications/tokens/new> com os escopos **`deposit:write`** e **`deposit:actions`**.
+2. Guardar em `~/.config/zenodo/token` (ou exportar como `ZENODO_TOKEN`). O arquivo está fora do repositório de propósito.
+3. Preencher o perfil do Zenodo com o **ORCID** (`0000-0002-1380-082X`) — assim o depósito entra automaticamente no ORCID.
 
 ### 2. Congelar a versão
 
-O que entra na release é o repositório inteiro na tag — exceto o que o `.gitignore` corta (`site/`, `registro/`, `.venv/`). Antes de marcar:
+O que entra no depósito é o repositório inteiro na tag — exceto o que o `.gitignore` corta (`site/`, `registro/`, `.venv/`). Antes de marcar:
 
 ```bash
 .venv/bin/python -m pytest build/tests -q     # 36 testes
@@ -47,19 +48,24 @@ O que entra na release é o repositório inteiro na tag — exceto o que o `.git
 git status --short                            # nada solto que devesse entrar
 ```
 
-### 3. Criar a release
+### 3. Marcar a versão e depositar
 
 ```bash
 git tag -a v1.0.0 -m "WebLab v1.0.0 — 57 aulas em quatro trilhas"
 git push origin v1.0.0
-gh release create v1.0.0 --title "WebLab v1.0.0" --notes-file <notas>
+gh release create v1.0.0 --title "WebLab v1.0.0" --notes-file <notas>   # opcional
+
+.venv/bin/python build/publicar_zenodo.py v1.0.0 --rascunho   # confere antes
+.venv/bin/python build/publicar_zenodo.py v1.0.0              # publica e emite o DOI
 ```
+
+O `build/publicar_zenodo.py` monta o pacote com `git archive` na tag — só arquivos versionados, sem `site/`, `registro/` nem `.venv/` —, envia os metadados do `.zenodo.json` acrescidos da versão, da data da tag e do enlace para a tag no GitHub, e publica. Aceita `--sandbox` para ensaiar em <https://sandbox.zenodo.org> com DOI de teste, e `--nova-versao=ID` para publicar uma versão nova preservando o *concept DOI*.
 
 A mesma tag serve de ponto identificável para o pacote do INPI (`build/empacotar_registro.py`), fechando a pendência do item 9 de `docs/registro-inpi.md`.
 
 ### 4. Colher o DOI
 
-Em um a dois minutos o depósito aparece em <https://zenodo.org/me/uploads>. Conferir antes de divulgar:
+O script imprime os dois DOIs ao publicar, e o depósito fica em <https://zenodo.org/me/uploads>. Conferir antes de divulgar:
 
 - [ ] os 8 autores, na ordem certa, cada um com ORCID;
 - [ ] licença CC BY 4.0 e acesso aberto;
